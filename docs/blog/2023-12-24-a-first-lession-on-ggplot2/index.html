@@ -68,10 +68,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -108,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
 <li class="nav-item">
-    <a class="nav-link" href="../../about.html" rel="" target="">
+    <a class="nav-link" href="../../about/index.html" rel="" target="">
  <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
@@ -151,30 +153,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">Quarto</div>
                 <div class="quarto-category">R</div>
-                <div class="quarto-category">GGPlot2</div>
+                <div class="quarto-category">Data Visualization</div>
               </div>
                   </div>
   </div>
     
-  <div class="quarto-title-meta-author">
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-heading">Affiliation</div>
-    
-      <div class="quarto-title-meta-contents">
-      <p class="author"><a href="https://lktuan.github.io/">Tuan Le Khac</a> </p>
-    </div>
-      <div class="quarto-title-meta-contents">
-          <p class="affiliation">
-              Risk Modeler @ Validus Vietnam
-            </p>
-        </div>
-      </div>
-
+  
   <div class="quarto-title-meta">
 
-        
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p><a href="https://lktuan.github.io/">Tuan Le Khac</a> </p>
+            </div>
+    </div>
+      
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
@@ -191,29 +185,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content"><p>Source: <a href="https://z3tt.github.io/exciting-extensions/slides.html#/title-slide" class="uri">https://z3tt.github.io/exciting-extensions/slides.html#/title-slide</a></p>
-<section id="preparation" class="level1"><h1>Preparation</h1>
+<main class="content quarto-banner-title-block" id="quarto-document-content"><section id="preparation" class="level1"><h1>Preparation</h1>
 <p>I need to install the following packages:</p>
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># | eval: false</span></span>
+<details><summary>Code</summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># | eval: false</span></span>
 <span><span class="co"># install CRAN packages</span></span>
 <span><span class="va">pkg_install</span> <span class="op">=</span>   <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ggplot2"</span>, <span class="st">"tibble"</span>, <span class="st">"tidyr"</span>, <span class="st">"forcats"</span>, <span class="st">"purrr"</span>, <span class="st">"prismatic"</span>, <span class="st">"corrr"</span>, </span>
 <span>    <span class="st">"cowplot"</span>, <span class="st">"ggforce"</span>, <span class="st">"ggrepel"</span>, <span class="st">"ggridges"</span>, <span class="st">"ggsci"</span>, <span class="st">"ggtext"</span>, <span class="st">"ggthemes"</span>, </span>
 <span>    <span class="st">"grid"</span>, <span class="st">"gridextra"</span>, <span class="st">"patchwork"</span>, <span class="st">"rcartocolor"</span>, <span class="st">"scico"</span>, <span class="st">"showtext"</span>, </span>
 <span>    <span class="st">"shiny"</span>, <span class="st">"plotly"</span>, <span class="st">"highcharter"</span>, <span class="st">"echarts4r"</span><span class="op">)</span></span>
 <span><span class="co"># install.packages(pkg_install)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>I was facing the error of installing devtools</p>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># | eval: false</span></span>
+<details><summary>Code</summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># | eval: false</span></span>
 <span><span class="co"># install from GitHub since not on CRAN</span></span>
 <span><span class="co"># install.packages('devtools')</span></span>
 <span><span class="co"># devtools::install_github("JohnCoene/charter")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>I tried to update R to the latest version (commented the code as it would be run once)</p>
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># | eval: false</span></span>
+<details><summary>Code</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># | eval: false</span></span>
 <span><span class="co"># update.packages(repos='http://cran.rstudio.com/', ask=FALSE, checkBuilt=TRUE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>–&gt; Not worked</p>
 <p><strong>Oops I was should be using “‘devtools’” instead of “devtools”!!! Problem solved</strong></p>
@@ -221,14 +217,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>I was using the dataset: “<em>National Morbidity and Mortality Air Pollution Study</em>&nbsp;(NMMAPS)”</p>
 <p>Install the readr first:</p>
 <div class="cell">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># | eval: false</span></span>
+<details><summary>Code</summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># | eval: false</span></span>
 <span><span class="co"># install.packages('readr')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <section id="import-data" class="level4"><h4 class="anchored" data-anchor-id="import-data">Import data</h4>
 <p>“: :” here call the namespace and can be used to access a function without loading the package.</p>
 <div class="cell">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">chic</span> <span class="op">&lt;-</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"https://cedricscherer.com/data/chicago-nmmaps-custom.csv"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
+<details><summary>Code</summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">chic</span> <span class="op">&lt;-</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"https://cedricscherer.com/data/chicago-nmmaps-custom.csv"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stderr">
 <pre><code>Rows: 1461 Columns: 10
 ── Column specification ────────────────────────────────────────────────────────
 Delimiter: ","
@@ -242,8 +239,8 @@ date (1): date
 </div>
 <p>view some data</p>
 <div class="cell">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">chic</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
+<details><summary>Code</summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">chic</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
 <pre><code>Rows: 1,461
 Columns: 10
 $ city     &lt;chr&gt; "chic", "chic", "chic", "chic", "chic", "chic", "chic", "chic…
@@ -259,8 +256,8 @@ $ year     &lt;dbl&gt; 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 199
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">chic</span>,<span class="fl">10</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
+<details><summary>Code</summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">chic</span>,<span class="fl">10</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 10
    city  date        temp    o3 dewpoint  pm10 season  yday month  year
    &lt;chr&gt; &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;
@@ -284,20 +281,11 @@ $ year     &lt;dbl&gt; 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 199
 <li>Aesthetics `aes()`: aesthetics of the geometric or statistical objects, such as postition, color, size, shape, and transparency;</li>
 <li>Scales `scale_`: map between the data and the aesthetics dimensions, such as data raneg to plot width or factor values to colors;</li>
 <li>
-</li></ol>
+</li></ol></section><section id="reference" class="level1"><h1>Reference</h1>
+<p>Source: <a href="https://z3tt.github.io/exciting-extensions/slides.html#/title-slide" class="uri">https://z3tt.github.io/exciting-extensions/slides.html#/title-slide</a></p>
 
 
-</section><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{le khac2023,
-  author = {Le Khac, Tuan},
-  title = {A (Not Very) First Lesson on {GGPlot} 2 :)},
-  date = {2023-12-24},
-  url = {https://github.com/lktuan/lktuan.github.io/blog/2023-12-24_post/},
-  langid = {en}
-}
-</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-le khac2023" class="csl-entry quarto-appendix-citeas" role="listitem">
-Le Khac, Tuan. 2023. <span>“A (Not Very) First Lesson on GGPlot 2
-:).”</span> December 24, 2023. <a href="https://github.com/lktuan/lktuan.github.io/blog/2023-12-24_post/">https://github.com/lktuan/lktuan.github.io/blog/2023-12-24_post/</a>.
-</div></div></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -532,11 +520,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 </div> <!-- /content -->
 <footer class="footer"><div class="nav-footer">
-    <div class="nav-footer-left"><span class="faux-block">© 2023, by Le Khac Tuan</span> <span class="faux-block"><a href="https://github.com/lktuan/lktuan.github.io"> Source Code</a></span></div>   
+    <div class="nav-footer-left"><span class="faux-block">© 2023, by Le Khac Tuan</span> <span class="faux-block"><a href="https://github.com/lktuan/lktuan.github.io"><i class="fa-brands fa-github" aria-label="github"></i> Source Code</a></span></div>   
     <div class="nav-footer-center">
       &nbsp;
     </div>
-    <div class="nav-footer-right"><span class="faux-block"> Designed with </span> <span class="faux-block"> Built with <a href="https://quarto.org/">Quarto</a></span></div>
+    <div class="nav-footer-right"><span class="faux-block"> Designed with <i class="fa-solid fa-heart" aria-label="heart"></i></span> <span class="faux-block"> Built with <a href="https://quarto.org/">Quarto</a></span></div>
   </div>
 </footer>
 
