@@ -1,47 +1,63 @@
+authorname: "Le Khac Tuan"
+draft: false
+
+
 project:
   type: website
   output-dir: docs
-# ~ additional metadata excluded for brevity ~
+
+  resources:
+    - "img/**"
+    - "assets/**"
+    # - "sitemap.xml"
+    # - "_redirects"
+
+  # ~ additional metadata excluded for brevity ~
   preview: 
     port: 22222
     browser: true
     watch-inputs: true
     navigate: true
 
-
+title-meta: "Le Khac Tuan"
+description-meta: "I am a Risk Modeler 🚀"
 
 website:
   title: "Le Khac Tuan" # This is my name
-  description: "I am a Risk Modeler" # A brief slogan
+  description: "I am a Risk Modeler 🚀" # A brief slogan
   
+  repo-url: "https://github.com/lktuan/lktuan.github.io"
+  repo-branch: gh-pages
 
   # image: img/tuan_ava.jpg
-  favicon: img/tuan_favicon.png
+  favicon: img/rocket_1613268.png
 
   # start of the navigation bar at the top of the website
   navbar:
     pinned: true
-    logo: /img/tuan_favicon.png
+    # logo: /img/lktuan_newlogo_25.12.png
+    # css: /html/logo.css
 
     left:
+      - text: "About"
+        href: about.qmd
       - text: "Blog"
         href: blog.qmd
-      - text: "Résumé"
-        href: about.qmd
+
 
     # your social media handles
     right:
       - icon: twitter
-        text: Twitter
+        # text: Twitter
         href: https://twitter.com/Halle4231
       - icon: github
-        text: Github
+        # text: Github
         href: https://github.com/lktuan
       - icon: linkedin
-        text: LinkedIn
+        # text: LinkedIn
         href: https://www.linkedin.com/in/tuanlekhac/
       - icon: envelope
-        text: Email
+        # text: Email
         href: "mailto:tuan.lekhac0905@gmail.com"   
 
 
@@ -49,31 +65,35 @@ website:
   search: 
     location: navbar
     type: textbox
+
+
   page-footer: 
     left: |
-      <span class="faux-block">&#169; 2023 Le Khac Tuan</span>
+      <span class="faux-block">&#169; 2023, by Le Khac Tuan</span>
+      <span class="faux-block"><a href="https://github.com/lktuan/lktuan.github.io">{{< fa brands github >}} Source Code</a></span>
     right: |
-      <span class="faux-block"><a href="https://github.com/lktuan/lktuan.github.io/">View source on GitHub</a></span>
-
+      <span class="faux-block"> Designed with {{< fa heart >}}</span>
+      <span class="faux-block"> Built with <a href="https://quarto.org/">Quarto</a></span>
 
 
 format:
   html:
     fontsize: 1.1em
     theme: 
-      light: cosmo
-      dark: darkly
+      - flatly
+      - html/styles.scss
     toc: false
     code-link: true
     anchor-sections: true
     fig-cap-location: margin
     reference-location: margin
     footnotes-hover: true
+    highlight-style: monokai
 
 editor: visual
 
 execute:
-  freeze: auto
+  freeze: true
   
 
 
