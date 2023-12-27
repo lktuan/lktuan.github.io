@@ -1,3 +1,3 @@
 # Hello, World! This is Tuan's website
 
-![example workflow](https://github.com/lktuan/lktuan.github.io/blob/main/.github/workflows/publish.yml/badge.svg)
+![Status Badge](https://img.shields.io/badge/Status-${{ steps.build.outputs.status }}-green)
