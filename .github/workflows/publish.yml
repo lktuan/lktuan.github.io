@@ -23,3 +23,8 @@ jobs:
           target: gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update Status Badge
+        if: ${{ success() }}
+        run: echo "::set-output name=status::success"
+        # This sets the status to 'success' if the reusable workflow was successful
+        # You can adapt this based on your needs
