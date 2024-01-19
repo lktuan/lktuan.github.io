@@ -263,14 +263,14 @@
     "href": "blog.html",
     "title": "My Blog",
     "section": "",
-    "text": "A (not very) first lesson on ggplot 2 :)\n\n\n\n\n\n\n\nR\n\n\nggplot2\n\n\nData Visualization\n\n\n\n\nThis is a again a lesson on ggplot2\n\n\n\n\n\n\nDec 24, 2023\n\n\nTuan Le Khac\n\n\n\n\n\n\nNo matching items"
+    "text": "A (not very) first lesson on ggplot 2 :)\n\n\n\n\n\n\n\nR\n\n\nggplot2\n\n\nData Visualization\n\n\n\n\nThis is a again a lesson on ggplot2\n\n\n\n\n\n\nDec 24, 2023\n\n\nTuan Le Khac\n\n\n\n\n\n\n  \n\n\n\n\nCách đọc Guitar Tab đơn giản\n\n\n\n\n\n\n\nGuitar\n\n\n\n\nBạn có thể không biết đọc nhạc nhưng ít nhất bạn phải biết cách đọc tab guitar!\n\n\n\n\n\n\nJan 24, 2023\n\n\nTuan Le Khac\n\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "blog/2023-12-24-a-first-lession-on-ggplot2/index.html",
+    "href": "blog/2023-12-24-a-first-lession-on-ggplot2/index.html",
+    "title": "A (not very) first lesson on ggplot 2 :)",
     "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
+    "text": "Preparation\nI need to install the following packages:\n\nCode# | eval: false\n# install CRAN packages\npkg_install =   c(\"ggplot2\", \"tibble\", \"tidyr\", \"forcats\", \"purrr\", \"prismatic\", \"corrr\", \n    \"cowplot\", \"ggforce\", \"ggrepel\", \"ggridges\", \"ggsci\", \"ggtext\", \"ggthemes\", \n    \"grid\", \"gridextra\", \"patchwork\", \"rcartocolor\", \"scico\", \"showtext\", \n    \"shiny\", \"plotly\", \"highcharter\", \"echarts4r\")\n# install.packages(pkg_install)\n\n\nI was facing the error of installing devtools\n\nCode# | eval: false\n# install from GitHub since not on CRAN\n# install.packages('devtools')\n# devtools::install_github(\"JohnCoene/charter\")\n\n\nI tried to update R to the latest version (commented the code as it would be run once)\n\nCode# | eval: false\n# update.packages(repos='http://cran.rstudio.com/', ask=FALSE, checkBuilt=TRUE)\n\n\n–&gt; Not worked\nOops I was should be using “‘devtools’” instead of “devtools”!!! Problem solved\nThe Dataset\nI was using the dataset: “National Morbidity and Mortality Air Pollution Study (NMMAPS)”\nInstall the readr first:\n\nCode# | eval: false\n# install.packages('readr')\n\n\nImport data\n“: :” here call the namespace and can be used to access a function without loading the package.\n\nCodechic &lt;- readr::read_csv(\"https://cedricscherer.com/data/chicago-nmmaps-custom.csv\")\n\nRows: 1461 Columns: 10\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (3): city, season, month\ndbl  (6): temp, o3, dewpoint, pm10, yday, year\ndate (1): date\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\nview some data\n\nCodetibble::glimpse(chic)\n\nRows: 1,461\nColumns: 10\n$ city     &lt;chr&gt; \"chic\", \"chic\", \"chic\", \"chic\", \"chic\", \"chic\", \"chic\", \"chic…\n$ date     &lt;date&gt; 1997-01-01, 1997-01-02, 1997-01-03, 1997-01-04, 1997-01-05, …\n$ temp     &lt;dbl&gt; 36.0, 45.0, 40.0, 51.5, 27.0, 17.0, 16.0, 19.0, 26.0, 16.0, 1…\n$ o3       &lt;dbl&gt; 5.659256, 5.525417, 6.288548, 7.537758, 20.760798, 14.940874,…\n$ dewpoint &lt;dbl&gt; 37.500, 47.250, 38.000, 45.500, 11.250, 5.750, 7.000, 17.750,…\n$ pm10     &lt;dbl&gt; 13.052268, 41.948600, 27.041751, 25.072573, 15.343121, 9.3646…\n$ season   &lt;chr&gt; \"Winter\", \"Winter\", \"Winter\", \"Winter\", \"Winter\", \"Winter\", \"…\n$ yday     &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18…\n$ month    &lt;chr&gt; \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\"…\n$ year     &lt;dbl&gt; 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1…\n\n\n\nCodehead(chic,10)\n\n# A tibble: 10 × 10\n   city  date        temp    o3 dewpoint  pm10 season  yday month  year\n   &lt;chr&gt; &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;\n 1 chic  1997-01-01  36    5.66    37.5  13.1  Winter     1 Jan    1997\n 2 chic  1997-01-02  45    5.53    47.2  41.9  Winter     2 Jan    1997\n 3 chic  1997-01-03  40    6.29    38    27.0  Winter     3 Jan    1997\n 4 chic  1997-01-04  51.5  7.54    45.5  25.1  Winter     4 Jan    1997\n 5 chic  1997-01-05  27   20.8     11.2  15.3  Winter     5 Jan    1997\n 6 chic  1997-01-06  17   14.9      5.75  9.36 Winter     6 Jan    1997\n 7 chic  1997-01-07  16   11.9      7    20.2  Winter     7 Jan    1997\n 8 chic  1997-01-08  19    8.68    17.8  33.1  Winter     8 Jan    1997\n 9 chic  1997-01-09  26   13.4     24    12.1  Winter     9 Jan    1997\n10 chic  1997-01-10  16   10.4      5.38 24.8  Winter    10 Jan    1997\n\n\nThe {ggplot2} Package\nA ggplot is built up from a few basic elements:\n\nData;\nGeometries geom_: the geometric shape that will represent the data;\nAesthetics aes_: aesthetics of the geometric or statistical objects, such as postition, color, size, shape, and transparency;\nScales scale_: map between the data and the aesthetics dimensions, such as data raneg to plot width or factor values to colors;\n\nReference\nSource: https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/"
   },
   {
     "objectID": "about/cv/index.html",
@@ -280,11 +280,95 @@
     "text": "Download current CV"
   },
   {
-    "objectID": "blog/2023-12-24-a-first-lession-on-ggplot2/index.html",
-    "href": "blog/2023-12-24-a-first-lession-on-ggplot2/index.html",
-    "title": "A (not very) first lesson on ggplot 2 :)",
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
     "section": "",
-    "text": "Preparation\nI need to install the following packages:\n\nCode# | eval: false\n# install CRAN packages\npkg_install =   c(\"ggplot2\", \"tibble\", \"tidyr\", \"forcats\", \"purrr\", \"prismatic\", \"corrr\", \n    \"cowplot\", \"ggforce\", \"ggrepel\", \"ggridges\", \"ggsci\", \"ggtext\", \"ggthemes\", \n    \"grid\", \"gridextra\", \"patchwork\", \"rcartocolor\", \"scico\", \"showtext\", \n    \"shiny\", \"plotly\", \"highcharter\", \"echarts4r\")\n# install.packages(pkg_install)\n\n\nI was facing the error of installing devtools\n\nCode# | eval: false\n# install from GitHub since not on CRAN\n# install.packages('devtools')\n# devtools::install_github(\"JohnCoene/charter\")\n\n\nI tried to update R to the latest version (commented the code as it would be run once)\n\nCode# | eval: false\n# update.packages(repos='http://cran.rstudio.com/', ask=FALSE, checkBuilt=TRUE)\n\n\n–&gt; Not worked\nOops I was should be using “‘devtools’” instead of “devtools”!!! Problem solved\nThe Dataset\nI was using the dataset: “National Morbidity and Mortality Air Pollution Study (NMMAPS)”\nInstall the readr first:\n\nCode# | eval: false\n# install.packages('readr')\n\n\nImport data\n“: :” here call the namespace and can be used to access a function without loading the package.\n\nCodechic &lt;- readr::read_csv(\"https://cedricscherer.com/data/chicago-nmmaps-custom.csv\")\n\nRows: 1461 Columns: 10\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (3): city, season, month\ndbl  (6): temp, o3, dewpoint, pm10, yday, year\ndate (1): date\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\nview some data\n\nCodetibble::glimpse(chic)\n\nRows: 1,461\nColumns: 10\n$ city     &lt;chr&gt; \"chic\", \"chic\", \"chic\", \"chic\", \"chic\", \"chic\", \"chic\", \"chic…\n$ date     &lt;date&gt; 1997-01-01, 1997-01-02, 1997-01-03, 1997-01-04, 1997-01-05, …\n$ temp     &lt;dbl&gt; 36.0, 45.0, 40.0, 51.5, 27.0, 17.0, 16.0, 19.0, 26.0, 16.0, 1…\n$ o3       &lt;dbl&gt; 5.659256, 5.525417, 6.288548, 7.537758, 20.760798, 14.940874,…\n$ dewpoint &lt;dbl&gt; 37.500, 47.250, 38.000, 45.500, 11.250, 5.750, 7.000, 17.750,…\n$ pm10     &lt;dbl&gt; 13.052268, 41.948600, 27.041751, 25.072573, 15.343121, 9.3646…\n$ season   &lt;chr&gt; \"Winter\", \"Winter\", \"Winter\", \"Winter\", \"Winter\", \"Winter\", \"…\n$ yday     &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18…\n$ month    &lt;chr&gt; \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\"…\n$ year     &lt;dbl&gt; 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1…\n\n\n\nCodehead(chic,10)\n\n# A tibble: 10 × 10\n   city  date        temp    o3 dewpoint  pm10 season  yday month  year\n   &lt;chr&gt; &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;\n 1 chic  1997-01-01  36    5.66    37.5  13.1  Winter     1 Jan    1997\n 2 chic  1997-01-02  45    5.53    47.2  41.9  Winter     2 Jan    1997\n 3 chic  1997-01-03  40    6.29    38    27.0  Winter     3 Jan    1997\n 4 chic  1997-01-04  51.5  7.54    45.5  25.1  Winter     4 Jan    1997\n 5 chic  1997-01-05  27   20.8     11.2  15.3  Winter     5 Jan    1997\n 6 chic  1997-01-06  17   14.9      5.75  9.36 Winter     6 Jan    1997\n 7 chic  1997-01-07  16   11.9      7    20.2  Winter     7 Jan    1997\n 8 chic  1997-01-08  19    8.68    17.8  33.1  Winter     8 Jan    1997\n 9 chic  1997-01-09  26   13.4     24    12.1  Winter     9 Jan    1997\n10 chic  1997-01-10  16   10.4      5.38 24.8  Winter    10 Jan    1997\n\n\nThe {ggplot2} Package\nA ggplot is built up from a few basic elements:\n\nData;\nGeometries geom_: the geometric shape that will represent the data;\nAesthetics aes_: aesthetics of the geometric or statistical objects, such as postition, color, size, shape, and transparency;\nScales scale_: map between the data and the aesthetics dimensions, such as data raneg to plot width or factor values to colors;\n\nReference\nSource: https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/"
+    "text": "About this site\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "blog/2024-01-19-guitar-tablature/index.html",
+    "href": "blog/2024-01-19-guitar-tablature/index.html",
+    "title": "Cách đọc Guitar Tab đơn giản",
+    "section": "",
+    "text": "TIL: tab là tableture"
+  },
+  {
+    "objectID": "blog/2024-01-19-guitar-tablature/index.html#hammer-on---h",
+    "href": "blog/2024-01-19-guitar-tablature/index.html#hammer-on---h",
+    "title": "Cách đọc Guitar Tab đơn giản",
+    "section": "2.1. Hammer On - h",
+    "text": "2.1. Hammer On - h\nHướng dẫn: https://www.youtube.com/watch?v=OGgp0uUNG1I\nVí dụ:\ne--------0------------------------------------------------\nB--------1--1h3-------------------------------------------\nG---------------------------------------------------------\nD---------------------------------------------------------\nA---------------------------------------------------------\nE---------------------------------------------------------\nĐánh dây B phím 1 xong dùng ngón tay nhấn đè lên ngăn 3 để tạo hiệu ứng Hammer On"
+  },
+  {
+    "objectID": "blog/2024-01-19-guitar-tablature/index.html#pull-offs---p",
+    "href": "blog/2024-01-19-guitar-tablature/index.html#pull-offs---p",
+    "title": "Cách đọc Guitar Tab đơn giản",
+    "section": "2.2. Pull Offs - p",
+    "text": "2.2. Pull Offs - p\nHưỡng dẫn: https://www.youtube.com/watch?v=cdo1H7FVI84\nNote: hammer on và pull offs ngược nhau nên sẽ có tab sử dụng ký hiệu chung là ^ (cười bằng 1 mắt 😜), ta phân biệt hai technique kia dựa trên số trước và sau dấu ^.\nVí dụ:\ne--------0-------5^3--------------------------------------\nB--------1--3p1-------------------------------------------\nG---------------------------------------------------------\nD---------------------------------------------------------\nA---------------------------------------------------------\nE---------------------------------------------------------\nSố trước nhỏ hơn số sau: 7^9 = 7h9 do đánh từ phím 7 lên thì phải là Hammer On\nSố trước lớn hơn số sau: 9^7 = 9p7 do đánh từ phím 9 xuống phải là Pull Offs\nTrong trường hợp này chúng ta hiểu 3p1 và 5^3 đều là Pull Offs."
+  },
+  {
+    "objectID": "blog/2024-01-19-guitar-tablature/index.html#trills---tr",
+    "href": "blog/2024-01-19-guitar-tablature/index.html#trills---tr",
+    "title": "Cách đọc Guitar Tab đơn giản",
+    "section": "2.3. Trills - tr",
+    "text": "2.3. Trills - tr\nKý hiệu tr phía trên hai con số, biểu thị Trills\nVí dụ:\n             tr~~~~    \ne------------7--(9)------------------------------------------\nB------7---------------------------------------------\nG---7-----7-------------------------------------------------\nD---------------------------------------------------------\nA---------------------------------------------------------\nE---------------------------------------------------------\nĐánh ngăn 7 xong sau đó Hammer On nhanh lên ngăn 9 rồi Pull Offs ngay ra. \nNói chung Hammer On sau đó Pull Offs thì gọi là Trills!"
+  },
+  {
+    "objectID": "blog/2024-01-19-guitar-tablature/index.html#bend---b",
+    "href": "blog/2024-01-19-guitar-tablature/index.html#bend---b",
+    "title": "Cách đọc Guitar Tab đơn giản",
+    "section": "2.4. Bend - b",
+    "text": "2.4. Bend - b\n(hay còn gọi là nhéo dây)\nVí dụ:\ne-------------------5-----7b8------------------------------\nB---------7-----------------------------------------------\nG-----7-------7---------------------------------------------\nD---------------------------------------------------------\nA---------------------------------------------------------\nE---------------------------------------------------------\n7b8 nghĩa là bend ở ngăn 7 lên cao độ ngăn 8 trên dây E (Dây 1)."
+  },
+  {
+    "objectID": "blog/2024-01-19-guitar-tablature/index.html#release---r",
+    "href": "blog/2024-01-19-guitar-tablature/index.html#release---r",
+    "title": "Cách đọc Guitar Tab đơn giản",
+    "section": "2.5. Release - r",
+    "text": "2.5. Release - r\n(nhả dây sau khi Bend)\ne------------------------7b8r7----------------------------\nB---------------------------------------------------------\nG---------------------------------------------------------\nD---------------------------------------------------------\nA---------------------------------------------------------\nE---------------------------------------------------------\n7b8r7 nghĩa là cũng bend lên cao độ ngăn 8 xong nhả về 7 bình thường trên dây E (Dây 1)."
+  },
+  {
+    "objectID": "blog/2024-01-19-guitar-tablature/index.html#legato-slide---s-hoặc",
+    "href": "blog/2024-01-19-guitar-tablature/index.html#legato-slide---s-hoặc",
+    "title": "Cách đọc Guitar Tab đơn giản",
+    "section": "2.6. Legato Slide - “s” hoặc “/”",
+    "text": "2.6. Legato Slide - “s” hoặc “/”\n(vuốt dây Legato)\nHướng dẫn: https://www.youtube.com/watch?v=QgKk0eV-E8c\ne------------------------7s9------------------------------\nB--------------------------------------------9\\7----------\nG---------------------------------------------------------\nD---------------------------------------------------------\nA---------------------------------------------------------\nE---------------------------------------------------------\nTrong một số tab sẽ ký hiệu là \"/\" với trường hơp vuốt lên như 7/9 hoặc\"\\\" là vuốt về ví dụ như 9\\7\nLegato là đánh xong rồi vuốt"
+  },
+  {
+    "objectID": "blog/2024-01-19-guitar-tablature/index.html#shift-slide---s",
+    "href": "blog/2024-01-19-guitar-tablature/index.html#shift-slide---s",
+    "title": "Cách đọc Guitar Tab đơn giản",
+    "section": "2.7. Shift slide - S",
+    "text": "2.7. Shift slide - S\nHướng dẫn (cũng như phân biệt s và S): https://www.youtube.com/watch?v=OWhziAenUeU\ne------------------------7S9------------------------------\nB--------------7-------------------------------------------\nG-----6----------------------------------------------------\nD-----6----------------------------------------------------\nA---------------------------------------------------------\nE---------------------------------------------------------\nVừa đánh vừa vuốt từ ngăn 7 lên ngăn 9"
+  },
+  {
+    "objectID": "blog/2024-01-19-guitar-tablature/index.html#vibrato---v-hoặc",
+    "href": "blog/2024-01-19-guitar-tablature/index.html#vibrato---v-hoặc",
+    "title": "Cách đọc Guitar Tab đơn giản",
+    "section": "2.8. Vibrato - “v” hoặc “~”",
+    "text": "2.8. Vibrato - “v” hoặc “~”\nHưỡng dẫn: https://www.youtube.com/watch?v=MY9aTs1YpT4\ne------------------------5v-------------5~----------------\nB-------7--------------------------------------------------\nG--------------5-------------------------------------------\nD---------------------------------------------------------\nA---0------------------------------------------------------\nE---------------------------------------------------------\nKhi thấy ký hiệu \"v\" hoặc \"~\" thì bạn bend nốt đó lên xuống liên tục là vibrato, xem đường link phia trên để hiểu rõ hơn"
+  },
+  {
+    "objectID": "blog/2024-01-19-guitar-tablature/index.html#mute---x",
+    "href": "blog/2024-01-19-guitar-tablature/index.html#mute---x",
+    "title": "Cách đọc Guitar Tab đơn giản",
+    "section": "2.9. Mute - x",
+    "text": "2.9. Mute - x\n(Bịt dây đánh câm tiếng)\nBịt dây lại đánh hoàn toàn không ra tiếng\ne----5---x--------------------------------------------------\nB----5---x--------------------------------------------------\nG----6---x--------------------------------------------------\nD----8---x--------------------------------------------------\nA----7---x--------------------------------------------------\nE----5---x--------------------------------------------------"
+  },
+  {
+    "objectID": "blog/2024-01-19-guitar-tablature/index.html#palm-mute---pm",
+    "href": "blog/2024-01-19-guitar-tablature/index.html#palm-mute---pm",
+    "title": "Cách đọc Guitar Tab đơn giản",
+    "section": "2.10. Palm Mute - PM",
+    "text": "2.10. Palm Mute - PM\nVẫn đánh ra tiếng nhưng dùng tay phải đè lên phần ngựa để hạn chế độ rung của dây. Tiếng gọn hơn chứ không vang đanh như bình thường.\n                    PM---------- |\nE---------5---------3-----------------------------------\nB------------7------------------------------------------\nG-------------------------------------------------------\nD-------------------------------------------------------\nA------0--------0---------------------------------------\nE---0---------------------------------------------------"
+  },
+  {
+    "objectID": "blog/2024-01-19-guitar-tablature/index.html#harmonic--",
+    "href": "blog/2024-01-19-guitar-tablature/index.html#harmonic--",
+    "title": "Cách đọc Guitar Tab đơn giản",
+    "section": "2.11. Harmonic - <>",
+    "text": "2.11. Harmonic - &lt;&gt;\nĐặt tay lên phím (không bấm, chỉ đặt hờ) gảy ở phía cuối dây đàn (nơi bình thường nếu gảy sẽ tạo ra tiếng đanh và sắc nhất), sẽ tạo ra tiếng harmonic.\nE------------------------&lt;7&gt;-------------&lt;12&gt;-------------\nB----------------------------------------&lt;12&gt;-------------\nG----------------------------------------&lt;12&gt;-------------\nD---------------------------------------------------------\nA---------------------------------------------------------\nE---------------------------------------------------------"
   },
   {
     "objectID": "index.html",
