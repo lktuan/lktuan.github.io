@@ -1,0 +1,210 @@
+---
+title: "Kinh tế lượng với Julia 1: Làm quen với Julia"
+description: "Đây là bài khởi đầu, làm quen với ngôn ngữ Julia trong chuỗi series các mô hình Kinh tế lượng - [nguồn](https://julia.quantecon.org/)"
+author:
+  - name: "Tuan Le Khac"
+    url: https://lktuan.github.io/
+date: 05-24-2023
+categories: [QEJ, Julia, Quant Econ] # self-defined categories
+# citation: 
+#   url: https://github.com/lktuan/lktuan.github.io/blog/2023-12-24_post/
+image: julia_sticker_2.png
+draft: false # setting this to `true` will prevent your post from appearing on your listing page until you're ready!
+
+format: 
+  html: 
+    code-fold: false
+    code-summary: "Show the code"
+    code-line-numbers: true
+css: html/styles.scss
+editor: visual
+theme:
+  light: flatly
+  dark: darkly
+---
+
+# 1. Bắt đầu với Julia
+
+Với giả định mình đã quen thuộc với các concepts của một ngôn ngữ lập trình như: Biến (Variables), Các kiểu dữ liệu (như Arrays và Vectors), Vòng lặp (Loops), Điều hướng (Conditionals - if/else), mình sẽ thử thực hành một vài ví dụ nhỏ với Julia với mục đích tìm hiểu các cú pháp và cấu trúc dữ liệu cơ bản.
+
+Code không hẳn đã được tối ưu, nhưng sẽ dần được tối ưu theo các ví dụ về sau!
+
+## 1.1. Các ví dụ mở đầu
+
+### 1.1.1. Vẽ một quá trình sinh nhiễu trắng (White Noise Process)
+
+**Quản lý Packages**: Có hai cách để quản lý Packages và Versions (Phương pháp thứ 2 được recommend khi Julia cung cấp sẵn một phương pháp SOTA cho quản lý môi trường có khả năng tái tạo lại cao):
+
+1.  `add` pakages một cách trực tiếp (ví dụ `Pkg.add("MyPackage")` hoặc `] add MyPackage`):
+
+-   Phải cài đặt `IJulia` trên toàn cục để sử dụng trong mọi dự án;
+
+-   `]` là phím tắt để truy cập vào quản lý pakages.
+
+2.  Dùng các file `Project.toml` và `Manifest.toml`:
+
+-   Nếu dùng notebook, các file này sẽ được tự đông xác định, nhưng cài đặt sẽ không tự động, cần `] instantiate`;
+
+-   Tệp Project có thể nằm ở folder mẹ của Notebook và Sourcecode.
+
+```{julia}
+using LinearAlgebra, Statistics, Plots, LaTeXStrings
+```
+
+**Sử dụng các hàm**: Có những function có sẵn trong Julia base, như `randn()`
+
+```{julia}
+randn()
+```
+
+Một số hàm cần gọi các thư viện ngoài Base, ví dụ `plot()` của thư viện `Plots`:
+
+```{julia}
+n = 100
+ep = randn(n)
+plot(1:n,ep)
+
+    # \ep
+```
+
+Note: thay vì `ep` chúng ta có thể dùng các ký tự khoa học như epsilon bằng cách `\epsilon<TAB>` .
+
+**Mảng**: `ep` trong ví dụ trên chính là một mảng (array).
+
+```{julia}
+typeof(ep)
+```
+
+Trích xuất 5 thành tố đầu tiên của mảng
+
+```{julia}
+ep[1:5]
+# Julia là một ngôn ngữ 1-index (như MATLAB hay Fortran, chứ không phải 0 như Python hay C)
+```
+
+Để tìm kiếm trợ giúp và ví dụ cho một hàm, dùng `?`:
+
+```{julia}
+# help?> typeof
+# search: typeof typejoin TypeError
+
+#   typeof(x)
+
+#   Get the concrete type of x.
+
+#   See also eltype.
+
+#   Examples
+#   ≡≡≡≡≡≡≡≡≡≡
+
+#   julia> a = 1//2;
+  
+#   julia> typeof(a)
+#   Rational{Int64}
+  
+#   julia> M = [1 2; 3.5 4];
+  
+#   julia> typeof(M)
+#   Matrix{Float64} (alias for Array{Float64, 2})
+```
+
+**Vòng lặp**: hãy thử viết lại quy trình tạo random trên bằng `for loops`.
+
+```{julia}
+# poor style
+n = 100 
+ep = zeros(n) # create an array with 0.0 as initial value
+for i in 1:n # the index is looped for all 1:n, but none vector of those indices is created.
+    ep[i] = randn()
+end # indicates the end of a loop
+```
+
+The word `in` from the `for` loop can be replaced by either `∈` or `=`.
+
+Code trên thành công tạo ra các giá trị cho mảng `ep`, tuy nhiên mối quan hệ giữa `i` và `ep` được thể hiện không tường minh. Để cải thiện, hãy dùng `eachindex`:
+
+```{julia}
+# better style
+n = 100
+ep = zeros(n)
+for i in eachindex(ep)
+    ep[i] = randn()
+end
+```
+
+Vòng lặp rất có hiệu quả về mặt bộ nhớ tuy nhiên lợi ích chính của nó là (1) thể hiện mã một cách rõ ràng hơn, ít mắc lỗi chính tả hơn, và (2) cho phép trình biên dịch linh hoạt tạo mã nhanh một cách sáng tạo.
+
+Trong Julia, chúng ta cũng có thể loop một array trực tiệp, như ví dụ dưới đây:
+
+```{julia}
+ep_sum = 0.0 # need to use 0.0 rather than 0
+m = 5
+for ep_eval in ep[1:m]
+    ep_sum = ep_sum + ep_eval
+end
+ep_mean = ep_sum / m
+```
+
+với `ep[1:m]` trả về các giá trị của vector `1` đến `m`.
+
+Julia cũng có các operator/function có sẵn để kiểm tra các kết quả này.
+
+```{julia}
+ep_mean ≈ mean(ep[1:m])
+isapprox(ep_mean, mean(ep[1:m])) # equivalent
+ep_mean ≈ sum(ep[1:m]) / m
+```
+
+Gõ `\approx<TAB>` .
+
+`≈` và `isapprox` dùng để kiểm tra đẳng thức (equality), khác với giá trị (`==`), sử dụng cho số và các loại khác.
+
+**Định nghĩa hàm**: để thực hành, tiếp tục sử dụng `for` để viết một hàm biểu diễn lại quá trình trên, nhưng thú vị hơn thì thử bình phương thay vì các trị số random đơn thuần xem sao.
+
+```{julia}
+# poor style
+function generatedata(n)
+    ep = zeros(n)
+    for i in eachindex(ep)
+        ep[i] = (randn())^2 # squaring the result
+    end
+    return ep
+end
+
+data = generatedata(10)
+plot(data)
+```
+
+Hãy nhớ rằng `randn()` có thể trả về một vector, thử cải thiện xem.
+
+```{julia}
+# still poor style
+function generatedata(n)
+    ep = randn(n) # use built in function
+
+    for i in eachindex(ep)
+        ep[i] = ep[i]^2 # squaring the result
+    end
+
+    return ep
+end
+data = generatedata(5)
+```
+
+### 1.1.2. Variations on Fixed Points (chưa biết dịch ntn :\>)
+
+## 1.2. Julia cơ bản
+
+## 1.3. Các kiểu dữ liệu cơ bản
+
+## 1.4. Kiểu dữ liệu và Lập trình tổng quát
+
+# 2. Các thư viện phổ biến của Julia (Package Ecosystem)
+
+## 2.1. Generic Programming
+
+## 2.2. General Purpose Packages
+
+## 2.3. Data and Statistics Packages
+
+## 2.4. Solvers, Optimizers, and Automatic Differentiation
