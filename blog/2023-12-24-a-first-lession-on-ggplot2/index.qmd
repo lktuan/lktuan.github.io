@@ -16,6 +16,7 @@ format:
     code-fold: true
     code-summary: "Show the code"
     code-line-numbers: true
+    code-tools: true
 css: html/styles.scss
 editor: visual
 ---
@@ -275,6 +276,137 @@ ggplot(chic, aes(x = date, y = temp)) +
 ```
 
 #### Change Aesthetics of Axis Text
+
+Similar to the `title`, we can change the appearance of the axis text (number indeed) by using `axis.text` and/or the subordinated elements `axis.text.x` and `axis.text.y`.
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+    geom_point(color = 'firebrick') +
+    labs(x= "Year", y = expression(paste("Temperature(",degree ~ F, ")"))) +
+    theme(axis.text = element_text(color = "dodgerblue", size = 13),
+         axis.text.x = element_text(face = 'italic'))
+```
+
+#### Rotate Axis Text
+
+Specifying an `angle` help us to rotate any text elements. With `hjust` and `vjust` we can adjust the position of text afterwards horizontally (0 = left, 1 = right), and vertically (0 = top, 1 = bottom).
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+    geom_point(color = 'firebrick') +
+    labs(x= "Year", y = expression(paste("Temperature(",degree ~ F, ")"))) +
+    theme(axis.text.x = element_text(angle = 50, vjust = 1, hjust = 1, size = 13))
+# 50 means 50 degrees, not % =)))
+```
+
+#### Remove Axis Text & Ticks
+
+Rarely a reason to do this but this is how it works.
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(axis.ticks.y = element_blank(),
+        axis.text.y = element_blank())
+```
+
+**🚀If you want to get rid of a theme element, the element is always `element_blank`.**
+
+#### Remove Axis Titles
+
+We could again use `element_blank()` but it is way simpler to just remove the label in the `labs()` (or `xlab()`) call:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = NULL, y = "")
+```
+
+Note that `NULL` removes the element (similarly to `element_blank()`) while empty quotes `""` will keep the spacing for the axis title and simply print nothing.
+
+#### Limit Axis Range
+
+Some time you want to take a closer look at some range of you data. You can do this without subsetting your data:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  ylim(c(0, 50))
+```
+
+Alternatively you can use `scale_y_continuous(limits = c(0, 50))` (subset) or `coord_cartesian(ylim = c(0, 50))`. The former removes all data points outside the range while the second adjusts the visible area (zooming) and is similar to `ylim(c(0, 50))` (subset).
+
+#### Force Plot to start at the origin
+
+```{r}
+chic_high <- dplyr::filter(chic, temp > 25, o3 > 20)
+
+ggplot(chic_high, aes(x = temp, y = o3)) +
+  geom_point(color = "darkcyan") +
+  labs(x = "Temperature higher than 25°F",
+       y = "Ozone higher than 20 ppb") +
+  expand_limits(x = 0, y = 0)
+```
+
+🐱‍🏍Using `coord_cartesian(xlim = c(0,NA), ylim = c(0,NA))`will lead to the same result.
+
+```{r}
+chic_high <- dplyr::filter(chic, temp > 25, o3 > 20)
+
+ggplot(chic_high, aes(x = temp, y = o3)) +
+  geom_point(color = "darkcyan") +
+  labs(x = "Temperature higher than 25°F",
+       y = "Ozone higher than 20 ppb") +
+  coord_cartesian(xlim = c(0, NA), ylim = c(0, NA))
+```
+
+But we can also force it to *literally* start at the origin!
+
+```{r}
+ggplot(chic_high, aes(x = temp, y = o3)) +
+  geom_point(color = "darkcyan") +
+  labs(x = "Temperature higher than 25°F",
+       y = "Ozone higher than 20 ppb") +
+  expand_limits(x = 0, y = 0) +
+  coord_cartesian(expand = FALSE, clip = "off")
+```
+
+**🚀The argument `clip = "off"` in any coordinate system, always starting with `coord_*`, allows to draw outside of the panel area. Call it here to make sure that the tick marks at `c(0, 0)` are not cut.**
+
+#### Axes with Same Scaling
+
+Use `coord_equal()` with default `ratio = 1` to ensure the units are equally scaled on the x-axis and on the y-axis. We can set the aspect ratio of a plot with `coord_fixed()` or `coord_equal()`. Both use `aspect = 1` (1:1) as a default.
+
+```{r}
+ggplot(chic, aes(x = temp, y = temp + rnorm(nrow(chic), sd = 20))) +
+  geom_point(color = "sienna") +
+  labs(x = "Temperature (°F)", y = "Temperature (°F) + random noise") +
+  xlim(c(0, 100)) + ylim(c(0, 150)) +
+  coord_fixed()
+```
+
+Ratios higher than one make units on the y axis longer than units on the x-axis, and vice versa:
+
+```{r}
+ggplot(chic, aes(x = temp, y = temp + rnorm(nrow(chic), sd = 20))) +
+  geom_point(color = "sienna") +
+  labs(x = "Temperature (°F)", y = "Temperature (°F) + random noise") +
+  xlim(c(0, 100)) + ylim(c(0, 150)) +
+  coord_fixed(ratio = 1/5)
+```
+
+#### Use a Function to Alter Labels
+
+In case you want to format (eg adding % sign) without change the data.
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = NULL) +
+  scale_y_continuous(label = function(x) {return(paste(x, "Degrees Fahrenheit"))})
+```
 
 # 6. Titles
 
