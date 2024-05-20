@@ -262,22 +262,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Tệp Project có thể nằm ở folder mẹ của Notebook và Sourcecode.</p></li>
 </ul>
 <div class="cell" data-execution_count="1">
+<details>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">using</span> <span class="bu">LinearAlgebra</span>, <span class="bu">Statistics</span>, <span class="bu">Plots</span>, <span class="bu">LaTeXStrings</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p><strong>Sử dụng các hàm</strong>: Có những function có sẵn trong Julia base, như <code>randn()</code></p>
 <div class="cell" data-execution_count="2">
+<details>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">randn</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display" data-execution_count="17">
 <pre><code>1.4890621269613782</code></pre>
 </div>
 </div>
 <p>Một số hàm cần gọi các thư viện ngoài Base, ví dụ <code>plot()</code> của thư viện <code>Plots</code>:</p>
 <div class="cell" data-execution_count="3">
+<details>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1"></a>n <span class="op">=</span> <span class="fl">100</span></span>
 <span id="cb4-2"><a href="#cb4-2"></a>ep <span class="op">=</span> <span class="fu">randn</span>(n)</span>
 <span id="cb4-3"><a href="#cb4-3"></a><span class="fu">plot</span>(<span class="fl">1</span><span class="op">:</span>n,ep)</span>
 <span id="cb4-4"><a href="#cb4-4"></a></span>
 <span id="cb4-5"><a href="#cb4-5"></a>    <span class="co"># \ep</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <!--?xml version="1.0" encoding="utf-8"?-->
 <svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="672" height="480" viewbox="0 0 2688 1920">
@@ -330,7 +339,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Note: thay vì <code>ep</code> chúng ta có thể dùng các ký tự khoa học như epsilon bằng cách <code>\epsilon&lt;TAB&gt;</code> .</p>
 <p><strong>Mảng</strong>: <code>ep</code> trong ví dụ trên chính là một mảng (array).</p>
 <div class="cell" data-execution_count="4">
+<details>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">typeof</span>(ep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display" data-execution_count="19">
 <div class="ansi-escaped-output">
 <pre>Vector{Float64}<span class="ansi-bright-black-fg"> (alias for </span><span class="ansi-bright-black-fg">Array{Float64, 1}</span><span class="ansi-bright-black-fg">)</span></pre>
@@ -339,8 +351,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Trích xuất 5 thành tố đầu tiên của mảng</p>
 <div class="cell" data-execution_count="5">
+<details>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1"></a>ep[<span class="fl">1</span><span class="op">:</span><span class="fl">5</span>]</span>
 <span id="cb6-2"><a href="#cb6-2"></a><span class="co"># Julia là một ngôn ngữ 1-index (như MATLAB hay Fortran, chứ không phải 0 như Python hay C)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display" data-execution_count="20">
 <pre><code>5-element Vector{Float64}:
  -0.5610819872863844
@@ -352,6 +367,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Để tìm kiếm trợ giúp và ví dụ cho một hàm, dùng <code>?</code>:</p>
 <div class="cell" data-execution_count="6">
+<details>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># help?&gt; typeof</span></span>
 <span id="cb8-2"><a href="#cb8-2"></a><span class="co"># search: typeof typejoin TypeError</span></span>
 <span id="cb8-3"><a href="#cb8-3"></a></span>
@@ -373,35 +390,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-19"><a href="#cb8-19"></a>  </span>
 <span id="cb8-20"><a href="#cb8-20"></a><span class="co">#   julia&gt; typeof(M)</span></span>
 <span id="cb8-21"><a href="#cb8-21"></a><span class="co">#   Matrix{Float64} (alias for Array{Float64, 2})</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p><strong>Vòng lặp</strong>: hãy thử viết lại quy trình tạo random trên bằng <code>for loops</code>.</p>
 <div class="cell" data-execution_count="7">
+<details>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># poor style</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>n <span class="op">=</span> <span class="fl">100</span> </span>
 <span id="cb9-3"><a href="#cb9-3"></a>ep <span class="op">=</span> <span class="fu">zeros</span>(n) <span class="co"># create an array with 0.0 as initial value</span></span>
 <span id="cb9-4"><a href="#cb9-4"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>n <span class="co"># the index is looped for all 1:n, but none vector of those indices is created.</span></span>
 <span id="cb9-5"><a href="#cb9-5"></a>    ep[i] <span class="op">=</span> <span class="fu">randn</span>()</span>
 <span id="cb9-6"><a href="#cb9-6"></a><span class="cf">end</span> <span class="co"># indicates the end of a loop</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>The word&nbsp;<code>in</code>&nbsp;from the&nbsp;<code>for</code>&nbsp;loop can be replaced by either&nbsp;<code>∈</code>&nbsp;or&nbsp;<code>=</code>.</p>
 <p>Code trên thành công tạo ra các giá trị cho mảng <code>ep</code>, tuy nhiên mối quan hệ giữa <code>i</code> và <code>ep</code> được thể hiện không tường minh. Để cải thiện, hãy dùng <code>eachindex</code>:</p>
 <div class="cell" data-execution_count="8">
+<details>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># better style</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a>n <span class="op">=</span> <span class="fl">100</span></span>
 <span id="cb10-3"><a href="#cb10-3"></a>ep <span class="op">=</span> <span class="fu">zeros</span>(n)</span>
 <span id="cb10-4"><a href="#cb10-4"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fu">eachindex</span>(ep)</span>
 <span id="cb10-5"><a href="#cb10-5"></a>    ep[i] <span class="op">=</span> <span class="fu">randn</span>()</span>
 <span id="cb10-6"><a href="#cb10-6"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>Vòng lặp rất có hiệu quả về mặt bộ nhớ tuy nhiên lợi ích chính của nó là (1) thể hiện mã một cách rõ ràng hơn, ít mắc lỗi chính tả hơn, và (2) cho phép trình biên dịch linh hoạt tạo mã nhanh một cách sáng tạo.</p>
 <p>Trong Julia, chúng ta cũng có thể loop một array trực tiệp, như ví dụ dưới đây:</p>
 <div class="cell" data-execution_count="9">
+<details>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1"></a>ep_sum <span class="op">=</span> <span class="fl">0.0</span> <span class="co"># need to use 0.0 rather than 0</span></span>
 <span id="cb11-2"><a href="#cb11-2"></a>m <span class="op">=</span> <span class="fl">5</span></span>
 <span id="cb11-3"><a href="#cb11-3"></a><span class="cf">for</span> ep_eval <span class="kw">in</span> ep[<span class="fl">1</span><span class="op">:</span>m]</span>
 <span id="cb11-4"><a href="#cb11-4"></a>    ep_sum <span class="op">=</span> ep_sum <span class="op">+</span> ep_eval</span>
 <span id="cb11-5"><a href="#cb11-5"></a><span class="cf">end</span></span>
 <span id="cb11-6"><a href="#cb11-6"></a>ep_mean <span class="op">=</span> ep_sum <span class="op">/</span> m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display" data-execution_count="24">
 <pre><code>0.34614674866999195</code></pre>
 </div>
@@ -409,9 +436,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>với <code>ep[1:m]</code> trả về các giá trị của vector <code>1</code> đến <code>m</code>.</p>
 <p>Julia cũng có các operator/function có sẵn để kiểm tra các kết quả này.</p>
 <div class="cell" data-execution_count="10">
+<details>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1"></a>ep_mean <span class="op">≈</span> <span class="fu">mean</span>(ep[<span class="fl">1</span><span class="op">:</span>m])</span>
 <span id="cb13-2"><a href="#cb13-2"></a><span class="fu">isapprox</span>(ep_mean, <span class="fu">mean</span>(ep[<span class="fl">1</span><span class="op">:</span>m])) <span class="co"># equivalent</span></span>
 <span id="cb13-3"><a href="#cb13-3"></a>ep_mean <span class="op">≈</span> <span class="fu">sum</span>(ep[<span class="fl">1</span><span class="op">:</span>m]) <span class="op">/</span> m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display" data-execution_count="25">
 <pre><code>true</code></pre>
 </div>
@@ -420,6 +450,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>≈</code> và <code>isapprox</code> dùng để kiểm tra đẳng thức (equality), khác với giá trị (<code>==</code>), sử dụng cho số và các loại khác.</p>
 <p><strong>Định nghĩa hàm</strong>: để thực hành, tiếp tục sử dụng <code>for</code> để viết một hàm biểu diễn lại quá trình trên, nhưng thú vị hơn thì thử bình phương thay vì các trị số random đơn thuần xem sao.</p>
 <div class="cell" data-execution_count="11">
+<details>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># poor style</span></span>
 <span id="cb15-2"><a href="#cb15-2"></a><span class="kw">function</span> <span class="fu">generatedata</span>(n)</span>
 <span id="cb15-3"><a href="#cb15-3"></a>    ep <span class="op">=</span> <span class="fu">zeros</span>(n)</span>
@@ -431,6 +463,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb15-9"><a href="#cb15-9"></a></span>
 <span id="cb15-10"><a href="#cb15-10"></a>data <span class="op">=</span> <span class="fu">generatedata</span>(<span class="fl">10</span>)</span>
 <span id="cb15-11"><a href="#cb15-11"></a><span class="fu">plot</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display" data-execution_count="26">
 <!--?xml version="1.0" encoding="utf-8"?-->
 <svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="672" height="480" viewbox="0 0 2688 1920">
@@ -482,6 +515,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Hãy nhớ rằng <code>randn()</code> có thể trả về một vector, thử cải thiện xem.</p>
 <div class="cell" data-execution_count="12">
+<details>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># still poor style</span></span>
 <span id="cb16-2"><a href="#cb16-2"></a><span class="kw">function</span> <span class="fu">generatedata</span>(n)</span>
 <span id="cb16-3"><a href="#cb16-3"></a>    ep <span class="op">=</span> <span class="fu">randn</span>(n) <span class="co"># use built in function</span></span>
@@ -493,6 +528,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb16-9"><a href="#cb16-9"></a>    <span class="cf">return</span> ep</span>
 <span id="cb16-10"><a href="#cb16-10"></a><span class="kw">end</span></span>
 <span id="cb16-11"><a href="#cb16-11"></a>data <span class="op">=</span> <span class="fu">generatedata</span>(<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display" data-execution_count="27">
 <pre><code>5-element Vector{Float64}:
  2.441837349775038
