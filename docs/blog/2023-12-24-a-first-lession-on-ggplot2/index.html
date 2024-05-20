@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.554">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2023-12-24">
 <meta name="description" content="I am a Risk Modeler 🚀">
 
-<title>Le Khac Tuan - A lesson on GGPLOT2</title>
+<title>Le Khac Tuan - A tuturial of ggplot2</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -25,7 +25,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -84,7 +84,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -93,6 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -106,10 +112,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Le Khac Tuan</span>
     </a>
@@ -121,43 +127,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../about/index.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="../../about/index.html"> 
+<span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../blog.html" rel="" target="">
- <span class="menu-text">Blog</span></a>
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../学汉语的日记.html" rel="" target="">
- <span class="menu-text">学汉语的日记</span></a>
+    <a class="nav-link" href="../../学汉语的日记.html"> 
+<span class="menu-text">学汉语的日记</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/Halle4231" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/Halle4231"> <i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/lktuan" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/lktuan"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://www.linkedin.com/in/tuanlekhac/" rel="" target=""><i class="bi bi-linkedin" role="img">
+    <a class="nav-link" href="https://www.linkedin.com/in/tuanlekhac/"> <i class="bi bi-linkedin" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="mailto:tuan.lekhac0905@gmail.com" rel="" target=""><i class="bi bi-envelope" role="img">
+    <a class="nav-link" href="mailto:tuan.lekhac0905@gmail.com"> <i class="bi bi-envelope" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools">
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -165,7 +171,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">A (not very) first lesson on ggplot 2 :)</h1>
+      <h1 class="title">A tuturial of ggplot2</h1>
                   <div>
         <div class="description">
           This is a again a lesson on ggplot2
@@ -211,7 +217,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#preparation" id="toc-preparation" class="nav-link active" data-scroll-target="#preparation">Preparation</a></li>
   <li><a href="#the-dataset" id="toc-the-dataset" class="nav-link" data-scroll-target="#the-dataset">The Dataset</a></li>
   <li><a href="#the-ggplot2-package" id="toc-the-ggplot2-package" class="nav-link" data-scroll-target="#the-ggplot2-package">The {ggplot2} Package</a></li>
-  <li><a href="#reference" id="toc-reference" class="nav-link" data-scroll-target="#reference">Reference</a></li>
+  <li><a href="#a-default-ggplot" id="toc-a-default-ggplot" class="nav-link" data-scroll-target="#a-default-ggplot">A default ggplot</a>
+  <ul class="collapse">
+  <li><a href="#change-properties-of-geometries" id="toc-change-properties-of-geometries" class="nav-link" data-scroll-target="#change-properties-of-geometries">Change properties of geometries</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
     </div>
@@ -221,25 +231,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
+
 <section id="preparation" class="level1">
 <h1>Preparation</h1>
 <p>I need to install the following packages:</p>
 <div class="cell">
-<details>
-<summary>Code</summary>
+<details class="code-fold">
+<summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># | eval: false</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="co"># install CRAN packages</span></span>
 <span id="cb1-3"><a href="#cb1-3"></a>pkg_install <span class="ot">=</span>   <span class="fu">c</span>(<span class="st">"ggplot2"</span>, <span class="st">"tibble"</span>, <span class="st">"tidyr"</span>, <span class="st">"forcats"</span>, <span class="st">"purrr"</span>, <span class="st">"prismatic"</span>, <span class="st">"corrr"</span>, </span>
 <span id="cb1-4"><a href="#cb1-4"></a>    <span class="st">"cowplot"</span>, <span class="st">"ggforce"</span>, <span class="st">"ggrepel"</span>, <span class="st">"ggridges"</span>, <span class="st">"ggsci"</span>, <span class="st">"ggtext"</span>, <span class="st">"ggthemes"</span>, </span>
-<span id="cb1-5"><a href="#cb1-5"></a>    <span class="st">"grid"</span>, <span class="st">"gridextra"</span>, <span class="st">"patchwork"</span>, <span class="st">"rcartocolor"</span>, <span class="st">"scico"</span>, <span class="st">"showtext"</span>, </span>
+<span id="cb1-5"><a href="#cb1-5"></a>    <span class="st">"grid"</span>, <span class="st">"gridExtra"</span>, <span class="st">"patchwork"</span>, <span class="st">"rcartocolor"</span>, <span class="st">"scico"</span>, <span class="st">"showtext"</span>, </span>
 <span id="cb1-6"><a href="#cb1-6"></a>    <span class="st">"shiny"</span>, <span class="st">"plotly"</span>, <span class="st">"highcharter"</span>, <span class="st">"echarts4r"</span>)</span>
 <span id="cb1-7"><a href="#cb1-7"></a><span class="co"># install.packages(pkg_install)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>I was facing the error of installing devtools</p>
 <div class="cell">
-<details>
-<summary>Code</summary>
+<details class="code-fold">
+<summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># | eval: false</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="co"># install from GitHub since not on CRAN</span></span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="co"># install.packages('devtools')</span></span>
@@ -248,8 +259,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>I tried to update R to the latest version (commented the code as it would be run once)</p>
 <div class="cell">
-<details>
-<summary>Code</summary>
+<details class="code-fold">
+<summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># | eval: false</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="co"># update.packages(repos='http://cran.rstudio.com/', ask=FALSE, checkBuilt=TRUE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -262,18 +273,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>I was using the dataset: “<em>National Morbidity and Mortality Air Pollution Study</em>&nbsp;(NMMAPS)”</p>
 <p>Install the readr first:</p>
 <div class="cell">
-<details>
-<summary>Code</summary>
+<details class="code-fold">
+<summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># | eval: false</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="co"># install.packages('readr')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co"># install.packages('readr')</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co"># install.packages("quarto")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="import-data" class="level4">
 <h4 class="anchored" data-anchor-id="import-data">Import data</h4>
 <p>“: :” here call the namespace and can be used to access a function without loading the package.</p>
 <div class="cell">
-<details>
-<summary>Code</summary>
+<details class="code-fold">
+<summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>chic <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"https://cedricscherer.com/data/chicago-nmmaps-custom.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
@@ -290,8 +302,8 @@ date (1): date
 </div>
 <p>view some data</p>
 <div class="cell">
-<details>
-<summary>Code</summary>
+<details class="code-fold">
+<summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>tibble<span class="sc">::</span><span class="fu">glimpse</span>(chic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
@@ -310,8 +322,8 @@ $ year     &lt;dbl&gt; 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 199
 </div>
 </div>
 <div class="cell">
-<details>
-<summary>Code</summary>
+<details class="code-fold">
+<summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">head</span>(chic,<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
@@ -337,14 +349,140 @@ $ year     &lt;dbl&gt; 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 199
 <p>A ggplot is built up from a few basic elements:</p>
 <ol type="1">
 <li>Data;</li>
-<li>Geometries <code>geom_</code>: the geometric shape that will represent the data;</li>
-<li>Aesthetics <code>aes_</code>: aesthetics of the geometric or statistical objects, such as postition, color, size, shape, and transparency;</li>
-<li>Scales <code>scale_</code>: map between the data and the aesthetics dimensions, such as data raneg to plot width or factor values to colors;</li>
-<li></li>
+<li>Geometries <code>geom_</code>: the geometric shape (hình học) that will represent the data;</li>
+<li>Aesthetics <code>aes_</code>: aesthetics (tính thẩm mỹ) of the geometric or statistical objects, such as postition, color, size, shape, and transparency;</li>
+<li>Scales <code>scale_</code>: map between the data and the aesthetics dimensions (ánh xạ từ dữ liệu đến đồ thị), such as data range to plot width or factor values to colors;</li>
+<li>Statistical transformations <code>stat_</code>: statistical summaries (thống kê) of data, such as quantitles, fitted curves, and sums;</li>
+<li>Coordinate system <code>coord_</code>: the transformation used for mapping data coordinates into the plane of the data rectangles (hệ tọa độ);</li>
+<li>Facets <code>facet_</code>: the arrangement of the data into a grid of plots;</li>
+<li>Visual themes <code>theme()</code>: the overall visual defaults of a plot, such as background, grids, axes, default typeface, sizes and colors (tông).</li>
 </ol>
+<p>🚀<strong>Không nhất thiết một phần từ được gọi, và chúng cũng có thể được gọi nhiều lần.</strong></p>
 </section>
-<section id="reference" class="level1">
-<h1>Reference</h1>
+<section id="a-default-ggplot" class="level1">
+<h1>A default ggplot</h1>
+<p>Load the package for ability to use the functionality:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>A default ggplot needs three things that you have to specify: the&nbsp;<em>data</em>,&nbsp;<em>aesthetics</em>, and a&nbsp;<em>geometry.</em></p>
+<ul>
+<li><p>starting define a plot by using <code>ggplot(data = df)</code>;</p></li>
+<li><p>if we want to plot (in most cases) 2 variables, we must add <em>positional aesthestics</em> <code>aes(x = var1, y = var2);</code></p></li>
+</ul>
+<p><strong>🚀Data được đề cập <em>bên ngoài</em><code>aes()</code>, trong khi đó biến/variables được đề cập <em>bên trong</em><code>aes()</code>.</strong></p>
+<p>Ví dụ:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>(g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Just a blank panel, because <code>{ggplot2}</code> <em>does not know</em> how we plot data ~ we still need to provide geometry.</p>
+<p><strong>🚀<code>ggplot2</code> cho phép chúng ta lưu <code>ggobject</code> thành một biến, trong trường hợp này là <code>g</code> . Chúng ta có thể mở rộng <code>g</code> bằng cách thêm cách layers về sau.</strong></p>
+<p><strong>🚀Bằng cách dùng dấu <code>()</code>, chúng ta có thể <em>in</em> ngay object được gán ra.</strong></p>
+<p>Many different geometries to use (called <code>geoms</code> because each function usually starts with <code>geom_</code>). For e.g., if we want to plot a scatter plot.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>g <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>also a lineplot which our managers always like:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>g <span class="sc">+</span> <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>cool but the plot does not look optimal, we can also using mutiple layers of geometry, where the magic and fun start.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>g <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># it's the same if we write g + geom_line() + geom_point() </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="change-properties-of-geometries" class="level3">
+<h3 class="anchored" data-anchor-id="change-properties-of-geometries">Change properties of geometries</h3>
+<p>Turn all points to large fire-red diamonds:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>g <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">'firebrick'</span>, <span class="at">shape =</span> <span class="st">'diamond'</span>, <span class="at">size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>🚀 <code>ggplot2</code> hiểu khi chúng ta dùng <code>color</code>, <code>colour</code>, cũng như <code>col</code>.</strong></p>
+<p><strong>🐱‍🏍Có thể dùng <a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf">màu mặc định</a> hoặc <a href="https://www.techopedia.com/definition/29788/color-hex-code">màu hex</a>, hoặc thậm chí là màu RGB/RGBA với hàm <code>rgb()</code>. Ví dụ:</strong></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>g <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"#b22222"</span>, <span class="at">shape =</span> <span class="st">"diamond"</span>, <span class="at">size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>g <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="fu">rgb</span>(<span class="dv">178</span>, <span class="dv">34</span>, <span class="dv">34</span>, <span class="at">maxColorValue =</span> <span class="dv">255</span>), <span class="at">shape =</span> <span class="st">"diamond"</span>, <span class="at">size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
 <p>Source: <a href="https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/" class="uri">https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/</a></p>
 
 
@@ -430,10 +568,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -443,8 +598,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -456,7 +620,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -500,6 +787,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -525,6 +813,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -587,11 +901,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left"><span class="faux-block"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i> 2023 Le Khac Tuan</span></div>   
-    <div class="nav-footer-center"><span class="faux-block">Designed with <i class="fa-solid fa-heart" aria-label="heart"></i></span></div>
-    <div class="nav-footer-right"><span class="faux-block">Made with <i class="fa-brands fa-r-project" aria-label="r-project"></i> and <a href="https://quarto.org/">Quarto</a></span> <span class="faux-block"><a href="https://github.com/lktuan/lktuan.github.io">View the source at <i class="fa-brands fa-github" aria-label="github"></i> GitHub</a></span></div>
+    <div class="nav-footer-left">
+<p><span class="faux-block"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i> 2023 Le Khac Tuan</span></p>
+</div>   
+    <div class="nav-footer-center">
+<p><span class="faux-block">Designed with <i class="fa-solid fa-heart" aria-label="heart"></i></span></p>
+</div>
+    <div class="nav-footer-right">
+<p><span class="faux-block">Made with <i class="fa-brands fa-r-project" aria-label="r-project"></i> and <a href="https://quarto.org/">Quarto</a></span> <span class="faux-block"><a href="https://github.com/lktuan/lktuan.github.io">View the source at <i class="fa-brands fa-github" aria-label="github"></i> GitHub</a></span></p>
+</div>
   </div>
 </footer>
+
 
 
 
