@@ -20,7 +20,7 @@ css: html/styles.scss
 editor: visual
 ---
 
-# Preparation
+# 0. Preparation
 
 I need to install the following packages:
 
@@ -56,7 +56,7 @@ I tried to update R to the latest version (commented the code as it would be run
 
 **Oops I was should be using "'devtools'" instead of "devtools"!!! Problem solved**
 
-# The Dataset
+# 1. The Dataset
 
 I was using the dataset: "*National Morbidity and Mortality Air Pollution Study* (NMMAPS)"
 
@@ -86,7 +86,7 @@ tibble::glimpse(chic)
 head(chic,10)
 ```
 
-# The {ggplot2} Package
+# 3. The {ggplot2} Package
 
 A ggplot is built up from a few basic elements:
 
@@ -99,9 +99,9 @@ A ggplot is built up from a few basic elements:
 7.  Facets `facet_`: the arrangement of the data into a grid of plots;
 8.  Visual themes `theme()`: the overall visual defaults of a plot, such as background, grids, axes, default typeface, sizes and colors (tông).
 
-🚀**Không nhất thiết một phần từ được gọi, và chúng cũng có thể được gọi nhiều lần.**
+🚀**Không nhất thiết một phần tử được gọi, và chúng cũng có thể được gọi nhiều lần.**
 
-# A default ggplot
+# 4. A default `ggplot`
 
 Load the package for ability to use the functionality:
 
@@ -113,7 +113,7 @@ A default ggplot needs three things that you have to specify: the *data*, *aes
 
 -   starting define a plot by using `ggplot(data = df)`;
 
--   if we want to plot (in most cases) 2 variables, we must add *positional aesthestics* `aes(x = var1, y = var2);`
+-   if we want to plot (in most cases) 2 variables, we must add *positional aesthetics* `aes(x = var1, y = var2);`
 
 **🚀Data được đề cập *bên ngoài*`aes()`, trong khi đó biến/variables được đề cập *bên trong*`aes()`.**
 
@@ -164,6 +164,147 @@ g + geom_point(color = 'firebrick', shape = 'diamond', size = 2)
 g + geom_point(color = "#b22222", shape = "diamond", size = 2)
 g + geom_point(color = rgb(178, 34, 34, maxColorValue = 255), shape = "diamond", size = 2)
 ```
+
+#### Replacing the default `ggplot2` theme
+
+Calling eg `theme_bw()` using `theme_set()`, all following plots will have same blank'n'white theme.
+
+```{r}
+theme_set(theme_bw())
+
+g + geom_point(color = 'firebrick')
+```
+
+**🚀`theme()` is also a useful function to modify all kinds of theme elements (texts, rectangles, and lines).**
+
+# 5. Axes
+
+#### Change Axis Titles
+
+Use `labs()` to assign character string for each lable.
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+    geom_point(color = 'firebrick') +
+    labs(x = 'Year', y = 'Temperature (°F)')
+```
+
+Can also using `xlab()` and `ylab()`:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  xlab("Year") +
+  ylab("Temperature (°F)")
+```
+
+🐱‍🏍Not only the degree symbol before F, but also the supper script:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = expression(paste("Temperature (", degree ~ F, ")"^"(Hey, why should we use metric units?!)")))
+```
+
+#### Increase space between Axis and Axis Titles.
+
+Overwrite the default `element_text()` within the `theme()` call:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+    geom_point(color = 'firebrick') +
+    labs(x = 'Year', y = 'Temperature (°F)') +
+    theme(axis.title.x = element_text(vjust = 0, size = 30),
+         axis.title.y = element_text(vjust = 2, size = 30))
+```
+
+`vjust` refer to vertical alignment. We can also change the distance by specifying the margin of both text elements.
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(axis.title.x = element_text(margin = margin(t = 10), size = 15),
+        axis.title.y = element_text(margin = margin(r = 10), size = 15))
+```
+
+`r` and `t` in the `margin` are **top** and **right**. Margin has 4 arguments: `margin(t, r, b, l)`.
+
+🚀A good way to remember the order of the margin sides is “***t-r***-ou-***b-l***-e”.
+
+#### Change Aesthetics of the Axis Titles
+
+Again, we use `theme()` function and modify the `axis.tile` and/or the subordinated elements `axis.tile.x` and `axis.tile.y` . Within `element_text()` we can modify the default of `size`, `color`, and `face`.
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(axis.title = element_text(size = 15, color = "firebrick",
+                                  face = "italic"))
+```
+
+the `face` argument can be used to make the font `bold`, `italic`, or even `bold.italic`.
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(axis.title.x = element_text(color = "sienna", size = 15, face = 'bold'),
+        axis.title.y = element_text(color = "orangered", size = 15, face = 'bold.italic'))
+```
+
+🐱‍🏍You could also use a combination of `axis.title` and `axis.title.y`, since `axis.title.x` inherits the values from `axis.title`. Eg:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(axis.title = element_text(color = "sienna", size = 15),
+        axis.title.y = element_text(color = "orangered", size = 15))
+```
+
+One can modify some properties for both axis titles and other only for one or properties for each on its own:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(axis.title = element_text(color = "sienna", size = 15, face = "bold"),
+        axis.title.y = element_text(face = "bold.italic"))
+```
+
+#### Change Aesthetics of Axis Text
+
+# 6. Titles
+
+# 7. Legends
+
+# 8. Backgrounds & Grid Lines
+
+# 9. Margins
+
+# 10. Multi-panel Plots
+
+# 11. Colors
+
+# 12. Themes
+
+# 13. Lines
+
+# 14. Text
+
+# 15. Coordinates
+
+# 16. Chart Types
+
+# 17. Ribbons (AUC, CI, etc.)
+
+# 18. Smoothings
+
+# 19. Interactive Plots
+
+# 20. Remarks, Tipps & Resources
 
 # References
 
