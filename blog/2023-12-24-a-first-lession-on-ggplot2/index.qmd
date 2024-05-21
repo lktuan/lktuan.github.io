@@ -23,6 +23,8 @@ editor: visual
 
 # 0. Preparation
 
+------------------------------------------------------------------------
+
 I need to install the following packages:
 
 ```{r}
@@ -59,6 +61,8 @@ I tried to update R to the latest version (commented the code as it would be run
 
 # 1. The Dataset
 
+------------------------------------------------------------------------
+
 I was using the dataset: "*National Morbidity and Mortality Air Pollution Study* (NMMAPS)"
 
 Install the readr first:
@@ -69,7 +73,7 @@ Install the readr first:
 # install.packages("quarto")
 ```
 
-#### Import data
+### Import data
 
 ": :" here call the namespace and can be used to access a function without loading the package.
 
@@ -87,7 +91,9 @@ tibble::glimpse(chic)
 head(chic,10)
 ```
 
-# 3. The {ggplot2} Package
+# 3. The `{ggplot2}` Package
+
+------------------------------------------------------------------------
 
 A ggplot is built up from a few basic elements:
 
@@ -103,6 +109,8 @@ A ggplot is built up from a few basic elements:
 🚀**Không nhất thiết một phần tử được gọi, và chúng cũng có thể được gọi nhiều lần.**
 
 # 4. A default `ggplot`
+
+------------------------------------------------------------------------
 
 Load the package for ability to use the functionality:
 
@@ -180,7 +188,9 @@ g + geom_point(color = 'firebrick')
 
 # 5. Axes
 
-#### Change Axis Titles
+------------------------------------------------------------------------
+
+### Change Axis Titles
 
 Use `labs()` to assign character string for each lable.
 
@@ -207,7 +217,7 @@ ggplot(chic, aes(x = date, y = temp)) +
   labs(x = "Year", y = expression(paste("Temperature (", degree ~ F, ")"^"(Hey, why should we use metric units?!)")))
 ```
 
-#### Increase space between Axis and Axis Titles.
+### Increase space between Axis and Axis Titles.
 
 Overwrite the default `element_text()` within the `theme()` call:
 
@@ -233,7 +243,7 @@ ggplot(chic, aes(x = date, y = temp)) +
 
 🚀A good way to remember the order of the margin sides is “***t-r***-ou-***b-l***-e”.
 
-#### Change Aesthetics of the Axis Titles
+### Change Aesthetics of the Axis Titles
 
 Again, we use `theme()` function and modify the `axis.tile` and/or the subordinated elements `axis.tile.x` and `axis.tile.y` . Within `element_text()` we can modify the default of `size`, `color`, and `face`.
 
@@ -275,7 +285,7 @@ ggplot(chic, aes(x = date, y = temp)) +
         axis.title.y = element_text(face = "bold.italic"))
 ```
 
-#### Change Aesthetics of Axis Text
+### Change Aesthetics of Axis Text
 
 Similar to the `title`, we can change the appearance of the axis text (number indeed) by using `axis.text` and/or the subordinated elements `axis.text.x` and `axis.text.y`.
 
@@ -287,7 +297,7 @@ ggplot(chic, aes(x = date, y = temp)) +
          axis.text.x = element_text(face = 'italic'))
 ```
 
-#### Rotate Axis Text
+### Rotate Axis Text
 
 Specifying an `angle` help us to rotate any text elements. With `hjust` and `vjust` we can adjust the position of text afterwards horizontally (0 = left, 1 = right), and vertically (0 = top, 1 = bottom).
 
@@ -299,7 +309,7 @@ ggplot(chic, aes(x = date, y = temp)) +
 # 50 means 50 degrees, not % =)))
 ```
 
-#### Remove Axis Text & Ticks
+### Remove Axis Text & Ticks
 
 Rarely a reason to do this but this is how it works.
 
@@ -313,7 +323,7 @@ ggplot(chic, aes(x = date, y = temp)) +
 
 **🚀If you want to get rid of a theme element, the element is always `element_blank`.**
 
-#### Remove Axis Titles
+### Remove Axis Titles
 
 We could again use `element_blank()` but it is way simpler to just remove the label in the `labs()` (or `xlab()`) call:
 
@@ -325,7 +335,7 @@ ggplot(chic, aes(x = date, y = temp)) +
 
 Note that `NULL` removes the element (similarly to `element_blank()`) while empty quotes `""` will keep the spacing for the axis title and simply print nothing.
 
-#### Limit Axis Range
+### Limit Axis Range
 
 Some time you want to take a closer look at some range of you data. You can do this without subsetting your data:
 
@@ -338,7 +348,7 @@ ggplot(chic, aes(x = date, y = temp)) +
 
 Alternatively you can use `scale_y_continuous(limits = c(0, 50))` (subset) or `coord_cartesian(ylim = c(0, 50))`. The former removes all data points outside the range while the second adjusts the visible area (zooming) and is similar to `ylim(c(0, 50))` (subset).
 
-#### Force Plot to start at the origin
+### Force Plot to start at the origin
 
 ```{r}
 chic_high <- dplyr::filter(chic, temp > 25, o3 > 20)
@@ -375,7 +385,7 @@ ggplot(chic_high, aes(x = temp, y = o3)) +
 
 **🚀The argument `clip = "off"` in any coordinate system, always starting with `coord_*`, allows to draw outside of the panel area. Call it here to make sure that the tick marks at `c(0, 0)` are not cut.**
 
-#### Axes with Same Scaling
+### Axes with Same Scaling
 
 Use `coord_equal()` with default `ratio = 1` to ensure the units are equally scaled on the x-axis and on the y-axis. We can set the aspect ratio of a plot with `coord_fixed()` or `coord_equal()`. Both use `aspect = 1` (1:1) as a default.
 
@@ -397,7 +407,7 @@ ggplot(chic, aes(x = temp, y = temp + rnorm(nrow(chic), sd = 20))) +
   coord_fixed(ratio = 1/5)
 ```
 
-#### Use a Function to Alter Labels
+### Use a Function to Alter Labels
 
 In case you want to format (eg adding % sign) without change the data.
 
@@ -410,34 +420,91 @@ ggplot(chic, aes(x = date, y = temp)) +
 
 # 6. Titles
 
+------------------------------------------------------------------------
+
+### Add a Title
+
+We can add a title via `ggtitle()` function.
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+    geom_point(color = "firebrick") +
+    labs(x = "Year", y = "Temperature (°F)") +
+    ggtitle("Temperatures in Chicago")
+```
+
+Alternatively, we can use `labs()`, where we can add serveral arguments \~ metadata of the plot (a sub-title, a caption, and a tag):
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+    geom_point(color = "firebrick") +
+    labs(x = "Year", y = "Temperature (°F)",
+        title = "Temperatures in Chicago",
+        subtitle = "Seasonal pattern of daily temperatures from 1997 to 2001",
+        caption = "Data: NMMAPS",
+        tag = "Fig 1")
+```
+
+### Make title bold & add a space at the baseline
+
 # 7. Legends
+
+------------------------------------------------------------------------
 
 # 8. Backgrounds & Grid Lines
 
+------------------------------------------------------------------------
+
 # 9. Margins
+
+------------------------------------------------------------------------
 
 # 10. Multi-panel Plots
 
+------------------------------------------------------------------------
+
 # 11. Colors
+
+------------------------------------------------------------------------
 
 # 12. Themes
 
+------------------------------------------------------------------------
+
 # 13. Lines
+
+------------------------------------------------------------------------
 
 # 14. Text
 
+------------------------------------------------------------------------
+
 # 15. Coordinates
+
+------------------------------------------------------------------------
 
 # 16. Chart Types
 
+------------------------------------------------------------------------
+
 # 17. Ribbons (AUC, CI, etc.)
+
+------------------------------------------------------------------------
 
 # 18. Smoothings
 
+------------------------------------------------------------------------
+
 # 19. Interactive Plots
+
+------------------------------------------------------------------------
 
 # 20. Remarks, Tipps & Resources
 
+------------------------------------------------------------------------
+
 # References
+
+------------------------------------------------------------------------
 
 Source: <https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/>
