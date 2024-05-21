@@ -1,0 +1,549 @@
+---
+title: "Python is cool"
+description: "Unknown Python's features"
+author:
+  - name: "Tuan Le Khac"
+    url: https://lktuan.github.io/
+date: 05-21-2024
+categories: [Python, Lambda] # self-defined categories
+image: julia_logo.jpg
+draft: true # setting this to `true` will prevent your post from appearing on your listing page until you're ready!
+
+format: 
+  html: 
+    code-fold: false
+    code-summary: "Show the code"
+    code-line-numbers: true
+css: html/styles.scss
+editor: visual
+---
+
+# 1. Motivation
+
+------------------------------------------------------------------------
+
+Đây là một bài thực hành theo một [post](https://github.com/chiphuyen/python-is-cool/tree/master) bởi chị [Chip Huyen](https://huyenchip.com/) về một số features đặc biệt của Python. Là một DA không sử dụng Python quá nhiều, chỉ một số feature dưới đây là mình đã từng *nghe* qua. Hi vọng bài thực hành sẽ giúp mình hứng thú với Python hơn!
+
+# 2. Lambda, map, filter, & reduce
+
+------------------------------------------------------------------------
+
+Lambda cho phép người dùng định nghĩa in-line functions. Việc sử dụng `lambda()` rất thuận tiện khi gọi lại (callback \~ một function được thực thi sau khi một function khác được thực thi; một cách lưu trữ function) hoặc khi đầu ra của một function là đối số cho một function khác.
+
+Hai hàm `square_fn` và `square_ld` dưới đây là một:
+
+```{python}
+def square_fn(x):
+    return x * x
+
+square_ld = lambda x : x * x
+
+for i in range(10):
+    assert square_fn(i) == square_ld(i)
+```
+
+`lambda` rất hữu ích khi sử dụng cùng với các function khác như `map`, `filter`, và `reduce` (mình rất hay sử dụng pattern này trên Excel 😂). `map(fn, interable)` sẽ apply hàm `fn` cho tất cả các phần tử trong `iterable` (như list, set, dict, tuple, string), trả về map object.
+
+```{python}
+nums = [1/3, 2/7, 1001/37500, 40/27]
+nums_squared = [num * num for num in nums]
+print(nums_squared)
+```
+
+Dùng `map` và một hàm callback, cho ra kết quả tương đương:
+
+```{python}
+nums_squared_1 = map(square_fn, nums)
+nums_squared_2 = map(lambda x: x*x, nums)
+print(list(nums_squared_1)) # list to list the elements of map object
+print(list(nums_squared_2))
+```
+
+Có thể dùng `map` với nhiều hơn 1 iterable. Ví dụ muốn tính MSE cho một hồi quy tuyến tính đơn giản `f(x) = ax + b` với ground tru `labels`, hai phương pháp sau tương đương:
+
+```{python}
+a, b = 3, -0.5
+xs = [2, 3, 4, 5]
+labels = [6.4, 8.9, 10.9, 15.3]
+
+# Phương pháp 1, loop
+errors = []
+for i,x in enumerate(xs):
+    errors.append( (a * x + b - labels[i])**2 )
+result_1 = sum(errors)**(1/2) / len(xs)
+
+# Phương pháp 2, map
+diff = map(lambda x, y: (a * x + b - y) ** 2, xs, labels) 
+result_2 = sum(diff)**.5 / len(xs)
+
+print(result_1, result_2)
+```
+
+`filter(fn, iterable)` giống như `map`, tuy nhiên `fn` là một hàm trả về giá trị boolean true/false, và `filter` sẽ trả về các phần tử của `iterable` khi `fn` trả về true.
+
+```{python}
+bad_preds = filter(lambda x: x > 0.5, errors)
+
+print(list(bad_preds))
+```
+
+`reduce(fn, iterable, initializer)` được dùng khi ta muốn áp dụng một toán lên tất cả thành phần trong danh sách. Ví dụ muốn tính kết quả nhân của toàn bộ phần tử:
+
+```{python}
+product = 1
+for num in nums:
+    product *= num
+print(product)
+```
+
+Sử dụng `reduce`:
+
+```{python}
+from functools import reduce
+
+product = reduce(lambda x, y: x * y, nums)
+print(product)
+```
+
+### Hiệu suất hàm Lambda
+
+Lambda được thiết kế để sử dụng một lần. Mỗi lần được gọi, hàm `lambda x: dosomething(x)` đều được tạo lại, và do đó ảnh hưởng tới hiệu suất.
+
+Khi hàm lambda được định nghĩa trước `fn = lambda x: dosomething(x)`, hiệu suất của nó vẫn chậm hơn `def`, tuy nhiên không [đáng kể](https://stackoverflow.com/questions/26540885/lambda-is-slower-than-function-call-in-python-why).
+
+🚀Nguyên văn chị Chip:
+
+> Even though I find lambdas cool, I personally recommend using named functions when you can for the sake of clarity.
+
+# 3. List manipulation
+
+------------------------------------------------------------------------
+
+## 3.1. Unpacking
+
+Chúng ta có thể "giải nén" một list như thế này:
+
+```{python}
+elems = [1,2,3,4]
+a,b,c,d = elems
+
+print(a,b,c,d)
+```
+
+Cũng có thể làm như thế này:
+
+```{python}
+a, *new_elems, d = elems # remember the char * for extended unpacking
+
+print(a)
+print(new_elems)
+print(b)
+```
+
+## 3.2. Slicing
+
+Chúng ta có thể reverse/đảo ngược một list với `[::-1]`
+
+```{python}
+elem = list(range(10))
+print(elem)
+
+
+print(elem[::-1])
+```
+
+Cú pháp `[x:y:z]` có nghĩa là lấy ***mỗi*** phần tử thứ `z` từ index `x` tới index `y`. Khi `z` âm, tương đương với việc lấy theo thứ tự ngược lại. `x` để trống chỉ việc lấy từ phần tử đầu tiên, `y` để rỗng chỉ việc lấy tới phần tử cuối cùng.
+
+```{python}
+evens = elem[::2]
+print(evens)
+
+reversed_evens = elem[2::-2]
+print(reversed_evens)
+```
+
+Cũng có thể dùng slicing để xóa các phần tử như thế này:
+
+```{python}
+del elems[::2]
+print(elems)
+```
+
+## 3.3. Insertion
+
+Chúng ta có thể thay đổi giá trị một phần tử trong một list như sau:
+
+```{python}
+elems = list(range(10))
+
+elems[1] = 100
+print(elems)
+```
+
+Cũng có thể thay thế một giá trị bằng nhiều giá trị:
+
+```{python}
+elems = list(range(10))
+elems[1:2] = [20, 30, 40]
+print(elems)
+```
+
+Nếu chúng ta muốn thêm 3 giá trị `0.3, 0.4, 0.5` vào giữa phần tử thứ 0 và 1 của list này, thì:
+
+```{python}
+elems = list(range(10))
+elems[1:1] = [.3, .4, .5]
+print(elems)
+```
+
+## 3.4. Flattening
+
+Chúng ta có thể flatten một list sử dung `sum(0)`:
+
+```{python}
+list_of_lists = [[1], [2, 3], [4, 5, 6]]
+sum(list_of_lists, [])
+```
+
+Cũng có thể sử dụng recursive lambda (another beauty of lambda)
+
+```{python}
+nested_lists = [[1, 2], [[3, 4], [5, 6], [[7, 8], [9, 10], [[11, [12, 13]]]]]]
+flatten = lambda x: [y for i in x for y in flatten(i)] if type(x) is list else [x]
+
+print(flatten(nested_lists))
+
+# This line of code is from
+# https://github.com/sahands/python-by-example/blob/master/python-by-example.rst#flattening-lists
+```
+
+## 3.5. List vs Generator
+
+🚀Generator là cái gì vậy? Trích [bài viết](https://manhhomienbienthuy.github.io/2016/01/05/python-iterator-generator.html):
+
+> Từ generator được sử dụng cho cả hàm (hàm generator là hàm đã nói ở trên) và kết quả mà hàm đó sinh ra (đối tượng được hàm generator sinh ra cũng được gọi là generator). Vì vậy đôi khi việc này gây khó hiểu một chút. Hãy xem ví dụ về việc tạo n-grams từ một danh sách tokens dưới đây để hiểu sự khác biệt giữa list và generator:
+
+```{python}
+tokens = ['i', 'want', 'to', 'go', 'to', 'school']
+
+def ngrams(tokens, n):
+    length = len(tokens)
+    grams = []
+    for i in range(length - n + 1):
+        grams.append(tokens[i:i+n])
+    return grams
+
+print(ngrams(tokens, 3))
+```
+
+Trong ví dụ này, chúng ta phải lưu toàn bộ n-grams một lúc. Nếu có `m` tokens, memory requirement là `O(nm)` - sẽ là vấn đề nếu `m` lớn. Thay vào đó, chúng ta có thể sử dụng generator để tạo n-grams tiếp theo khi được yêu cầu. Đây gọi là lazy evaluation. Chúng ta có thể tạo một hàm `ngrams` trả về một generator sử dụng keyword `yield`, lúc này memory requirement là `O(n+m)`.
+
+```{python}
+def ngrams(tokens, n):
+    length = len(tokens)
+    for i in range(length - n + 1):
+        yield tokens[i:i+n]
+
+ngrams_generator = ngrams(tokens, 3)
+print(ngrams_generator)
+
+for ngram in ngrams_generator:
+    print(ngram)
+```
+
+Một cách khác để tạo n-grams là slice để lấy các sub-list `[0, 1, 2, ...,-n]`, `[1, 2, 3, ...,-n+1]`, `[2, 3, 4, ...,-n+2]`,... `[n-1, n, ...,-1]`, sau đó `zip` chúng lại:
+
+```{python}
+def ngrams(tokens, n):
+    length = len(tokens)
+    slices = (tokens[i:length-n+i+1] for i in range(n))
+    return zip(*slices)
+
+ngrams_generator = ngrams(tokens, 3)
+print(ngrams_generator)
+
+
+for ngram in ngrams_generator:
+    print(ngram)
+```
+
+Lưu ý chúng ta sử dụng `(tokens[...] for i in range(n))`, chứ không phải `[tokens[...] for i in range(n)]`. `[]` trả về một list, `()` trả về generator. \# 4. Classes & magic methods
+
+------------------------------------------------------------------------
+
+Trong Python, magic methods được prefixed và suffixed bởi double underscore `__` (aka dunder). Magic method được biết đến rộng rãi nhất là `__init__`.
+
+```{python}
+class Node:
+    """ A struct to denote the node of a binary tree.
+    It contains a value and pointers to left and right children.
+    """
+    def __init__(self, value, left=None, right=None):
+        self.value = value
+        self.left = left
+        self.right = right
+```
+
+In ra object, tuy nhiên nhìn không tường minh lắm!
+
+```{python}
+root = Node(5)
+print(root) # <__main__.Node object at 0x1069c4518>
+```
+
+Chúng ta mong muốn khi in ra một Node, giá trị của nó cũng như giá trị của các Node con (nếu có) cũng sẽ được in ra. Chúng ta dùng `__repr__`:
+
+```{python}
+class Node:
+    """ A struct to denote the node of a binary tree.
+    It contains a value and pointers to left and right children.
+    """
+    def __init__(self, value, left=None, right=None):
+        self.value = value
+        self.left = left
+        self.right = right
+
+    def __repr__(self):
+        strings = [f'value: {self.value}']
+        strings.append(f'left: {self.left.value}' if self.left else 'left: None')
+        strings.append(f'right: {self.right.value}' if self.right else 'right: None')
+        return ', '.join(strings)
+
+left = Node(4)
+root = Node(5, left)
+print(root) # value: 5, left: 4, right: None
+```
+
+Chúng ta cũng muốn hai Node có thể được so sánh được với nhau, vì thế tạo ra các magic method để implement các operator: `==` với `__eq__`, `>` với `__lt__`, '\>=' với `__ge__`:
+
+```{python}
+class Node:
+    """ A struct to denote the node of a binary tree.
+    It contains a value and pointers to left and right children.
+    """
+    def __init__(self, value, left=None, right=None):
+        self.value = value
+        self.left = left
+        self.right = right
+
+    def __eq__(self, other):
+        return self.value == other.value
+
+    def __lt__(self, other):
+        return self.value < other.value
+
+    def __ge__(self, other):
+        return self.value >= other.value
+
+
+left = Node(4)
+root = Node(5, left)
+print(left == root) # False
+print(left < root) # True
+print(left >= root) # False
+```
+
+Xem [ở đây](https://www.tutorialsteacher.com/python/magic-methods-in-python), hoặc [ở đây](https://docs.python.org/3/reference/datamodel.html#special-method-names) danh sách đầy đủ các magic method mà Python hỗ trợ.
+
+Một số magic method khác cần chú ý `__len__`, `__str__`, `__iter__`, and `__slots__` (tham khảo [đây](https://stackoverflow.com/questions/472000/usage-of-slots/28059785#28059785))
+
+# 5. Local namespace, object's attributes
+
+------------------------------------------------------------------------
+
+Hàm `locals()` trả về danh sách các biến nằm trong local namespace:
+
+```{python}
+class Model1:
+    def __init__(self, hidden_size=100, num_layers=3, learning_rate=3e-4):
+        print(locals())
+        self.hidden_size = hidden_size
+        self.num_layers = num_layers
+        self.learning_rate = learning_rate
+
+model1 = Model1()
+```
+
+Các attributes của 1 object cũng được lưu hết trong `__dict__`:
+
+```{python}
+print(model1.__dict__)
+```
+
+Khi có quá nhiều arguments, việc assign nó trong `__init__` trở nên phiền hà, chúng ta có thể làm như sau:
+
+```{python}
+class Model2:
+    def __init__(self, hidden_size=100, num_layers=3, learning_rate=3e-4):
+        params = locals()
+        del params['self']
+        self.__dict__ = params
+
+model2 = Model2()
+print(model2.__dict__)
+```
+
+Thậm chí rất tiện khi làm việc với `*kwargs`:
+
+```{python}
+class Model3:
+    def __init__(self, **kwargs):
+        self.__dict__ = kwargs
+
+model3 = Model3(hidden_size=100, num_layers=3, learning_rate=3e-4)
+print(model3.__dict__)
+```
+
+Đọc thêm về `*args` và `*kwargs` ở [đây](https://manhhomienbienthuy.github.io/2019/09/20/python-args-kwargs.html).
+
+# 6. Wild Import
+
+------------------------------------------------------------------------
+
+Chúng ta thường `import` tất cả như thế này:
+
+`file.py`
+
+```{python}
+#| eval: false
+from parts import *
+```
+
+Sẽ là vô trách nhiệm khi chúng ta import toàn bộ module, ví dụ nếu `parts.py` có cấu trúc như thế này: `parts.py`
+
+```{python}
+#| eval: false
+import numpy 
+import tensorflow 
+class Encoder: 
+    ... 
+class Decoder: 
+    ... 
+class Loss: 
+    ... 
+def helper(*args, **kwargs): 
+    ...
+def utils(*args, **kwargs): 
+    ... 
+```
+
+Vì `parts.py` không định nghĩa `__all__`, nên `file.py` sẽ import tất cả Encoder, Decoder, Loss, helper, untils cùng với numpy và tensorFlow. Nếu chỉ muốn import Encoder, Decoder, Loss, chúng ta nên làm như sau: `parts.py`
+
+```{python}
+#| eval: false
+__all__ = ['Encoder', 'Decoder', 'Loss'] 
+import numpy 
+import tensorflow 
+class Encoder: 
+    ... 
+```
+
+Chúng ta có thể dùng `__all__` để tìm hiểu thành phần một module.
+
+# 7. Decorator to time your functions
+
+------------------------------------------------------------------------
+
+Chúng ta thường muốn đo lường thời gian chạy của 1 function. Các tự nhiên thường dùng là đặt `time.time()` ở hai điểm đầu và cuối giữa các lệnh.
+
+Ví dụ, với hàm tìm số Fibbonacci thứ n, với hai cách (1 cách sử dụng memoization).
+
+```{python}
+def fib_helper(n):
+    if n < 2:
+        return n
+    return fib_helper(n - 1) + fib_helper(n - 2)
+
+def fib(n):
+    """ fib is a wrapper function so that later we can change its behavior
+    at the top level without affecting the behavior at every recursion step.
+    """
+    return fib_helper(n)
+
+def fib_m_helper(n, computed):
+    if n in computed:
+        return computed[n]
+    computed[n] = fib_m_helper(n - 1, computed) + fib_m_helper(n - 2, computed)
+    return computed[n]
+
+def fib_m(n):
+    return fib_m_helper(n, {0: 0, 1: 1})
+```
+
+Hãy chắc chắn `fib` và `fib_m` tương đương nhau:
+
+```{python}
+for n in range(20):
+    assert fib(n) == fib_m(n)
+```
+
+Đo lường thời gian chạy:
+
+```{python}
+import time
+
+start = time.time()
+fib(30)
+print(f'Without memoization, it takes {time.time() - start:7f} seconds.')
+
+start = time.time()
+fib_m(30)
+print(f'With memoization, it takes {time.time() - start:.7f} seconds.')
+```
+Using decorator, define `timeit`:
+```{python}
+def timeit(fn): 
+    # *args and **kwargs are to support positional and named arguments of fn
+    def get_time(*args, **kwargs): 
+        start = time.time() 
+        output = fn(*args, **kwargs)
+        print(f"Time taken in {fn.__name__}: {time.time() - start:.7f}")
+        return output  # make sure that the decorator returns the output of fn
+    return get_time 
+```
+Sau đó thêm `@timeit` tới function:
+```{python}
+@timeit
+def fib(n):
+    return fib_helper(n)
+
+@timeit
+def fib_m(n):
+    return fib_m_helper(n, {0: 0, 1: 1})
+
+fib(30)
+fib_m(30)
+```
+# 8. Caching with `@functools.lru_cache`
+
+------------------------------------------------------------------------
+
+🚀Nguyên văn chị Huyền:
+> Memoization is a form of cache: we cache the previously calculated Fibonacci numbers so that we don't have to calculate them again.
+
+```{python}
+import functools
+
+@functools.lru_cache()
+def fib_helper(n):
+    if n < 2:
+        return n
+    return fib_helper(n - 1) + fib_helper(n - 2)
+
+@timeit
+def fib(n):
+    """ fib is a wrapper function so that later we can change its behavior
+    at the top level without affecting the behavior at every recursion step.
+    """
+    return fib_helper(n)
+
+fib(50)
+fib_m(50)
+```
+`lru` stands for "least recently used". For more information on cache, see [here](https://docs.python.org/3/library/functools.html).
+
+# Reference
+
+------------------------------------------------------------------------
+
+Source: <https://github.com/chiphuyen/python-is-cool/tree/master>
