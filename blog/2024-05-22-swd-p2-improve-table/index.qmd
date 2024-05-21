@@ -1,0 +1,144 @@
+---
+title: "Storytelling with Data: Let’s Practice, Improve this table!"
+description: "Practicing to improve a cross-tab report table using Python"
+author:
+  - name: "Tuan Le Khac"
+    url: https://lktuan.github.io/
+date: 05-22-2024
+categories: [Python, Visualization] # self-defined categories
+image: .jpg
+draft: false # setting this to `true` will prevent your post from appearing on your listing page until you're ready!
+
+format: 
+  html: 
+    code-fold: false
+    code-summary: "Show the code"
+    code-line-numbers: true
+css: html/styles.scss
+editor: visual
+---
+
+# 1. Motivation
+Lấy cảm hứng từ bài [post](https://rpubs.com/chidungkt/1139405) của thầy Nguyễn Chí Dũng về việc giải các exercise thuộc Chương 2 cuốn sách **Storytelling with Data: Let’s Practice** của tác giả [Cole Nussbaumer Knaflic](https://www.linkedin.com/in/colenussbaumer/) sử dụng R, mình muốn cải thiện 1 bảng biểu nhưng sử dụng Python (trong cuốn sách gốc, có lẽ tác giả sử dụng Excel).
+
+# 2. Let's Practice
+Mình đang học `{ggplot2}` trên R để thực hành hình ảnh hóa dữ liệu, tuy nhiên có vẻ package này (và tương ứng là `plotnine` trên Python không phù hợp cho báo cáo bảng). Trong bài post, thầy Dũng cũng sử dụng một library khác là `kableExtra` (tham khảo [đây](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html)).
+
+Sau một lúc google thì có vẻ có một package của Python phù hợp để làm nhiệm vụ này, đó là `great_tables` (tham khảo [đây](https://posit-dev.github.io/great-tables/articles/intro.html)).
+
+## 2.1. Import the data
+Okay đầu tiên cần import và làm sạch dữ liệu. Bảng có sẵn trong file Exercise có vẻ dùng để báo cáo hơn là lưu trữ dữ liệu.
+```{python}
+import pandas as pd
+
+data = pd.read_excel(
+  "2.1 EXERCISE.xlsx",
+  sheet_name = "EXERCISE 2.1",
+  skiprows=6
+)
+
+data = data.drop('Unnamed: 0', axis=1)
+data = data.rename(columns={ "Tier": "tier"
+                    ,"# of Accounts": "no_of_account"
+                    ,"% Accounts": "pct_of_account"
+                    ,"Revenue ($M)": "revenue"
+                    ,"% Revenue": "pct_of_revenue"})
+```
+
+## 2.2. Data manipulation
+Yep giờ ta đã có 1 bảng data khá sạch, tuy nhiên lưu ý là bảng đang không thể hiện toàn bộ dữ liệu (total của `pct_of_account` chỉ là `81.86%`). Ta cần tính toán thêm `All other` và `Grand Total` (lý do là mình chưa tìm thấy function hiển thị Grand Total với package đang sử dụng, ngay cả trong ví dụ [này](https://posit-dev.github.io/great-tables/blog/pycon-2024-great-tables-are-possible/), GT cũng sử dụng data đã có sẵn Grand Total).
+
+```{python}
+all_other_pct_of_account = 1 - data["pct_of_account"].sum()
+all_other_no_of_account = round(all_other_pct_of_account / data["pct_of_account"][0] * data["no_of_account"][0],0)
+
+all_other_pct_of_revenue = 1 - data["pct_of_revenue"].sum()
+all_other_revenue = round(all_other_pct_of_revenue / data["pct_of_revenue"][0] * data["revenue"][0],3)
+
+all_other = pd.Series({ "tier": "All other",
+                        "no_of_account": all_other_no_of_account,
+                        "pct_of_account": all_other_pct_of_account,
+                        "revenue":all_other_revenue,
+                        "pct_of_revenue": all_other_pct_of_revenue})
+
+data = pd.concat([data, all_other.to_frame().T])
+
+data.loc["total"] = data.sum()
+data.loc[data.index[-1], 'tier'] = 'Grand Total'
+```
+Show the data:
+```{python}
+from great_tables import GT
+
+( 
+  GT(data)
+  .fmt_number(columns= ["no_of_account","pct_of_account","revenue","pct_of_revenue"],decimals=2))
+```
+## 2.3. Visualization
+Được rồi, giờ ta có thể dùng `great_tables` để tiến hành visualize. Về cơ bản, chỉ cần khởi tạo một object `GT()` có  thể mở rộng được, các element/hoặc format được định nghĩa về sau.
+
+Dưới đây chúng ta trình bày một bảng đơn giản với tiêu đề, tên cột, cũng như định dạng lại dữ liệu.
+```{python}
+(
+  GT(data)
+  .tab_header(title="New client tier share")
+  .cols_label(
+    tier = "Tier",
+    no_of_account = "# of Accounts",
+    pct_of_account = "% Accounts",
+    revenue = "Revenue ($M)",
+    pct_of_revenue = "% Revenue"
+  )
+  .fmt_number(columns="no_of_account",decimals=0)
+  .fmt_percent(columns=["pct_of_account", "pct_of_revenue"], decimals=2)
+  .fmt_currency(columns = "revenue", currency="USD", decimals=2)
+  .tab_source_note(source_note="Figure 2.1b: Slightly improved table")
+)
+```
+Trông ổn (ít nhất là trình bày số liệu một cách toàn vẹn) so với bản gốc rồi!
+
+Tiếp tục, ta dùng helper `md()` để định dạng lại tiêu đề, sử dụng `.data_color()` để tạo heatmapping, sử dụng `tab_style()` để format dòng Grand Total,sử dụng `.opt_stylize()` để theming.
+```{python}
+from great_tables import md, style, loc
+
+(
+  GT(data)
+  .tab_header(title=md("<strong>New client tier share</strong>"))
+  .opt_align_table_header(align="left")
+  .cols_label(
+    tier = "Tier",
+    no_of_account = "# of Accounts",
+    pct_of_account = "% Accounts",
+    revenue = "($M) Revenue", # change the label
+    pct_of_revenue = "% Revenue"
+  )
+  .fmt_number(columns="no_of_account",decimals=0)
+  .fmt_percent(columns=["pct_of_account", "pct_of_revenue"], decimals=0) # changed decimals
+  .fmt_currency(columns = "revenue", currency="USD", decimals=1)# changed decimals
+  .tab_source_note(source_note="Figure 2.1c: Table with heatmapping")
+  .data_color(
+    columns=["pct_of_account", "pct_of_revenue"],
+    palette=["#57A6A1", "#577B8D", "#344C64", "#240750"],
+    domain=[0, 1],
+    na_color="lightgray",
+    autocolor_text = False
+  )
+  .tab_style(
+        style=style.fill("#EEEEEE"),
+        locations=loc.body(rows=[6]),
+    )
+  .tab_style(
+        style=style.borders(sides=["top", "bottom"], weight='2px', color="grey"),
+        locations=loc.body(rows=[6])
+  )
+  .tab_style(
+        style=style.text(style="bolder"),
+        locations=loc.body(rows=[6])
+  )
+  .opt_stylize(style=5 ,color='blue')
+)
+```
+# References
+1. <https://www.storytellingwithdata.com/books>
+2. <https://rpubs.com/chidungkt/1139405>
+3. <https://posit-dev.github.io/great-tables/articles/intro.html>
