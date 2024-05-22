@@ -61,9 +61,9 @@ all_other = pd.Series({ "tier": "All other",
                         "revenue":all_other_revenue,
                         "pct_of_revenue": all_other_pct_of_revenue})
 
-data = pd.concat([data, all_other.to_frame().T])
+data = pd.concat([data, all_other.to_frame().T], ignore_index=True)
 
-data.loc["total"] = data.sum()
+data.loc[len(data.index)] = data.sum()
 data.loc[data.index[-1], 'tier'] = 'Grand Total'
 ```
 Show the data:
@@ -97,7 +97,12 @@ Dưới đây chúng ta trình bày một bảng đơn giản với tiêu đề,
 ```
 Trông ổn (ít nhất là trình bày số liệu một cách toàn vẹn) so với bản gốc rồi!
 
-Tiếp tục, ta dùng helper `md()` để định dạng lại tiêu đề, sử dụng `.data_color()` để tạo heatmapping, sử dụng `tab_style()` để format dòng Grand Total,sử dụng `.opt_stylize()` để theming.
+Tiếp tục, ta dùng
+- helper `md()` để định dạng lại tiêu đề;
+- sử dụng `.data_color()` để tạo heatmapping;
+- sử dụng `tab_style()` để format dòng Grand Total;
+- sử dụng `.opt_stylize()` để theming.
+
 ```{python}
 from great_tables import md, style, loc
 
@@ -124,21 +129,101 @@ from great_tables import md, style, loc
     autocolor_text = False
   )
   .tab_style(
-        style=style.fill("#EEEEEE"),
-        locations=loc.body(rows=[6]),
-    )
-  .tab_style(
-        style=style.borders(sides=["top", "bottom"], weight='2px', color="grey"),
-        locations=loc.body(rows=[6])
-  )
-  .tab_style(
-        style=style.text(style="bolder"),
+        style=[
+          style.text(style="bolder"),
+          style.fill("#EEEEEE"),
+          style.borders(sides=["top", "bottom"], weight='2px', color="grey")
+          ],
         locations=loc.body(rows=[6])
   )
   .opt_stylize(style=5 ,color='blue')
 )
 ```
+Tiếp theo, chúng ta sẽ thử dùng `fmt_nanoplot()` để tạo một bar plots thay cho hai cột percentage.
+
+Đây là một tính năng trong giai đoạn thử nghiệm nên mình thấy chưa thực sử ổn định và tuân theo document mà nhà phát triển đề cập. Trong ví dụ dưới đây mình sử dụng data bar, loại bỏ format do hàng cuối cùng. Tuy nhiên, đồ thị vẫn include giá trị `100%` ở hàng Grand Total để điều chỉnh bar scale.
+
+Thêm nữa mình cần chuyển dataframe về polar dataframe, khi đó một column của dl.df là iterable.
+```{python}
+from great_tables import md, style, loc, nanoplot_options
+import numpy as np
+import polars as pl
+
+data.at[6, "pct_of_account"] = np.nan
+data.at[6, "pct_of_revenue"] = np.nan
+# so that the data scale looks better
+
+pl_data = pl.from_pandas(data)
+
+(
+  GT(pl_data, rowname_col="tier")
+  .tab_header(title=md("<strong>New client tier share</strong>"))
+  .opt_align_table_header(align="left")
+  .tab_source_note(source_note="Figure 2.1d: Table with data bar")
+  .cols_label(
+    tier = "Tier",
+    no_of_account = "# of Accounts",
+    pct_of_account = "% Accounts",
+    revenue = "($M) Revenue", # change the label
+    pct_of_revenue = "% Revenue"
+  )
+  .fmt_number(columns="no_of_account",decimals=0)
+  .fmt_currency(columns = "revenue", currency="USD", decimals=1)
+  .fmt_percent(columns=["pct_of_account", "pct_of_revenue"], decimals=0) # changed decimals
+  .cols_width(
+    cases={
+        "tier": "20%",
+        "no_of_account": "20%",
+        "pct_of_account": "20%",
+        "revenue": "20%",
+        "pct_of_revenue": "20%"      
+    }
+    )
+  .fmt_nanoplot(
+    columns="pct_of_account",
+    rows = [0,1,2,3,4,5],
+    plot_type="bar",
+    plot_height = "3em",
+    autoscale=True,
+    options=nanoplot_options(
+      data_bar_stroke_color="#577B8D",
+      data_bar_stroke_width=80,
+      data_bar_fill_color="#577B8D",)
+    )
+  .fmt_nanoplot(
+    columns="pct_of_revenue",
+    rows = [0,1,2,3,4,5],
+    plot_type="bar",
+    plot_height = "3em",
+    autoscale=True,
+    options=nanoplot_options(
+      data_bar_stroke_color="#577B8D",
+      data_bar_stroke_width=80,
+      data_bar_fill_color="#577B8D",)
+  )
+  .tab_style(
+        style=[
+          style.text(style="bolder"),
+          style.fill("#EEEEEE"),
+          style.borders(sides=["top", "bottom"], weight='2px', color="grey")
+          ],
+        locations=loc.body(rows=[6])
+  )
+  .tab_style(
+        style=[
+          style.text(color="#EEEEEE", size=0.5),
+          ],
+        locations=loc.body(rows=[6], columns=["pct_of_account", "pct_of_revenue"])
+  )
+  .opt_stylize(style=3 ,color='blue')
+)
+```
+`great_tables` vẫn chưa thực sự render ra được bảng biểu đúng như setting.
+
+Bài thực hành đến đây là kết thúc! 🚀
+
 # References
 1. <https://www.storytellingwithdata.com/books>
 2. <https://rpubs.com/chidungkt/1139405>
 3. <https://posit-dev.github.io/great-tables/articles/intro.html>
+
