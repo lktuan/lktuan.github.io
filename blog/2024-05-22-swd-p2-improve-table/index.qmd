@@ -19,12 +19,18 @@ editor: visual
 ---
 
 # 1. Motivation
-Lấy cảm hứng từ bài [post](https://rpubs.com/chidungkt/1139405) của thầy Nguyễn Chí Dũng về việc giải các exercise thuộc Chương 2 cuốn sách **Storytelling with Data: Let’s Practice** của tác giả [Cole Nussbaumer Knaflic](https://www.linkedin.com/in/colenussbaumer/) sử dụng R, mình muốn cải thiện 1 bảng biểu nhưng sử dụng Python (trong cuốn sách gốc, có lẽ tác giả sử dụng Excel).
+Lấy cảm hứng từ bài [post](https://rpubs.com/chidungkt/1139405) của thầy Nguyễn Chí Dũng về việc giải các exercise thuộc Chương 2 cuốn sách **Storytelling with Data: Let’s Practice** của tác giả [Cole Nussbaumer Knaflic](https://www.linkedin.com/in/colenussbaumer/) sử dụng R, mình muốn cải thiện 1 bảng biểu nhưng sử dụng Python (trong cuốn sách gốc, tác giả sử dụng Excel để makeover các graph).
+
+Đây là một cuốn sách hay về chủ để visualization, dành cho những người sử dụng biểu đồ nhiều để communicate trong công việc. Cụm từ "storytelling" đang được sử dụng rất nhiều, thậm chí như là một buzzword, một keyword cần có trong CV của mỗi người làm data. Đối với mình, "storytelling" chỉ nên được sử dụng khi bạn đã có sẵn các kết quả phân tích, được thực hiện một cách khoa học, và bạn muốn truyền tải nó tới business unit/management một cách hiệu quả. "Storytelling" nên không bao giờ là động cơ để bạn thực hiện một phân tích (thứ thay vào đó nên là một **câu hỏi**), thiên kiến sẽ ảnh hưởng tới phương pháp thực hiện, và rất dễ nảy sinh ngụy biện khi kết luận. Hãy xem bài viết này của [Keith McNulty](https://www.linkedin.com/pulse/data-professionals-beware-storytelling-keith-mcnulty/) và [discussion](https://www.linkedin.com/posts/keith-mcnulty_my-most-hated-word-in-data-science-activity-7017097392759918592-2Atc/) trên Linked In.
+
+::: {layout-ncol=1}
+![Photo credit to [swd](https://www.storytellingwithdata.com/blog/2019/8/27/lets-practice)](swd_chap5.png){width=100%}
+:::
 
 # 2. Let's Practice
 Mình đang học `{ggplot2}` trên R để thực hành hình ảnh hóa dữ liệu, tuy nhiên có vẻ package này (và tương ứng là `plotnine` trên Python không phù hợp cho báo cáo bảng). Trong bài post, thầy Dũng cũng sử dụng một library khác là `kableExtra` (tham khảo [đây](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html)).
 
-Sau một lúc google thì có vẻ có một package của Python phù hợp để làm nhiệm vụ này, đó là `great_tables` (tham khảo [đây](https://posit-dev.github.io/great-tables/articles/intro.html)).
+Sau một lúc google thì có vẻ có một package của Python phù hợp để làm nhiệm vụ này, đó là `great_tables` (tham khảo [đây](https://posit-dev.github.io/great-tables/articles/intro.html)). Package này cũng được khuyến khích sử dụng cho mục đích communication bởi [Emily Riederer](https://www.emilyriederer.com/post/py-rgo/#the-stack).
 
 ## 2.1. Import the data
 Okay đầu tiên cần import và làm sạch dữ liệu. Bảng có sẵn trong file Exercise có vẻ dùng để báo cáo hơn là lưu trữ dữ liệu.
@@ -218,6 +224,7 @@ pl_data = pl.from_pandas(data)
   .opt_stylize(style=3 ,color='blue')
 )
 ```
+
 `great_tables` vẫn chưa thực sự render ra được bảng biểu đúng như setting.
 
 Bài thực hành đến đây là kết thúc! 🚀
