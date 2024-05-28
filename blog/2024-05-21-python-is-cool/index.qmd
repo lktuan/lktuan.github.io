@@ -273,7 +273,7 @@ for ngram in ngrams_generator:
     print(ngram)
 ```
 
-Lưu ý chúng ta sử dụng `(tokens[...] for i in range(n))`, chứ không phải `[tokens[...] for i in range(n)]`. `[]` trả về một list, `()` trả về generator. \# 4. Classes & magic methods
+Lưu ý chúng ta sử dụng `(tokens[...] for i in range(n))`, chứ không phải `[tokens[...] for i in range(n)]`. `[]` trả về một list, `()` trả về generator. # 4. Classes & magic methods
 
 ------------------------------------------------------------------------
 
@@ -408,16 +408,14 @@ print(model3.__dict__)
 
 Chúng ta thường `import` tất cả như thế này:
 
-`file.py`
-
-```{python}
+```{.python filename="file.py"}
 #| eval: false
 from parts import *
 ```
 
-Sẽ là vô trách nhiệm khi chúng ta import toàn bộ module, ví dụ nếu `parts.py` có cấu trúc như thế này: `parts.py`
+Sẽ là vô trách nhiệm khi chúng ta import toàn bộ module, ví dụ nếu `parts.py` có cấu trúc như thế này:
 
-```{python}
+```{.python filename="parts.py"}
 #| eval: false
 import numpy 
 import tensorflow 
@@ -433,9 +431,9 @@ def utils(*args, **kwargs):
     ... 
 ```
 
-Vì `parts.py` không định nghĩa `__all__`, nên `file.py` sẽ import tất cả Encoder, Decoder, Loss, helper, untils cùng với numpy và tensorFlow. Nếu chỉ muốn import Encoder, Decoder, Loss, chúng ta nên làm như sau: `parts.py`
+Vì `parts.py` không định nghĩa `__all__`, nên `file.py` sẽ import tất cả Encoder, Decoder, Loss, helper, untils cùng với numpy và tensorFlow. Nếu chỉ muốn import Encoder, Decoder, Loss, chúng ta nên làm như sau:
 
-```{python}
+```{.python filename="parts.py"}
 #| eval: false
 __all__ = ['Encoder', 'Decoder', 'Loss'] 
 import numpy 

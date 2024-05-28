@@ -166,7 +166,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Cách đọc Guitar Tab đơn giản</h1>
+      <div class="quarto-title-block"><div><h1 class="title">Cách đọc Guitar Tab đơn giản</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
                   <div>
         <div class="description">
           Bạn có thể không biết đọc nhạc nhưng ít nhất bạn phải biết cách đọc tab guitar!
@@ -478,6 +478,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 
 
+<!-- -->
+
 </section>
 
 </main> <!-- /main -->
@@ -560,9 +562,60 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/lktuan\.github\.io\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
@@ -889,7 +942,395 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb16" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb16-1"><a href="#cb16-1"></a><span class="co">---</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="an">title:</span><span class="co"> "Cách đọc Guitar Tab đơn giản"</span></span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="an">description:</span><span class="co"> "Bạn có thể không biết đọc nhạc nhưng ít nhất bạn phải biết cách đọc tab guitar!"</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="an">author:</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="an">date:</span><span class="co"> 01-24-2024</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a><span class="an">categories:</span><span class="co"> [Guitar] # self-defined categories</span></span>
+<span id="cb16-9"><a href="#cb16-9"></a><span class="co"># citation: </span></span>
+<span id="cb16-10"><a href="#cb16-10"></a><span class="co">#   url: https://github.com/lktuan/lktuan.github.io/blog/2023-12-24_post/</span></span>
+<span id="cb16-11"><a href="#cb16-11"></a><span class="an">image:</span><span class="co"> how-to-read-guitar-tabs.jpg</span></span>
+<span id="cb16-12"><a href="#cb16-12"></a><span class="an">draft:</span><span class="co"> false # setting this to `true` will prevent your post from appearing on your listing page until you're ready!</span></span>
+<span id="cb16-13"><a href="#cb16-13"></a></span>
+<span id="cb16-14"><a href="#cb16-14"></a><span class="an">format:</span><span class="co"> </span></span>
+<span id="cb16-15"><a href="#cb16-15"></a><span class="co">  html: </span></span>
+<span id="cb16-16"><a href="#cb16-16"></a><span class="co">    code-fold: false</span></span>
+<span id="cb16-17"><a href="#cb16-17"></a><span class="co">    code-summary: "Show the code"</span></span>
+<span id="cb16-18"><a href="#cb16-18"></a><span class="co">    code-line-numbers: true</span></span>
+<span id="cb16-19"><a href="#cb16-19"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
+<span id="cb16-20"><a href="#cb16-20"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb16-21"><a href="#cb16-21"></a><span class="an">theme:</span></span>
+<span id="cb16-22"><a href="#cb16-22"></a><span class="co">  light: flatly</span></span>
+<span id="cb16-23"><a href="#cb16-23"></a><span class="co">  dark: darkly</span></span>
+<span id="cb16-24"><a href="#cb16-24"></a><span class="co">---</span></span>
+<span id="cb16-25"><a href="#cb16-25"></a></span>
+<span id="cb16-26"><a href="#cb16-26"></a>TIL: tab là tableture</span>
+<span id="cb16-27"><a href="#cb16-27"></a></span>
+<span id="cb16-28"><a href="#cb16-28"></a><span class="fu"># 1. Cách đọc tab guitar căn bản</span></span>
+<span id="cb16-29"><a href="#cb16-29"></a></span>
+<span id="cb16-30"><a href="#cb16-30"></a>Học guitar đã hai tháng mà không biết đọc tab :"<span class="sc">\&gt;</span>. Nay mình quyết định dành một buổi sáng để tìm hiểu về chủ đề này.</span>
+<span id="cb16-31"><a href="#cb16-31"></a></span>
+<span id="cb16-32"><a href="#cb16-32"></a>Vẫn là 6 dòng kẻ, mỗi dòng tương ứng một dây của đàn:</span>
+<span id="cb16-33"><a href="#cb16-33"></a></span>
+<span id="cb16-34"><a href="#cb16-34"></a><span class="in">``` txt</span></span>
+<span id="cb16-35"><a href="#cb16-35"></a><span class="in">e----------------------------||(Dây mỏng nhất, cao nhất)</span></span>
+<span id="cb16-36"><a href="#cb16-36"></a><span class="in">B----------------------------||</span></span>
+<span id="cb16-37"><a href="#cb16-37"></a><span class="in">G----------------------------||</span></span>
+<span id="cb16-38"><a href="#cb16-38"></a><span class="in">D----------------------------||</span></span>
+<span id="cb16-39"><a href="#cb16-39"></a><span class="in">A----------------------------||</span></span>
+<span id="cb16-40"><a href="#cb16-40"></a><span class="in">E----------------------------||(Dây dày nhất, trầm nhất)</span></span>
+<span id="cb16-41"><a href="#cb16-41"></a><span class="in">```</span></span>
+<span id="cb16-42"><a href="#cb16-42"></a></span>
+<span id="cb16-43"><a href="#cb16-43"></a>Tab dùng con số để cho chúng ta biết cần đặt tay lên ngăn số mấy của dây tương ứng.</span>
+<span id="cb16-44"><a href="#cb16-44"></a></span>
+<span id="cb16-45"><a href="#cb16-45"></a>Ví dụ 1: Đánh dây 1 phím 3, sau đó đánh dây 2 buông, sau đó đánh dây 1 phím 1:</span>
+<span id="cb16-46"><a href="#cb16-46"></a></span>
+<span id="cb16-47"><a href="#cb16-47"></a><span class="in">``` txt</span></span>
+<span id="cb16-48"><a href="#cb16-48"></a><span class="in">E----3-------1----------------------------------------------------</span></span>
+<span id="cb16-49"><a href="#cb16-49"></a><span class="in">B--------0--------------------------------------------------------</span></span>
+<span id="cb16-50"><a href="#cb16-50"></a><span class="in">G-----------------------------------------------------------------</span></span>
+<span id="cb16-51"><a href="#cb16-51"></a><span class="in">D-----------------------------------------------------------------</span></span>
+<span id="cb16-52"><a href="#cb16-52"></a><span class="in">A-----------------------------------------------------------------</span></span>
+<span id="cb16-53"><a href="#cb16-53"></a><span class="in">E-----------------------------------------------------------------</span></span>
+<span id="cb16-54"><a href="#cb16-54"></a><span class="in">```</span></span>
+<span id="cb16-55"><a href="#cb16-55"></a></span>
+<span id="cb16-56"><a href="#cb16-56"></a>**Lưu ý 1**: Tab chỉ cho ta thông tin về cao độ (bấm ở đâu), chứ không phải trường độ (như khuông nhạc)</span>
+<span id="cb16-57"><a href="#cb16-57"></a></span>
+<span id="cb16-58"><a href="#cb16-58"></a>**Lưu ý 2**: nhiều số xuất hiện thẳng hàng nghĩa là cần thực hiện một lúc</span>
+<span id="cb16-59"><a href="#cb16-59"></a></span>
+<span id="cb16-60"><a href="#cb16-60"></a><span class="in">``` txt</span></span>
+<span id="cb16-61"><a href="#cb16-61"></a><span class="in">Cách bấm hợp âm Đô Trưởng</span></span>
+<span id="cb16-62"><a href="#cb16-62"></a><span class="in">E----0-----------------------------------------------------</span></span>
+<span id="cb16-63"><a href="#cb16-63"></a><span class="in">B----1-----------------------------------------------------</span></span>
+<span id="cb16-64"><a href="#cb16-64"></a><span class="in">G----0-----------------------------------------------------</span></span>
+<span id="cb16-65"><a href="#cb16-65"></a><span class="in">D----2-----------------------------------------------------</span></span>
+<span id="cb16-66"><a href="#cb16-66"></a><span class="in">A----3-----------------------------------------------------</span></span>
+<span id="cb16-67"><a href="#cb16-67"></a><span class="in">E----0-----------------------------------------------------</span></span>
+<span id="cb16-68"><a href="#cb16-68"></a><span class="in">Đôi khi bạn sẽ thấy một số clip hướng dẫn trên mạng sẽ chỉ cách bấm hợp âm bằng cách đọc tab như vầy:</span></span>
+<span id="cb16-69"><a href="#cb16-69"></a><span class="in">Đô Trưởng - 032010</span></span>
+<span id="cb16-70"><a href="#cb16-70"></a><span class="in">Rê Thứ - 000231</span></span>
+<span id="cb16-71"><a href="#cb16-71"></a><span class="in">...</span></span>
+<span id="cb16-72"><a href="#cb16-72"></a><span class="in">```</span></span>
+<span id="cb16-73"><a href="#cb16-73"></a></span>
+<span id="cb16-74"><a href="#cb16-74"></a>Ví dụ 2:</span>
+<span id="cb16-75"><a href="#cb16-75"></a></span>
+<span id="cb16-76"><a href="#cb16-76"></a><span class="in">``` txt</span></span>
+<span id="cb16-77"><a href="#cb16-77"></a><span class="in">Intro bài River Flows In You có rất nhiều chỗ phải đánh 2 dây cùng lúc</span></span>
+<span id="cb16-78"><a href="#cb16-78"></a><span class="in">e ||--3--2--3--2-|-3-----3-----|------3--2--3--2-|-3-----3------|</span></span>
+<span id="cb16-79"><a href="#cb16-79"></a><span class="in">B ||--------3----|----3-----1~-|---0--------3----|----3-----1~--|</span></span>
+<span id="cb16-80"><a href="#cb16-80"></a><span class="in">G ||-----0-----0-|----0-----0~-|-0-------0-----0-|----0-----0~--|</span></span>
+<span id="cb16-81"><a href="#cb16-81"></a><span class="in">D ||--2----------|-------------|------2----------|--------------|</span></span>
+<span id="cb16-82"><a href="#cb16-82"></a><span class="in">A ||-------------|-3-----------|-----------------|-3------------|</span></span>
+<span id="cb16-83"><a href="#cb16-83"></a><span class="in">E ||-------------|-------------|-----------------|--------------|</span></span>
+<span id="cb16-84"><a href="#cb16-84"></a><span class="in">```</span></span>
+<span id="cb16-85"><a href="#cb16-85"></a></span>
+<span id="cb16-86"><a href="#cb16-86"></a><span class="fu"># 2. Cách đọc tab guitar nâng cao</span></span>
+<span id="cb16-87"><a href="#cb16-87"></a></span>
+<span id="cb16-88"><a href="#cb16-88"></a>Yeah chừng đấy phía trên là đủ đọc tab cho đa số (nhất là đệm hát), tuy nhiên nâng cao xíu sẽ không thừa, nhỉ? Rất hữu ích cho người chơi finger style</span>
+<span id="cb16-89"><a href="#cb16-89"></a></span>
+<span id="cb16-90"><a href="#cb16-90"></a><span class="fu">## 2.1. Hammer On - h</span></span>
+<span id="cb16-91"><a href="#cb16-91"></a></span>
+<span id="cb16-92"><a href="#cb16-92"></a>Hướng dẫn: <span class="ot">&lt;https://www.youtube.com/watch?v=OGgp0uUNG1I&gt;</span></span>
+<span id="cb16-93"><a href="#cb16-93"></a></span>
+<span id="cb16-94"><a href="#cb16-94"></a>Ví dụ:</span>
+<span id="cb16-95"><a href="#cb16-95"></a></span>
+<span id="cb16-96"><a href="#cb16-96"></a><span class="in">``` txt</span></span>
+<span id="cb16-97"><a href="#cb16-97"></a><span class="in">e--------0------------------------------------------------</span></span>
+<span id="cb16-98"><a href="#cb16-98"></a><span class="in">B--------1--1h3-------------------------------------------</span></span>
+<span id="cb16-99"><a href="#cb16-99"></a><span class="in">G---------------------------------------------------------</span></span>
+<span id="cb16-100"><a href="#cb16-100"></a><span class="in">D---------------------------------------------------------</span></span>
+<span id="cb16-101"><a href="#cb16-101"></a><span class="in">A---------------------------------------------------------</span></span>
+<span id="cb16-102"><a href="#cb16-102"></a><span class="in">E---------------------------------------------------------</span></span>
+<span id="cb16-103"><a href="#cb16-103"></a><span class="in">Đánh dây B phím 1 xong dùng ngón tay nhấn đè lên ngăn 3 để tạo hiệu ứng Hammer On</span></span>
+<span id="cb16-104"><a href="#cb16-104"></a><span class="in">```</span></span>
+<span id="cb16-105"><a href="#cb16-105"></a></span>
+<span id="cb16-106"><a href="#cb16-106"></a><span class="fu">## 2.2. Pull Offs - p</span></span>
+<span id="cb16-107"><a href="#cb16-107"></a></span>
+<span id="cb16-108"><a href="#cb16-108"></a>Hưỡng dẫn: <span class="ot">&lt;https://www.youtube.com/watch?v=cdo1H7FVI84&gt;</span></span>
+<span id="cb16-109"><a href="#cb16-109"></a></span>
+<span id="cb16-110"><a href="#cb16-110"></a>Note: hammer on và pull offs ngược nhau nên sẽ có tab sử dụng ký hiệu chung là \^ (cười bằng 1 mắt 😜), ta phân biệt hai technique kia dựa trên số trước và sau dấu \^.</span>
+<span id="cb16-111"><a href="#cb16-111"></a></span>
+<span id="cb16-112"><a href="#cb16-112"></a>Ví dụ:</span>
+<span id="cb16-113"><a href="#cb16-113"></a></span>
+<span id="cb16-114"><a href="#cb16-114"></a><span class="in">``` txt</span></span>
+<span id="cb16-115"><a href="#cb16-115"></a><span class="in">e--------0-------5^3--------------------------------------</span></span>
+<span id="cb16-116"><a href="#cb16-116"></a><span class="in">B--------1--3p1-------------------------------------------</span></span>
+<span id="cb16-117"><a href="#cb16-117"></a><span class="in">G---------------------------------------------------------</span></span>
+<span id="cb16-118"><a href="#cb16-118"></a><span class="in">D---------------------------------------------------------</span></span>
+<span id="cb16-119"><a href="#cb16-119"></a><span class="in">A---------------------------------------------------------</span></span>
+<span id="cb16-120"><a href="#cb16-120"></a><span class="in">E---------------------------------------------------------</span></span>
+<span id="cb16-121"><a href="#cb16-121"></a><span class="in">Số trước nhỏ hơn số sau: 7^9 = 7h9 do đánh từ phím 7 lên thì phải là Hammer On</span></span>
+<span id="cb16-122"><a href="#cb16-122"></a><span class="in">Số trước lớn hơn số sau: 9^7 = 9p7 do đánh từ phím 9 xuống phải là Pull Offs</span></span>
+<span id="cb16-123"><a href="#cb16-123"></a><span class="in">Trong trường hợp này chúng ta hiểu 3p1 và 5^3 đều là Pull Offs.</span></span>
+<span id="cb16-124"><a href="#cb16-124"></a><span class="in">```</span></span>
+<span id="cb16-125"><a href="#cb16-125"></a></span>
+<span id="cb16-126"><a href="#cb16-126"></a><span class="fu">## 2.3. Trills - tr</span></span>
+<span id="cb16-127"><a href="#cb16-127"></a></span>
+<span id="cb16-128"><a href="#cb16-128"></a>Ký hiệu tr phía trên hai con số, biểu thị Trills</span>
+<span id="cb16-129"><a href="#cb16-129"></a></span>
+<span id="cb16-130"><a href="#cb16-130"></a>Ví dụ:</span>
+<span id="cb16-131"><a href="#cb16-131"></a></span>
+<span id="cb16-132"><a href="#cb16-132"></a><span class="in">``` txt</span></span>
+<span id="cb16-133"><a href="#cb16-133"></a><span class="in">             tr~~~~    </span></span>
+<span id="cb16-134"><a href="#cb16-134"></a><span class="in">e------------7--(9)------------------------------------------</span></span>
+<span id="cb16-135"><a href="#cb16-135"></a><span class="in">B------7---------------------------------------------</span></span>
+<span id="cb16-136"><a href="#cb16-136"></a><span class="in">G---7-----7-------------------------------------------------</span></span>
+<span id="cb16-137"><a href="#cb16-137"></a><span class="in">D---------------------------------------------------------</span></span>
+<span id="cb16-138"><a href="#cb16-138"></a><span class="in">A---------------------------------------------------------</span></span>
+<span id="cb16-139"><a href="#cb16-139"></a><span class="in">E---------------------------------------------------------</span></span>
+<span id="cb16-140"><a href="#cb16-140"></a><span class="in">Đánh ngăn 7 xong sau đó Hammer On nhanh lên ngăn 9 rồi Pull Offs ngay ra. </span></span>
+<span id="cb16-141"><a href="#cb16-141"></a><span class="in">Nói chung Hammer On sau đó Pull Offs thì gọi là Trills!</span></span>
+<span id="cb16-142"><a href="#cb16-142"></a><span class="in">```</span></span>
+<span id="cb16-143"><a href="#cb16-143"></a></span>
+<span id="cb16-144"><a href="#cb16-144"></a><span class="fu">## 2.4. Bend - b</span></span>
+<span id="cb16-145"><a href="#cb16-145"></a></span>
+<span id="cb16-146"><a href="#cb16-146"></a>(hay còn gọi là nhéo dây)</span>
+<span id="cb16-147"><a href="#cb16-147"></a></span>
+<span id="cb16-148"><a href="#cb16-148"></a>Ví dụ:</span>
+<span id="cb16-149"><a href="#cb16-149"></a></span>
+<span id="cb16-150"><a href="#cb16-150"></a><span class="in">``` txt</span></span>
+<span id="cb16-151"><a href="#cb16-151"></a><span class="in">e-------------------5-----7b8------------------------------</span></span>
+<span id="cb16-152"><a href="#cb16-152"></a><span class="in">B---------7-----------------------------------------------</span></span>
+<span id="cb16-153"><a href="#cb16-153"></a><span class="in">G-----7-------7---------------------------------------------</span></span>
+<span id="cb16-154"><a href="#cb16-154"></a><span class="in">D---------------------------------------------------------</span></span>
+<span id="cb16-155"><a href="#cb16-155"></a><span class="in">A---------------------------------------------------------</span></span>
+<span id="cb16-156"><a href="#cb16-156"></a><span class="in">E---------------------------------------------------------</span></span>
+<span id="cb16-157"><a href="#cb16-157"></a><span class="in">7b8 nghĩa là bend ở ngăn 7 lên cao độ ngăn 8 trên dây E (Dây 1).</span></span>
+<span id="cb16-158"><a href="#cb16-158"></a><span class="in">```</span></span>
+<span id="cb16-159"><a href="#cb16-159"></a></span>
+<span id="cb16-160"><a href="#cb16-160"></a><span class="fu">## 2.5. Release - r</span></span>
+<span id="cb16-161"><a href="#cb16-161"></a></span>
+<span id="cb16-162"><a href="#cb16-162"></a>(nhả dây sau khi Bend)</span>
+<span id="cb16-163"><a href="#cb16-163"></a></span>
+<span id="cb16-164"><a href="#cb16-164"></a><span class="in">``` txt</span></span>
+<span id="cb16-165"><a href="#cb16-165"></a><span class="in">e------------------------7b8r7----------------------------</span></span>
+<span id="cb16-166"><a href="#cb16-166"></a><span class="in">B---------------------------------------------------------</span></span>
+<span id="cb16-167"><a href="#cb16-167"></a><span class="in">G---------------------------------------------------------</span></span>
+<span id="cb16-168"><a href="#cb16-168"></a><span class="in">D---------------------------------------------------------</span></span>
+<span id="cb16-169"><a href="#cb16-169"></a><span class="in">A---------------------------------------------------------</span></span>
+<span id="cb16-170"><a href="#cb16-170"></a><span class="in">E---------------------------------------------------------</span></span>
+<span id="cb16-171"><a href="#cb16-171"></a><span class="in">7b8r7 nghĩa là cũng bend lên cao độ ngăn 8 xong nhả về 7 bình thường trên dây E (Dây 1).</span></span>
+<span id="cb16-172"><a href="#cb16-172"></a><span class="in">```</span></span>
+<span id="cb16-173"><a href="#cb16-173"></a></span>
+<span id="cb16-174"><a href="#cb16-174"></a><span class="fu">## 2.6. Legato Slide - "s" hoặc "/"</span></span>
+<span id="cb16-175"><a href="#cb16-175"></a></span>
+<span id="cb16-176"><a href="#cb16-176"></a>(vuốt dây Legato)</span>
+<span id="cb16-177"><a href="#cb16-177"></a></span>
+<span id="cb16-178"><a href="#cb16-178"></a>Hướng dẫn: <span class="ot">&lt;https://www.youtube.com/watch?v=QgKk0eV-E8c&gt;</span></span>
+<span id="cb16-179"><a href="#cb16-179"></a></span>
+<span id="cb16-180"><a href="#cb16-180"></a><span class="in">``` txt</span></span>
+<span id="cb16-181"><a href="#cb16-181"></a><span class="in">e------------------------7s9------------------------------</span></span>
+<span id="cb16-182"><a href="#cb16-182"></a><span class="in">B--------------------------------------------9\7----------</span></span>
+<span id="cb16-183"><a href="#cb16-183"></a><span class="in">G---------------------------------------------------------</span></span>
+<span id="cb16-184"><a href="#cb16-184"></a><span class="in">D---------------------------------------------------------</span></span>
+<span id="cb16-185"><a href="#cb16-185"></a><span class="in">A---------------------------------------------------------</span></span>
+<span id="cb16-186"><a href="#cb16-186"></a><span class="in">E---------------------------------------------------------</span></span>
+<span id="cb16-187"><a href="#cb16-187"></a><span class="in">Trong một số tab sẽ ký hiệu là "/" với trường hơp vuốt lên như 7/9 hoặc"\" là vuốt về ví dụ như 9\7</span></span>
+<span id="cb16-188"><a href="#cb16-188"></a><span class="in">Legato là đánh xong rồi vuốt</span></span>
+<span id="cb16-189"><a href="#cb16-189"></a><span class="in">```</span></span>
+<span id="cb16-190"><a href="#cb16-190"></a></span>
+<span id="cb16-191"><a href="#cb16-191"></a><span class="fu">## 2.7. Shift slide - S</span></span>
+<span id="cb16-192"><a href="#cb16-192"></a></span>
+<span id="cb16-193"><a href="#cb16-193"></a>Hướng dẫn (cũng như phân biệt s và S): <span class="ot">&lt;https://www.youtube.com/watch?v=OWhziAenUeU&gt;</span></span>
+<span id="cb16-194"><a href="#cb16-194"></a></span>
+<span id="cb16-195"><a href="#cb16-195"></a><span class="in">``` txt</span></span>
+<span id="cb16-196"><a href="#cb16-196"></a><span class="in">e------------------------7S9------------------------------</span></span>
+<span id="cb16-197"><a href="#cb16-197"></a><span class="in">B--------------7-------------------------------------------</span></span>
+<span id="cb16-198"><a href="#cb16-198"></a><span class="in">G-----6----------------------------------------------------</span></span>
+<span id="cb16-199"><a href="#cb16-199"></a><span class="in">D-----6----------------------------------------------------</span></span>
+<span id="cb16-200"><a href="#cb16-200"></a><span class="in">A---------------------------------------------------------</span></span>
+<span id="cb16-201"><a href="#cb16-201"></a><span class="in">E---------------------------------------------------------</span></span>
+<span id="cb16-202"><a href="#cb16-202"></a><span class="in">Vừa đánh vừa vuốt từ ngăn 7 lên ngăn 9</span></span>
+<span id="cb16-203"><a href="#cb16-203"></a><span class="in">```</span></span>
+<span id="cb16-204"><a href="#cb16-204"></a></span>
+<span id="cb16-205"><a href="#cb16-205"></a><span class="fu">## 2.8. Vibrato - "v" hoặc "\~"</span></span>
+<span id="cb16-206"><a href="#cb16-206"></a></span>
+<span id="cb16-207"><a href="#cb16-207"></a>Hưỡng dẫn: <span class="ot">&lt;https://www.youtube.com/watch?v=MY9aTs1YpT4&gt;</span></span>
+<span id="cb16-208"><a href="#cb16-208"></a></span>
+<span id="cb16-209"><a href="#cb16-209"></a><span class="in">``` txt</span></span>
+<span id="cb16-210"><a href="#cb16-210"></a><span class="in">e------------------------5v-------------5~----------------</span></span>
+<span id="cb16-211"><a href="#cb16-211"></a><span class="in">B-------7--------------------------------------------------</span></span>
+<span id="cb16-212"><a href="#cb16-212"></a><span class="in">G--------------5-------------------------------------------</span></span>
+<span id="cb16-213"><a href="#cb16-213"></a><span class="in">D---------------------------------------------------------</span></span>
+<span id="cb16-214"><a href="#cb16-214"></a><span class="in">A---0------------------------------------------------------</span></span>
+<span id="cb16-215"><a href="#cb16-215"></a><span class="in">E---------------------------------------------------------</span></span>
+<span id="cb16-216"><a href="#cb16-216"></a><span class="in">Khi thấy ký hiệu "v" hoặc "~" thì bạn bend nốt đó lên xuống liên tục là vibrato, xem đường link phia trên để hiểu rõ hơn</span></span>
+<span id="cb16-217"><a href="#cb16-217"></a><span class="in">```</span></span>
+<span id="cb16-218"><a href="#cb16-218"></a></span>
+<span id="cb16-219"><a href="#cb16-219"></a><span class="fu">## 2.9. Mute - x</span></span>
+<span id="cb16-220"><a href="#cb16-220"></a></span>
+<span id="cb16-221"><a href="#cb16-221"></a>(Bịt dây đánh câm tiếng)</span>
+<span id="cb16-222"><a href="#cb16-222"></a></span>
+<span id="cb16-223"><a href="#cb16-223"></a>Bịt dây lại đánh hoàn toàn không ra tiếng</span>
+<span id="cb16-224"><a href="#cb16-224"></a></span>
+<span id="cb16-225"><a href="#cb16-225"></a><span class="in">``` txt</span></span>
+<span id="cb16-226"><a href="#cb16-226"></a><span class="in">e----5---x--------------------------------------------------</span></span>
+<span id="cb16-227"><a href="#cb16-227"></a><span class="in">B----5---x--------------------------------------------------</span></span>
+<span id="cb16-228"><a href="#cb16-228"></a><span class="in">G----6---x--------------------------------------------------</span></span>
+<span id="cb16-229"><a href="#cb16-229"></a><span class="in">D----8---x--------------------------------------------------</span></span>
+<span id="cb16-230"><a href="#cb16-230"></a><span class="in">A----7---x--------------------------------------------------</span></span>
+<span id="cb16-231"><a href="#cb16-231"></a><span class="in">E----5---x--------------------------------------------------</span></span>
+<span id="cb16-232"><a href="#cb16-232"></a><span class="in">```</span></span>
+<span id="cb16-233"><a href="#cb16-233"></a></span>
+<span id="cb16-234"><a href="#cb16-234"></a><span class="fu">## 2.10. Palm Mute - PM</span></span>
+<span id="cb16-235"><a href="#cb16-235"></a></span>
+<span id="cb16-236"><a href="#cb16-236"></a>Vẫn đánh ra tiếng nhưng dùng tay phải đè lên phần ngựa để hạn chế độ rung của dây. Tiếng gọn hơn chứ không vang đanh như bình thường.</span>
+<span id="cb16-237"><a href="#cb16-237"></a></span>
+<span id="cb16-238"><a href="#cb16-238"></a><span class="in">``` txt</span></span>
+<span id="cb16-239"><a href="#cb16-239"></a><span class="in">                    PM---------- |</span></span>
+<span id="cb16-240"><a href="#cb16-240"></a><span class="in">E---------5---------3-----------------------------------</span></span>
+<span id="cb16-241"><a href="#cb16-241"></a><span class="in">B------------7------------------------------------------</span></span>
+<span id="cb16-242"><a href="#cb16-242"></a><span class="in">G-------------------------------------------------------</span></span>
+<span id="cb16-243"><a href="#cb16-243"></a><span class="in">D-------------------------------------------------------</span></span>
+<span id="cb16-244"><a href="#cb16-244"></a><span class="in">A------0--------0---------------------------------------</span></span>
+<span id="cb16-245"><a href="#cb16-245"></a><span class="in">E---0---------------------------------------------------</span></span>
+<span id="cb16-246"><a href="#cb16-246"></a><span class="in">```</span></span>
+<span id="cb16-247"><a href="#cb16-247"></a></span>
+<span id="cb16-248"><a href="#cb16-248"></a><span class="fu">## 2.11. Harmonic - \&lt;\&gt;</span></span>
+<span id="cb16-249"><a href="#cb16-249"></a></span>
+<span id="cb16-250"><a href="#cb16-250"></a>Đặt tay lên phím (không bấm, chỉ đặt hờ) gảy ở phía cuối dây đàn (nơi bình thường nếu gảy sẽ tạo ra tiếng đanh và sắc nhất), sẽ tạo ra tiếng harmonic.</span>
+<span id="cb16-251"><a href="#cb16-251"></a></span>
+<span id="cb16-252"><a href="#cb16-252"></a><span class="in">``` txt</span></span>
+<span id="cb16-253"><a href="#cb16-253"></a><span class="in">E------------------------&lt;7&gt;-------------&lt;12&gt;-------------</span></span>
+<span id="cb16-254"><a href="#cb16-254"></a><span class="in">B----------------------------------------&lt;12&gt;-------------</span></span>
+<span id="cb16-255"><a href="#cb16-255"></a><span class="in">G----------------------------------------&lt;12&gt;-------------</span></span>
+<span id="cb16-256"><a href="#cb16-256"></a><span class="in">D---------------------------------------------------------</span></span>
+<span id="cb16-257"><a href="#cb16-257"></a><span class="in">A---------------------------------------------------------</span></span>
+<span id="cb16-258"><a href="#cb16-258"></a><span class="in">E---------------------------------------------------------</span></span>
+<span id="cb16-259"><a href="#cb16-259"></a><span class="in">```</span></span>
+<span id="cb16-260"><a href="#cb16-260"></a></span>
+<span id="cb16-261"><a href="#cb16-261"></a><span class="fu"># 3. Các ký hiệu</span></span>
+<span id="cb16-262"><a href="#cb16-262"></a></span>
+<span id="cb16-263"><a href="#cb16-263"></a><span class="ss">-   </span>b – Nhấn dây lên</span>
+<span id="cb16-264"><a href="#cb16-264"></a></span>
+<span id="cb16-265"><a href="#cb16-265"></a><span class="ss">-   </span>r – Trả note nhấn về vị trí củ</span>
+<span id="cb16-266"><a href="#cb16-266"></a></span>
+<span id="cb16-267"><a href="#cb16-267"></a><span class="ss">-   </span>p – luyến dây</span>
+<span id="cb16-268"><a href="#cb16-268"></a></span>
+<span id="cb16-269"><a href="#cb16-269"></a><span class="ss">-   </span>h – gõ lên</span>
+<span id="cb16-270"><a href="#cb16-270"></a></span>
+<span id="cb16-271"><a href="#cb16-271"></a><span class="ss">-   </span>/ – kéo note lên hoặc là (S)</span>
+<span id="cb16-272"><a href="#cb16-272"></a></span>
+<span id="cb16-273"><a href="#cb16-273"></a><span class="ss">-   </span><span class="sc">\\</span> – kéo note xuống; như trên</span>
+<span id="cb16-274"><a href="#cb16-274"></a></span>
+<span id="cb16-275"><a href="#cb16-275"></a><span class="ss">-   </span>m – đánh tiếng câm</span>
+<span id="cb16-276"><a href="#cb16-276"></a></span>
+<span id="cb16-277"><a href="#cb16-277"></a><span class="ss">-   </span>Pm – tiếng câm tây phải</span>
+<span id="cb16-278"><a href="#cb16-278"></a></span>
+<span id="cb16-279"><a href="#cb16-279"></a><span class="ss">-   </span>v – rung dây (có khi sẽ viết là \~)</span>
+<span id="cb16-280"><a href="#cb16-280"></a></span>
+<span id="cb16-281"><a href="#cb16-281"></a><span class="ss">-   </span>t – gõ lên bằng tây cầm phím (hoặc có thể viết là +)</span>
+<span id="cb16-282"><a href="#cb16-282"></a></span>
+<span id="cb16-283"><a href="#cb16-283"></a><span class="ss">-   </span>ha – Đánh tiếng chuôn</span>
+<span id="cb16-284"><a href="#cb16-284"></a></span>
+<span id="cb16-285"><a href="#cb16-285"></a><span class="ss">-   </span>x – không đánh hoặc có đánh thì đánh tiếng câm không ra note.</span>
+<span id="cb16-286"><a href="#cb16-286"></a></span>
+<span id="cb16-287"><a href="#cb16-287"></a><span class="ss">-   </span>w/bar – dùng cần nhúng</span>
+<span id="cb16-288"><a href="#cb16-288"></a></span>
+<span id="cb16-289"><a href="#cb16-289"></a><span class="ss">-   </span>h – hammer on – luyến từ âm thấp lên âm cao</span>
+<span id="cb16-290"><a href="#cb16-290"></a></span>
+<span id="cb16-291"><a href="#cb16-291"></a><span class="ss">-   </span>p – pull off – luyến từ âm cao về âm thấp</span>
+<span id="cb16-292"><a href="#cb16-292"></a></span>
+<span id="cb16-293"><a href="#cb16-293"></a><span class="ss">-   </span>hammeron và pulloff còn được kí hiệu bằng dấu \^ VD: ——-2\^3\^2\^3——–</span>
+<span id="cb16-294"><a href="#cb16-294"></a></span>
+<span id="cb16-295"><a href="#cb16-295"></a><span class="ss">-   </span>b – uốn dây lên (dí chặt dây đàn và di lên phía trên, tạo ra âm méo)</span>
+<span id="cb16-296"><a href="#cb16-296"></a></span>
+<span id="cb16-297"><a href="#cb16-297"></a><span class="ss">-   </span>b\^ = uốn ½ nhịp</span>
+<span id="cb16-298"><a href="#cb16-298"></a></span>
+<span id="cb16-299"><a href="#cb16-299"></a><span class="ss">-   </span>b\^\^ = uốn 1 1/2 nhịp</span>
+<span id="cb16-300"><a href="#cb16-300"></a></span>
+<span id="cb16-301"><a href="#cb16-301"></a><span class="ss">-   </span>pb = pre-bend</span>
+<span id="cb16-302"><a href="#cb16-302"></a></span>
+<span id="cb16-303"><a href="#cb16-303"></a><span class="ss">-   </span>r – nhả uốn, tức là đưa dây về vị trí bình thường:&nbsp; Có nhiều kiểu uốn dây như uốn lên luôn, ko nhả, uốn rồi nhả về, uốn rồi nhả rồi lại uốn hoặc là uốn trước rồi mới gẩy (gọi là pre-bend), uốn trước – gẩy – và nhả về…</span>
+<span id="cb16-304"><a href="#cb16-304"></a></span>
+<span id="cb16-305"><a href="#cb16-305"></a><span class="ss">-   </span>/ – miết lên (miết ngón tay từ 1 phím lên phím có cao độ lớn hơn)</span>
+<span id="cb16-306"><a href="#cb16-306"></a></span>
+<span id="cb16-307"><a href="#cb16-307"></a><span class="ss">-   </span><span class="sc">\\</span> – miết xuống</span>
+<span id="cb16-308"><a href="#cb16-308"></a></span>
+<span id="cb16-309"><a href="#cb16-309"></a><span class="ss">-   </span>v (hoặc \~) – nhay nhay ngón tay để tạo âm rung</span>
+<span id="cb16-310"><a href="#cb16-310"></a></span>
+<span id="cb16-311"><a href="#cb16-311"></a><span class="ss">-   </span>t – đánh kiểu tapping, dùng đầu ngón tay ấn nhanh vào dây đàn để tạo âm thanh</span>
+<span id="cb16-312"><a href="#cb16-312"></a></span>
+<span id="cb16-313"><a href="#cb16-313"></a><span class="ss">-   </span>#(#) = Trill – đánh 2 nốt cùng 1 âm hoặc đánh như kiểu vê ý</span>
+<span id="cb16-314"><a href="#cb16-314"></a></span>
+<span id="cb16-315"><a href="#cb16-315"></a><span class="ss">-   </span>x = Nốt chết – có đánh nhưng phát ra tiếng câm (sờ lên dây chứ ko bấm, kiểu thế)</span>
+<span id="cb16-316"><a href="#cb16-316"></a></span>
+<span id="cb16-317"><a href="#cb16-317"></a><span class="ss">-   </span>P.M. = Ốp lòng bàn tay vào để tắt âm</span>
+<span id="cb16-318"><a href="#cb16-318"></a></span>
+<span id="cb16-319"><a href="#cb16-319"></a><span class="ss">-   </span>Tp = oánh tapping bằng móng gẩy</span>
+<span id="cb16-320"><a href="#cb16-320"></a></span>
+<span id="cb16-321"><a href="#cb16-321"></a><span class="ss">-   </span><span class="sc">\&gt;\&gt;\&gt;</span> tăng độ to</span>
+<span id="cb16-322"><a href="#cb16-322"></a></span>
+<span id="cb16-323"><a href="#cb16-323"></a><span class="ss">-   </span><span class="sc">\&lt;\&lt;\&lt;</span> giảm độ to</span>
+<span id="cb16-324"><a href="#cb16-324"></a></span>
+<span id="cb16-325"><a href="#cb16-325"></a><span class="ss">-   </span>Hình chữ X(x): Death note(âm chết). Cách đánh: đập mạnh dây cho chạm tới thanh đồng của cần đàn cho kêu thành tiếng “chạch” hoặc gãy vào 1 dây nhưng tay trái giữ cho không kêu -<span class="sc">\&gt;</span>”pực”. Cả 2 cách đều có hiệu ứng như nhau nhưng cách đầu tiếng rất chói, dùng trong dập hoặc rock.</span>
+<span id="cb16-326"><a href="#cb16-326"></a></span>
+<span id="cb16-327"><a href="#cb16-327"></a><span class="ss">-   </span>Grace Note(G): âm hoa mĩ, đánh nhỏ hơn các âm bình thường.</span>
+<span id="cb16-328"><a href="#cb16-328"></a></span>
+<span id="cb16-329"><a href="#cb16-329"></a><span class="ss">-   </span>Ghost Note(O): âm ma, đánh nhỏ hơn âm hoa mĩ.</span>
+<span id="cb16-330"><a href="#cb16-330"></a></span>
+<span id="cb16-331"><a href="#cb16-331"></a><span class="ss">-   </span>Accentuated note: âm nhấn mạnh.</span>
+<span id="cb16-332"><a href="#cb16-332"></a></span>
+<span id="cb16-333"><a href="#cb16-333"></a><span class="ss">-   </span>Heavy accentuated note: nhấn mạnh hơn 1 chút nữa.</span>
+<span id="cb16-334"><a href="#cb16-334"></a></span>
+<span id="cb16-335"><a href="#cb16-335"></a><span class="ss">-   </span>Let ring(I): để kêu, không ngắt tiếng.</span>
+<span id="cb16-336"><a href="#cb16-336"></a></span>
+<span id="cb16-337"><a href="#cb16-337"></a><span class="ss">-   </span>Natural Harmonic: âm gió tự nhiên, đặt tay hờ vào phím 12 và gẩy tạo âm thanh lạ.</span>
+<span id="cb16-338"><a href="#cb16-338"></a></span>
+<span id="cb16-339"><a href="#cb16-339"></a><span class="ss">-   </span>Artificial harmonic: âm gió nghệ thuật, tay trái bấm vào 1 phím bất kỳ còn tay phải bấm hờ vào phím cách phím cũ 1 khoảng nhất định(5,7,12,19…)-<span class="sc">\&gt;</span> tạo ra các âm gió đa dạng hơn.</span>
+<span id="cb16-340"><a href="#cb16-340"></a></span>
+<span id="cb16-341"><a href="#cb16-341"></a><span class="ss">-   </span>Hammer on/ Pull off(H): nháy phím, dùng tay bấm(trái) (chứ không phải tay gảy) để gảy nhẹ hoặc bấm mạnh vào các phím nhằm tạo ra âm thanh khác so với gảy-<span class="sc">\&gt;</span> đánh 1 số chỗ nhanh cần dùng kỹ thuật này.</span>
+<span id="cb16-342"><a href="#cb16-342"></a></span>
+<span id="cb16-343"><a href="#cb16-343"></a><span class="ss">-   </span>Bend(B): đẩy dây, ngón bấm phím đẩy dây lên dọc theo thanh đồng làm tiếng bị méo lên cao. 1/2 tức cao độ méo đi là 1 phím, full là 2 phím…</span>
+<span id="cb16-344"><a href="#cb16-344"></a></span>
+<span id="cb16-345"><a href="#cb16-345"></a><span class="ss">-   </span>Tremolo Bar: cái này khó dùng lắm, mà người ta cũng không dùng mấy.</span>
+<span id="cb16-346"><a href="#cb16-346"></a></span>
+<span id="cb16-347"><a href="#cb16-347"></a><span class="ss">-   </span>Legato slide(S): vuốt dây liền tiếng, vuốt dây mà không gảy ở cuối lúc vuốt.</span>
+<span id="cb16-348"><a href="#cb16-348"></a></span>
+<span id="cb16-349"><a href="#cb16-349"></a><span class="ss">-   </span>Shift slide(Alt+S): vuốt dây đứt tiếng, vuốt dây sau khi đạt tới phím vuốt sau thì gảy 1 cái.</span>
+<span id="cb16-350"><a href="#cb16-350"></a></span>
+<span id="cb16-351"><a href="#cb16-351"></a><span class="ss">-   </span>Slide: vuốt dây, có 4 loại là vuốt lên, vuốt xuống,… thông thường phím khởi điểm cách phím cuối 2 phím.</span>
+<span id="cb16-352"><a href="#cb16-352"></a></span>
+<span id="cb16-353"><a href="#cb16-353"></a><span class="ss">-   </span>Vibrato(v): rung dây, Cách 1:ngón bấm rung dây theo chiều lên xuống dọc theo phím đồng, điểm tiếp xúc của ngón bấm với cần đàn chuyển động. Cách 2: tay trái bấm lay dây dọc theo cần đàn nhưng chỗ tiếp xúc với cần đàn đứng yên.</span>
+<span id="cb16-354"><a href="#cb16-354"></a></span>
+<span id="cb16-355"><a href="#cb16-355"></a><span class="ss">-   </span>Wide Vibrato: rung dây biên độ lớn, cách đánh tương tự.</span>
+<span id="cb16-356"><a href="#cb16-356"></a></span>
+<span id="cb16-357"><a href="#cb16-357"></a><span class="ss">-   </span>Trill: tremolo cả khuông nhạc. về kỹ thuật tremolo các bạn có thể tham khảo trên mạng hoặc trên www.guitarpro.vn</span>
+<span id="cb16-358"><a href="#cb16-358"></a></span>
+<span id="cb16-359"><a href="#cb16-359"></a><span class="ss">-   </span>Tremolo picking: tremolo với số lần định trước.</span>
+<span id="cb16-360"><a href="#cb16-360"></a></span>
+<span id="cb16-361"><a href="#cb16-361"></a><span class="ss">-   </span>P.M(P): Palm mute, tay gảy hoặc tay bấm chặn ở gần cầu ngựa hoặc gần chỗ đầu rung của dây là dây rung kém đi 1 chút, nếu thành thạo thì tiếng nghe giống tiếng đàn bầu.(Kỹ thuật này khó lắm, phụ thuộc vào cảm giác tay nhiều lắm)</span>
+<span id="cb16-362"><a href="#cb16-362"></a></span>
+<span id="cb16-363"><a href="#cb16-363"></a><span class="ss">-   </span>Staccato: ngắt tiếng, làm thế nào cho 1 cái dây nó không kêu nữa 1 cách đột ngột thì làm.</span>
+<span id="cb16-364"><a href="#cb16-364"></a></span>
+<span id="cb16-365"><a href="#cb16-365"></a><span class="ss">-   </span>Tapping: dùng tay gảy bấm note đó(trường hợp các phím bấm xa nhau không với được.</span>
+<span id="cb16-366"><a href="#cb16-366"></a></span>
+<span id="cb16-367"><a href="#cb16-367"></a><span class="ss">-   </span>Slapping: trong bass thì có kỹ thuật lấy ngón cái đập vào dây khi kêu tạo hiệu ứng lạ.</span>
+<span id="cb16-368"><a href="#cb16-368"></a></span>
+<span id="cb16-369"><a href="#cb16-369"></a><span class="ss">-   </span>Popping: cái này trong đàn bass dùng, tui cũng chưa biết nó thế nào vì không đánh bass bao giờ.</span>
+<span id="cb16-370"><a href="#cb16-370"></a></span>
+<span id="cb16-371"><a href="#cb16-371"></a><span class="ss">-   </span>Fade In(F): tạo ra tiếng to dần(trong đàn điện mới được).</span>
+<span id="cb16-372"><a href="#cb16-372"></a></span>
+<span id="cb16-373"><a href="#cb16-373"></a><span class="ss">-   </span>Wah Wah: Dấu + là đánh vì trí gảy dây tay gảy gảy gần về phía cầu ngựa, dấu o là gảy gần vào giữa dây đàn.</span>
+<span id="cb16-374"><a href="#cb16-374"></a></span>
+<span id="cb16-375"><a href="#cb16-375"></a><span class="ss">-   </span>Chord(A): các thế bấm Gam.</span>
+<span id="cb16-376"><a href="#cb16-376"></a></span>
+<span id="cb16-377"><a href="#cb16-377"></a><span class="ss">-   </span>Downstroke(Ctrl+D): rải hợp âm xuống.</span>
+<span id="cb16-378"><a href="#cb16-378"></a></span>
+<span id="cb16-379"><a href="#cb16-379"></a><span class="ss">-   </span>Upstroke(Ctrl+U): rải hợp âm lên.</span>
+<span id="cb16-380"><a href="#cb16-380"></a></span>
+<span id="cb16-381"><a href="#cb16-381"></a><span class="ss">-   </span>Pickstroke up: móc dây theo hướng lên trên.</span>
+<span id="cb16-382"><a href="#cb16-382"></a></span>
+<span id="cb16-383"><a href="#cb16-383"></a><span class="ss">-   </span>Pickstroke down: bật dây xuống dưới.</span>
+<span id="cb16-384"><a href="#cb16-384"></a></span>
+<span id="cb16-385"><a href="#cb16-385"></a><span class="ss">-   </span>“ppp”-<span class="sc">\&gt;</span>”fff”: độ to của âm tăng dần.</span>
+<span id="cb16-386"><a href="#cb16-386"></a></span>
+<span id="cb16-387"><a href="#cb16-387"></a><span class="ss">-   </span>Tempo: số note đen trong 1 phút, càng nhiều thì bài càng nhanh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">

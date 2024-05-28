@@ -130,7 +130,7 @@ window.Quarto = {
 };
 </script>
 
-</head>
+<link rel="alternate" type="application/rss+xml" title="Le Khac Tuan" href="blog.xml" data-external="1"></head>
 
 <body class="nav-fixed">
 
@@ -219,6 +219,31 @@ window.Quarto = {
 
 
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="listing-actions-group">
+   <div class="input-group input-group-sm quarto-listing-sort">
+     <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
+     <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
+       <option value="" disabled="" selected="" hidden="">Order By</option>
+       <option value="index" data-direction="asc">Default</option>
+         <option value="listing-title" data-direction="asc">
+          Title
+        </option>
+         <option value="listing-date-sort" data-direction="asc">
+          Date - Oldest
+        </option>
+         <option value="listing-date-sort" data-direction="desc">
+          Date - Newest
+        </option>
+         <option value="listing-author" data-direction="asc">
+          Author
+        </option>
+     </select>
+  </div>
+    <div class="input-group input-group-sm quarto-listing-filter">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="text" class="search form-control" placeholder="Filter">
+    </div>
+</div>
 <div class="list quarto-listing-default">
 <div class="quarto-post image-right" data-index="0" data-categories="Python,Visualization" data-listing-date-sort="1716310800000" data-listing-file-modified-sort="1716366501712" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1505">
 <div class="thumbnail">
@@ -256,7 +281,7 @@ Tuan Le Khac
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-categories="Python,Lambda" data-listing-date-sort="1716224400000" data-listing-file-modified-sort="1716450381860" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2349">
+<div class="quarto-post image-right" data-index="1" data-categories="Python,Lambda" data-listing-date-sort="1716224400000" data-listing-file-modified-sort="1716869931146" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2350">
 <div class="thumbnail">
 <p><a href="./blog/2024-05-21-python-is-cool/index.html" class="no-external"></a></p><a href="./blog/2024-05-21-python-is-cool/index.html" class="no-external">
 <p><img src="./blog/2024-05-21-python-is-cool/python.jpg" class="thumbnail-image"></p>
@@ -364,7 +389,7 @@ Tuan Le Khac
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="4" data-categories="R,ggplot2,Data Visualization" data-listing-date-sort="1703350800000" data-listing-file-modified-sort="1716278132672" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2184">
+<div class="quarto-post image-right" data-index="4" data-categories="R,ggplot2,Data Visualization" data-listing-date-sort="1703350800000" data-listing-file-modified-sort="1716869798861" data-listing-date-modified-sort="1716829200000" data-listing-reading-time-sort="11" data-listing-word-count-sort="2184">
 <div class="thumbnail">
 <p><a href="./blog/2023-12-24-a-first-lession-on-ggplot2/index.html" class="no-external"></a></p><a href="./blog/2023-12-24-a-first-lession-on-ggplot2/index.html" class="no-external">
 <p><img src="./blog/2023-12-24-a-first-lession-on-ggplot2/ggplot2.png" class="thumbnail-image"></p>
@@ -489,7 +514,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/lktuan\.github\.io\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
