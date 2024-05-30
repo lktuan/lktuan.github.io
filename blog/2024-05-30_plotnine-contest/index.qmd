@@ -1,0 +1,86 @@
+---
+title: "I am participating Plotnine Contest 2024 🚀"
+description: "While  learning the grammar of graphics with {ggplot2}, let's see how can we do the same in Python {plotnine}"
+author:
+  - name: "Tuan Le Khac"
+    url: https://lktuan.github.io/
+date: 05-30-2024
+modified-date: 05-30-2024
+categories: [Python, Plotnine, ggplot2, data visualization] 
+image: plotnine_logo.jpg
+draft: true 
+format: 
+  html: 
+    code-fold: false
+    code-summary: "Show the code"
+    code-line-numbers: true
+css: html/styles.scss
+fig-cap-location: bottom
+editor: visual
+---
+
+# 1. Motivation 🔥
+
+I've heard for a while that there is a package called `plotnine`, which is an implementation of the grammar of graphics in Python based on `ggplot2`, but have not had a chance to practice yet. The Plotnine Contest shared by [Christoph Scheuch](https://www.linkedin.com/posts/christophscheuch_python-dataviz-activity-7198933177287983104-quhR) and [Rami Krispin](https://www.linkedin.com/posts/rami-krispin_python-datascience-dataviz-activity-7199741039849476096-t4f3) motivated me to attend this challenge.
+
+
+::: {layout-ncol=1}
+![Photo credit to [Posit](https://posit.co/blog/announcing-the-2024-plotnine-contest/)](posit_plotnine_contest_banner.jpg){width=100%}
+:::
+
+# 2. My Submission 🚴‍♂️
+The initial idea is to re-create/enhance [this Dumbell chart](https://www.visualcapitalist.com/countries-with-biggest-happiness-gaps-between-generations/) from Visual Capitalist.
+
+::: {layout-ncol=1}
+![Photo credit to [Visual Capitalist](https://www.visualcapitalist.com/countries-with-biggest-happiness-gaps-between-generations/)](Voro-Happiness-gap-Site-Footer.jpg){width=100%}
+:::
+
+## 2.1. Getting the data
+
+```{python}
+import requests
+import pandas as pd
+from io import StringIO
+
+
+url = "https://www.visualcapitalist.com/countries-with-biggest-happiness-gaps-between-generations/"
+headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+response = requests.get(url, headers=headers)
+html = response.content.decode()
+
+data = pd.read_html(StringIO(html),attrs={"id": "tablepress-4104"})[0]
+data["Country"] = data["Country"].str[3:] # remove the country alias
+
+data = data.rename(columns={
+  "Rank": "rank",
+  "Country": "country",
+  "Youth Happiness Rank": "youth_happiness_r",
+  "Older Adult Happiness Rank": "older_adult_happiness_r",
+  "Happiness Gap": "happiness_gap"
+})
+```
+
+## 2.2. Plotting
+TBU
+```{python}
+from plotnine import *
+
+(
+  ggplot()
+  # range strip
+  + geom_segment(
+      data,
+      aes(y="country", yend="country"),
+      x=0,
+      xend=100,
+      size=8.5,
+      color="#edece3",
+  )
+)
+```
+
+# 3. Resources 📚
+1. [Announcing the 2024 Plotnine Contest](https://posit.co/blog/announcing-the-2024-plotnine-contest/);
+2. [Plotnine Github repo](https://github.com/has2k1/plotnine);
+3. [Plotnine Documentation](https://plotnine.org/)
+4. [**Visual Capitalist**, Ranked: Countries Where Youth are the Most Unhappy, Relative to Older Generations](https://www.visualcapitalist.com/countries-with-biggest-happiness-gaps-between-generations/)
