@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.554">
+<meta name="generator" content="quarto-1.3.450">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
 <meta name="author" content="Tuan Le Khac">
 <meta name="dcterms.date" content="2023-12-24">
 <meta name="description" content="I am a Risk Modeler 🚀">
+
 <title>Le Khac Tuan - A tuturial of ggplot2</title>
 <style>
 code{white-space: pre-wrap;}
@@ -22,7 +25,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -56,6 +59,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 </style>
 
+
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -73,18 +77,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
-<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "textbox",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
+  "limit": 20,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -93,18 +93,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
-    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><link rel="stylesheet" href="html/styles.scss">
+}</script>
+
+
+<link rel="stylesheet" href="html/styles.scss">
 </head>
+
 <body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
-      <div class="navbar-brand-container mx-auto">
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Le Khac Tuan</span>
     </a>
@@ -115,46 +120,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-<li class="nav-item">
-    <a class="nav-link" href="../../about/index.html"> 
-<span class="menu-text">About</span></a>
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/index.html" rel="" target="">
+ <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../blog.html"> 
-<span class="menu-text">Blog</span></a>
+    <a class="nav-link" href="../../blog.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../学汉语的日记.html"> 
-<span class="menu-text">学汉语的日记</span></a>
+    <a class="nav-link" href="../../学汉语的日记.html" rel="" target="">
+ <span class="menu-text">学汉语的日记</span></a>
   </li>  
 </ul>
-<ul class="navbar-nav navbar-nav-scroll ms-auto">
-<li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/lktuan"> <i class="bi bi-github" role="img">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/lktuan" rel="" target=""><i class="bi bi-github" role="img">
 </i> 
-<span class="menu-text"></span></a>
+ <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://www.linkedin.com/in/tuanlekhac/"> <i class="bi bi-linkedin" role="img">
+    <a class="nav-link" href="https://www.linkedin.com/in/tuanlekhac/" rel="" target=""><i class="bi bi-linkedin" role="img">
 </i> 
-<span class="menu-text"></span></a>
+ <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://www.facebook.com/toilatuan.lk/"> <i class="bi bi-facebook" role="img">
+    <a class="nav-link" href="https://www.facebook.com/toilatuan.lk/" rel="" target=""><i class="bi bi-facebook" role="img">
 </i> 
-<span class="menu-text"></span></a>
+ <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="mailto:tuan.lekhac0905@gmail.com"> <i class="bi bi-envelope" role="img">
+    <a class="nav-link" href="mailto:tuan.lekhac0905@gmail.com" rel="" target=""><i class="bi bi-envelope" role="img">
 </i> 
-<span class="menu-text"></span></a>
+ <span class="menu-text"></span></a>
   </li>  
 </ul>
-</div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
+          </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
-    </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default page-columns page-full"><div class="quarto-title-banner page-columns page-full">
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <div class="quarto-title-block"><div><h1 class="title">A tuturial of ggplot2</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
                   <div>
@@ -201,27 +210,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
    
   <ul>
-<li><a href="#preparation" id="toc-preparation" class="nav-link active" data-scroll-target="#preparation">0. Preparation</a></li>
-  <li>
-<a href="#the-dataset" id="toc-the-dataset" class="nav-link" data-scroll-target="#the-dataset">1. The Dataset</a>
+  <li><a href="#preparation" id="toc-preparation" class="nav-link active" data-scroll-target="#preparation">0. Preparation</a></li>
+  <li><a href="#the-dataset" id="toc-the-dataset" class="nav-link" data-scroll-target="#the-dataset">1. The Dataset</a>
   <ul class="collapse">
-<li><a href="#import-data" id="toc-import-data" class="nav-link" data-scroll-target="#import-data">Import data</a></li>
-  </ul>
-</li>
+  <li><a href="#import-data" id="toc-import-data" class="nav-link" data-scroll-target="#import-data">Import data</a></li>
+  </ul></li>
   <li><a href="#the-ggplot2-package" id="toc-the-ggplot2-package" class="nav-link" data-scroll-target="#the-ggplot2-package">3. The <code>{ggplot2}</code> Package</a></li>
-  <li>
-<a href="#a-default-ggplot" id="toc-a-default-ggplot" class="nav-link" data-scroll-target="#a-default-ggplot">4. A default <code>ggplot</code></a>
+  <li><a href="#a-default-ggplot" id="toc-a-default-ggplot" class="nav-link" data-scroll-target="#a-default-ggplot">4. A default <code>ggplot</code></a>
   <ul class="collapse">
-<li><a href="#change-properties-of-geometries" id="toc-change-properties-of-geometries" class="nav-link" data-scroll-target="#change-properties-of-geometries">Change properties of geometries</a></li>
-  </ul>
-</li>
-  <li>
-<a href="#axes" id="toc-axes" class="nav-link" data-scroll-target="#axes">5. Axes</a>
+  <li><a href="#change-properties-of-geometries" id="toc-change-properties-of-geometries" class="nav-link" data-scroll-target="#change-properties-of-geometries">Change properties of geometries</a></li>
+  </ul></li>
+  <li><a href="#axes" id="toc-axes" class="nav-link" data-scroll-target="#axes">5. Axes</a>
   <ul class="collapse">
-<li><a href="#change-axis-titles" id="toc-change-axis-titles" class="nav-link" data-scroll-target="#change-axis-titles">Change Axis Titles</a></li>
+  <li><a href="#change-axis-titles" id="toc-change-axis-titles" class="nav-link" data-scroll-target="#change-axis-titles">Change Axis Titles</a></li>
   <li><a href="#increase-space-between-axis-and-axis-titles." id="toc-increase-space-between-axis-and-axis-titles." class="nav-link" data-scroll-target="#increase-space-between-axis-and-axis-titles.">Increase space between Axis and Axis Titles.</a></li>
   <li><a href="#change-aesthetics-of-the-axis-titles" id="toc-change-aesthetics-of-the-axis-titles" class="nav-link" data-scroll-target="#change-aesthetics-of-the-axis-titles">Change Aesthetics of the Axis Titles</a></li>
   <li><a href="#change-aesthetics-of-axis-text" id="toc-change-aesthetics-of-axis-text" class="nav-link" data-scroll-target="#change-aesthetics-of-axis-text">Change Aesthetics of Axis Text</a></li>
@@ -232,15 +237,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#force-plot-to-start-at-the-origin" id="toc-force-plot-to-start-at-the-origin" class="nav-link" data-scroll-target="#force-plot-to-start-at-the-origin">Force Plot to start at the origin</a></li>
   <li><a href="#axes-with-same-scaling" id="toc-axes-with-same-scaling" class="nav-link" data-scroll-target="#axes-with-same-scaling">Axes with Same Scaling</a></li>
   <li><a href="#use-a-function-to-alter-labels" id="toc-use-a-function-to-alter-labels" class="nav-link" data-scroll-target="#use-a-function-to-alter-labels">Use a Function to Alter Labels</a></li>
-  </ul>
-</li>
-  <li>
-<a href="#titles" id="toc-titles" class="nav-link" data-scroll-target="#titles">6. Titles</a>
+  </ul></li>
+  <li><a href="#titles" id="toc-titles" class="nav-link" data-scroll-target="#titles">6. Titles</a>
   <ul class="collapse">
-<li><a href="#add-a-title" id="toc-add-a-title" class="nav-link" data-scroll-target="#add-a-title">Add a Title</a></li>
+  <li><a href="#add-a-title" id="toc-add-a-title" class="nav-link" data-scroll-target="#add-a-title">Add a Title</a></li>
   <li><a href="#make-title-bold-add-a-space-at-the-baseline" id="toc-make-title-bold-add-a-space-at-the-baseline" class="nav-link" data-scroll-target="#make-title-bold-add-a-space-at-the-baseline">Make title bold &amp; add a space at the baseline</a></li>
-  </ul>
-</li>
+  </ul></li>
   <li><a href="#legends" id="toc-legends" class="nav-link" data-scroll-target="#legends">7. Legends</a></li>
   <li><a href="#backgrounds-grid-lines" id="toc-backgrounds-grid-lines" class="nav-link" data-scroll-target="#backgrounds-grid-lines">8. Backgrounds &amp; Grid Lines</a></li>
   <li><a href="#margins" id="toc-margins" class="nav-link" data-scroll-target="#margins">9. Margins</a></li>
@@ -256,14 +258,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#interactive-plots" id="toc-interactive-plots" class="nav-link" data-scroll-target="#interactive-plots">19. Interactive Plots</a></li>
   <li><a href="#remarks-tipps-resources" id="toc-remarks-tipps-resources" class="nav-link" data-scroll-target="#remarks-tipps-resources">20. Remarks, Tipps &amp; Resources</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
-  </ul></nav>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content"><section id="preparation" class="level1"><h1>0. Preparation</h1>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="preparation" class="level1">
+<h1>0. Preparation</h1>
 <hr>
 <p>I need to install the following packages:</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># | eval: false</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># | eval: false</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="co"># install CRAN packages</span></span>
 <span id="cb1-3"><a href="#cb1-3"></a>pkg_install <span class="ot">=</span>   <span class="fu">c</span>(<span class="st">"ggplot2"</span>, <span class="st">"tibble"</span>, <span class="st">"tidyr"</span>, <span class="st">"forcats"</span>, <span class="st">"purrr"</span>, <span class="st">"prismatic"</span>, <span class="st">"corrr"</span>, </span>
 <span id="cb1-4"><a href="#cb1-4"></a>    <span class="st">"cowplot"</span>, <span class="st">"ggforce"</span>, <span class="st">"ggrepel"</span>, <span class="st">"ggridges"</span>, <span class="st">"ggsci"</span>, <span class="st">"ggtext"</span>, <span class="st">"ggthemes"</span>, </span>
@@ -274,7 +285,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>I was facing the error of installing devtools</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># | eval: false</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># | eval: false</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="co"># install from GitHub since not on CRAN</span></span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="co"># install.packages('devtools')</span></span>
 <span id="cb2-4"><a href="#cb2-4"></a><span class="co"># devtools::install_github("JohnCoene/charter")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -282,27 +295,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>I tried to update R to the latest version (commented the code as it would be run once)</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># | eval: false</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># | eval: false</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="co"># update.packages(repos='http://cran.rstudio.com/', ask=FALSE, checkBuilt=TRUE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>–&gt; Not worked</p>
 <p><strong>Oops I was should be using “‘devtools’” instead of “devtools”!!! Problem solved</strong></p>
-</section><section id="the-dataset" class="level1"><h1>1. The Dataset</h1>
+</section>
+<section id="the-dataset" class="level1">
+<h1>1. The Dataset</h1>
 <hr>
 <p>I was using the dataset: “<em>National Morbidity and Mortality Air Pollution Study</em>&nbsp;(NMMAPS)”</p>
 <p>Install the readr first:</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># | eval: false</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># | eval: false</span></span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="co"># install.packages('readr')</span></span>
 <span id="cb4-3"><a href="#cb4-3"></a><span class="co"># install.packages("quarto")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<section id="import-data" class="level3"><h3 class="anchored" data-anchor-id="import-data">Import data</h3>
+<section id="import-data" class="level3">
+<h3 class="anchored" data-anchor-id="import-data">Import data</h3>
 <p>“: :” here call the namespace and can be used to access a function without loading the package.</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>chic <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"https://cedricscherer.com/data/chicago-nmmaps-custom.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stderr">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>chic <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"https://cedricscherer.com/data/chicago-nmmaps-custom.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
 <pre><code>Rows: 1461 Columns: 10
 ── Column specification ────────────────────────────────────────────────────────
 Delimiter: ","
@@ -316,8 +339,11 @@ date (1): date
 </div>
 <p>view some data</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>tibble<span class="sc">::</span><span class="fu">glimpse</span>(chic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stdout">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>tibble<span class="sc">::</span><span class="fu">glimpse</span>(chic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>Rows: 1,461
 Columns: 10
 $ city     &lt;chr&gt; "chic", "chic", "chic", "chic", "chic", "chic", "chic", "chic…
@@ -333,8 +359,11 @@ $ year     &lt;dbl&gt; 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 199
 </div>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">head</span>(chic,<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stdout">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">head</span>(chic,<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 10
    city  date        temp    o3 dewpoint  pm10 season  yday month  year
    &lt;chr&gt; &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;
@@ -350,7 +379,10 @@ $ year     &lt;dbl&gt; 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 199
 10 chic  1997-01-10  16   10.4      5.38 24.8  Winter    10 Jan    1997</code></pre>
 </div>
 </div>
-</section></section><section id="the-ggplot2-package" class="level1"><h1>3. The <code>{ggplot2}</code> Package</h1>
+</section>
+</section>
+<section id="the-ggplot2-package" class="level1">
+<h1>3. The <code>{ggplot2}</code> Package</h1>
 <hr>
 <p>A ggplot is built up from a few basic elements:</p>
 <ol type="1">
@@ -364,12 +396,15 @@ $ year     &lt;dbl&gt; 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 199
 <li>Visual themes <code>theme()</code>: the overall visual defaults of a plot, such as background, grids, axes, default typeface, sizes and colors (tông).</li>
 </ol>
 <p>🚀<strong>Không nhất thiết một phần tử được gọi, và chúng cũng có thể được gọi nhiều lần.</strong></p>
-</section><section id="a-default-ggplot" class="level1"><h1>4. A default <code>ggplot</code>
-</h1>
+</section>
+<section id="a-default-ggplot" class="level1">
+<h1>4. A default <code>ggplot</code></h1>
 <hr>
 <p>Load the package for ability to use the functionality:</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>A default ggplot needs three things that you have to specify: the&nbsp;<em>data</em>,&nbsp;<em>aesthetics</em>, and a&nbsp;<em>geometry.</em></p>
@@ -380,454 +415,539 @@ $ year     &lt;dbl&gt; 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 199
 <p><strong>🚀Data được đề cập <em>bên ngoài</em><code>aes()</code>, trong khi đó biến/variables được đề cập <em>bên trong</em><code>aes()</code>.</strong></p>
 <p>Ví dụ:</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>(g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>(g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</div>
-<p>Just a blank panel, because <a href="https://ggplot2.tidyverse.org">ggplot2</a> <em>does not know</em> how we plot data ~ we still need to provide geometry.</p>
+<p>Just a blank panel, because <code>{ggplot2}</code> <em>does not know</em> how we plot data ~ we still need to provide geometry.</p>
 <p><strong>🚀<code>ggplot2</code> cho phép chúng ta lưu <code>ggobject</code> thành một biến, trong trường hợp này là <code>g</code> . Chúng ta có thể mở rộng <code>g</code> bằng cách thêm cách layers về sau.</strong></p>
 <p><strong>🚀Bằng cách dùng dấu <code>()</code>, chúng ta có thể <em>in</em> ngay object được gán ra.</strong></p>
 <p>Many different geometries to use (called <code>geoms</code> because each function usually starts with <code>geom_</code>). For e.g., if we want to plot a scatter plot.</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>g <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>g <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>also a lineplot which our managers always like:</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>g <span class="sc">+</span> <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>g <span class="sc">+</span> <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>cool but the plot does not look optimal, we can also using mutiple layers of geometry, where the magic and fun start.</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>g <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>g <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
-</div>
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># it's the same if we write g + geom_line() + geom_point() </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># it's the same if we write g + geom_line() + geom_point() </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<section id="change-properties-of-geometries" class="level3"><h3 class="anchored" data-anchor-id="change-properties-of-geometries">Change properties of geometries</h3>
+<section id="change-properties-of-geometries" class="level3">
+<h3 class="anchored" data-anchor-id="change-properties-of-geometries">Change properties of geometries</h3>
 <p>Turn all points to large fire-red diamonds:</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>g <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">'firebrick'</span>, <span class="at">shape =</span> <span class="st">'diamond'</span>, <span class="at">size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>g <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">'firebrick'</span>, <span class="at">shape =</span> <span class="st">'diamond'</span>, <span class="at">size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p><strong>🚀 <code>ggplot2</code> hiểu khi chúng ta dùng <code>color</code>, <code>colour</code>, cũng như <code>col</code>.</strong></p>
-<p><strong>🐱‍🏍Có thể dùng <a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf">màu mặc định</a> hoặc <a href="https://www.techopedia.com/definition/29788/color-hex-code">màu hex</a>, hoặc thậm chí là màu RGB/RGBA với hàm <code><a href="https://rdrr.io/r/grDevices/rgb.html">rgb()</a></code>. Ví dụ:</strong></p>
+<p><strong>🐱‍🏍Có thể dùng <a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf">màu mặc định</a> hoặc <a href="https://www.techopedia.com/definition/29788/color-hex-code">màu hex</a>, hoặc thậm chí là màu RGB/RGBA với hàm <code>rgb()</code>. Ví dụ:</strong></p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>g <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"#b22222"</span>, <span class="at">shape =</span> <span class="st">"diamond"</span>, <span class="at">size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>g <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"#b22222"</span>, <span class="at">shape =</span> <span class="st">"diamond"</span>, <span class="at">size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>g <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="fu">rgb</span>(<span class="dv">178</span>, <span class="dv">34</span>, <span class="dv">34</span>, <span class="at">maxColorValue =</span> <span class="dv">255</span>), <span class="at">shape =</span> <span class="st">"diamond"</span>, <span class="at">size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>g <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="fu">rgb</span>(<span class="dv">178</span>, <span class="dv">34</span>, <span class="dv">34</span>, <span class="at">maxColorValue =</span> <span class="dv">255</span>), <span class="at">shape =</span> <span class="st">"diamond"</span>, <span class="at">size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<section id="replacing-the-default-ggplot2-theme" class="level4"><h4 class="anchored" data-anchor-id="replacing-the-default-ggplot2-theme">Replacing the default <code>ggplot2</code> theme</h4>
+<section id="replacing-the-default-ggplot2-theme" class="level4">
+<h4 class="anchored" data-anchor-id="replacing-the-default-ggplot2-theme">Replacing the default <code>ggplot2</code> theme</h4>
 <p>Calling eg <code>theme_bw()</code> using <code>theme_set()</code>, all following plots will have same blank’n’white theme.</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>())</span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>())</span>
 <span id="cb20-2"><a href="#cb20-2"></a></span>
 <span id="cb20-3"><a href="#cb20-3"></a>g <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">'firebrick'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p><strong>🚀<code>theme()</code> is also a useful function to modify all kinds of theme elements (texts, rectangles, and lines).</strong></p>
-</section></section></section><section id="axes" class="level1"><h1>5. Axes</h1>
+</section>
+</section>
+</section>
+<section id="axes" class="level1">
+<h1>5. Axes</h1>
 <hr>
-<section id="change-axis-titles" class="level3"><h3 class="anchored" data-anchor-id="change-axis-titles">Change Axis Titles</h3>
+<section id="change-axis-titles" class="level3">
+<h3 class="anchored" data-anchor-id="change-axis-titles">Change Axis Titles</h3>
 <p>Use <code>labs()</code> to assign character string for each lable.</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
 <span id="cb21-2"><a href="#cb21-2"></a>    <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">'firebrick'</span>) <span class="sc">+</span></span>
 <span id="cb21-3"><a href="#cb21-3"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Year'</span>, <span class="at">y =</span> <span class="st">'Temperature (°F)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Can also using <code>xlab()</code> and <code>ylab()</code>:</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
 <span id="cb22-2"><a href="#cb22-2"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"firebrick"</span>) <span class="sc">+</span></span>
 <span id="cb22-3"><a href="#cb22-3"></a>  <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span></span>
 <span id="cb22-4"><a href="#cb22-4"></a>  <span class="fu">ylab</span>(<span class="st">"Temperature (°F)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>🐱‍🏍Not only the degree symbol before F, but also the supper script:</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
 <span id="cb23-2"><a href="#cb23-2"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"firebrick"</span>) <span class="sc">+</span></span>
 <span id="cb23-3"><a href="#cb23-3"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Temperature ("</span>, degree <span class="sc">~</span> F, <span class="st">")"</span><span class="sc">^</span><span class="st">"(Hey, why should we use metric units?!)"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</div>
-</section><section id="increase-space-between-axis-and-axis-titles." class="level3"><h3 class="anchored" data-anchor-id="increase-space-between-axis-and-axis-titles.">Increase space between Axis and Axis Titles.</h3>
+</section>
+<section id="increase-space-between-axis-and-axis-titles." class="level3">
+<h3 class="anchored" data-anchor-id="increase-space-between-axis-and-axis-titles.">Increase space between Axis and Axis Titles.</h3>
 <p>Overwrite the default <code>element_text()</code> within the <code>theme()</code> call:</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
 <span id="cb24-2"><a href="#cb24-2"></a>    <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">'firebrick'</span>) <span class="sc">+</span></span>
 <span id="cb24-3"><a href="#cb24-3"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Year'</span>, <span class="at">y =</span> <span class="st">'Temperature (°F)'</span>) <span class="sc">+</span></span>
 <span id="cb24-4"><a href="#cb24-4"></a>    <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">vjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">30</span>),</span>
 <span id="cb24-5"><a href="#cb24-5"></a>         <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">vjust =</span> <span class="dv">2</span>, <span class="at">size =</span> <span class="dv">30</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p><code>vjust</code> refer to vertical alignment. We can also change the distance by specifying the margin of both text elements.</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
 <span id="cb25-2"><a href="#cb25-2"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"firebrick"</span>) <span class="sc">+</span></span>
 <span id="cb25-3"><a href="#cb25-3"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Temperature (°F)"</span>) <span class="sc">+</span></span>
 <span id="cb25-4"><a href="#cb25-4"></a>  <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">10</span>), <span class="at">size =</span> <span class="dv">15</span>),</span>
 <span id="cb25-5"><a href="#cb25-5"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">r =</span> <span class="dv">10</span>), <span class="at">size =</span> <span class="dv">15</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p><code>r</code> and <code>t</code> in the <code>margin</code> are <strong>top</strong> and <strong>right</strong>. Margin has 4 arguments: <code>margin(t, r, b, l)</code>.</p>
 <p>🚀A good way to remember the order of the margin sides is “<strong><em>t-r</em></strong>-ou-<strong><em>b-l</em></strong>-e”.</p>
-</section><section id="change-aesthetics-of-the-axis-titles" class="level3"><h3 class="anchored" data-anchor-id="change-aesthetics-of-the-axis-titles">Change Aesthetics of the Axis Titles</h3>
+</section>
+<section id="change-aesthetics-of-the-axis-titles" class="level3">
+<h3 class="anchored" data-anchor-id="change-aesthetics-of-the-axis-titles">Change Aesthetics of the Axis Titles</h3>
 <p>Again, we use <code>theme()</code> function and modify the <code>axis.tile</code> and/or the subordinated elements <code>axis.tile.x</code> and <code>axis.tile.y</code> . Within <code>element_text()</code> we can modify the default of <code>size</code>, <code>color</code>, and <code>face</code>.</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
 <span id="cb26-2"><a href="#cb26-2"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"firebrick"</span>) <span class="sc">+</span></span>
 <span id="cb26-3"><a href="#cb26-3"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Temperature (°F)"</span>) <span class="sc">+</span></span>
 <span id="cb26-4"><a href="#cb26-4"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">color =</span> <span class="st">"firebrick"</span>,</span>
 <span id="cb26-5"><a href="#cb26-5"></a>                                  <span class="at">face =</span> <span class="st">"italic"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>the <code>face</code> argument can be used to make the font <code>bold</code>, <code>italic</code>, or even <code>bold.italic</code>.</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
 <span id="cb27-2"><a href="#cb27-2"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"firebrick"</span>) <span class="sc">+</span></span>
 <span id="cb27-3"><a href="#cb27-3"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Temperature (°F)"</span>) <span class="sc">+</span></span>
 <span id="cb27-4"><a href="#cb27-4"></a>  <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"sienna"</span>, <span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">'bold'</span>),</span>
 <span id="cb27-5"><a href="#cb27-5"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"orangered"</span>, <span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">'bold.italic'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>🐱‍🏍You could also use a combination of <code>axis.title</code> and <code>axis.title.y</code>, since <code>axis.title.x</code> inherits the values from <code>axis.title</code>. Eg:</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
 <span id="cb28-2"><a href="#cb28-2"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"firebrick"</span>) <span class="sc">+</span></span>
 <span id="cb28-3"><a href="#cb28-3"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Temperature (°F)"</span>) <span class="sc">+</span></span>
 <span id="cb28-4"><a href="#cb28-4"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"sienna"</span>, <span class="at">size =</span> <span class="dv">15</span>),</span>
 <span id="cb28-5"><a href="#cb28-5"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"orangered"</span>, <span class="at">size =</span> <span class="dv">15</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>One can modify some properties for both axis titles and other only for one or properties for each on its own:</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
 <span id="cb29-2"><a href="#cb29-2"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"firebrick"</span>) <span class="sc">+</span></span>
 <span id="cb29-3"><a href="#cb29-3"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Temperature (°F)"</span>) <span class="sc">+</span></span>
 <span id="cb29-4"><a href="#cb29-4"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"sienna"</span>, <span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
 <span id="cb29-5"><a href="#cb29-5"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold.italic"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</div>
-</section><section id="change-aesthetics-of-axis-text" class="level3"><h3 class="anchored" data-anchor-id="change-aesthetics-of-axis-text">Change Aesthetics of Axis Text</h3>
+</section>
+<section id="change-aesthetics-of-axis-text" class="level3">
+<h3 class="anchored" data-anchor-id="change-aesthetics-of-axis-text">Change Aesthetics of Axis Text</h3>
 <p>Similar to the <code>title</code>, we can change the appearance of the axis text (number indeed) by using <code>axis.text</code> and/or the subordinated elements <code>axis.text.x</code> and <code>axis.text.y</code>.</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
 <span id="cb30-2"><a href="#cb30-2"></a>    <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">'firebrick'</span>) <span class="sc">+</span></span>
 <span id="cb30-3"><a href="#cb30-3"></a>    <span class="fu">labs</span>(<span class="at">x=</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Temperature("</span>,degree <span class="sc">~</span> F, <span class="st">")"</span>))) <span class="sc">+</span></span>
 <span id="cb30-4"><a href="#cb30-4"></a>    <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"dodgerblue"</span>, <span class="at">size =</span> <span class="dv">13</span>),</span>
 <span id="cb30-5"><a href="#cb30-5"></a>         <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'italic'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</div>
-</section><section id="rotate-axis-text" class="level3"><h3 class="anchored" data-anchor-id="rotate-axis-text">Rotate Axis Text</h3>
+</section>
+<section id="rotate-axis-text" class="level3">
+<h3 class="anchored" data-anchor-id="rotate-axis-text">Rotate Axis Text</h3>
 <p>Specifying an <code>angle</code> help us to rotate any text elements. With <code>hjust</code> and <code>vjust</code> we can adjust the position of text afterwards horizontally (0 = left, 1 = right), and vertically (0 = top, 1 = bottom).</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
 <span id="cb31-2"><a href="#cb31-2"></a>    <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">'firebrick'</span>) <span class="sc">+</span></span>
 <span id="cb31-3"><a href="#cb31-3"></a>    <span class="fu">labs</span>(<span class="at">x=</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Temperature("</span>,degree <span class="sc">~</span> F, <span class="st">")"</span>))) <span class="sc">+</span></span>
 <span id="cb31-4"><a href="#cb31-4"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">50</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">13</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
 </div>
-</div>
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="co"># 50 means 50 degrees, not % =)))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="co"># 50 means 50 degrees, not % =)))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</section><section id="remove-axis-text-ticks" class="level3"><h3 class="anchored" data-anchor-id="remove-axis-text-ticks">Remove Axis Text &amp; Ticks</h3>
+</section>
+<section id="remove-axis-text-ticks" class="level3">
+<h3 class="anchored" data-anchor-id="remove-axis-text-ticks">Remove Axis Text &amp; Ticks</h3>
 <p>Rarely a reason to do this but this is how it works.</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
 <span id="cb33-2"><a href="#cb33-2"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"firebrick"</span>) <span class="sc">+</span></span>
 <span id="cb33-3"><a href="#cb33-3"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Temperature (°F)"</span>) <span class="sc">+</span></span>
 <span id="cb33-4"><a href="#cb33-4"></a>  <span class="fu">theme</span>(<span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>(),</span>
 <span id="cb33-5"><a href="#cb33-5"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p><strong>🚀If you want to get rid of a theme element, the element is always <code>element_blank</code>.</strong></p>
-</section><section id="remove-axis-titles" class="level3"><h3 class="anchored" data-anchor-id="remove-axis-titles">Remove Axis Titles</h3>
+</section>
+<section id="remove-axis-titles" class="level3">
+<h3 class="anchored" data-anchor-id="remove-axis-titles">Remove Axis Titles</h3>
 <p>We could again use <code>element_blank()</code> but it is way simpler to just remove the label in the <code>labs()</code> (or <code>xlab()</code>) call:</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
 <span id="cb34-2"><a href="#cb34-2"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"firebrick"</span>) <span class="sc">+</span></span>
 <span id="cb34-3"><a href="#cb34-3"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Note that <code>NULL</code> removes the element (similarly to <code>element_blank()</code>) while empty quotes <code>""</code> will keep the spacing for the axis title and simply print nothing.</p>
-</section><section id="limit-axis-range" class="level3"><h3 class="anchored" data-anchor-id="limit-axis-range">Limit Axis Range</h3>
+</section>
+<section id="limit-axis-range" class="level3">
+<h3 class="anchored" data-anchor-id="limit-axis-range">Limit Axis Range</h3>
 <p>Some time you want to take a closer look at some range of you data. You can do this without subsetting your data:</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
 <span id="cb35-2"><a href="#cb35-2"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"firebrick"</span>) <span class="sc">+</span></span>
 <span id="cb35-3"><a href="#cb35-3"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Temperature (°F)"</span>) <span class="sc">+</span></span>
 <span id="cb35-4"><a href="#cb35-4"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">50</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stderr">
+</details>
+<div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 777 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="index_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Alternatively you can use <code>scale_y_continuous(limits = c(0, 50))</code> (subset) or <code>coord_cartesian(ylim = c(0, 50))</code>. The former removes all data points outside the range while the second adjusts the visible area (zooming) and is similar to <code>ylim(c(0, 50))</code> (subset).</p>
-</section><section id="force-plot-to-start-at-the-origin" class="level3"><h3 class="anchored" data-anchor-id="force-plot-to-start-at-the-origin">Force Plot to start at the origin</h3>
+</section>
+<section id="force-plot-to-start-at-the-origin" class="level3">
+<h3 class="anchored" data-anchor-id="force-plot-to-start-at-the-origin">Force Plot to start at the origin</h3>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>chic_high <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(chic, temp <span class="sc">&gt;</span> <span class="dv">25</span>, o3 <span class="sc">&gt;</span> <span class="dv">20</span>)</span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>chic_high <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(chic, temp <span class="sc">&gt;</span> <span class="dv">25</span>, o3 <span class="sc">&gt;</span> <span class="dv">20</span>)</span>
 <span id="cb37-2"><a href="#cb37-2"></a></span>
 <span id="cb37-3"><a href="#cb37-3"></a><span class="fu">ggplot</span>(chic_high, <span class="fu">aes</span>(<span class="at">x =</span> temp, <span class="at">y =</span> o3)) <span class="sc">+</span></span>
 <span id="cb37-4"><a href="#cb37-4"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"darkcyan"</span>) <span class="sc">+</span></span>
 <span id="cb37-5"><a href="#cb37-5"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Temperature higher than 25°F"</span>,</span>
 <span id="cb37-6"><a href="#cb37-6"></a>       <span class="at">y =</span> <span class="st">"Ozone higher than 20 ppb"</span>) <span class="sc">+</span></span>
 <span id="cb37-7"><a href="#cb37-7"></a>  <span class="fu">expand_limits</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>🐱‍🏍Using <code>coord_cartesian(xlim = c(0,NA), ylim = c(0,NA))</code>will lead to the same result.</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>chic_high <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(chic, temp <span class="sc">&gt;</span> <span class="dv">25</span>, o3 <span class="sc">&gt;</span> <span class="dv">20</span>)</span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>chic_high <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(chic, temp <span class="sc">&gt;</span> <span class="dv">25</span>, o3 <span class="sc">&gt;</span> <span class="dv">20</span>)</span>
 <span id="cb38-2"><a href="#cb38-2"></a></span>
 <span id="cb38-3"><a href="#cb38-3"></a><span class="fu">ggplot</span>(chic_high, <span class="fu">aes</span>(<span class="at">x =</span> temp, <span class="at">y =</span> o3)) <span class="sc">+</span></span>
 <span id="cb38-4"><a href="#cb38-4"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"darkcyan"</span>) <span class="sc">+</span></span>
 <span id="cb38-5"><a href="#cb38-5"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Temperature higher than 25°F"</span>,</span>
 <span id="cb38-6"><a href="#cb38-6"></a>       <span class="at">y =</span> <span class="st">"Ozone higher than 20 ppb"</span>) <span class="sc">+</span></span>
 <span id="cb38-7"><a href="#cb38-7"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="cn">NA</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="cn">NA</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>But we can also force it to <em>literally</em> start at the origin!</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="fu">ggplot</span>(chic_high, <span class="fu">aes</span>(<span class="at">x =</span> temp, <span class="at">y =</span> o3)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="fu">ggplot</span>(chic_high, <span class="fu">aes</span>(<span class="at">x =</span> temp, <span class="at">y =</span> o3)) <span class="sc">+</span></span>
 <span id="cb39-2"><a href="#cb39-2"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"darkcyan"</span>) <span class="sc">+</span></span>
 <span id="cb39-3"><a href="#cb39-3"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Temperature higher than 25°F"</span>,</span>
 <span id="cb39-4"><a href="#cb39-4"></a>       <span class="at">y =</span> <span class="st">"Ozone higher than 20 ppb"</span>) <span class="sc">+</span></span>
 <span id="cb39-5"><a href="#cb39-5"></a>  <span class="fu">expand_limits</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
 <span id="cb39-6"><a href="#cb39-6"></a>  <span class="fu">coord_cartesian</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>, <span class="at">clip =</span> <span class="st">"off"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p><strong>🚀The argument <code>clip = "off"</code> in any coordinate system, always starting with <code>coord_*</code>, allows to draw outside of the panel area. Call it here to make sure that the tick marks at <code>c(0, 0)</code> are not cut.</strong></p>
-</section><section id="axes-with-same-scaling" class="level3"><h3 class="anchored" data-anchor-id="axes-with-same-scaling">Axes with Same Scaling</h3>
+</section>
+<section id="axes-with-same-scaling" class="level3">
+<h3 class="anchored" data-anchor-id="axes-with-same-scaling">Axes with Same Scaling</h3>
 <p>Use <code>coord_equal()</code> with default <code>ratio = 1</code> to ensure the units are equally scaled on the x-axis and on the y-axis. We can set the aspect ratio of a plot with <code>coord_fixed()</code> or <code>coord_equal()</code>. Both use <code>aspect = 1</code> (1:1) as a default.</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> temp, <span class="at">y =</span> temp <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(chic), <span class="at">sd =</span> <span class="dv">20</span>))) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> temp, <span class="at">y =</span> temp <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(chic), <span class="at">sd =</span> <span class="dv">20</span>))) <span class="sc">+</span></span>
 <span id="cb40-2"><a href="#cb40-2"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"sienna"</span>) <span class="sc">+</span></span>
 <span id="cb40-3"><a href="#cb40-3"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Temperature (°F)"</span>, <span class="at">y =</span> <span class="st">"Temperature (°F) + random noise"</span>) <span class="sc">+</span></span>
 <span id="cb40-4"><a href="#cb40-4"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">150</span>)) <span class="sc">+</span></span>
 <span id="cb40-5"><a href="#cb40-5"></a>  <span class="fu">coord_fixed</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stderr">
+</details>
+<div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 54 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="index_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Ratios higher than one make units on the y axis longer than units on the x-axis, and vice versa:</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> temp, <span class="at">y =</span> temp <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(chic), <span class="at">sd =</span> <span class="dv">20</span>))) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> temp, <span class="at">y =</span> temp <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(chic), <span class="at">sd =</span> <span class="dv">20</span>))) <span class="sc">+</span></span>
 <span id="cb42-2"><a href="#cb42-2"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"sienna"</span>) <span class="sc">+</span></span>
 <span id="cb42-3"><a href="#cb42-3"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Temperature (°F)"</span>, <span class="at">y =</span> <span class="st">"Temperature (°F) + random noise"</span>) <span class="sc">+</span></span>
 <span id="cb42-4"><a href="#cb42-4"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">150</span>)) <span class="sc">+</span></span>
 <span id="cb42-5"><a href="#cb42-5"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stderr">
+</details>
+<div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 51 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<p><img src="index_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</div>
-</section><section id="use-a-function-to-alter-labels" class="level3"><h3 class="anchored" data-anchor-id="use-a-function-to-alter-labels">Use a Function to Alter Labels</h3>
+</section>
+<section id="use-a-function-to-alter-labels" class="level3">
+<h3 class="anchored" data-anchor-id="use-a-function-to-alter-labels">Use a Function to Alter Labels</h3>
 <p>In case you want to format (eg adding % sign) without change the data.</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
 <span id="cb44-2"><a href="#cb44-2"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"firebrick"</span>) <span class="sc">+</span></span>
 <span id="cb44-3"><a href="#cb44-3"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
 <span id="cb44-4"><a href="#cb44-4"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">label =</span> <span class="cf">function</span>(x) {<span class="fu">return</span>(<span class="fu">paste</span>(x, <span class="st">"Degrees Fahrenheit"</span>))})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</div>
-</section></section><section id="titles" class="level1"><h1>6. Titles</h1>
+</section>
+</section>
+<section id="titles" class="level1">
+<h1>6. Titles</h1>
 <hr>
-<section id="add-a-title" class="level3"><h3 class="anchored" data-anchor-id="add-a-title">Add a Title</h3>
+<section id="add-a-title" class="level3">
+<h3 class="anchored" data-anchor-id="add-a-title">Add a Title</h3>
 <p>We can add a title via <code>ggtitle()</code> function.</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
 <span id="cb45-2"><a href="#cb45-2"></a>    <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"firebrick"</span>) <span class="sc">+</span></span>
 <span id="cb45-3"><a href="#cb45-3"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Temperature (°F)"</span>) <span class="sc">+</span></span>
 <span id="cb45-4"><a href="#cb45-4"></a>    <span class="fu">ggtitle</span>(<span class="st">"Temperatures in Chicago"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Alternatively, we can use <code>labs()</code>, where we can add serveral arguments ~ metadata of the plot (a sub-title, a caption, and a tag):</p>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a><span class="fu">ggplot</span>(chic, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> temp)) <span class="sc">+</span></span>
 <span id="cb46-2"><a href="#cb46-2"></a>    <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"firebrick"</span>) <span class="sc">+</span></span>
 <span id="cb46-3"><a href="#cb46-3"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Temperature (°F)"</span>,</span>
 <span id="cb46-4"><a href="#cb46-4"></a>        <span class="at">title =</span> <span class="st">"Temperatures in Chicago"</span>,</span>
 <span id="cb46-5"><a href="#cb46-5"></a>        <span class="at">subtitle =</span> <span class="st">"Seasonal pattern of daily temperatures from 1997 to 2001"</span>,</span>
 <span id="cb46-6"><a href="#cb46-6"></a>        <span class="at">caption =</span> <span class="st">"Data: NMMAPS"</span>,</span>
 <span id="cb46-7"><a href="#cb46-7"></a>        <span class="at">tag =</span> <span class="st">"Fig 1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="index_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+</details>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</div>
-</section><section id="make-title-bold-add-a-space-at-the-baseline" class="level3"><h3 class="anchored" data-anchor-id="make-title-bold-add-a-space-at-the-baseline">Make title bold &amp; add a space at the baseline</h3>
-</section></section><section id="legends" class="level1"><h1>7. Legends</h1>
-<hr></section><section id="backgrounds-grid-lines" class="level1"><h1>8. Backgrounds &amp; Grid Lines</h1>
-<hr></section><section id="margins" class="level1"><h1>9. Margins</h1>
-<hr></section><section id="multi-panel-plots" class="level1"><h1>10. Multi-panel Plots</h1>
-<hr></section><section id="colors" class="level1"><h1>11. Colors</h1>
-<hr></section><section id="themes" class="level1"><h1>12. Themes</h1>
-<hr></section><section id="lines" class="level1"><h1>13. Lines</h1>
-<hr></section><section id="text" class="level1"><h1>14. Text</h1>
-<hr></section><section id="coordinates" class="level1"><h1>15. Coordinates</h1>
-<hr></section><section id="chart-types" class="level1"><h1>16. Chart Types</h1>
-<hr></section><section id="ribbons-auc-ci-etc." class="level1"><h1>17. Ribbons (AUC, CI, etc.)</h1>
-<hr></section><section id="smoothings" class="level1"><h1>18. Smoothings</h1>
-<hr></section><section id="interactive-plots" class="level1"><h1>19. Interactive Plots</h1>
-<hr></section><section id="remarks-tipps-resources" class="level1"><h1>20. Remarks, Tipps &amp; Resources</h1>
-<hr></section><section id="references" class="level1"><h1>References</h1>
+</section>
+<section id="make-title-bold-add-a-space-at-the-baseline" class="level3">
+<h3 class="anchored" data-anchor-id="make-title-bold-add-a-space-at-the-baseline">Make title bold &amp; add a space at the baseline</h3>
+</section>
+</section>
+<section id="legends" class="level1">
+<h1>7. Legends</h1>
+<hr>
+</section>
+<section id="backgrounds-grid-lines" class="level1">
+<h1>8. Backgrounds &amp; Grid Lines</h1>
+<hr>
+</section>
+<section id="margins" class="level1">
+<h1>9. Margins</h1>
+<hr>
+</section>
+<section id="multi-panel-plots" class="level1">
+<h1>10. Multi-panel Plots</h1>
+<hr>
+</section>
+<section id="colors" class="level1">
+<h1>11. Colors</h1>
+<hr>
+</section>
+<section id="themes" class="level1">
+<h1>12. Themes</h1>
+<hr>
+</section>
+<section id="lines" class="level1">
+<h1>13. Lines</h1>
+<hr>
+</section>
+<section id="text" class="level1">
+<h1>14. Text</h1>
+<hr>
+</section>
+<section id="coordinates" class="level1">
+<h1>15. Coordinates</h1>
+<hr>
+</section>
+<section id="chart-types" class="level1">
+<h1>16. Chart Types</h1>
+<hr>
+</section>
+<section id="ribbons-auc-ci-etc." class="level1">
+<h1>17. Ribbons (AUC, CI, etc.)</h1>
+<hr>
+</section>
+<section id="smoothings" class="level1">
+<h1>18. Smoothings</h1>
+<hr>
+</section>
+<section id="interactive-plots" class="level1">
+<h1>19. Interactive Plots</h1>
+<hr>
+</section>
+<section id="remarks-tipps-resources" class="level1">
+<h1>20. Remarks, Tipps &amp; Resources</h1>
+<hr>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
 <hr>
 <p>Source: <a href="https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/" class="uri">https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/</a></p>
 
 
 <!-- -->
 
-</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -957,27 +1077,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   if (showAllCode) {
     showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/lktuan\.github\.io\/");
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
-      }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+  function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,
+      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -987,17 +1090,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start',
+      placement: 'bottom-start'
     };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1009,130 +1103,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
-          }
-        }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
-        }
-        return container.innerHTML
-      } else {
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(note);
-        }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
-      }
-    }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
-          }
-        } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
-          .then(res => res.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
-            if (note !== null) {
-              const html = processXRef(id, note);
-              instance.setContent(html);
-            } 
-          }).finally(() => {
-            instance.enable();
-            instance.show();
-          });
-        }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
+      return note.innerHTML;
     });
   }
       let selectedAnnoteEl;
@@ -1176,7 +1147,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
-            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1202,32 +1172,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1795,18 +1739,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer">
-    <div class="nav-footer-left">
-<p><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2024 Le Khac Tuan</span></p>
-</div>   
-    <div class="nav-footer-center">
-<p><span class="faux-block">Designed with <i class="fa-solid fa-heart" aria-label="heart"></i></span></p>
-</div>
-    <div class="nav-footer-right">
-<p><span class="faux-block">Made with <a href="https://quarto.org/">Quarto</a></span> <span class="faux-block"><a href="https://github.com/lktuan/lktuan.github.io">View the source at <i class="fa-brands fa-github" aria-label="github"></i> GitHub</a></span></p>
-</div>
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left"><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2024 Le Khac Tuan</span></div>   
+    <div class="nav-footer-center"><span class="faux-block">Designed with <i class="fa-solid fa-heart" aria-label="heart"></i></span></div>
+    <div class="nav-footer-right"><span class="faux-block">Made with <a href="https://quarto.org/">Quarto</a></span> <span class="faux-block"><a href="https://github.com/lktuan/lktuan.github.io">View the source at <i class="fa-brands fa-github" aria-label="github"></i> GitHub</a></span></div>
   </div>
 </footer>
+
 
 
 </body></html>
