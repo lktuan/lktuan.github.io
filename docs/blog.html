@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.554">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -50,7 +50,12 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -59,6 +64,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -97,15 +103,42 @@ ul.task-list li input[type="checkbox"] {
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="alternate" type="application/rss+xml" title="Le Khac Tuan" href="blog.xml"></head>
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="alternate" type="application/rss+xml" title="Le Khac Tuan" href="blog.xml" data-external="1"></head>
 
 <body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Le Khac Tuan</span>
     </a>
@@ -117,43 +150,43 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about/index.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="./about/index.html"> 
+<span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./blog.html" rel="" target="" aria-current="page">
- <span class="menu-text">Blog</span></a>
+    <a class="nav-link active" href="./blog.html" aria-current="page"> 
+<span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./学汉语的日记.html" rel="" target="">
- <span class="menu-text">学汉语的日记</span></a>
+    <a class="nav-link" href="./学汉语的日记.html"> 
+<span class="menu-text">学汉语的日记</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/lktuan" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/lktuan"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://www.linkedin.com/in/tuanlekhac/" rel="" target=""><i class="bi bi-linkedin" role="img">
+    <a class="nav-link" href="https://www.linkedin.com/in/tuanlekhac/"> <i class="bi bi-linkedin" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://www.facebook.com/toilatuan.lk/" rel="" target=""><i class="bi bi-facebook" role="img">
+    <a class="nav-link" href="https://www.facebook.com/toilatuan.lk/"> <i class="bi bi-facebook" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="mailto:tuan.lekhac0905@gmail.com" rel="" target=""><i class="bi bi-envelope" role="img">
+    <a class="nav-link" href="mailto:tuan.lekhac0905@gmail.com"> <i class="bi bi-envelope" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools">
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -166,7 +199,7 @@ ul.task-list li input[type="checkbox"] {
   </div>
     
   
-  <div class="quarto-title-meta">
+  <div class="quarto-title-meta column-page-left">
 
       
     
@@ -181,6 +214,7 @@ ul.task-list li input[type="checkbox"] {
     <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(5)</span></div><div class="category" data-category="Data Visualization">Data Visualization <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Guitar">Guitar <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Julia">Julia <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Lambda">Lambda <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Python">Python <span class="quarto-category-count">(2)</span></div><div class="category" data-category="QEJ">QEJ <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Quant Econ">Quant Econ <span class="quarto-category-count">(1)</span></div><div class="category" data-category="R">R <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Visualization">Visualization <span class="quarto-category-count">(1)</span></div><div class="category" data-category="ggplot2">ggplot2 <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+
 
 
 
@@ -216,19 +250,19 @@ ul.task-list li input[type="checkbox"] {
     </div>
 </div>
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="Python,Visualization" data-listing-date-sort="1716310800000" data-listing-file-modified-sort="1716477182408" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
+<div class="quarto-post image-right" data-index="0" data-categories="Python,Visualization" data-listing-date-sort="1716310800000" data-listing-file-modified-sort="1716366501712" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1505">
 <div class="thumbnail">
-<p><a href="./blog/2024-05-22-swd-p2-improve-table/index.html"> <img src="./blog/2024-05-22-swd-p2-improve-table/SWD-Cover-FULL-R5-MED.png" class="thumbnail-image"> </a></p>
+<p><a href="./blog/2024-05-22-swd-p2-improve-table/index.html" class="no-external"></a></p><a href="./blog/2024-05-22-swd-p2-improve-table/index.html" class="no-external">
+<p><img src="./blog/2024-05-22-swd-p2-improve-table/SWD-Cover-FULL-R5-MED.png" class="thumbnail-image"></p>
+</a><p><a href="./blog/2024-05-22-swd-p2-improve-table/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./blog/2024-05-22-swd-p2-improve-table/index.html">
 <h3 class="no-anchor listing-title">
-Storytelling with Data: Let’s Practice, Improve this table!
+<a href="./blog/2024-05-22-swd-p2-improve-table/index.html" class="no-external">Storytelling with Data: Let’s Practice, Improve this table!</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./blog/2024-05-22-swd-p2-improve-table/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('Python'); return false;">
 Python
@@ -237,14 +271,12 @@ Python
 Visualization
 </div>
 </div>
-<a href="./blog/2024-05-22-swd-p2-improve-table/index.html">
 <div class="listing-description">
-<p>Practicing to improve a cross-tab report table using Python</p>
+<a href="./blog/2024-05-22-swd-p2-improve-table/index.html" class="no-external">Practicing to improve a cross-tab report table using Python</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./blog/2024-05-22-swd-p2-improve-table/index.html">
+<a href="./blog/2024-05-22-swd-p2-improve-table/index.html" class="no-external">
 <div class="listing-date">
 May 22, 2024
 </div>
@@ -254,19 +286,19 @@ Tuan Le Khac
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-categories="Python,Lambda" data-listing-date-sort="1716224400000" data-listing-file-modified-sort="1717157180337" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12">
+<div class="quarto-post image-right" data-index="1" data-categories="Python,Lambda" data-listing-date-sort="1716224400000" data-listing-file-modified-sort="1716869931146" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2350">
 <div class="thumbnail">
-<p><a href="./blog/2024-05-21-python-is-cool/index.html"> <img src="./blog/2024-05-21-python-is-cool/python.jpg" class="thumbnail-image"> </a></p>
+<p><a href="./blog/2024-05-21-python-is-cool/index.html" class="no-external"></a></p><a href="./blog/2024-05-21-python-is-cool/index.html" class="no-external">
+<p><img src="./blog/2024-05-21-python-is-cool/python.jpg" class="thumbnail-image"></p>
+</a><p><a href="./blog/2024-05-21-python-is-cool/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./blog/2024-05-21-python-is-cool/index.html">
 <h3 class="no-anchor listing-title">
-Python is cool ❄
+<a href="./blog/2024-05-21-python-is-cool/index.html" class="no-external">Python is cool ❄</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./blog/2024-05-21-python-is-cool/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('Python'); return false;">
 Python
@@ -275,14 +307,12 @@ Python
 Lambda
 </div>
 </div>
-<a href="./blog/2024-05-21-python-is-cool/index.html">
 <div class="listing-description">
-<p>Less-known Python features</p>
+<a href="./blog/2024-05-21-python-is-cool/index.html" class="no-external">Less-known Python features</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./blog/2024-05-21-python-is-cool/index.html">
+<a href="./blog/2024-05-21-python-is-cool/index.html" class="no-external">
 <div class="listing-date">
 May 21, 2024
 </div>
@@ -292,19 +322,19 @@ Tuan Le Khac
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-categories="QEJ,Julia,Quant Econ" data-listing-date-sort="1713891600000" data-listing-file-modified-sort="1716477182398" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5">
+<div class="quarto-post image-right" data-index="2" data-categories="QEJ,Julia,Quant Econ" data-listing-date-sort="1713891600000" data-listing-file-modified-sort="1716261657045" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="859">
 <div class="thumbnail">
-<p><a href="./blog/2024-04-19-qej-1/index.html"> <img src="./blog/2024-04-19-qej-1/julia_logo.jpg" class="thumbnail-image"> </a></p>
+<p><a href="./blog/2024-04-19-qej-1/index.html" class="no-external"></a></p><a href="./blog/2024-04-19-qej-1/index.html" class="no-external">
+<p><img src="./blog/2024-04-19-qej-1/julia_logo.jpg" class="thumbnail-image"></p>
+</a><p><a href="./blog/2024-04-19-qej-1/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./blog/2024-04-19-qej-1/index.html">
 <h3 class="no-anchor listing-title">
-Kinh tế lượng với Julia 1: Làm quen với Julia
+<a href="./blog/2024-04-19-qej-1/index.html" class="no-external">Kinh tế lượng với Julia 1: Làm quen với Julia</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./blog/2024-04-19-qej-1/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('QEJ'); return false;">
 QEJ
@@ -316,14 +346,12 @@ Julia
 Quant Econ
 </div>
 </div>
-<a href="./blog/2024-04-19-qej-1/index.html">
 <div class="listing-description">
-<p>Đây là bài khởi đầu, làm quen với ngôn ngữ Julia trong chuỗi series các mô hình Kinh tế lượng - <span>nguồn</span></p>
+<a href="./blog/2024-04-19-qej-1/index.html" class="no-external">Đây là bài khởi đầu, làm quen với ngôn ngữ Julia trong chuỗi series các mô hình Kinh tế lượng - <span>nguồn</span></a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./blog/2024-04-19-qej-1/index.html">
+<a href="./blog/2024-04-19-qej-1/index.html" class="no-external">
 <div class="listing-date">
 Apr 24, 2024
 </div>
@@ -333,32 +361,30 @@ Tuan Le Khac
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-categories="Guitar" data-listing-date-sort="1706029200000" data-listing-file-modified-sort="1716477182398" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9">
+<div class="quarto-post image-right" data-index="3" data-categories="Guitar" data-listing-date-sort="1706029200000" data-listing-file-modified-sort="1716269315236" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1726">
 <div class="thumbnail">
-<p><a href="./blog/2024-01-19-guitar-tablature/index.html"> <img src="./blog/2024-01-19-guitar-tablature/how-to-read-guitar-tabs.jpg" class="thumbnail-image"> </a></p>
+<p><a href="./blog/2024-01-19-guitar-tablature/index.html" class="no-external"></a></p><a href="./blog/2024-01-19-guitar-tablature/index.html" class="no-external">
+<p><img src="./blog/2024-01-19-guitar-tablature/how-to-read-guitar-tabs.jpg" class="thumbnail-image"></p>
+</a><p><a href="./blog/2024-01-19-guitar-tablature/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./blog/2024-01-19-guitar-tablature/index.html">
 <h3 class="no-anchor listing-title">
-Cách đọc Guitar Tab đơn giản
+<a href="./blog/2024-01-19-guitar-tablature/index.html" class="no-external">Cách đọc Guitar Tab đơn giản</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./blog/2024-01-19-guitar-tablature/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('Guitar'); return false;">
 Guitar
 </div>
 </div>
-<a href="./blog/2024-01-19-guitar-tablature/index.html">
 <div class="listing-description">
-<p>Bạn có thể không biết đọc nhạc nhưng ít nhất bạn phải biết cách đọc tab guitar!</p>
+<a href="./blog/2024-01-19-guitar-tablature/index.html" class="no-external">Bạn có thể không biết đọc nhạc nhưng ít nhất bạn phải biết cách đọc tab guitar!</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./blog/2024-01-19-guitar-tablature/index.html">
+<a href="./blog/2024-01-19-guitar-tablature/index.html" class="no-external">
 <div class="listing-date">
 Jan 24, 2024
 </div>
@@ -368,19 +394,19 @@ Tuan Le Khac
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="4" data-categories="R,ggplot2,Data Visualization" data-listing-date-sort="1703350800000" data-listing-file-modified-sort="1717157180337" data-listing-date-modified-sort="1716829200000" data-listing-reading-time-sort="11">
+<div class="quarto-post image-right" data-index="4" data-categories="R,ggplot2,Data Visualization" data-listing-date-sort="1703350800000" data-listing-file-modified-sort="1716869798861" data-listing-date-modified-sort="1716829200000" data-listing-reading-time-sort="11" data-listing-word-count-sort="2184">
 <div class="thumbnail">
-<p><a href="./blog/2023-12-24-a-first-lession-on-ggplot2/index.html"> <img src="./blog/2023-12-24-a-first-lession-on-ggplot2/ggplot2.png" class="thumbnail-image"> </a></p>
+<p><a href="./blog/2023-12-24-a-first-lession-on-ggplot2/index.html" class="no-external"></a></p><a href="./blog/2023-12-24-a-first-lession-on-ggplot2/index.html" class="no-external">
+<p><img src="./blog/2023-12-24-a-first-lession-on-ggplot2/ggplot2.png" class="thumbnail-image"></p>
+</a><p><a href="./blog/2023-12-24-a-first-lession-on-ggplot2/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./blog/2023-12-24-a-first-lession-on-ggplot2/index.html">
 <h3 class="no-anchor listing-title">
-A tuturial of ggplot2
+<a href="./blog/2023-12-24-a-first-lession-on-ggplot2/index.html" class="no-external">A tuturial of ggplot2</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./blog/2023-12-24-a-first-lession-on-ggplot2/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('R'); return false;">
 R
@@ -392,14 +418,12 @@ ggplot2
 Data Visualization
 </div>
 </div>
-<a href="./blog/2023-12-24-a-first-lession-on-ggplot2/index.html">
 <div class="listing-description">
-<p>This is a again a lesson on ggplot2</p>
+<a href="./blog/2023-12-24-a-first-lession-on-ggplot2/index.html" class="no-external">This is a again a lesson on ggplot2</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./blog/2023-12-24-a-first-lession-on-ggplot2/index.html">
+<a href="./blog/2023-12-24-a-first-lession-on-ggplot2/index.html" class="no-external">
 <div class="listing-date">
 Dec 24, 2023
 </div>
@@ -493,10 +517,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/lktuan\.github\.io\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -506,8 +547,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -519,7 +569,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -563,6 +736,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -588,6 +762,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -650,11 +850,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left"><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2024 Le Khac Tuan</span></div>   
-    <div class="nav-footer-center"><span class="faux-block">Designed with <i class="fa-solid fa-heart" aria-label="heart"></i></span></div>
-    <div class="nav-footer-right"><span class="faux-block">Made with <a href="https://quarto.org/">Quarto</a></span> <span class="faux-block"><a href="https://github.com/lktuan/lktuan.github.io">View the source at <i class="fa-brands fa-github" aria-label="github"></i> GitHub</a></span></div>
+    <div class="nav-footer-left">
+<p><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2024 Le Khac Tuan</span></p>
+</div>   
+    <div class="nav-footer-center">
+<p><span class="faux-block">Designed with <i class="fa-solid fa-heart" aria-label="heart"></i></span></p>
+</div>
+    <div class="nav-footer-right">
+<p><span class="faux-block">Made with <a href="https://quarto.org/">Quarto</a></span> <span class="faux-block"><a href="https://github.com/lktuan/lktuan.github.io">View the source at <i class="fa-brands fa-github" aria-label="github"></i> GitHub</a></span></p>
+</div>
   </div>
 </footer>
+
 
 
 
