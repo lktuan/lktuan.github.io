@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Tuan Le Khac">
+<meta name="dcterms.date" content="2024-06-06">
+<meta name="description" content="I am a Risk Modeler 🚀">
+
+<title>Le Khac Tuan - TIL: Xử lý mảng dynamic-ragged trong Excel</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../img/rocket_1613268.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="html/styles.scss">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Le Khac Tuan</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../学汉语的日记.html"> 
+<span class="menu-text">学汉语的日记</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/lktuan"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/tuanlekhac/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.facebook.com/toilatuan.lk/"> <i class="bi bi-facebook" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:tuan.lekhac0905@gmail.com"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <div class="quarto-title-block"><div><h1 class="title">TIL: Xử lý mảng dynamic-ragged trong Excel</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+                  <div>
+        <div class="description">
+          Các mảng
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">excel</div>
+                <div class="quarto-category">lambda</div>
+                <div class="quarto-category">til</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p><a href="https://lktuan.github.io/">Tuan Le Khac</a> </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">June 6, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#problem-statement" id="toc-problem-statement" class="nav-link active" data-scroll-target="#problem-statement">Problem statement</a></li>
+  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a></li>
+  <li><a href="#blambdaλ" id="toc-blambdaλ" class="nav-link" data-scroll-target="#blambdaλ"><code>BLAMBDAλ()</code></a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content">
+
+
+
+
+
+<section id="problem-statement" class="level1">
+<h1>Problem statement</h1>
+<p>TIL: Hôm nay mình thử giải một <a href="https://www.linkedin.com/posts/owenhprice_data-analytics-sql-activity-7204129483144986624-R73I">challenge</a> của bác <a href="https://www.linkedin.com/in/owenhprice/">Owen Price</a>. Bác là Microsoft MVP, master ở khía cạnh xử lí, làm sạch, thậm chí là tối ưu việc xử lí đó trong Excel, trang blog của bác là <a href="https://www.flexyourdata.com/">FLEX YOUR DATA</a>, mình học được rất nhiều các sử dụng formulas, đặc biệt là các hàm mới từ <code>LAMBDA()</code>, <code>MAP()</code>, <code>REDUCE()</code> cho đến gần đây là <strong>Python in Excel</strong>, <code>GROUPBY()</code>, <code>PIVOTBY</code>, và các hàm <code>REGEX</code>.</p>
+<p>Nội dung challeng là, với <strong>một phần</strong> (1000 records) của bộ dữ liệu <a href="https://citibikenyc.com/system-data">Citi Bike</a>, trong đó chứa hai cột <code>start_station_name</code>, <code>end_station_name</code>, mỗi cột lại chứa thông tin các “station” ~ trạm, liệt kê 5 <strong>địa chỉ</strong> cùng số lần xuất hiện với số lượng lớn nhất!. Hình dưới là 10 dòng đầu tiên của dữ liệu.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="data.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>10 dòng đầu tiên của dữ liệu</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Well lúc đầu mình nghĩ nó cũng đơn giản 😂, thậm chí cũng không hiểu tại sao mỗi start hoặc end station lại có <em>hai station</em>, cách nhau bởi ký tự <code>&amp;</code> (space before &amp; after). Mình lập tức đưa ra lời giải như sau:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1"></a>=LET(</span>
+<span id="cb1-2"><a href="#cb1-2"></a>    _d, " &amp; ",</span>
+<span id="cb1-3"><a href="#cb1-3"></a>    _all_records, TOCOL(</span>
+<span id="cb1-4"><a href="#cb1-4"></a>        BYROW(</span>
+<span id="cb1-5"><a href="#cb1-5"></a>            BYROW(</span>
+<span id="cb1-6"><a href="#cb1-6"></a>                _tbl_CityBike[[start_station_name]:[end_station_name]],</span>
+<span id="cb1-7"><a href="#cb1-7"></a>                LAMBDA(x, TEXTJOIN(_d, TRUE, x))</span>
+<span id="cb1-8"><a href="#cb1-8"></a>            ),</span>
+<span id="cb1-9"><a href="#cb1-9"></a>        LAMBDA(x, TEXTSPLIT(x, _d))</span>
+<span id="cb1-10"><a href="#cb1-10"></a>        )</span>
+<span id="cb1-11"><a href="#cb1-11"></a>    ),</span>
+<span id="cb1-12"><a href="#cb1-12"></a>    _stations, UNIQUE(_all_records),</span>
+<span id="cb1-13"><a href="#cb1-13"></a>    _cnt, BYROW(</span>
+<span id="cb1-14"><a href="#cb1-14"></a>        --(_stations = TRANSPOSE(_all_records)), </span>
+<span id="cb1-15"><a href="#cb1-15"></a>        // "--" equals to "+" will convert the boolean TRUE/FALSE to value 1/0</span>
+<span id="cb1-16"><a href="#cb1-16"></a>        LAMBDA(x, SUM(x))</span>
+<span id="cb1-17"><a href="#cb1-17"></a>    ),</span>
+<span id="cb1-18"><a href="#cb1-18"></a>    TAKE(SORTBY(HSTACK(_stations, _cnt), _cnt, -1), 5, )</span>
+<span id="cb1-19"><a href="#cb1-19"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Kết quả:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="my_initial_result.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Kết quả đầu tiên của mình</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Đối chiếu với các kết quả của những người tham gia khách thì nó sai! Ý tưởng của mình là đầu tiên với mỗi hàng, join chúng lại với <code>&amp;</code> (<code>_d</code>), sau đó lại split chúng ra với cùng <code>_d</code> đó, từ đó có được danh sách occurence của tất cả các <strong>địa chỉ</strong>. Tuy nhiên mình nhận ra dữ liệu trả về cho <code>_all_records</code> bị thiếu sót. Lý do là các trạm (station) thường là các giao lộ, kết hợp từ hai địa chỉ với dấu <code>&amp;</code>, tuy nhiên có một số trạm lại nằm trên một con đường. Và vì chất lượng dữ liệu, cũng có một số station là <code>null</code>. Hàm <code>TOCOL()</code> là hàm mảng xử lí cách mảng con nhận được từ <code>BYROW(...,LAMBDA(...,TEXTSPLIT()))</code>, các mảng con này có độ dài <strong>không đều</strong>, dẫn đến <code>TOCOL()</code> chỉ take record đầu tiên của mỗi mảng con, trả về <code>_all_records</code> chỉ gồm <em>1000 dòng dữ liệu</em>.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="special_data_points.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Các điểm dữ liệu đặc biệt</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="solution" class="level1 page-columns page-full">
+<h1>Solution</h1>
+<div class="page-columns page-full"><p>Các mảng lởm chởm hay ragged/jagged array là các mảng gồm các mảng con có độ dài không đều nhau. </p><div class="no-row-height column-margin column-container"><span class="margin-aside">In computer science, a <strong>jagged array</strong>, also known as a <strong>ragged array</strong>, or <strong>irregular array</strong>, is an array of arrays of which the member arrays can be of different lengths, producing rows of jagged edges when visualized as output. In contrast, two-dimensional arrays are always rectangular, so jagged arrays should not be confused with multidimensional arrays, but the former is often used to emulate the latter. <a href="https://en.wikipedia.org/wiki/Jagged_array#:~:text=In%20computer%20science%2C%20a%20jagged,edges%20when%20visualized%20as%20output.">Wiki</a></span></div></div>
+<p>Một <a href="https://www.linkedin.com/feed/update/urn:li:activity:7204129483144986624?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7204129483144986624%2C7204309739827044353%29&amp;dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287204309739827044353%2Curn%3Ali%3Aactivity%3A7204129483144986624%29">comment</a> đưa mình tới hàm <a href="https://gist.github.com/ncalm/0e72b08272ec14f411e8aaa763c0c0b5"><code>BLAMBDAλ()</code></a> của bác MVP <a href="https://www.linkedin.com/in/peterbartholomew/">Peter Bartholemew</a> và <a href="https://www.linkedin.com/pulse/excel-lambda-spotlight-bisected-map-bmap%2525CE%2525BB-owen-price/?trackingId=8qiw9B83QGuOUZNX2I7OMg%3D%3D">bài giải thích</a> của Owen Price.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="g4g_ragged_array.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption>Ragged or Jagged array, photo credit to <a href="https://www.geeksforgeeks.org/jagged-array-in-java/">Geeks for Geeks</a></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Và lời giải đúng, được dựa trên ý tưởng của <code>BLAMBDAλ()</code> là:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1"></a>=LET(</span>
+<span id="cb2-2"><a href="#cb2-2"></a>    B, LAMBDA(B, v,</span>
+<span id="cb2-3"><a href="#cb2-3"></a>        LET(</span>
+<span id="cb2-4"><a href="#cb2-4"></a>            n, ROWS(v),</span>
+<span id="cb2-5"><a href="#cb2-5"></a>            IF(</span>
+<span id="cb2-6"><a href="#cb2-6"></a>                n &gt; 1,</span>
+<span id="cb2-7"><a href="#cb2-7"></a>                VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))),</span>
+<span id="cb2-8"><a href="#cb2-8"></a>                TEXTSPLIT(TEXTJOIN(" &amp; ", , v), , " &amp; ")</span>
+<span id="cb2-9"><a href="#cb2-9"></a>            )</span>
+<span id="cb2-10"><a href="#cb2-10"></a>        )</span>
+<span id="cb2-11"><a href="#cb2-11"></a>    ),</span>
+<span id="cb2-12"><a href="#cb2-12"></a>    str, B(B, CHOOSECOLS(_tbl_CityBike, 4, 5)),</span>
+<span id="cb2-13"><a href="#cb2-13"></a>    _u_str, UNIQUE(str),</span>
+<span id="cb2-14"><a href="#cb2-14"></a>    _cnt, BYROW(--(_u_str = TRANSPOSE(str)), LAMBDA(x, SUM(x))),</span>
+<span id="cb2-15"><a href="#cb2-15"></a>    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)</span>
+<span id="cb2-16"><a href="#cb2-16"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Nếu sử dụng <code>GROUPBY()</code> thì việc tính toán cuối cùng sẽ gọn hơn, tuy nhiên vào thời điểm viết bài, hàm này vẫn chưa được MS đưa lên 365 Production mà chỉ ở kênh Insider.</p>
+<p>Kết quả cuối cùng:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="final_result.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Kết quả đúng</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="blambdaλ" class="level1">
+<h1><code>BLAMBDAλ()</code></h1>
+<p>Nguyên văn mục đích của <code>BLAMBDAλ()</code> của Peter:</p>
+<blockquote class="blockquote">
+<p>Recursively bisects an array and applies a function to the leaf nodes. Useful for when the result of the Fnλ(leaf) calls are not of equal length. As such, BMAPλ can produce ragged arrays.</p>
+</blockquote>
+<p>Owen cũng nhận xét là hàm này “more computationally efficient” so với <a href="https://gist.github.com/ncalm/ef7ed953571eec1475c291948aa2dbc3"><code>STACKER()</code></a> của ổng. Chi tiết về ý tưởng hàm gốc có thể tham khảo ở các link trên, giờ mình sẽ tìm hiểu <code>BLAMBDAλ()</code> được áp dụng cho use case này.</p>
+<p>Đầu tiên <code>B()</code> (stands for Bisected) là một hàm recursive:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1"></a>B = LAMBDA(B, v,</span>
+<span id="cb3-2"><a href="#cb3-2"></a>        LET(</span>
+<span id="cb3-3"><a href="#cb3-3"></a>            n, ROWS(v),</span>
+<span id="cb3-4"><a href="#cb3-4"></a>            IF(</span>
+<span id="cb3-5"><a href="#cb3-5"></a>                n &gt; 1,</span>
+<span id="cb3-6"><a href="#cb3-6"></a>                VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))),</span>
+<span id="cb3-7"><a href="#cb3-7"></a>                TEXTSPLIT(TEXTJOIN(" &amp; ", , v), , " &amp; ")</span>
+<span id="cb3-8"><a href="#cb3-8"></a>            )</span>
+<span id="cb3-9"><a href="#cb3-9"></a>        )</span>
+<span id="cb3-10"><a href="#cb3-10"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Trong đó:</p>
+<ul>
+<li><code>n</code> là số dòng của <code>v</code> ~ mảng cần tính toán</li>
+<li>nếu <code>n</code> &gt; 1, trả về kết hợp <code>VSTACK()</code> khi hàm <code>B()</code> được áp dụng cho hai nửa của mảng <code>v</code>, <code>TAKE()</code> sẽ lấy “phân nửa” đầu tiên, <code>DROP()</code> sẽ bỏ đi phân nửa đầu tiên ~ nghĩa là lấy phân nửa thứ 2 (lưu ý rằng hai hàm này đều lấy số nguyên nhỏ hơn gần nhất của <code>n / 2</code>, do đó không cần lấy phần nguyên bằng <code>QUOTIENT(n,2)</code> như hàm gốc của Peter).</li>
+<li>khi n = 1, nghĩa là với mỗi phần tử của mảng <code>v</code>, thực hiện động tác <code>TEXTSPLIT(TEXTJOIN(...))</code> ~ trước hết join hai cột rồi sau đó split.</li>
+<li>hàm này đệ quy và sẽ <code>VSTACK()</code> tất cả các mảng dọc sinh từ việc <code>TEXTSPLIT()</code> kết quả của <code>TEXTJOIN()</code> hai cột trên mỗi dòng của mảng <code>v</code>.</li>
+</ul>
+<p>Mình cũng thử viết lại hàm <code>B()</code>, thay đổi một chút ~ thay vì thực hiện trên 1 mảng 2 cột mình cố gắng chuyển mảng <code>v</code> thành một cột, tuy nhiên chưa thành công 😪 <strong>(chưa hiểu tại sao)</strong>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb4-1"><a href="#cb4-1"></a>=LET(</span>
+<span id="cb4-2"><a href="#cb4-2"></a>    B, LAMBDA(B, v,</span>
+<span id="cb4-3"><a href="#cb4-3"></a>        LET(</span>
+<span id="cb4-4"><a href="#cb4-4"></a>            n, ROWS(v),</span>
+<span id="cb4-5"><a href="#cb4-5"></a>            IF(n &gt; 1, VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))), TEXTSPLIT(v, " &amp; "))</span>
+<span id="cb4-6"><a href="#cb4-6"></a>        )</span>
+<span id="cb4-7"><a href="#cb4-7"></a>    ),</span>
+<span id="cb4-8"><a href="#cb4-8"></a>    _data, VSTACK(_tbl_CityBike[start_station_name], _tbl_CityBike[end_station_name]),</span>
+<span id="cb4-9"><a href="#cb4-9"></a>    str, B(B, FILTER(_data, LEN(_data) &gt; 0)),</span>
+<span id="cb4-10"><a href="#cb4-10"></a>    _u_str, UNIQUE(str),</span>
+<span id="cb4-11"><a href="#cb4-11"></a>    _cnt, BYROW(--(_u_str = TRANSPOSE(str)), LAMBDA(x, SUM(x))),</span>
+<span id="cb4-12"><a href="#cb4-12"></a>    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)</span>
+<span id="cb4-13"><a href="#cb4-13"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Thanks Peter &amp; Owen for this great use of recursion presented in such a concise manner.</p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/lktuan\.github\.io\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb5" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">---</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="an">title:</span><span class="co"> "TIL: Xử lý mảng dynamic-ragged trong Excel"</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="an">description:</span><span class="co"> "Các mảng"</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="an">author:</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="an">date:</span><span class="co"> 06-06-2024</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="an">modified-date:</span><span class="co"> 06-06-2024</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a><span class="an">categories:</span><span class="co"> [excel, lambda, til] </span></span>
+<span id="cb5-10"><a href="#cb5-10"></a><span class="an">image:</span><span class="co"> excel-lambda.jpg</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a><span class="an">draft:</span><span class="co"> false</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a><span class="an">format:</span><span class="co"> </span></span>
+<span id="cb5-13"><a href="#cb5-13"></a><span class="co">  html: </span></span>
+<span id="cb5-14"><a href="#cb5-14"></a><span class="co">    code-fold: false</span></span>
+<span id="cb5-15"><a href="#cb5-15"></a><span class="co">    code-summary: "Show the code"</span></span>
+<span id="cb5-16"><a href="#cb5-16"></a><span class="co">    code-line-numbers: true</span></span>
+<span id="cb5-17"><a href="#cb5-17"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
+<span id="cb5-18"><a href="#cb5-18"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
+<span id="cb5-19"><a href="#cb5-19"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb5-20"><a href="#cb5-20"></a><span class="co">---</span></span>
+<span id="cb5-21"><a href="#cb5-21"></a></span>
+<span id="cb5-22"><a href="#cb5-22"></a><span class="fu"># Problem statement</span></span>
+<span id="cb5-23"><a href="#cb5-23"></a></span>
+<span id="cb5-24"><a href="#cb5-24"></a>TIL: Hôm nay mình thử giải một <span class="co">[</span><span class="ot">challenge</span><span class="co">](https://www.linkedin.com/posts/owenhprice_data-analytics-sql-activity-7204129483144986624-R73I)</span> của bác <span class="co">[</span><span class="ot">Owen Price</span><span class="co">](https://www.linkedin.com/in/owenhprice/)</span>. Bác là Microsoft MVP, master ở khía cạnh xử lí, làm sạch, thậm chí là tối ưu việc xử lí đó trong Excel, trang blog của bác là <span class="co">[</span><span class="ot">FLEX YOUR DATA</span><span class="co">](https://www.flexyourdata.com/)</span>, mình học được rất nhiều các sử dụng formulas, đặc biệt là các hàm mới từ <span class="in">`LAMBDA()`</span>, <span class="in">`MAP()`</span>, <span class="in">`REDUCE()`</span> cho đến gần đây là **Python in Excel**, <span class="in">`GROUPBY()`</span>, <span class="in">`PIVOTBY`</span>, và các hàm <span class="in">`REGEX`</span>.</span>
+<span id="cb5-25"><a href="#cb5-25"></a></span>
+<span id="cb5-26"><a href="#cb5-26"></a>Nội dung challeng là, với **một phần** (1000 records) của bộ dữ liệu [Citi Bike](https://citibikenyc.com/system-data), trong đó chứa hai cột `start_station_name`, `end_station_name`, mỗi cột lại chứa thông tin các "station" ~ trạm, liệt kê 5 **địa chỉ** cùng số lần xuất hiện với số lượng lớn nhất!. Hình dưới là 10 dòng đầu tiên của dữ liệu.</span>
+<span id="cb5-27"><a href="#cb5-27"></a></span>
+<span id="cb5-28"><a href="#cb5-28"></a>::: {layout-ncol=1}</span>
+<span id="cb5-29"><a href="#cb5-29"></a><span class="al">![10 dòng đầu tiên của dữ liệu](data.png)</span>{width=100%}</span>
+<span id="cb5-30"><a href="#cb5-30"></a>:::</span>
+<span id="cb5-31"><a href="#cb5-31"></a></span>
+<span id="cb5-32"><a href="#cb5-32"></a>Well lúc đầu mình nghĩ nó cũng đơn giản 😂, thậm chí cũng không hiểu tại sao mỗi start hoặc end station lại có *hai station*, cách nhau bởi ký tự <span class="in">` &amp; `</span> (space before &amp; after). Mình lập tức đưa ra lời giải như sau:</span>
+<span id="cb5-33"><a href="#cb5-33"></a></span>
+<span id="cb5-34"><a href="#cb5-34"></a><span class="in">``` txt</span></span>
+<span id="cb5-35"><a href="#cb5-35"></a><span class="in">=LET(</span></span>
+<span id="cb5-36"><a href="#cb5-36"></a><span class="in">    _d, " &amp; ",</span></span>
+<span id="cb5-37"><a href="#cb5-37"></a><span class="in">    _all_records, TOCOL(</span></span>
+<span id="cb5-38"><a href="#cb5-38"></a><span class="in">        BYROW(</span></span>
+<span id="cb5-39"><a href="#cb5-39"></a><span class="in">            BYROW(</span></span>
+<span id="cb5-40"><a href="#cb5-40"></a><span class="in">                _tbl_CityBike[[start_station_name]:[end_station_name]],</span></span>
+<span id="cb5-41"><a href="#cb5-41"></a><span class="in">                LAMBDA(x, TEXTJOIN(_d, TRUE, x))</span></span>
+<span id="cb5-42"><a href="#cb5-42"></a><span class="in">            ),</span></span>
+<span id="cb5-43"><a href="#cb5-43"></a><span class="in">        LAMBDA(x, TEXTSPLIT(x, _d))</span></span>
+<span id="cb5-44"><a href="#cb5-44"></a><span class="in">        )</span></span>
+<span id="cb5-45"><a href="#cb5-45"></a><span class="in">    ),</span></span>
+<span id="cb5-46"><a href="#cb5-46"></a><span class="in">    _stations, UNIQUE(_all_records),</span></span>
+<span id="cb5-47"><a href="#cb5-47"></a><span class="in">    _cnt, BYROW(</span></span>
+<span id="cb5-48"><a href="#cb5-48"></a><span class="in">        --(_stations = TRANSPOSE(_all_records)), </span></span>
+<span id="cb5-49"><a href="#cb5-49"></a><span class="in">        // "--" equals to "+" will convert the boolean TRUE/FALSE to value 1/0</span></span>
+<span id="cb5-50"><a href="#cb5-50"></a><span class="in">        LAMBDA(x, SUM(x))</span></span>
+<span id="cb5-51"><a href="#cb5-51"></a><span class="in">    ),</span></span>
+<span id="cb5-52"><a href="#cb5-52"></a><span class="in">    TAKE(SORTBY(HSTACK(_stations, _cnt), _cnt, -1), 5, )</span></span>
+<span id="cb5-53"><a href="#cb5-53"></a><span class="in">)</span></span>
+<span id="cb5-54"><a href="#cb5-54"></a><span class="in">```</span></span>
+<span id="cb5-55"><a href="#cb5-55"></a></span>
+<span id="cb5-56"><a href="#cb5-56"></a>Kết quả:</span>
+<span id="cb5-57"><a href="#cb5-57"></a></span>
+<span id="cb5-58"><a href="#cb5-58"></a>::: {layout-ncol=1}</span>
+<span id="cb5-59"><a href="#cb5-59"></a><span class="al">![Kết quả đầu tiên của mình](my_initial_result.png)</span>{width=50%}</span>
+<span id="cb5-60"><a href="#cb5-60"></a>:::</span>
+<span id="cb5-61"><a href="#cb5-61"></a></span>
+<span id="cb5-62"><a href="#cb5-62"></a>Đối chiếu với các kết quả của những người tham gia khách thì nó sai! Ý tưởng của mình là đầu tiên với mỗi hàng, join chúng lại với <span class="in">` &amp; `</span> (<span class="in">`_d`</span>), sau đó lại split chúng ra với cùng <span class="in">`_d`</span> đó, từ đó có được danh sách occurence của tất cả các **địa chỉ**. Tuy nhiên mình nhận ra dữ liệu trả về cho `_all_records` bị thiếu sót. Lý do là các trạm (station) thường là các giao lộ, kết hợp từ hai địa chỉ với dấu ` &amp; `, tuy nhiên có một số trạm lại nằm trên một con đường. Và vì chất lượng dữ liệu, cũng có một số station là `null`. Hàm `TOCOL()` là hàm mảng xử lí cách mảng con nhận được từ `BYROW(...,LAMBDA(...,TEXTSPLIT()))`, các mảng con này có độ dài **không đều**, dẫn đến <span class="in">`TOCOL()`</span> chỉ take record đầu tiên của mỗi mảng con, trả về <span class="in">`_all_records`</span> chỉ gồm *1000 dòng dữ liệu*.</span>
+<span id="cb5-63"><a href="#cb5-63"></a></span>
+<span id="cb5-64"><a href="#cb5-64"></a>::: {layout-ncol=1}</span>
+<span id="cb5-65"><a href="#cb5-65"></a><span class="al">![Các điểm dữ liệu đặc biệt](special_data_points.png)</span>{width=100%}</span>
+<span id="cb5-66"><a href="#cb5-66"></a>:::</span>
+<span id="cb5-67"><a href="#cb5-67"></a></span>
+<span id="cb5-68"><a href="#cb5-68"></a><span class="fu"># Solution</span></span>
+<span id="cb5-69"><a href="#cb5-69"></a></span>
+<span id="cb5-70"><a href="#cb5-70"></a>Các mảng lởm chởm hay ragged/jagged array là các mảng gồm các mảng con có độ dài không đều nhau. <span class="co">[</span><span class="ot">In computer science, a **jagged array**, also known as a **ragged array**, or **irregular array**, is an array of arrays of which the member arrays can be of different lengths, producing rows of jagged edges when visualized as output. In contrast, two-dimensional arrays are always rectangular, so jagged arrays should not be confused with multidimensional arrays, but the former is often used to emulate the latter. [Wiki](https://en.wikipedia.org/wiki/Jagged_array#:~:text=In%20computer%20science%2C%20a%20jagged,edges%20when%20visualized%20as%20output.)</span><span class="co">]</span>{.aside}</span>
+<span id="cb5-71"><a href="#cb5-71"></a></span>
+<span id="cb5-72"><a href="#cb5-72"></a>Một <span class="co">[</span><span class="ot">comment</span><span class="co">](https://www.linkedin.com/feed/update/urn:li:activity:7204129483144986624?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7204129483144986624%2C7204309739827044353%29&amp;dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287204309739827044353%2Curn%3Ali%3Aactivity%3A7204129483144986624%29)</span> đưa mình tới hàm <span class="co">[</span><span class="ot">`BLAMBDAλ()`</span><span class="co">](https://gist.github.com/ncalm/0e72b08272ec14f411e8aaa763c0c0b5)</span> của bác MVP <span class="co">[</span><span class="ot">Peter Bartholemew</span><span class="co">](https://www.linkedin.com/in/peterbartholomew/)</span> và <span class="co">[</span><span class="ot">bài giải thích</span><span class="co">](https://www.linkedin.com/pulse/excel-lambda-spotlight-bisected-map-bmap%2525CE%2525BB-owen-price/?trackingId=8qiw9B83QGuOUZNX2I7OMg%3D%3D)</span> của Owen Price.</span>
+<span id="cb5-73"><a href="#cb5-73"></a></span>
+<span id="cb5-74"><a href="#cb5-74"></a>::: {layout-ncol=1}</span>
+<span id="cb5-75"><a href="#cb5-75"></a>!<span class="co">[</span><span class="ot">Ragged or Jagged array, photo credit to [Geeks for Geeks](https://www.geeksforgeeks.org/jagged-array-in-java/)</span><span class="co">](g4g_ragged_array.png)</span>{width=80%}</span>
+<span id="cb5-76"><a href="#cb5-76"></a>::: </span>
+<span id="cb5-77"><a href="#cb5-77"></a></span>
+<span id="cb5-78"><a href="#cb5-78"></a>Và lời giải đúng, được dựa trên ý tưởng của <span class="in">`BLAMBDAλ()`</span> là:</span>
+<span id="cb5-79"><a href="#cb5-79"></a></span>
+<span id="cb5-80"><a href="#cb5-80"></a><span class="in">``` txt</span></span>
+<span id="cb5-81"><a href="#cb5-81"></a><span class="in">=LET(</span></span>
+<span id="cb5-82"><a href="#cb5-82"></a><span class="in">    B, LAMBDA(B, v,</span></span>
+<span id="cb5-83"><a href="#cb5-83"></a><span class="in">        LET(</span></span>
+<span id="cb5-84"><a href="#cb5-84"></a><span class="in">            n, ROWS(v),</span></span>
+<span id="cb5-85"><a href="#cb5-85"></a><span class="in">            IF(</span></span>
+<span id="cb5-86"><a href="#cb5-86"></a><span class="in">                n &gt; 1,</span></span>
+<span id="cb5-87"><a href="#cb5-87"></a><span class="in">                VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))),</span></span>
+<span id="cb5-88"><a href="#cb5-88"></a><span class="in">                TEXTSPLIT(TEXTJOIN(" &amp; ", , v), , " &amp; ")</span></span>
+<span id="cb5-89"><a href="#cb5-89"></a><span class="in">            )</span></span>
+<span id="cb5-90"><a href="#cb5-90"></a><span class="in">        )</span></span>
+<span id="cb5-91"><a href="#cb5-91"></a><span class="in">    ),</span></span>
+<span id="cb5-92"><a href="#cb5-92"></a><span class="in">    str, B(B, CHOOSECOLS(_tbl_CityBike, 4, 5)),</span></span>
+<span id="cb5-93"><a href="#cb5-93"></a><span class="in">    _u_str, UNIQUE(str),</span></span>
+<span id="cb5-94"><a href="#cb5-94"></a><span class="in">    _cnt, BYROW(--(_u_str = TRANSPOSE(str)), LAMBDA(x, SUM(x))),</span></span>
+<span id="cb5-95"><a href="#cb5-95"></a><span class="in">    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)</span></span>
+<span id="cb5-96"><a href="#cb5-96"></a><span class="in">)</span></span>
+<span id="cb5-97"><a href="#cb5-97"></a></span>
+<span id="cb5-98"><a href="#cb5-98"></a><span class="in">```</span></span>
+<span id="cb5-99"><a href="#cb5-99"></a></span>
+<span id="cb5-100"><a href="#cb5-100"></a>Nếu sử dụng <span class="in">`GROUPBY()`</span> thì việc tính toán cuối cùng sẽ gọn hơn, tuy nhiên vào thời điểm viết bài, hàm này vẫn chưa được MS đưa lên 365 Production mà chỉ ở kênh Insider.</span>
+<span id="cb5-101"><a href="#cb5-101"></a></span>
+<span id="cb5-102"><a href="#cb5-102"></a>Kết quả cuối cùng:</span>
+<span id="cb5-103"><a href="#cb5-103"></a></span>
+<span id="cb5-104"><a href="#cb5-104"></a>::: {layout-ncol=1}</span>
+<span id="cb5-105"><a href="#cb5-105"></a><span class="al">![Kết quả đúng](final_result.png)</span>{width=50%}</span>
+<span id="cb5-106"><a href="#cb5-106"></a>:::</span>
+<span id="cb5-107"><a href="#cb5-107"></a></span>
+<span id="cb5-108"><a href="#cb5-108"></a><span class="fu"># `BLAMBDAλ()`</span></span>
+<span id="cb5-109"><a href="#cb5-109"></a></span>
+<span id="cb5-110"><a href="#cb5-110"></a>Nguyên văn mục đích của <span class="in">`BLAMBDAλ()`</span> của Peter:</span>
+<span id="cb5-111"><a href="#cb5-111"></a></span>
+<span id="cb5-112"><a href="#cb5-112"></a><span class="at">&gt; Recursively bisects an array and applies a function to the leaf nodes. </span></span>
+<span id="cb5-113"><a href="#cb5-113"></a><span class="at">Useful for when the result of the Fnλ(leaf) calls are not of equal length.</span></span>
+<span id="cb5-114"><a href="#cb5-114"></a><span class="at">As such, BMAPλ can produce ragged arrays. </span></span>
+<span id="cb5-115"><a href="#cb5-115"></a></span>
+<span id="cb5-116"><a href="#cb5-116"></a>Owen cũng nhận xét là hàm này "more computationally efficient" so với <span class="co">[</span><span class="ot">`STACKER()`</span><span class="co">](https://gist.github.com/ncalm/ef7ed953571eec1475c291948aa2dbc3)</span> của ổng. Chi tiết về ý tưởng hàm gốc có thể tham khảo ở các link trên, giờ mình sẽ tìm hiểu <span class="in">`BLAMBDAλ()`</span> được áp dụng cho use case này.</span>
+<span id="cb5-117"><a href="#cb5-117"></a></span>
+<span id="cb5-118"><a href="#cb5-118"></a>Đầu tiên <span class="in">`B()`</span> (stands for Bisected) là một hàm recursive:</span>
+<span id="cb5-119"><a href="#cb5-119"></a></span>
+<span id="cb5-120"><a href="#cb5-120"></a><span class="in">``` txt</span></span>
+<span id="cb5-121"><a href="#cb5-121"></a><span class="in">B = LAMBDA(B, v,</span></span>
+<span id="cb5-122"><a href="#cb5-122"></a><span class="in">        LET(</span></span>
+<span id="cb5-123"><a href="#cb5-123"></a><span class="in">            n, ROWS(v),</span></span>
+<span id="cb5-124"><a href="#cb5-124"></a><span class="in">            IF(</span></span>
+<span id="cb5-125"><a href="#cb5-125"></a><span class="in">                n &gt; 1,</span></span>
+<span id="cb5-126"><a href="#cb5-126"></a><span class="in">                VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))),</span></span>
+<span id="cb5-127"><a href="#cb5-127"></a><span class="in">                TEXTSPLIT(TEXTJOIN(" &amp; ", , v), , " &amp; ")</span></span>
+<span id="cb5-128"><a href="#cb5-128"></a><span class="in">            )</span></span>
+<span id="cb5-129"><a href="#cb5-129"></a><span class="in">        )</span></span>
+<span id="cb5-130"><a href="#cb5-130"></a><span class="in">    )</span></span>
+<span id="cb5-131"><a href="#cb5-131"></a><span class="in">```</span></span>
+<span id="cb5-132"><a href="#cb5-132"></a></span>
+<span id="cb5-133"><a href="#cb5-133"></a>Trong đó:</span>
+<span id="cb5-134"><a href="#cb5-134"></a></span>
+<span id="cb5-135"><a href="#cb5-135"></a><span class="ss">- </span><span class="in">`n`</span> là số dòng của <span class="in">`v`</span> ~ mảng cần tính toán</span>
+<span id="cb5-136"><a href="#cb5-136"></a><span class="ss">- </span>nếu <span class="in">`n`</span> &gt; 1, trả về kết hợp <span class="in">`VSTACK()`</span> khi hàm <span class="in">`B()`</span> được áp dụng cho hai nửa của mảng <span class="in">`v`</span>, <span class="in">`TAKE()`</span> sẽ lấy "phân nửa" đầu tiên, <span class="in">`DROP()`</span> sẽ bỏ đi phân nửa đầu tiên ~ nghĩa là lấy phân nửa thứ 2 (lưu ý rằng hai hàm này đều lấy số nguyên nhỏ hơn gần nhất của <span class="in">`n / 2`</span>, do đó không cần lấy phần nguyên bằng <span class="in">`QUOTIENT(n,2)`</span> như hàm gốc của Peter).</span>
+<span id="cb5-137"><a href="#cb5-137"></a><span class="ss">- </span>khi n = 1, nghĩa là với mỗi phần tử của mảng <span class="in">`v`</span>, thực hiện động tác <span class="in">`TEXTSPLIT(TEXTJOIN(...))`</span> ~ trước hết join hai cột rồi sau đó split.</span>
+<span id="cb5-138"><a href="#cb5-138"></a><span class="ss">- </span>hàm này đệ quy và sẽ <span class="in">`VSTACK()`</span> tất cả các mảng dọc sinh từ việc <span class="in">`TEXTSPLIT()`</span> kết quả của <span class="in">`TEXTJOIN()`</span> hai cột trên mỗi dòng của mảng <span class="in">`v`</span>.</span>
+<span id="cb5-139"><a href="#cb5-139"></a></span>
+<span id="cb5-140"><a href="#cb5-140"></a>Mình cũng thử viết lại hàm <span class="in">`B()`</span>, thay đổi một chút ~ thay vì thực hiện trên 1 mảng 2 cột mình cố gắng chuyển mảng <span class="in">`v`</span> thành một cột, tuy nhiên chưa thành công 😪 **(chưa hiểu tại sao)**:</span>
+<span id="cb5-141"><a href="#cb5-141"></a></span>
+<span id="cb5-142"><a href="#cb5-142"></a><span class="in">```txt</span></span>
+<span id="cb5-143"><a href="#cb5-143"></a><span class="in">=LET(</span></span>
+<span id="cb5-144"><a href="#cb5-144"></a><span class="in">    B, LAMBDA(B, v,</span></span>
+<span id="cb5-145"><a href="#cb5-145"></a><span class="in">        LET(</span></span>
+<span id="cb5-146"><a href="#cb5-146"></a><span class="in">            n, ROWS(v),</span></span>
+<span id="cb5-147"><a href="#cb5-147"></a><span class="in">            IF(n &gt; 1, VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))), TEXTSPLIT(v, " &amp; "))</span></span>
+<span id="cb5-148"><a href="#cb5-148"></a><span class="in">        )</span></span>
+<span id="cb5-149"><a href="#cb5-149"></a><span class="in">    ),</span></span>
+<span id="cb5-150"><a href="#cb5-150"></a><span class="in">    _data, VSTACK(_tbl_CityBike[start_station_name], _tbl_CityBike[end_station_name]),</span></span>
+<span id="cb5-151"><a href="#cb5-151"></a><span class="in">    str, B(B, FILTER(_data, LEN(_data) &gt; 0)),</span></span>
+<span id="cb5-152"><a href="#cb5-152"></a><span class="in">    _u_str, UNIQUE(str),</span></span>
+<span id="cb5-153"><a href="#cb5-153"></a><span class="in">    _cnt, BYROW(--(_u_str = TRANSPOSE(str)), LAMBDA(x, SUM(x))),</span></span>
+<span id="cb5-154"><a href="#cb5-154"></a><span class="in">    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)</span></span>
+<span id="cb5-155"><a href="#cb5-155"></a><span class="in">)</span></span>
+<span id="cb5-156"><a href="#cb5-156"></a><span class="in">```</span></span>
+<span id="cb5-157"><a href="#cb5-157"></a></span>
+<span id="cb5-158"><a href="#cb5-158"></a></span>
+<span id="cb5-159"><a href="#cb5-159"></a>Thanks Peter &amp; Owen for this great use of recursion presented in such a concise manner. </span>
+<span id="cb5-160"><a href="#cb5-160"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2024 Le Khac Tuan</span></p>
+</div>   
+    <div class="nav-footer-center">
+<p><span class="faux-block">Designed with <i class="fa-solid fa-heart" aria-label="heart"></i></span></p>
+</div>
+    <div class="nav-footer-right">
+<p><span class="faux-block">Made with <a href="https://quarto.org/">Quarto</a></span> <span class="faux-block"><a href="https://github.com/lktuan/lktuan.github.io">View the source at <i class="fa-brands fa-github" aria-label="github"></i> GitHub</a></span></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

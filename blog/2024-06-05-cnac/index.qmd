@@ -1,0 +1,71 @@
+---
+title: "Về quy ước đặt tên dữ liệu"
+description: "Danh pháp quy ước để đặt tên cho dữ liệu dạng bảng, tăng tốc độ hiểu biết và sử dụng dữ liệu"
+author:
+  - name: "Tuan Le Khac"
+    url: https://lktuan.github.io/
+date: 06-05-2024
+modified-date: 06-06-2024
+categories: [data quality, name convention, controlled vocabulary, metadata] 
+image: ""
+draft: true 
+format: 
+  html: 
+    code-fold: false
+    code-summary: "Show the code"
+    code-line-numbers: true
+css: html/styles.scss
+fig-cap-location: bottom
+editor: visual
+---
+
+Đây là keynote từ article [Column Names as Contracts](https://emilyriederer.netlify.app/post/column-name-contracts/) của [Emily Riederer](https://emilyriederer.netlify.app/about).
+
+Các sản phẩm phần mềm luôn tuân theo một quy ước nhất định (về hình ảnh, ký tự) nhằm để người dùng có thể ngay lập tức nắm bắt được cách thức sử dụng, giao tiếp với nó. Ví dụ, nút Home thường sẽ đưa người dùng về trang chủ của một mobile app, nút "blog" trên blog của tôi sẽ đưa các bạn tiếp cận danh mục bài viết, etc. Ở layer phía sau, các API được BE viết cần tuân thủ documented inputs & outputs, để các BE khác hay FE có thể sử dụng.
+
+Tuy nhiên các bảng dữ liệu lại nằm ở một vùng màu xám không rõ ràng. Data service (từ producer i.e DE -> user i.e DA, DS) đủ tĩnh để không được xem là normal service, nhưng cũng đủ thô để người ta ít chú ý đến nó về mặt giao diện. DE cứ thể lấy hết mọi dữ liệu trong hệ thống, DA nhìn dữ liệu và ngay lập tức giả định được nội dung của (cột) dữ liệu đó.
+
+> Producers wonder why consumers aren’t satisfied, and consumers wonder why the data is never “right”.
+
+Cũng có một cách được nhiều tổ chức sử dụng như là Metadata managament, như:
+
+- Lyft’s [Amundsen](https://eng.lyft.com/amundsen-lyfts-data-discovery-metadata-engine-62d27254fbb9)
+- LinkedIn’s [DataHub](https://www.linkedin.com/blog/engineering/archive/data-hub)
+- Netflix’s [Metacat](https://netflixtechblog.com/building-and-scaling-data-lineage-at-netflix-to-improve-data-infrastructure-reliability-and-1a52526a7977)
+
+Tuy nhiên giải pháp này là documentation oriented, producer và user đều phải tuân thủ nghiêm ngặt. Nó không *trực diện* khi DE đặt tên cột, hay DA đọc dữ liệu.
+
+Ý tưởng của Emily là chuẩn hóa các quy ước đặt tên dữ liệu bằng [Controlled vocabulary](https://en.wikipedia.org/wiki/Controlled_vocabulary). Minh họa bằng `pointblank`, `collapsibleTree`, và `dplyr`.
+
+# Controlled Vocabulary
+
+## Level 1: Kiểu dữ liệu, kiểu đo lường
+## Level 2: Đối tượng, chủ đề
+## Level 3-n: Chi tiết
+## Kết hợp chúng lại
+
+# Data Validation
+
+# Data Discoverability
+
+# Data Wrangling
+
+# Other languages
+
+## Generating SQL
+## R - base & data.table
+## python pandas
+
+# Updates by Emily
+
+## Concept Map
+
+## New Package (Dec 2020)
+[`convo`](https://emilyriederer.github.io/convo/articles/quickstart-guide.html) 
+
+## New Package (April 2021)
+
+[`dbtplyr`](https://emilyriederer.github.io/dbtplyr/#!/overview) 
+
+
+https://gist.github.com/bluet/23e7697b86144561c4a3d804903d059d

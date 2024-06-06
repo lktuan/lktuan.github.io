@@ -10,7 +10,197 @@
 <atom:link href="https://lktuan.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>I am a Risk Modeler 🚀</description>
 <generator>quarto-1.4.554</generator>
-<lastBuildDate>Tue, 21 May 2024 17:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 05 Jun 2024 17:00:00 GMT</lastBuildDate>
+<item>
+  <title>TIL: Xử lý mảng dynamic-ragged trong Excel</title>
+  <dc:creator>Tuan Le Khac</dc:creator>
+  <link>https://lktuan.github.io/blog/2024-06-06-excel-blambda/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="problem-statement" class="level1">
+<h1>Problem statement</h1>
+<p>TIL: Hôm nay mình thử giải một <a href="https://www.linkedin.com/posts/owenhprice_data-analytics-sql-activity-7204129483144986624-R73I">challenge</a> của bác <a href="https://www.linkedin.com/in/owenhprice/">Owen Price</a>. Bác là Microsoft MVP, master ở khía cạnh xử lí, làm sạch, thậm chí là tối ưu việc xử lí đó trong Excel, trang blog của bác là <a href="https://www.flexyourdata.com/">FLEX YOUR DATA</a>, mình học được rất nhiều các sử dụng formulas, đặc biệt là các hàm mới từ <code>LAMBDA()</code>, <code>MAP()</code>, <code>REDUCE()</code> cho đến gần đây là <strong>Python in Excel</strong>, <code>GROUPBY()</code>, <code>PIVOTBY</code>, và các hàm <code>REGEX</code>.</p>
+<p>Nội dung challeng là, với <strong>một phần</strong> (1000 records) của bộ dữ liệu <a href="https://citibikenyc.com/system-data">Citi Bike</a>, trong đó chứa hai cột <code>start_station_name</code>, <code>end_station_name</code>, mỗi cột lại chứa thông tin các “station” ~ trạm, liệt kê 5 <strong>địa chỉ</strong> cùng số lần xuất hiện với số lượng lớn nhất!. Hình dưới là 10 dòng đầu tiên của dữ liệu.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-06-06-excel-blambda/data.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>10 dòng đầu tiên của dữ liệu</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Well lúc đầu mình nghĩ nó cũng đơn giản 😂, thậm chí cũng không hiểu tại sao mỗi start hoặc end station lại có <em>hai station</em>, cách nhau bởi ký tự <code>&amp;</code> (space before &amp; after). Mình lập tức đưa ra lời giải như sau:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb1-1">=LET(</span>
+<span id="cb1-2">    _d, " &amp; ",</span>
+<span id="cb1-3">    _all_records, TOCOL(</span>
+<span id="cb1-4">        BYROW(</span>
+<span id="cb1-5">            BYROW(</span>
+<span id="cb1-6">                _tbl_CityBike[[start_station_name]:[end_station_name]],</span>
+<span id="cb1-7">                LAMBDA(x, TEXTJOIN(_d, TRUE, x))</span>
+<span id="cb1-8">            ),</span>
+<span id="cb1-9">        LAMBDA(x, TEXTSPLIT(x, _d))</span>
+<span id="cb1-10">        )</span>
+<span id="cb1-11">    ),</span>
+<span id="cb1-12">    _stations, UNIQUE(_all_records),</span>
+<span id="cb1-13">    _cnt, BYROW(</span>
+<span id="cb1-14">        --(_stations = TRANSPOSE(_all_records)), </span>
+<span id="cb1-15">        // "--" equals to "+" will convert the boolean TRUE/FALSE to value 1/0</span>
+<span id="cb1-16">        LAMBDA(x, SUM(x))</span>
+<span id="cb1-17">    ),</span>
+<span id="cb1-18">    TAKE(SORTBY(HSTACK(_stations, _cnt), _cnt, -1), 5, )</span>
+<span id="cb1-19">)</span></code></pre></div>
+<p>Kết quả:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-06-06-excel-blambda/my_initial_result.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Kết quả đầu tiên của mình</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Đối chiếu với các kết quả của những người tham gia khách thì nó sai! Ý tưởng của mình là đầu tiên với mỗi hàng, join chúng lại với <code>&amp;</code> (<code>_d</code>), sau đó lại split chúng ra với cùng <code>_d</code> đó, từ đó có được danh sách occurence của tất cả các <strong>địa chỉ</strong>. Tuy nhiên mình nhận ra dữ liệu trả về cho <code>_all_records</code> bị thiếu sót. Lý do là các trạm (station) thường là các giao lộ, kết hợp từ hai địa chỉ với dấu <code>&amp;</code>, tuy nhiên có một số trạm lại nằm trên một con đường. Và vì chất lượng dữ liệu, cũng có một số station là <code>null</code>. Hàm <code>TOCOL()</code> là hàm mảng xử lí cách mảng con nhận được từ <code>BYROW(...,LAMBDA(...,TEXTSPLIT()))</code>, các mảng con này có độ dài <strong>không đều</strong>, dẫn đến <code>TOCOL()</code> chỉ take record đầu tiên của mỗi mảng con, trả về <code>_all_records</code> chỉ gồm <em>1000 dòng dữ liệu</em>.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-06-06-excel-blambda/special_data_points.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Các điểm dữ liệu đặc biệt</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="solution" class="level1 page-columns page-full">
+<h1>Solution</h1>
+<div class="page-columns page-full"><p>Các mảng lởm chởm hay ragged/jagged array là các mảng gồm các mảng con có độ dài không đều nhau. </p><div class="no-row-height column-margin column-container"><span class="margin-aside">In computer science, a <strong>jagged array</strong>, also known as a <strong>ragged array</strong>, or <strong>irregular array</strong>, is an array of arrays of which the member arrays can be of different lengths, producing rows of jagged edges when visualized as output. In contrast, two-dimensional arrays are always rectangular, so jagged arrays should not be confused with multidimensional arrays, but the former is often used to emulate the latter. <a href="https://en.wikipedia.org/wiki/Jagged_array#:~:text=In%20computer%20science%2C%20a%20jagged,edges%20when%20visualized%20as%20output.">Wiki</a></span></div></div>
+<p>Một <a href="https://www.linkedin.com/feed/update/urn:li:activity:7204129483144986624?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7204129483144986624%2C7204309739827044353%29&amp;dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287204309739827044353%2Curn%3Ali%3Aactivity%3A7204129483144986624%29">comment</a> đưa mình tới hàm <a href="https://gist.github.com/ncalm/0e72b08272ec14f411e8aaa763c0c0b5"><code>BLAMBDAλ()</code></a> của bác MVP <a href="https://www.linkedin.com/in/peterbartholomew/">Peter Bartholemew</a> và <a href="https://www.linkedin.com/pulse/excel-lambda-spotlight-bisected-map-bmap%2525CE%2525BB-owen-price/?trackingId=8qiw9B83QGuOUZNX2I7OMg%3D%3D">bài giải thích</a> của Owen Price.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-06-06-excel-blambda/g4g_ragged_array.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption>Ragged or Jagged array, photo credit to <a href="https://www.geeksforgeeks.org/jagged-array-in-java/">Geeks for Geeks</a></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Và lời giải đúng, được dựa trên ý tưởng của <code>BLAMBDAλ()</code> là:</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb2-1">=LET(</span>
+<span id="cb2-2">    B, LAMBDA(B, v,</span>
+<span id="cb2-3">        LET(</span>
+<span id="cb2-4">            n, ROWS(v),</span>
+<span id="cb2-5">            IF(</span>
+<span id="cb2-6">                n &gt; 1,</span>
+<span id="cb2-7">                VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))),</span>
+<span id="cb2-8">                TEXTSPLIT(TEXTJOIN(" &amp; ", , v), , " &amp; ")</span>
+<span id="cb2-9">            )</span>
+<span id="cb2-10">        )</span>
+<span id="cb2-11">    ),</span>
+<span id="cb2-12">    str, B(B, CHOOSECOLS(_tbl_CityBike, 4, 5)),</span>
+<span id="cb2-13">    _u_str, UNIQUE(str),</span>
+<span id="cb2-14">    _cnt, BYROW(--(_u_str = TRANSPOSE(str)), LAMBDA(x, SUM(x))),</span>
+<span id="cb2-15">    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)</span>
+<span id="cb2-16">)</span></code></pre></div>
+<p>Nếu sử dụng <code>GROUPBY()</code> thì việc tính toán cuối cùng sẽ gọn hơn, tuy nhiên vào thời điểm viết bài, hàm này vẫn chưa được MS đưa lên 365 Production mà chỉ ở kênh Insider.</p>
+<p>Kết quả cuối cùng:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-06-06-excel-blambda/final_result.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Kết quả đúng</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="blambdaλ" class="level1">
+<h1><code>BLAMBDAλ()</code></h1>
+<p>Nguyên văn mục đích của <code>BLAMBDAλ()</code> của Peter:</p>
+<blockquote class="blockquote">
+<p>Recursively bisects an array and applies a function to the leaf nodes. Useful for when the result of the Fnλ(leaf) calls are not of equal length. As such, BMAPλ can produce ragged arrays.</p>
+</blockquote>
+<p>Owen cũng nhận xét là hàm này “more computationally efficient” so với <a href="https://gist.github.com/ncalm/ef7ed953571eec1475c291948aa2dbc3"><code>STACKER()</code></a> của ổng. Chi tiết về ý tưởng hàm gốc có thể tham khảo ở các link trên, giờ mình sẽ tìm hiểu <code>BLAMBDAλ()</code> được áp dụng cho use case này.</p>
+<p>Đầu tiên <code>B()</code> (stands for Bisected) là một hàm recursive:</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb3-1">B = LAMBDA(B, v,</span>
+<span id="cb3-2">        LET(</span>
+<span id="cb3-3">            n, ROWS(v),</span>
+<span id="cb3-4">            IF(</span>
+<span id="cb3-5">                n &gt; 1,</span>
+<span id="cb3-6">                VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))),</span>
+<span id="cb3-7">                TEXTSPLIT(TEXTJOIN(" &amp; ", , v), , " &amp; ")</span>
+<span id="cb3-8">            )</span>
+<span id="cb3-9">        )</span>
+<span id="cb3-10">    )</span></code></pre></div>
+<p>Trong đó:</p>
+<ul>
+<li><code>n</code> là số dòng của <code>v</code> ~ mảng cần tính toán</li>
+<li>nếu <code>n</code> &gt; 1, trả về kết hợp <code>VSTACK()</code> khi hàm <code>B()</code> được áp dụng cho hai nửa của mảng <code>v</code>, <code>TAKE()</code> sẽ lấy “phân nửa” đầu tiên, <code>DROP()</code> sẽ bỏ đi phân nửa đầu tiên ~ nghĩa là lấy phân nửa thứ 2 (lưu ý rằng hai hàm này đều lấy số nguyên nhỏ hơn gần nhất của <code>n / 2</code>, do đó không cần lấy phần nguyên bằng <code>QUOTIENT(n,2)</code> như hàm gốc của Peter).</li>
+<li>khi n = 1, nghĩa là với mỗi phần tử của mảng <code>v</code>, thực hiện động tác <code>TEXTSPLIT(TEXTJOIN(...))</code> ~ trước hết join hai cột rồi sau đó split.</li>
+<li>hàm này đệ quy và sẽ <code>VSTACK()</code> tất cả các mảng dọc sinh từ việc <code>TEXTSPLIT()</code> kết quả của <code>TEXTJOIN()</code> hai cột trên mỗi dòng của mảng <code>v</code>.</li>
+</ul>
+<p>Mình cũng thử viết lại hàm <code>B()</code>, thay đổi một chút ~ thay vì thực hiện trên 1 mảng 2 cột mình cố gắng chuyển mảng <code>v</code> thành một cột, tuy nhiên chưa thành công 😪 <strong>(chưa hiểu tại sao)</strong>:</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb4-1">=LET(</span>
+<span id="cb4-2">    B, LAMBDA(B, v,</span>
+<span id="cb4-3">        LET(</span>
+<span id="cb4-4">            n, ROWS(v),</span>
+<span id="cb4-5">            IF(n &gt; 1, VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))), TEXTSPLIT(v, " &amp; "))</span>
+<span id="cb4-6">        )</span>
+<span id="cb4-7">    ),</span>
+<span id="cb4-8">    _data, VSTACK(_tbl_CityBike[start_station_name], _tbl_CityBike[end_station_name]),</span>
+<span id="cb4-9">    str, B(B, FILTER(_data, LEN(_data) &gt; 0)),</span>
+<span id="cb4-10">    _u_str, UNIQUE(str),</span>
+<span id="cb4-11">    _cnt, BYROW(--(_u_str = TRANSPOSE(str)), LAMBDA(x, SUM(x))),</span>
+<span id="cb4-12">    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)</span>
+<span id="cb4-13">)</span></code></pre></div>
+<p>Thanks Peter &amp; Owen for this great use of recursion presented in such a concise manner.</p>
+
+
+<!-- -->
+
+</section>
+
+ ]]></description>
+  <category>excel</category>
+  <category>lambda</category>
+  <category>til</category>
+  <guid>https://lktuan.github.io/blog/2024-06-06-excel-blambda/</guid>
+  <pubDate>Wed, 05 Jun 2024 17:00:00 GMT</pubDate>
+  <media:content url="https://lktuan.github.io/blog/2024-06-06-excel-blambda/excel-lambda.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Storytelling with Data: Let’s Practice, Improve this table!</title>
   <dc:creator>Tuan Le Khac</dc:creator>
