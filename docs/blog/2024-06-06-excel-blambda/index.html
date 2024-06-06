@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2024-06-06">
 <meta name="description" content="I am a Risk Modeler 🚀">
 
-<title>Le Khac Tuan - TIL: Xử lý mảng dynamic-ragged trong Excel</title>
+<title>Le Khac Tuan - TIL: Xử lý dynamic-ragged array trong Excel</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -171,10 +171,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <div class="quarto-title-block"><div><h1 class="title">TIL: Xử lý mảng dynamic-ragged trong Excel</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+      <div class="quarto-title-block"><div><h1 class="title">TIL: Xử lý dynamic-ragged array trong Excel</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
                   <div>
         <div class="description">
-          Các mảng
+          Từ khi các hàm mảng như VTACK() xuất hiện, mình thường xuyên sử dụng các patterns như REDUCE/VSTACK để mở rộng khả năng xử lí các phần tử của mảng: thay vì chỉ tính toán với đầu ra là value, nay đã có thể tạo ra các mảng. Tuy nhiên không phải lúc nào cũng có thể làm việc với mảng trong mảng một cáhc đơn giản
         </div>
       </div>
                           <div class="quarto-categories">
@@ -216,7 +216,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#problem-statement" id="toc-problem-statement" class="nav-link active" data-scroll-target="#problem-statement">Problem statement</a></li>
   <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a></li>
-  <li><a href="#blambdaλ" id="toc-blambdaλ" class="nav-link" data-scroll-target="#blambdaλ"><code>BLAMBDAλ()</code></a></li>
+  <li><a href="#blambdaλ" id="toc-blambdaλ" class="nav-link" data-scroll-target="#blambdaλ"><code>BLAMBDAλ()</code></a>
+  <ul class="collapse">
+  <li><a href="#edit-sau-khi-mày-mò-thêm-sửa-lỗi-cho-giải-pháp-trên-mình-back-to-basic-với-lời-giải-sau" id="toc-edit-sau-khi-mày-mò-thêm-sửa-lỗi-cho-giải-pháp-trên-mình-back-to-basic-với-lời-giải-sau" class="nav-link" data-scroll-target="#edit-sau-khi-mày-mò-thêm-sửa-lỗi-cho-giải-pháp-trên-mình-back-to-basic-với-lời-giải-sau">🚀 Edit: sau khi mày mò thêm sửa lỗi cho giải pháp trên mình back to basic với lời giải sau:</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -229,8 +232,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="problem-statement" class="level1">
 <h1>Problem statement</h1>
-<p>TIL: Hôm nay mình thử giải một <a href="https://www.linkedin.com/posts/owenhprice_data-analytics-sql-activity-7204129483144986624-R73I">challenge</a> của bác <a href="https://www.linkedin.com/in/owenhprice/">Owen Price</a>. Bác là Microsoft MVP, master ở khía cạnh xử lí, làm sạch, thậm chí là tối ưu việc xử lí đó trong Excel, trang blog của bác là <a href="https://www.flexyourdata.com/">FLEX YOUR DATA</a>, mình học được rất nhiều các sử dụng formulas, đặc biệt là các hàm mới từ <code>LAMBDA()</code>, <code>MAP()</code>, <code>REDUCE()</code> cho đến gần đây là <strong>Python in Excel</strong>, <code>GROUPBY()</code>, <code>PIVOTBY</code>, và các hàm <code>REGEX</code>.</p>
-<p>Nội dung challeng là, với <strong>một phần</strong> (1000 records) của bộ dữ liệu <a href="https://citibikenyc.com/system-data">Citi Bike</a>, trong đó chứa hai cột <code>start_station_name</code>, <code>end_station_name</code>, mỗi cột lại chứa thông tin các “station” ~ trạm, liệt kê 5 <strong>địa chỉ</strong> cùng số lần xuất hiện với số lượng lớn nhất!. Hình dưới là 10 dòng đầu tiên của dữ liệu.</p>
+<p>TIL: Hôm nay mình thử giải một <a href="https://www.linkedin.com/posts/owenhprice_data-analytics-sql-activity-7204129483144986624-R73I">challenge</a> của bác <a href="https://www.linkedin.com/in/owenhprice/">Owen Price</a>. Bác là Microsoft MVP, master ở khía cạnh xử lí, làm sạch, thậm chí là tối ưu việc xử lí đó trong Excel, trang blog của bác là <a href="https://www.flexyourdata.com/">FLEX YOUR DATA</a>, mình học được rất nhiều cách sử dụng formulas, đặc biệt là các hàm mới từ <code>LAMBDA()</code>, <code>MAP()</code>, <code>REDUCE()</code> cho đến gần đây là <strong>Python in Excel</strong>, <code>GROUPBY()</code>, <code>PIVOTBY</code>, và các hàm <code>REGEX_()</code>.</p>
+<p>Nội dung challenge là, với <strong>một phần</strong> (1000 records) của bộ dữ liệu <a href="https://citibikenyc.com/system-data">Citi Bike</a>, trong đó chứa hai cột <code>start_station_name</code>, <code>end_station_name</code>, mỗi cột lại chứa thông tin các “station” ~ trạm, liệt kê 5 <strong>địa chỉ</strong> cùng số lần xuất hiện với số lượng lớn nhất!. Hình dưới là 10 dòng đầu tiên của dữ liệu.</p>
 <div>
 
 </div>
@@ -301,8 +304,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="solution" class="level1 page-columns page-full">
 <h1>Solution</h1>
-<div class="page-columns page-full"><p>Các mảng lởm chởm hay ragged/jagged array là các mảng gồm các mảng con có độ dài không đều nhau. </p><div class="no-row-height column-margin column-container"><span class="margin-aside">In computer science, a <strong>jagged array</strong>, also known as a <strong>ragged array</strong>, or <strong>irregular array</strong>, is an array of arrays of which the member arrays can be of different lengths, producing rows of jagged edges when visualized as output. In contrast, two-dimensional arrays are always rectangular, so jagged arrays should not be confused with multidimensional arrays, but the former is often used to emulate the latter. <a href="https://en.wikipedia.org/wiki/Jagged_array#:~:text=In%20computer%20science%2C%20a%20jagged,edges%20when%20visualized%20as%20output.">Wiki</a></span></div></div>
-<p>Một <a href="https://www.linkedin.com/feed/update/urn:li:activity:7204129483144986624?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7204129483144986624%2C7204309739827044353%29&amp;dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287204309739827044353%2Curn%3Ali%3Aactivity%3A7204129483144986624%29">comment</a> đưa mình tới hàm <a href="https://gist.github.com/ncalm/0e72b08272ec14f411e8aaa763c0c0b5"><code>BLAMBDAλ()</code></a> của bác MVP <a href="https://www.linkedin.com/in/peterbartholomew/">Peter Bartholemew</a> và <a href="https://www.linkedin.com/pulse/excel-lambda-spotlight-bisected-map-bmap%2525CE%2525BB-owen-price/?trackingId=8qiw9B83QGuOUZNX2I7OMg%3D%3D">bài giải thích</a> của Owen Price.</p>
+<div class="page-columns page-full"><p>Các mảng lởm chởm hay ragged/jagged array là các mảng gồm các mảng con có độ dài không đều nhau.  Excel <strong>không thể</strong> merge các bảng có kích cỡ không bằng nhau.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">In computer science, a <strong>jagged array</strong>, also known as a <strong>ragged array</strong>, or <strong>irregular array</strong>, is an array of arrays of which the member arrays can be of different lengths, producing rows of jagged edges when visualized as output. In contrast, two-dimensional arrays are always rectangular, so jagged arrays should not be confused with multidimensional arrays, but the former is often used to emulate the latter. <a href="https://en.wikipedia.org/wiki/Jagged_array#:~:text=In%20computer%20science%2C%20a%20jagged,edges%20when%20visualized%20as%20output.">Wiki</a></span></div></div>
+<p>Một <a href="https://www.linkedin.com/feed/update/urn:li:activity:7204129483144986624?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7204129483144986624%2C7204309739827044353%29&amp;dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287204309739827044353%2Curn%3Ali%3Aactivity%3A7204129483144986624%29">comment</a> đưa mình tới hàm <a href="https://gist.github.com/ncalm/0e72b08272ec14f411e8aaa763c0c0b5"><code>BLAMBDAλ()</code></a> của bác MVP <a href="https://www.linkedin.com/in/peterbartholomew/">Peter Bartholemew</a> và <a href="https://www.linkedin.com/pulse/excel-lambda-spotlight-bisected-map-bmap%2525CE%2525BB-owen-price/">bài giải thích</a> của Owen Price.</p>
 <div>
 
 </div>
@@ -392,11 +395,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-11"><a href="#cb4-11"></a>    _cnt, BYROW(--(_u_str = TRANSPOSE(str)), LAMBDA(x, SUM(x))),</span>
 <span id="cb4-12"><a href="#cb4-12"></a>    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)</span>
 <span id="cb4-13"><a href="#cb4-13"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="edit-sau-khi-mày-mò-thêm-sửa-lỗi-cho-giải-pháp-trên-mình-back-to-basic-với-lời-giải-sau" class="level2">
+<h2 class="anchored" data-anchor-id="edit-sau-khi-mày-mò-thêm-sửa-lỗi-cho-giải-pháp-trên-mình-back-to-basic-với-lời-giải-sau">🚀 Edit: sau khi mày mò thêm sửa lỗi cho giải pháp trên mình back to basic với lời giải sau:</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb5-1"><a href="#cb5-1"></a>=LET(</span>
+<span id="cb5-2"><a href="#cb5-2"></a>    _data, TOCOL(_tbl_CityBike[[start_station_name]:[end_station_name]], 3),</span>
+<span id="cb5-3"><a href="#cb5-3"></a>    _str, DROP(REDUCE("", _data, LAMBDA(a, x, VSTACK(a, TEXTSPLIT(x, , " &amp; ")))), 1),</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    _u_str, UNIQUE(_str),</span>
+<span id="cb5-5"><a href="#cb5-5"></a>    _cnt, BYROW(--(_u_str = TRANSPOSE(_str)), LAMBDA(x, SUM(x))),</span>
+<span id="cb5-6"><a href="#cb5-6"></a>    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)</span>
+<span id="cb5-7"><a href="#cb5-7"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Tất nhiên tốc độ xử lí sẽ chậm hơn <code>BLAMBDAλ()</code> - O_log(n), giải pháp này duyệt qua từng phần tử, nên BigO là O(n)</p>
 <p>Thanks Peter &amp; Owen for this great use of recursion presented in such a concise manner.</p>
 
 
 <!-- -->
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -860,166 +874,178 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb5" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">---</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="an">title:</span><span class="co"> "TIL: Xử lý mảng dynamic-ragged trong Excel"</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a><span class="an">description:</span><span class="co"> "Các mảng"</span></span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="an">author:</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
-<span id="cb5-7"><a href="#cb5-7"></a><span class="an">date:</span><span class="co"> 06-06-2024</span></span>
-<span id="cb5-8"><a href="#cb5-8"></a><span class="an">modified-date:</span><span class="co"> 06-06-2024</span></span>
-<span id="cb5-9"><a href="#cb5-9"></a><span class="an">categories:</span><span class="co"> [excel, lambda, til] </span></span>
-<span id="cb5-10"><a href="#cb5-10"></a><span class="an">image:</span><span class="co"> excel-lambda.jpg</span></span>
-<span id="cb5-11"><a href="#cb5-11"></a><span class="an">draft:</span><span class="co"> false</span></span>
-<span id="cb5-12"><a href="#cb5-12"></a><span class="an">format:</span><span class="co"> </span></span>
-<span id="cb5-13"><a href="#cb5-13"></a><span class="co">  html: </span></span>
-<span id="cb5-14"><a href="#cb5-14"></a><span class="co">    code-fold: false</span></span>
-<span id="cb5-15"><a href="#cb5-15"></a><span class="co">    code-summary: "Show the code"</span></span>
-<span id="cb5-16"><a href="#cb5-16"></a><span class="co">    code-line-numbers: true</span></span>
-<span id="cb5-17"><a href="#cb5-17"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
-<span id="cb5-18"><a href="#cb5-18"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
-<span id="cb5-19"><a href="#cb5-19"></a><span class="an">editor:</span><span class="co"> visual</span></span>
-<span id="cb5-20"><a href="#cb5-20"></a><span class="co">---</span></span>
-<span id="cb5-21"><a href="#cb5-21"></a></span>
-<span id="cb5-22"><a href="#cb5-22"></a><span class="fu"># Problem statement</span></span>
-<span id="cb5-23"><a href="#cb5-23"></a></span>
-<span id="cb5-24"><a href="#cb5-24"></a>TIL: Hôm nay mình thử giải một <span class="co">[</span><span class="ot">challenge</span><span class="co">](https://www.linkedin.com/posts/owenhprice_data-analytics-sql-activity-7204129483144986624-R73I)</span> của bác <span class="co">[</span><span class="ot">Owen Price</span><span class="co">](https://www.linkedin.com/in/owenhprice/)</span>. Bác là Microsoft MVP, master ở khía cạnh xử lí, làm sạch, thậm chí là tối ưu việc xử lí đó trong Excel, trang blog của bác là <span class="co">[</span><span class="ot">FLEX YOUR DATA</span><span class="co">](https://www.flexyourdata.com/)</span>, mình học được rất nhiều các sử dụng formulas, đặc biệt là các hàm mới từ <span class="in">`LAMBDA()`</span>, <span class="in">`MAP()`</span>, <span class="in">`REDUCE()`</span> cho đến gần đây là **Python in Excel**, <span class="in">`GROUPBY()`</span>, <span class="in">`PIVOTBY`</span>, và các hàm <span class="in">`REGEX`</span>.</span>
-<span id="cb5-25"><a href="#cb5-25"></a></span>
-<span id="cb5-26"><a href="#cb5-26"></a>Nội dung challeng là, với **một phần** (1000 records) của bộ dữ liệu [Citi Bike](https://citibikenyc.com/system-data), trong đó chứa hai cột `start_station_name`, `end_station_name`, mỗi cột lại chứa thông tin các "station" ~ trạm, liệt kê 5 **địa chỉ** cùng số lần xuất hiện với số lượng lớn nhất!. Hình dưới là 10 dòng đầu tiên của dữ liệu.</span>
-<span id="cb5-27"><a href="#cb5-27"></a></span>
-<span id="cb5-28"><a href="#cb5-28"></a>::: {layout-ncol=1}</span>
-<span id="cb5-29"><a href="#cb5-29"></a><span class="al">![10 dòng đầu tiên của dữ liệu](data.png)</span>{width=100%}</span>
-<span id="cb5-30"><a href="#cb5-30"></a>:::</span>
-<span id="cb5-31"><a href="#cb5-31"></a></span>
-<span id="cb5-32"><a href="#cb5-32"></a>Well lúc đầu mình nghĩ nó cũng đơn giản 😂, thậm chí cũng không hiểu tại sao mỗi start hoặc end station lại có *hai station*, cách nhau bởi ký tự <span class="in">` &amp; `</span> (space before &amp; after). Mình lập tức đưa ra lời giải như sau:</span>
-<span id="cb5-33"><a href="#cb5-33"></a></span>
-<span id="cb5-34"><a href="#cb5-34"></a><span class="in">``` txt</span></span>
-<span id="cb5-35"><a href="#cb5-35"></a><span class="in">=LET(</span></span>
-<span id="cb5-36"><a href="#cb5-36"></a><span class="in">    _d, " &amp; ",</span></span>
-<span id="cb5-37"><a href="#cb5-37"></a><span class="in">    _all_records, TOCOL(</span></span>
-<span id="cb5-38"><a href="#cb5-38"></a><span class="in">        BYROW(</span></span>
-<span id="cb5-39"><a href="#cb5-39"></a><span class="in">            BYROW(</span></span>
-<span id="cb5-40"><a href="#cb5-40"></a><span class="in">                _tbl_CityBike[[start_station_name]:[end_station_name]],</span></span>
-<span id="cb5-41"><a href="#cb5-41"></a><span class="in">                LAMBDA(x, TEXTJOIN(_d, TRUE, x))</span></span>
-<span id="cb5-42"><a href="#cb5-42"></a><span class="in">            ),</span></span>
-<span id="cb5-43"><a href="#cb5-43"></a><span class="in">        LAMBDA(x, TEXTSPLIT(x, _d))</span></span>
-<span id="cb5-44"><a href="#cb5-44"></a><span class="in">        )</span></span>
-<span id="cb5-45"><a href="#cb5-45"></a><span class="in">    ),</span></span>
-<span id="cb5-46"><a href="#cb5-46"></a><span class="in">    _stations, UNIQUE(_all_records),</span></span>
-<span id="cb5-47"><a href="#cb5-47"></a><span class="in">    _cnt, BYROW(</span></span>
-<span id="cb5-48"><a href="#cb5-48"></a><span class="in">        --(_stations = TRANSPOSE(_all_records)), </span></span>
-<span id="cb5-49"><a href="#cb5-49"></a><span class="in">        // "--" equals to "+" will convert the boolean TRUE/FALSE to value 1/0</span></span>
-<span id="cb5-50"><a href="#cb5-50"></a><span class="in">        LAMBDA(x, SUM(x))</span></span>
-<span id="cb5-51"><a href="#cb5-51"></a><span class="in">    ),</span></span>
-<span id="cb5-52"><a href="#cb5-52"></a><span class="in">    TAKE(SORTBY(HSTACK(_stations, _cnt), _cnt, -1), 5, )</span></span>
-<span id="cb5-53"><a href="#cb5-53"></a><span class="in">)</span></span>
-<span id="cb5-54"><a href="#cb5-54"></a><span class="in">```</span></span>
-<span id="cb5-55"><a href="#cb5-55"></a></span>
-<span id="cb5-56"><a href="#cb5-56"></a>Kết quả:</span>
-<span id="cb5-57"><a href="#cb5-57"></a></span>
-<span id="cb5-58"><a href="#cb5-58"></a>::: {layout-ncol=1}</span>
-<span id="cb5-59"><a href="#cb5-59"></a><span class="al">![Kết quả đầu tiên của mình](my_initial_result.png)</span>{width=50%}</span>
-<span id="cb5-60"><a href="#cb5-60"></a>:::</span>
-<span id="cb5-61"><a href="#cb5-61"></a></span>
-<span id="cb5-62"><a href="#cb5-62"></a>Đối chiếu với các kết quả của những người tham gia khách thì nó sai! Ý tưởng của mình là đầu tiên với mỗi hàng, join chúng lại với <span class="in">` &amp; `</span> (<span class="in">`_d`</span>), sau đó lại split chúng ra với cùng <span class="in">`_d`</span> đó, từ đó có được danh sách occurence của tất cả các **địa chỉ**. Tuy nhiên mình nhận ra dữ liệu trả về cho `_all_records` bị thiếu sót. Lý do là các trạm (station) thường là các giao lộ, kết hợp từ hai địa chỉ với dấu ` &amp; `, tuy nhiên có một số trạm lại nằm trên một con đường. Và vì chất lượng dữ liệu, cũng có một số station là `null`. Hàm `TOCOL()` là hàm mảng xử lí cách mảng con nhận được từ `BYROW(...,LAMBDA(...,TEXTSPLIT()))`, các mảng con này có độ dài **không đều**, dẫn đến <span class="in">`TOCOL()`</span> chỉ take record đầu tiên của mỗi mảng con, trả về <span class="in">`_all_records`</span> chỉ gồm *1000 dòng dữ liệu*.</span>
-<span id="cb5-63"><a href="#cb5-63"></a></span>
-<span id="cb5-64"><a href="#cb5-64"></a>::: {layout-ncol=1}</span>
-<span id="cb5-65"><a href="#cb5-65"></a><span class="al">![Các điểm dữ liệu đặc biệt](special_data_points.png)</span>{width=100%}</span>
-<span id="cb5-66"><a href="#cb5-66"></a>:::</span>
-<span id="cb5-67"><a href="#cb5-67"></a></span>
-<span id="cb5-68"><a href="#cb5-68"></a><span class="fu"># Solution</span></span>
-<span id="cb5-69"><a href="#cb5-69"></a></span>
-<span id="cb5-70"><a href="#cb5-70"></a>Các mảng lởm chởm hay ragged/jagged array là các mảng gồm các mảng con có độ dài không đều nhau. <span class="co">[</span><span class="ot">In computer science, a **jagged array**, also known as a **ragged array**, or **irregular array**, is an array of arrays of which the member arrays can be of different lengths, producing rows of jagged edges when visualized as output. In contrast, two-dimensional arrays are always rectangular, so jagged arrays should not be confused with multidimensional arrays, but the former is often used to emulate the latter. [Wiki](https://en.wikipedia.org/wiki/Jagged_array#:~:text=In%20computer%20science%2C%20a%20jagged,edges%20when%20visualized%20as%20output.)</span><span class="co">]</span>{.aside}</span>
-<span id="cb5-71"><a href="#cb5-71"></a></span>
-<span id="cb5-72"><a href="#cb5-72"></a>Một <span class="co">[</span><span class="ot">comment</span><span class="co">](https://www.linkedin.com/feed/update/urn:li:activity:7204129483144986624?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7204129483144986624%2C7204309739827044353%29&amp;dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287204309739827044353%2Curn%3Ali%3Aactivity%3A7204129483144986624%29)</span> đưa mình tới hàm <span class="co">[</span><span class="ot">`BLAMBDAλ()`</span><span class="co">](https://gist.github.com/ncalm/0e72b08272ec14f411e8aaa763c0c0b5)</span> của bác MVP <span class="co">[</span><span class="ot">Peter Bartholemew</span><span class="co">](https://www.linkedin.com/in/peterbartholomew/)</span> và <span class="co">[</span><span class="ot">bài giải thích</span><span class="co">](https://www.linkedin.com/pulse/excel-lambda-spotlight-bisected-map-bmap%2525CE%2525BB-owen-price/?trackingId=8qiw9B83QGuOUZNX2I7OMg%3D%3D)</span> của Owen Price.</span>
-<span id="cb5-73"><a href="#cb5-73"></a></span>
-<span id="cb5-74"><a href="#cb5-74"></a>::: {layout-ncol=1}</span>
-<span id="cb5-75"><a href="#cb5-75"></a>!<span class="co">[</span><span class="ot">Ragged or Jagged array, photo credit to [Geeks for Geeks](https://www.geeksforgeeks.org/jagged-array-in-java/)</span><span class="co">](g4g_ragged_array.png)</span>{width=80%}</span>
-<span id="cb5-76"><a href="#cb5-76"></a>::: </span>
-<span id="cb5-77"><a href="#cb5-77"></a></span>
-<span id="cb5-78"><a href="#cb5-78"></a>Và lời giải đúng, được dựa trên ý tưởng của <span class="in">`BLAMBDAλ()`</span> là:</span>
-<span id="cb5-79"><a href="#cb5-79"></a></span>
-<span id="cb5-80"><a href="#cb5-80"></a><span class="in">``` txt</span></span>
-<span id="cb5-81"><a href="#cb5-81"></a><span class="in">=LET(</span></span>
-<span id="cb5-82"><a href="#cb5-82"></a><span class="in">    B, LAMBDA(B, v,</span></span>
-<span id="cb5-83"><a href="#cb5-83"></a><span class="in">        LET(</span></span>
-<span id="cb5-84"><a href="#cb5-84"></a><span class="in">            n, ROWS(v),</span></span>
-<span id="cb5-85"><a href="#cb5-85"></a><span class="in">            IF(</span></span>
-<span id="cb5-86"><a href="#cb5-86"></a><span class="in">                n &gt; 1,</span></span>
-<span id="cb5-87"><a href="#cb5-87"></a><span class="in">                VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))),</span></span>
-<span id="cb5-88"><a href="#cb5-88"></a><span class="in">                TEXTSPLIT(TEXTJOIN(" &amp; ", , v), , " &amp; ")</span></span>
-<span id="cb5-89"><a href="#cb5-89"></a><span class="in">            )</span></span>
-<span id="cb5-90"><a href="#cb5-90"></a><span class="in">        )</span></span>
-<span id="cb5-91"><a href="#cb5-91"></a><span class="in">    ),</span></span>
-<span id="cb5-92"><a href="#cb5-92"></a><span class="in">    str, B(B, CHOOSECOLS(_tbl_CityBike, 4, 5)),</span></span>
-<span id="cb5-93"><a href="#cb5-93"></a><span class="in">    _u_str, UNIQUE(str),</span></span>
-<span id="cb5-94"><a href="#cb5-94"></a><span class="in">    _cnt, BYROW(--(_u_str = TRANSPOSE(str)), LAMBDA(x, SUM(x))),</span></span>
-<span id="cb5-95"><a href="#cb5-95"></a><span class="in">    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)</span></span>
-<span id="cb5-96"><a href="#cb5-96"></a><span class="in">)</span></span>
-<span id="cb5-97"><a href="#cb5-97"></a></span>
-<span id="cb5-98"><a href="#cb5-98"></a><span class="in">```</span></span>
-<span id="cb5-99"><a href="#cb5-99"></a></span>
-<span id="cb5-100"><a href="#cb5-100"></a>Nếu sử dụng <span class="in">`GROUPBY()`</span> thì việc tính toán cuối cùng sẽ gọn hơn, tuy nhiên vào thời điểm viết bài, hàm này vẫn chưa được MS đưa lên 365 Production mà chỉ ở kênh Insider.</span>
-<span id="cb5-101"><a href="#cb5-101"></a></span>
-<span id="cb5-102"><a href="#cb5-102"></a>Kết quả cuối cùng:</span>
-<span id="cb5-103"><a href="#cb5-103"></a></span>
-<span id="cb5-104"><a href="#cb5-104"></a>::: {layout-ncol=1}</span>
-<span id="cb5-105"><a href="#cb5-105"></a><span class="al">![Kết quả đúng](final_result.png)</span>{width=50%}</span>
-<span id="cb5-106"><a href="#cb5-106"></a>:::</span>
-<span id="cb5-107"><a href="#cb5-107"></a></span>
-<span id="cb5-108"><a href="#cb5-108"></a><span class="fu"># `BLAMBDAλ()`</span></span>
-<span id="cb5-109"><a href="#cb5-109"></a></span>
-<span id="cb5-110"><a href="#cb5-110"></a>Nguyên văn mục đích của <span class="in">`BLAMBDAλ()`</span> của Peter:</span>
-<span id="cb5-111"><a href="#cb5-111"></a></span>
-<span id="cb5-112"><a href="#cb5-112"></a><span class="at">&gt; Recursively bisects an array and applies a function to the leaf nodes. </span></span>
-<span id="cb5-113"><a href="#cb5-113"></a><span class="at">Useful for when the result of the Fnλ(leaf) calls are not of equal length.</span></span>
-<span id="cb5-114"><a href="#cb5-114"></a><span class="at">As such, BMAPλ can produce ragged arrays. </span></span>
-<span id="cb5-115"><a href="#cb5-115"></a></span>
-<span id="cb5-116"><a href="#cb5-116"></a>Owen cũng nhận xét là hàm này "more computationally efficient" so với <span class="co">[</span><span class="ot">`STACKER()`</span><span class="co">](https://gist.github.com/ncalm/ef7ed953571eec1475c291948aa2dbc3)</span> của ổng. Chi tiết về ý tưởng hàm gốc có thể tham khảo ở các link trên, giờ mình sẽ tìm hiểu <span class="in">`BLAMBDAλ()`</span> được áp dụng cho use case này.</span>
-<span id="cb5-117"><a href="#cb5-117"></a></span>
-<span id="cb5-118"><a href="#cb5-118"></a>Đầu tiên <span class="in">`B()`</span> (stands for Bisected) là một hàm recursive:</span>
-<span id="cb5-119"><a href="#cb5-119"></a></span>
-<span id="cb5-120"><a href="#cb5-120"></a><span class="in">``` txt</span></span>
-<span id="cb5-121"><a href="#cb5-121"></a><span class="in">B = LAMBDA(B, v,</span></span>
-<span id="cb5-122"><a href="#cb5-122"></a><span class="in">        LET(</span></span>
-<span id="cb5-123"><a href="#cb5-123"></a><span class="in">            n, ROWS(v),</span></span>
-<span id="cb5-124"><a href="#cb5-124"></a><span class="in">            IF(</span></span>
-<span id="cb5-125"><a href="#cb5-125"></a><span class="in">                n &gt; 1,</span></span>
-<span id="cb5-126"><a href="#cb5-126"></a><span class="in">                VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))),</span></span>
-<span id="cb5-127"><a href="#cb5-127"></a><span class="in">                TEXTSPLIT(TEXTJOIN(" &amp; ", , v), , " &amp; ")</span></span>
-<span id="cb5-128"><a href="#cb5-128"></a><span class="in">            )</span></span>
-<span id="cb5-129"><a href="#cb5-129"></a><span class="in">        )</span></span>
-<span id="cb5-130"><a href="#cb5-130"></a><span class="in">    )</span></span>
-<span id="cb5-131"><a href="#cb5-131"></a><span class="in">```</span></span>
-<span id="cb5-132"><a href="#cb5-132"></a></span>
-<span id="cb5-133"><a href="#cb5-133"></a>Trong đó:</span>
-<span id="cb5-134"><a href="#cb5-134"></a></span>
-<span id="cb5-135"><a href="#cb5-135"></a><span class="ss">- </span><span class="in">`n`</span> là số dòng của <span class="in">`v`</span> ~ mảng cần tính toán</span>
-<span id="cb5-136"><a href="#cb5-136"></a><span class="ss">- </span>nếu <span class="in">`n`</span> &gt; 1, trả về kết hợp <span class="in">`VSTACK()`</span> khi hàm <span class="in">`B()`</span> được áp dụng cho hai nửa của mảng <span class="in">`v`</span>, <span class="in">`TAKE()`</span> sẽ lấy "phân nửa" đầu tiên, <span class="in">`DROP()`</span> sẽ bỏ đi phân nửa đầu tiên ~ nghĩa là lấy phân nửa thứ 2 (lưu ý rằng hai hàm này đều lấy số nguyên nhỏ hơn gần nhất của <span class="in">`n / 2`</span>, do đó không cần lấy phần nguyên bằng <span class="in">`QUOTIENT(n,2)`</span> như hàm gốc của Peter).</span>
-<span id="cb5-137"><a href="#cb5-137"></a><span class="ss">- </span>khi n = 1, nghĩa là với mỗi phần tử của mảng <span class="in">`v`</span>, thực hiện động tác <span class="in">`TEXTSPLIT(TEXTJOIN(...))`</span> ~ trước hết join hai cột rồi sau đó split.</span>
-<span id="cb5-138"><a href="#cb5-138"></a><span class="ss">- </span>hàm này đệ quy và sẽ <span class="in">`VSTACK()`</span> tất cả các mảng dọc sinh từ việc <span class="in">`TEXTSPLIT()`</span> kết quả của <span class="in">`TEXTJOIN()`</span> hai cột trên mỗi dòng của mảng <span class="in">`v`</span>.</span>
-<span id="cb5-139"><a href="#cb5-139"></a></span>
-<span id="cb5-140"><a href="#cb5-140"></a>Mình cũng thử viết lại hàm <span class="in">`B()`</span>, thay đổi một chút ~ thay vì thực hiện trên 1 mảng 2 cột mình cố gắng chuyển mảng <span class="in">`v`</span> thành một cột, tuy nhiên chưa thành công 😪 **(chưa hiểu tại sao)**:</span>
-<span id="cb5-141"><a href="#cb5-141"></a></span>
-<span id="cb5-142"><a href="#cb5-142"></a><span class="in">```txt</span></span>
-<span id="cb5-143"><a href="#cb5-143"></a><span class="in">=LET(</span></span>
-<span id="cb5-144"><a href="#cb5-144"></a><span class="in">    B, LAMBDA(B, v,</span></span>
-<span id="cb5-145"><a href="#cb5-145"></a><span class="in">        LET(</span></span>
-<span id="cb5-146"><a href="#cb5-146"></a><span class="in">            n, ROWS(v),</span></span>
-<span id="cb5-147"><a href="#cb5-147"></a><span class="in">            IF(n &gt; 1, VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))), TEXTSPLIT(v, " &amp; "))</span></span>
-<span id="cb5-148"><a href="#cb5-148"></a><span class="in">        )</span></span>
-<span id="cb5-149"><a href="#cb5-149"></a><span class="in">    ),</span></span>
-<span id="cb5-150"><a href="#cb5-150"></a><span class="in">    _data, VSTACK(_tbl_CityBike[start_station_name], _tbl_CityBike[end_station_name]),</span></span>
-<span id="cb5-151"><a href="#cb5-151"></a><span class="in">    str, B(B, FILTER(_data, LEN(_data) &gt; 0)),</span></span>
-<span id="cb5-152"><a href="#cb5-152"></a><span class="in">    _u_str, UNIQUE(str),</span></span>
-<span id="cb5-153"><a href="#cb5-153"></a><span class="in">    _cnt, BYROW(--(_u_str = TRANSPOSE(str)), LAMBDA(x, SUM(x))),</span></span>
-<span id="cb5-154"><a href="#cb5-154"></a><span class="in">    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)</span></span>
-<span id="cb5-155"><a href="#cb5-155"></a><span class="in">)</span></span>
-<span id="cb5-156"><a href="#cb5-156"></a><span class="in">```</span></span>
-<span id="cb5-157"><a href="#cb5-157"></a></span>
-<span id="cb5-158"><a href="#cb5-158"></a></span>
-<span id="cb5-159"><a href="#cb5-159"></a>Thanks Peter &amp; Owen for this great use of recursion presented in such a concise manner. </span>
-<span id="cb5-160"><a href="#cb5-160"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">---</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="an">title:</span><span class="co"> "TIL: Xử lý dynamic-ragged array trong Excel"</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="an">description:</span><span class="co"> "Từ khi các hàm mảng như VTACK() xuất hiện, mình thường xuyên sử dụng các patterns như REDUCE/VSTACK để mở rộng khả năng xử lí các phần tử của mảng: thay vì chỉ tính toán với đầu ra là value, nay đã có thể tạo ra các mảng. Tuy nhiên không phải lúc nào cũng có thể làm việc với mảng trong mảng một cáhc đơn giản"</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="an">author:</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="an">date:</span><span class="co"> 06-06-2024</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="an">modified-date:</span><span class="co"> 06-06-2024</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="an">categories:</span><span class="co"> [excel, lambda, til] </span></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="an">image:</span><span class="co"> excel-lambda.jpg</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="an">draft:</span><span class="co"> false</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="an">format:</span><span class="co"> </span></span>
+<span id="cb6-13"><a href="#cb6-13"></a><span class="co">  html: </span></span>
+<span id="cb6-14"><a href="#cb6-14"></a><span class="co">    code-fold: false</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a><span class="co">    code-summary: "Show the code"</span></span>
+<span id="cb6-16"><a href="#cb6-16"></a><span class="co">    code-line-numbers: true</span></span>
+<span id="cb6-17"><a href="#cb6-17"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
+<span id="cb6-19"><a href="#cb6-19"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb6-20"><a href="#cb6-20"></a><span class="co">---</span></span>
+<span id="cb6-21"><a href="#cb6-21"></a></span>
+<span id="cb6-22"><a href="#cb6-22"></a><span class="fu"># Problem statement</span></span>
+<span id="cb6-23"><a href="#cb6-23"></a></span>
+<span id="cb6-24"><a href="#cb6-24"></a>TIL: Hôm nay mình thử giải một <span class="co">[</span><span class="ot">challenge</span><span class="co">](https://www.linkedin.com/posts/owenhprice_data-analytics-sql-activity-7204129483144986624-R73I)</span> của bác <span class="co">[</span><span class="ot">Owen Price</span><span class="co">](https://www.linkedin.com/in/owenhprice/)</span>. Bác là Microsoft MVP, master ở khía cạnh xử lí, làm sạch, thậm chí là tối ưu việc xử lí đó trong Excel, trang blog của bác là <span class="co">[</span><span class="ot">FLEX YOUR DATA</span><span class="co">](https://www.flexyourdata.com/)</span>, mình học được rất nhiều cách sử dụng formulas, đặc biệt là các hàm mới từ <span class="in">`LAMBDA()`</span>, <span class="in">`MAP()`</span>, <span class="in">`REDUCE()`</span> cho đến gần đây là **Python in Excel**, <span class="in">`GROUPBY()`</span>, <span class="in">`PIVOTBY`</span>, và các hàm <span class="in">`REGEX_()`</span>.</span>
+<span id="cb6-25"><a href="#cb6-25"></a></span>
+<span id="cb6-26"><a href="#cb6-26"></a>Nội dung challenge là, với **một phần** (1000 records) của bộ dữ liệu [Citi Bike](https://citibikenyc.com/system-data), trong đó chứa hai cột `start_station_name`, `end_station_name`, mỗi cột lại chứa thông tin các "station" ~ trạm, liệt kê 5 **địa chỉ** cùng số lần xuất hiện với số lượng lớn nhất!. Hình dưới là 10 dòng đầu tiên của dữ liệu.</span>
+<span id="cb6-27"><a href="#cb6-27"></a></span>
+<span id="cb6-28"><a href="#cb6-28"></a>::: {layout-ncol=1}</span>
+<span id="cb6-29"><a href="#cb6-29"></a><span class="al">![10 dòng đầu tiên của dữ liệu](data.png)</span>{width=100%}</span>
+<span id="cb6-30"><a href="#cb6-30"></a>:::</span>
+<span id="cb6-31"><a href="#cb6-31"></a></span>
+<span id="cb6-32"><a href="#cb6-32"></a>Well lúc đầu mình nghĩ nó cũng đơn giản 😂, thậm chí cũng không hiểu tại sao mỗi start hoặc end station lại có *hai station*, cách nhau bởi ký tự <span class="in">` &amp; `</span> (space before &amp; after). Mình lập tức đưa ra lời giải như sau:</span>
+<span id="cb6-33"><a href="#cb6-33"></a></span>
+<span id="cb6-34"><a href="#cb6-34"></a><span class="in">``` txt</span></span>
+<span id="cb6-35"><a href="#cb6-35"></a><span class="in">=LET(</span></span>
+<span id="cb6-36"><a href="#cb6-36"></a><span class="in">    _d, " &amp; ",</span></span>
+<span id="cb6-37"><a href="#cb6-37"></a><span class="in">    _all_records, TOCOL(</span></span>
+<span id="cb6-38"><a href="#cb6-38"></a><span class="in">        BYROW(</span></span>
+<span id="cb6-39"><a href="#cb6-39"></a><span class="in">            BYROW(</span></span>
+<span id="cb6-40"><a href="#cb6-40"></a><span class="in">                _tbl_CityBike[[start_station_name]:[end_station_name]],</span></span>
+<span id="cb6-41"><a href="#cb6-41"></a><span class="in">                LAMBDA(x, TEXTJOIN(_d, TRUE, x))</span></span>
+<span id="cb6-42"><a href="#cb6-42"></a><span class="in">            ),</span></span>
+<span id="cb6-43"><a href="#cb6-43"></a><span class="in">        LAMBDA(x, TEXTSPLIT(x, _d))</span></span>
+<span id="cb6-44"><a href="#cb6-44"></a><span class="in">        )</span></span>
+<span id="cb6-45"><a href="#cb6-45"></a><span class="in">    ),</span></span>
+<span id="cb6-46"><a href="#cb6-46"></a><span class="in">    _stations, UNIQUE(_all_records),</span></span>
+<span id="cb6-47"><a href="#cb6-47"></a><span class="in">    _cnt, BYROW(</span></span>
+<span id="cb6-48"><a href="#cb6-48"></a><span class="in">        --(_stations = TRANSPOSE(_all_records)), </span></span>
+<span id="cb6-49"><a href="#cb6-49"></a><span class="in">        // "--" equals to "+" will convert the boolean TRUE/FALSE to value 1/0</span></span>
+<span id="cb6-50"><a href="#cb6-50"></a><span class="in">        LAMBDA(x, SUM(x))</span></span>
+<span id="cb6-51"><a href="#cb6-51"></a><span class="in">    ),</span></span>
+<span id="cb6-52"><a href="#cb6-52"></a><span class="in">    TAKE(SORTBY(HSTACK(_stations, _cnt), _cnt, -1), 5, )</span></span>
+<span id="cb6-53"><a href="#cb6-53"></a><span class="in">)</span></span>
+<span id="cb6-54"><a href="#cb6-54"></a><span class="in">```</span></span>
+<span id="cb6-55"><a href="#cb6-55"></a></span>
+<span id="cb6-56"><a href="#cb6-56"></a>Kết quả:</span>
+<span id="cb6-57"><a href="#cb6-57"></a></span>
+<span id="cb6-58"><a href="#cb6-58"></a>::: {layout-ncol=1}</span>
+<span id="cb6-59"><a href="#cb6-59"></a><span class="al">![Kết quả đầu tiên của mình](my_initial_result.png)</span>{width=50%}</span>
+<span id="cb6-60"><a href="#cb6-60"></a>:::</span>
+<span id="cb6-61"><a href="#cb6-61"></a></span>
+<span id="cb6-62"><a href="#cb6-62"></a>Đối chiếu với các kết quả của những người tham gia khách thì nó sai! Ý tưởng của mình là đầu tiên với mỗi hàng, join chúng lại với <span class="in">` &amp; `</span> (<span class="in">`_d`</span>), sau đó lại split chúng ra với cùng <span class="in">`_d`</span> đó, từ đó có được danh sách occurence của tất cả các **địa chỉ**. Tuy nhiên mình nhận ra dữ liệu trả về cho `_all_records` bị thiếu sót. Lý do là các trạm (station) thường là các giao lộ, kết hợp từ hai địa chỉ với dấu ` &amp; `, tuy nhiên có một số trạm lại nằm trên một con đường. Và vì chất lượng dữ liệu, cũng có một số station là `null`. Hàm `TOCOL()` là hàm mảng xử lí cách mảng con nhận được từ `BYROW(...,LAMBDA(...,TEXTSPLIT()))`, các mảng con này có độ dài **không đều**, dẫn đến <span class="in">`TOCOL()`</span> chỉ take record đầu tiên của mỗi mảng con, trả về <span class="in">`_all_records`</span> chỉ gồm *1000 dòng dữ liệu*.</span>
+<span id="cb6-63"><a href="#cb6-63"></a></span>
+<span id="cb6-64"><a href="#cb6-64"></a>::: {layout-ncol=1}</span>
+<span id="cb6-65"><a href="#cb6-65"></a><span class="al">![Các điểm dữ liệu đặc biệt](special_data_points.png)</span>{width=100%}</span>
+<span id="cb6-66"><a href="#cb6-66"></a>:::</span>
+<span id="cb6-67"><a href="#cb6-67"></a></span>
+<span id="cb6-68"><a href="#cb6-68"></a><span class="fu"># Solution</span></span>
+<span id="cb6-69"><a href="#cb6-69"></a></span>
+<span id="cb6-70"><a href="#cb6-70"></a>Các mảng lởm chởm hay ragged/jagged array là các mảng gồm các mảng con có độ dài không đều nhau. <span class="co">[</span><span class="ot">In computer science, a **jagged array**, also known as a **ragged array**, or **irregular array**, is an array of arrays of which the member arrays can be of different lengths, producing rows of jagged edges when visualized as output. In contrast, two-dimensional arrays are always rectangular, so jagged arrays should not be confused with multidimensional arrays, but the former is often used to emulate the latter. [Wiki](https://en.wikipedia.org/wiki/Jagged_array#:~:text=In%20computer%20science%2C%20a%20jagged,edges%20when%20visualized%20as%20output.)</span><span class="co">]</span>{.aside} Excel **không thể** merge các bảng có kích cỡ không bằng nhau.</span>
+<span id="cb6-71"><a href="#cb6-71"></a></span>
+<span id="cb6-72"><a href="#cb6-72"></a>Một <span class="co">[</span><span class="ot">comment</span><span class="co">](https://www.linkedin.com/feed/update/urn:li:activity:7204129483144986624?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7204129483144986624%2C7204309739827044353%29&amp;dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287204309739827044353%2Curn%3Ali%3Aactivity%3A7204129483144986624%29)</span> đưa mình tới hàm <span class="co">[</span><span class="ot">`BLAMBDAλ()`</span><span class="co">](https://gist.github.com/ncalm/0e72b08272ec14f411e8aaa763c0c0b5)</span> của bác MVP <span class="co">[</span><span class="ot">Peter Bartholemew</span><span class="co">](https://www.linkedin.com/in/peterbartholomew/)</span> và <span class="co">[</span><span class="ot">bài giải thích</span><span class="co">](https://www.linkedin.com/pulse/excel-lambda-spotlight-bisected-map-bmap%2525CE%2525BB-owen-price/)</span> của Owen Price.</span>
+<span id="cb6-73"><a href="#cb6-73"></a></span>
+<span id="cb6-74"><a href="#cb6-74"></a>::: {layout-ncol=1}</span>
+<span id="cb6-75"><a href="#cb6-75"></a>!<span class="co">[</span><span class="ot">Ragged or Jagged array, photo credit to [Geeks for Geeks](https://www.geeksforgeeks.org/jagged-array-in-java/)</span><span class="co">](g4g_ragged_array.png)</span>{width=80%}</span>
+<span id="cb6-76"><a href="#cb6-76"></a>::: </span>
+<span id="cb6-77"><a href="#cb6-77"></a></span>
+<span id="cb6-78"><a href="#cb6-78"></a>Và lời giải đúng, được dựa trên ý tưởng của <span class="in">`BLAMBDAλ()`</span> là:</span>
+<span id="cb6-79"><a href="#cb6-79"></a></span>
+<span id="cb6-80"><a href="#cb6-80"></a><span class="in">``` txt</span></span>
+<span id="cb6-81"><a href="#cb6-81"></a><span class="in">=LET(</span></span>
+<span id="cb6-82"><a href="#cb6-82"></a><span class="in">    B, LAMBDA(B, v,</span></span>
+<span id="cb6-83"><a href="#cb6-83"></a><span class="in">        LET(</span></span>
+<span id="cb6-84"><a href="#cb6-84"></a><span class="in">            n, ROWS(v),</span></span>
+<span id="cb6-85"><a href="#cb6-85"></a><span class="in">            IF(</span></span>
+<span id="cb6-86"><a href="#cb6-86"></a><span class="in">                n &gt; 1,</span></span>
+<span id="cb6-87"><a href="#cb6-87"></a><span class="in">                VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))),</span></span>
+<span id="cb6-88"><a href="#cb6-88"></a><span class="in">                TEXTSPLIT(TEXTJOIN(" &amp; ", , v), , " &amp; ")</span></span>
+<span id="cb6-89"><a href="#cb6-89"></a><span class="in">            )</span></span>
+<span id="cb6-90"><a href="#cb6-90"></a><span class="in">        )</span></span>
+<span id="cb6-91"><a href="#cb6-91"></a><span class="in">    ),</span></span>
+<span id="cb6-92"><a href="#cb6-92"></a><span class="in">    str, B(B, CHOOSECOLS(_tbl_CityBike, 4, 5)),</span></span>
+<span id="cb6-93"><a href="#cb6-93"></a><span class="in">    _u_str, UNIQUE(str),</span></span>
+<span id="cb6-94"><a href="#cb6-94"></a><span class="in">    _cnt, BYROW(--(_u_str = TRANSPOSE(str)), LAMBDA(x, SUM(x))),</span></span>
+<span id="cb6-95"><a href="#cb6-95"></a><span class="in">    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)</span></span>
+<span id="cb6-96"><a href="#cb6-96"></a><span class="in">)</span></span>
+<span id="cb6-97"><a href="#cb6-97"></a></span>
+<span id="cb6-98"><a href="#cb6-98"></a><span class="in">```</span></span>
+<span id="cb6-99"><a href="#cb6-99"></a></span>
+<span id="cb6-100"><a href="#cb6-100"></a>Nếu sử dụng <span class="in">`GROUPBY()`</span> thì việc tính toán cuối cùng sẽ gọn hơn, tuy nhiên vào thời điểm viết bài, hàm này vẫn chưa được MS đưa lên 365 Production mà chỉ ở kênh Insider.</span>
+<span id="cb6-101"><a href="#cb6-101"></a></span>
+<span id="cb6-102"><a href="#cb6-102"></a>Kết quả cuối cùng:</span>
+<span id="cb6-103"><a href="#cb6-103"></a></span>
+<span id="cb6-104"><a href="#cb6-104"></a>::: {layout-ncol=1}</span>
+<span id="cb6-105"><a href="#cb6-105"></a><span class="al">![Kết quả đúng](final_result.png)</span>{width=50%}</span>
+<span id="cb6-106"><a href="#cb6-106"></a>:::</span>
+<span id="cb6-107"><a href="#cb6-107"></a></span>
+<span id="cb6-108"><a href="#cb6-108"></a><span class="fu"># `BLAMBDAλ()`</span></span>
+<span id="cb6-109"><a href="#cb6-109"></a></span>
+<span id="cb6-110"><a href="#cb6-110"></a>Nguyên văn mục đích của <span class="in">`BLAMBDAλ()`</span> của Peter:</span>
+<span id="cb6-111"><a href="#cb6-111"></a></span>
+<span id="cb6-112"><a href="#cb6-112"></a><span class="at">&gt; Recursively bisects an array and applies a function to the leaf nodes. </span></span>
+<span id="cb6-113"><a href="#cb6-113"></a><span class="at">Useful for when the result of the Fnλ(leaf) calls are not of equal length.</span></span>
+<span id="cb6-114"><a href="#cb6-114"></a><span class="at">As such, BMAPλ can produce ragged arrays. </span></span>
+<span id="cb6-115"><a href="#cb6-115"></a></span>
+<span id="cb6-116"><a href="#cb6-116"></a>Owen cũng nhận xét là hàm này "more computationally efficient" so với <span class="co">[</span><span class="ot">`STACKER()`</span><span class="co">](https://gist.github.com/ncalm/ef7ed953571eec1475c291948aa2dbc3)</span> của ổng. Chi tiết về ý tưởng hàm gốc có thể tham khảo ở các link trên, giờ mình sẽ tìm hiểu <span class="in">`BLAMBDAλ()`</span> được áp dụng cho use case này.</span>
+<span id="cb6-117"><a href="#cb6-117"></a></span>
+<span id="cb6-118"><a href="#cb6-118"></a>Đầu tiên <span class="in">`B()`</span> (stands for Bisected) là một hàm recursive:</span>
+<span id="cb6-119"><a href="#cb6-119"></a></span>
+<span id="cb6-120"><a href="#cb6-120"></a><span class="in">``` txt</span></span>
+<span id="cb6-121"><a href="#cb6-121"></a><span class="in">B = LAMBDA(B, v,</span></span>
+<span id="cb6-122"><a href="#cb6-122"></a><span class="in">        LET(</span></span>
+<span id="cb6-123"><a href="#cb6-123"></a><span class="in">            n, ROWS(v),</span></span>
+<span id="cb6-124"><a href="#cb6-124"></a><span class="in">            IF(</span></span>
+<span id="cb6-125"><a href="#cb6-125"></a><span class="in">                n &gt; 1,</span></span>
+<span id="cb6-126"><a href="#cb6-126"></a><span class="in">                VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))),</span></span>
+<span id="cb6-127"><a href="#cb6-127"></a><span class="in">                TEXTSPLIT(TEXTJOIN(" &amp; ", , v), , " &amp; ")</span></span>
+<span id="cb6-128"><a href="#cb6-128"></a><span class="in">            )</span></span>
+<span id="cb6-129"><a href="#cb6-129"></a><span class="in">        )</span></span>
+<span id="cb6-130"><a href="#cb6-130"></a><span class="in">    )</span></span>
+<span id="cb6-131"><a href="#cb6-131"></a><span class="in">```</span></span>
+<span id="cb6-132"><a href="#cb6-132"></a></span>
+<span id="cb6-133"><a href="#cb6-133"></a>Trong đó:</span>
+<span id="cb6-134"><a href="#cb6-134"></a></span>
+<span id="cb6-135"><a href="#cb6-135"></a><span class="ss">- </span><span class="in">`n`</span> là số dòng của <span class="in">`v`</span> ~ mảng cần tính toán</span>
+<span id="cb6-136"><a href="#cb6-136"></a><span class="ss">- </span>nếu <span class="in">`n`</span> &gt; 1, trả về kết hợp <span class="in">`VSTACK()`</span> khi hàm <span class="in">`B()`</span> được áp dụng cho hai nửa của mảng <span class="in">`v`</span>, <span class="in">`TAKE()`</span> sẽ lấy "phân nửa" đầu tiên, <span class="in">`DROP()`</span> sẽ bỏ đi phân nửa đầu tiên ~ nghĩa là lấy phân nửa thứ 2 (lưu ý rằng hai hàm này đều lấy số nguyên nhỏ hơn gần nhất của <span class="in">`n / 2`</span>, do đó không cần lấy phần nguyên bằng <span class="in">`QUOTIENT(n,2)`</span> như hàm gốc của Peter).</span>
+<span id="cb6-137"><a href="#cb6-137"></a><span class="ss">- </span>khi n = 1, nghĩa là với mỗi phần tử của mảng <span class="in">`v`</span>, thực hiện động tác <span class="in">`TEXTSPLIT(TEXTJOIN(...))`</span> ~ trước hết join hai cột rồi sau đó split.</span>
+<span id="cb6-138"><a href="#cb6-138"></a><span class="ss">- </span>hàm này đệ quy và sẽ <span class="in">`VSTACK()`</span> tất cả các mảng dọc sinh từ việc <span class="in">`TEXTSPLIT()`</span> kết quả của <span class="in">`TEXTJOIN()`</span> hai cột trên mỗi dòng của mảng <span class="in">`v`</span>.</span>
+<span id="cb6-139"><a href="#cb6-139"></a></span>
+<span id="cb6-140"><a href="#cb6-140"></a>Mình cũng thử viết lại hàm <span class="in">`B()`</span>, thay đổi một chút ~ thay vì thực hiện trên 1 mảng 2 cột mình cố gắng chuyển mảng <span class="in">`v`</span> thành một cột, tuy nhiên chưa thành công 😪 **(chưa hiểu tại sao)**:</span>
+<span id="cb6-141"><a href="#cb6-141"></a></span>
+<span id="cb6-142"><a href="#cb6-142"></a><span class="in">```txt</span></span>
+<span id="cb6-143"><a href="#cb6-143"></a><span class="in">=LET(</span></span>
+<span id="cb6-144"><a href="#cb6-144"></a><span class="in">    B, LAMBDA(B, v,</span></span>
+<span id="cb6-145"><a href="#cb6-145"></a><span class="in">        LET(</span></span>
+<span id="cb6-146"><a href="#cb6-146"></a><span class="in">            n, ROWS(v),</span></span>
+<span id="cb6-147"><a href="#cb6-147"></a><span class="in">            IF(n &gt; 1, VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))), TEXTSPLIT(v, " &amp; "))</span></span>
+<span id="cb6-148"><a href="#cb6-148"></a><span class="in">        )</span></span>
+<span id="cb6-149"><a href="#cb6-149"></a><span class="in">    ),</span></span>
+<span id="cb6-150"><a href="#cb6-150"></a><span class="in">    _data, VSTACK(_tbl_CityBike[start_station_name], _tbl_CityBike[end_station_name]),</span></span>
+<span id="cb6-151"><a href="#cb6-151"></a><span class="in">    str, B(B, FILTER(_data, LEN(_data) &gt; 0)),</span></span>
+<span id="cb6-152"><a href="#cb6-152"></a><span class="in">    _u_str, UNIQUE(str),</span></span>
+<span id="cb6-153"><a href="#cb6-153"></a><span class="in">    _cnt, BYROW(--(_u_str = TRANSPOSE(str)), LAMBDA(x, SUM(x))),</span></span>
+<span id="cb6-154"><a href="#cb6-154"></a><span class="in">    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)</span></span>
+<span id="cb6-155"><a href="#cb6-155"></a><span class="in">)</span></span>
+<span id="cb6-156"><a href="#cb6-156"></a><span class="in">```</span></span>
+<span id="cb6-157"><a href="#cb6-157"></a><span class="fu">## 🚀 Edit: sau khi mày mò thêm sửa lỗi cho giải pháp trên mình back to basic với lời giải sau:</span></span>
+<span id="cb6-158"><a href="#cb6-158"></a></span>
+<span id="cb6-159"><a href="#cb6-159"></a><span class="in">```txt</span></span>
+<span id="cb6-160"><a href="#cb6-160"></a><span class="in">=LET(</span></span>
+<span id="cb6-161"><a href="#cb6-161"></a><span class="in">    _data, TOCOL(_tbl_CityBike[[start_station_name]:[end_station_name]], 3),</span></span>
+<span id="cb6-162"><a href="#cb6-162"></a><span class="in">    _str, DROP(REDUCE("", _data, LAMBDA(a, x, VSTACK(a, TEXTSPLIT(x, , " &amp; ")))), 1),</span></span>
+<span id="cb6-163"><a href="#cb6-163"></a><span class="in">    _u_str, UNIQUE(_str),</span></span>
+<span id="cb6-164"><a href="#cb6-164"></a><span class="in">    _cnt, BYROW(--(_u_str = TRANSPOSE(_str)), LAMBDA(x, SUM(x))),</span></span>
+<span id="cb6-165"><a href="#cb6-165"></a><span class="in">    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)</span></span>
+<span id="cb6-166"><a href="#cb6-166"></a><span class="in">)</span></span>
+<span id="cb6-167"><a href="#cb6-167"></a><span class="in">```</span></span>
+<span id="cb6-168"><a href="#cb6-168"></a></span>
+<span id="cb6-169"><a href="#cb6-169"></a>Tất nhiên tốc độ xử lí sẽ chậm hơn <span class="in">`BLAMBDAλ()`</span> - O_log(n), giải pháp này duyệt qua từng phần tử, nên BigO là O(n)</span>
+<span id="cb6-170"><a href="#cb6-170"></a></span>
+<span id="cb6-171"><a href="#cb6-171"></a>Thanks Peter &amp; Owen for this great use of recursion presented in such a concise manner. </span>
+<span id="cb6-172"><a href="#cb6-172"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

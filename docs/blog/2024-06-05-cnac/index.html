@@ -104,6 +104,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+<link href="../../site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="../../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<link href="../../site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+
+<script src="../../site_libs/datatables-binding-0.33/datatables.js"></script>
+
+<script src="../../site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+
+<link href="../../site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+
+<link href="../../site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+
+<script src="../../site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+
+<link href="../../site_libs/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet">
+
+<script src="../../site_libs/nouislider-7.0.10/jquery.nouislider.min.js"></script>
+
+<link href="../../site_libs/selectize-0.12.0/selectize.bootstrap3.css" rel="stylesheet">
+
+<script src="../../site_libs/selectize-0.12.0/selectize.min.js"></script>
+
+<link href="../../site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+
+<script src="../../site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
+<script src="../../site_libs/d3-4.10.2/d3.min.js"></script>
+
+<link href="../../site_libs/collapsibleTree-0.1.6/collapsibleTree.css" rel="stylesheet">
+
+<script src="../../site_libs/collapsibleTree-binding-0.1.8/collapsibleTree.js"></script>
+
 
 
 <link rel="stylesheet" href="html/styles.scss">
@@ -228,8 +265,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#other-languages" id="toc-other-languages" class="nav-link" data-scroll-target="#other-languages">Other languages</a>
   <ul class="collapse">
   <li><a href="#generating-sql" id="toc-generating-sql" class="nav-link" data-scroll-target="#generating-sql">Generating SQL</a></li>
-  <li><a href="#r---base-data.table" id="toc-r---base-data.table" class="nav-link" data-scroll-target="#r---base-data.table">R - base &amp; data.table</a></li>
-  <li><a href="#python-pandas" id="toc-python-pandas" class="nav-link" data-scroll-target="#python-pandas">python pandas</a></li>
+  <li><a href="#r---base-data.table" id="toc-r---base-data.table" class="nav-link" data-scroll-target="#r---base-data.table">R - <code>base</code> &amp; <code>data.table</code></a></li>
+  <li><a href="#python-pandas" id="toc-python-pandas" class="nav-link" data-scroll-target="#python-pandas">python <code>pandas</code></a></li>
   </ul></li>
   <li><a href="#updates-by-emily" id="toc-updates-by-emily" class="nav-link" data-scroll-target="#updates-by-emily">Updates by Emily</a>
   <ul class="collapse">
@@ -241,7 +278,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content">
 
 
 
@@ -263,53 +300,1061 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Ý tưởng của Emily là chuẩn hóa các quy ước đặt tên dữ liệu bằng <a href="https://en.wikipedia.org/wiki/Controlled_vocabulary">Controlled vocabulary</a>. Minh họa bằng <code>pointblank</code>, <code>collapsibleTree</code>, và <code>dplyr</code>.</p>
 <section id="controlled-vocabulary" class="level1">
 <h1>Controlled Vocabulary</h1>
+<p>CV là phương pháp sử dụng một tập hợp các từ, cụm từ, từ viết tắt để ký hiệu thông tin. Quy ước này cần được định nghĩa đề phù hợp cho tính chất bộ dữ liệu, và cũng đủ đơn giản để người tạo dữ liệu, người sử dụng dữ liệu sử dụng.</p>
+<p>Ví dụ, 1 ứng dụng booking.</p>
 <section id="level-1-kiểu-dữ-liệu-kiểu-đo-lường" class="level2">
 <h2 class="anchored" data-anchor-id="level-1-kiểu-dữ-liệu-kiểu-đo-lường">Level 1: Kiểu dữ liệu, kiểu đo lường</h2>
+<ul>
+<li><code>ID</code>: chỉ đối tượng, dạng numberic, tối ưu cho việc lưu trữ và thường làm khóa chính các bảng’</li>
+<li><code>IND</code>: giá trị boolean 0/1, tôi thì thường sử dụng các từ như <code>IS</code>, <code>FLAG</code>;</li>
+<li><code>N</code>: chỉ các dạng thông tin <em>có thể đếm (count)</em> được;</li>
+<li><code>AMT</code>: chỉ các dạng thông tin có thể tổng, thường đề cập đến <em>currency</em>;</li>
+<li><code>VAL</code>: cũng là số nhưng không thể tổng được (không có ý nghĩa), ví dụ như <em>kinh độ</em>, <em>vĩ độ</em>;</li>
+<li><code>DT</code>: ngày;</li>
+<li><code>TM</code>: giờ hoặc ngày giờ;</li>
+<li><code>CAT</code>: category</li>
+</ul>
+<p>Cũng tùy vào dữ liệu, có thể thêm các cụm từ nhất định đề đề cập đến thông tin dữ liệu đó mang lại, ví dụ <code>ADD</code> cho address.</p>
 </section>
 <section id="level-2-đối-tượng-chủ-đề" class="level2">
 <h2 class="anchored" data-anchor-id="level-2-đối-tượng-chủ-đề">Level 2: Đối tượng, chủ đề</h2>
+<p>Mối quan tâm của người dùng dữ liệu cũng giống như nhà quản trị, xung quanh các đối tượng của business: <code>USER</code>, <code>TRANSACTION</code>, etc.</p>
+<p>Đối với ứng dụng đặt xe, các chủ thể có thể cần quan tâm là <code>TRIP</code>, <code>TRAVELER</code>, <code>ACCOMODATION</code>, <code>TRANSPORTATION</code>, etc.</p>
 </section>
 <section id="level-3-n-chi-tiết" class="level2">
 <h2 class="anchored" data-anchor-id="level-3-n-chi-tiết">Level 3-n: Chi tiết</h2>
+<p>Hai tầng trên về cơ bản đã cho phép chúng ta mô tả được cột thông tin, chúng đều thể hiện được thuộc tính của chủ thể. Ví dụ:</p>
+<ul>
+<li><code>AMT_TRIP</code>: giá trị deal của Trip;</li>
+<li><code>ADD_DESTINATION</code>: Điểm đến của trip.</li>
+</ul>
+<p>Tuy nhiên tùy vào từng use case, chúng ta hoàn toàn có thể mở rộng được về cả hai phía. Ví dụ:</p>
+<ul>
+<li>Về phía trước: khi làm việc với nhiều layer dữ liệu, ta có thể dùng <code>RAW</code>, <code>STAGING</code>, <code>DW</code>, <code>DL</code>, <code>DM</code>, etc<br>
+</li>
+<li>Về phía sau: <code>DAY</code> hoặc <code>MONTH</code> cho <code>N_DURATION</code>, <code>VND</code> hoặc <code>USD</code> cho currency <code>AMT</code>.</li>
+</ul>
+<p>Miễn là có một quy chuẩn, và nó đủ đơn giản để sử dụng.</p>
 </section>
 <section id="kết-hợp-chúng-lại" class="level2">
 <h2 class="anchored" data-anchor-id="kết-hợp-chúng-lại">Kết hợp chúng lại</h2>
+<p>Tất nhiên ràng buộc việc đặt tên như vậy không chỉ để trang trí, nó sẽ giúp chúng ta tự động hóa quy trình kiểm soát chất lượng dữ liệu, .</p>
+<p>Tôi sử dụng <a href="https://www.kaggle.com/datasets/rkiattisak/traveler-trip-data">bộ dữ liệu</a> này để thực hành (cột dữ liệu đã được đổi tên).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">head</span>(trip_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 13
+  ID_TRIP CAT_DESTINATION_CITY DT_START  DT_END N_DURATION_DAY CAT_TRAVELER_NAME
+    &lt;dbl&gt; &lt;chr&gt;                &lt;chr&gt;     &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;            
+1       1 London, UK           5/1/2023  5/8/2…              7 John Smith       
+2       2 Phuket, Thailand     6/15/2023 6/20/…              5 Jane Doe         
+3       3 Bali, Indonesia      7/1/2023  7/8/2…              7 David Lee        
+4       4 New York, USA        8/15/2023 8/29/…             14 Sarah Johnson    
+5       5 Tokyo, Japan         9/10/2023 9/17/…              7 Kim Nguyen       
+6       6 Paris, France        10/5/2023 10/10…              5 Michael Brown    
+# ℹ 7 more variables: VAL_AGE_TRAVELER &lt;dbl&gt;, IND_GENDER_TRAVELER &lt;chr&gt;,
+#   CAT_TRAVELER_NATIONALITY &lt;chr&gt;, CAT_ACCOMMODATION_TYPE &lt;chr&gt;,
+#   AMT_ACCOMMODATION_COST &lt;chr&gt;, CAT_TRANSPORTATION_TYPE &lt;chr&gt;,
+#   AMT_TRANSPORTATION_COST &lt;chr&gt;</code></pre>
+</div>
+</div>
 </section>
 </section>
-<section id="data-validation" class="level1">
+<section id="data-validation" class="level1 page-columns page-full">
 <h1>Data Validation</h1>
+<p>Sử dụng <code>pointblank</code> của R để kiếm tra một số tính chất của dữ liệu:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">library</span>(pointblank)</span>
+<span id="cb3-2"><a href="#cb3-2"></a></span>
+<span id="cb3-3"><a href="#cb3-3"></a>agent <span class="ot">&lt;-</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>  trip_data  <span class="sc">%&gt;%</span> </span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="fu">create_agent</span>(<span class="at">actions =</span> <span class="fu">action_levels</span>(<span class="at">stop_at =</span> <span class="fl">0.001</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="fu">col_vals_gte</span>(<span class="fu">starts_with</span>(<span class="st">"N"</span>), <span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="co"># check if cols start with N is GTE 0 or not</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>  <span class="fu">col_vals_gte</span>(<span class="fu">starts_with</span>(<span class="st">"VAL"</span>), <span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="co"># check if cols start with VAL is GTE 0 or not</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a>  <span class="fu">col_vals_not_null</span>(<span class="fu">starts_with</span>(<span class="st">"IND"</span>)) <span class="sc">%&gt;%</span> <span class="co"># check if cols start with IND contain Null or not</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a>  <span class="fu">col_vals_in_set</span>(<span class="fu">starts_with</span>(<span class="st">"IND"</span>), <span class="fu">c</span>(<span class="st">"Male"</span>,<span class="st">"Female"</span>)) <span class="sc">%&gt;%</span> <span class="co"># validate the value of only column started with IND - Gender</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a>  <span class="fu">col_is_date</span>(<span class="fu">starts_with</span>(<span class="st">"DT"</span>)) <span class="sc">%&gt;%</span> <span class="co"># check validation of date columns</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a>  <span class="fu">interrogate</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Note: To type <code>pipe</code> operator in VS Code, use this in the <code>keybindings.json</code> file:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>  <span class="dt">"key"</span><span class="fu">:</span> <span class="st">"Ctrl+Shift+m"</span><span class="fu">,</span>             </span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="dt">"command"</span><span class="fu">:</span> <span class="st">"type"</span><span class="fu">,</span> </span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="dt">"args"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"text"</span><span class="fu">:</span> <span class="st">" %&gt;% "</span> <span class="fu">},</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="dt">"when"</span><span class="fu">:</span> <span class="st">"editorTextFocus </span></span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="st">            &amp;&amp; !editorHasSelection </span></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="st">            &amp;&amp; editorLangId </span></span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="st">            == 'quarto'"</span> </span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then you can get the <code>pipe</code> when type <code>Ctrl + Shift + M</code>.</p>
+</div></div><div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>agent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<div id="pb_agent" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://unpkg.com/balloon-css/balloon.min.css");
+#pb_agent table {
+  font-family: 'IBM Plex Sans', system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#pb_agent thead, #pb_agent tbody, #pb_agent tfoot, #pb_agent tr, #pb_agent td, #pb_agent th {
+  border-style: none;
+}
+
+#pb_agent p {
+  margin: 0;
+  padding: 0;
+}
+
+#pb_agent .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 90%;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#pb_agent .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#pb_agent .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#pb_agent .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#pb_agent .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pb_agent .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pb_agent .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pb_agent .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#pb_agent .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#pb_agent .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#pb_agent .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#pb_agent .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#pb_agent .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#pb_agent .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#pb_agent .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#pb_agent .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#pb_agent .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#pb_agent .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#pb_agent .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pb_agent .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#pb_agent .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#pb_agent .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#pb_agent .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pb_agent .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#pb_agent .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#pb_agent .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pb_agent .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pb_agent .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#pb_agent .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pb_agent .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#pb_agent .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pb_agent .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pb_agent .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pb_agent .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pb_agent .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pb_agent .gt_left {
+  text-align: left;
+}
+
+#pb_agent .gt_center {
+  text-align: center;
+}
+
+#pb_agent .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#pb_agent .gt_font_normal {
+  font-weight: normal;
+}
+
+#pb_agent .gt_font_bold {
+  font-weight: bold;
+}
+
+#pb_agent .gt_font_italic {
+  font-style: italic;
+}
+
+#pb_agent .gt_super {
+  font-size: 65%;
+}
+
+#pb_agent .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#pb_agent .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#pb_agent .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#pb_agent .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#pb_agent .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#pb_agent .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#pb_agent .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#pb_agent {
+  -webkit-font-smoothing: antialiased;
+}
+
+#pb_agent .gt_row {
+  overflow: visible;
+}
+
+#pb_agent .gt_sourcenote {
+  height: 35px;
+  padding: 0;
+}
+
+#pb_agent code {
+  font-family: 'IBM Plex Mono', monospace, courier;
+  color: black;
+  background-color: transparent;
+  padding: 0;
+}
+</style>
+
+<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_heading">
+<th colspan="14" class="gt_heading gt_title gt_font_normal" style="text-align: left; color: #444444; font-size: 28px; font-weight: 500;">Pointblank Validation</th>
+</tr>
+<tr class="odd gt_heading">
+<th colspan="14" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style="text-align: left; font-size: 12px;"><span style="text-decoration-style:solid;text-decoration-color:#ADD8E6;text-decoration-line:underline;text-underline-position:under;color:#333333;font-variant-numeric:tabular-nums;padding-left:4px;margin-right:5px;padding-right:2px;">[2024-06-06|23:38:28]</span>
+<p></p>
+<div style="height:25px;padding-top:10px;">
+<span style="background-color: #F1D35A;color: #222222;padding: 0.5em 0.5em;position: inherit;text-transform: uppercase;margin: 5px 1px 5px 4px;font-weight: bold;border: solid 1px #F1D35A;padding: 2px 10px 2px 10px;font-size: smaller;">tibble</span><span style="background-color:#E5AB00;color:white;padding:0.5em 0.5em;position:inherit;text-transform:uppercase;margin:5px 0px 5px 5px;font-weight:bold;border:solid 1px #E5AB00;padding:2px 15px 2px 15px;font-size:smaller;">WARN</span> <span style="background-color:none;color:#333333;padding:0.5em 0.5em;position:inherit;margin:5px 0px 5px -4px;font-weight:bold;border:solid 1px #E5AB00;padding:2px 15px 2px 15px;font-size:smaller;">—</span> <span style="background-color:#D0182F;color:white;padding:0.5em 0.5em;position:inherit;text-transform:uppercase;margin:5px 0px 5px 1px;font-weight:bold;border:solid 1px #D0182F;padding:2px 15px 2px 15px;font-size:smaller;">STOP</span> <span style="background-color:none;color:#333333;padding:0.5em 0.5em;position:inherit;margin:5px 0px 5px -4px;font-weight:bold;border:solid 1px #D0182F;padding:2px 15px 2px 15px;font-size:smaller;">0.00</span> <span style="background-color:#499FFE;color:white;padding:0.5em 0.5em;position:inherit;text-transform:uppercase;margin:5px 0px 5px 1px;font-weight:bold;border:solid 1px #499FFE;padding:2px 15px 2px 15px;font-size:smaller;">NOTIFY</span> <span style="background-color:none;color:#333333;padding:0.5em 0.5em;position:inherit;margin:5px 0px 5px -4px;font-weight:bold;border:solid 1px #499FFE;padding:2px 15px 2px 15px;font-size:smaller;">—</span>
+</div></th>
+</tr>
+<tr class="header gt_col_headings">
+<th class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col"></th>
+<th class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col"></th>
+<th id="STEP" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">STEP</th>
+<th id="COLUMNS" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">COLUMNS</th>
+<th id="VALUES" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">VALUES</th>
+<th id="TBL" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">TBL</th>
+<th id="EVAL" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">EVAL</th>
+<th id="UNITS" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">UNITS</th>
+<th id="PASS" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">PASS</th>
+<th id="FAIL" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">FAIL</th>
+<th id="W" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">W</th>
+<th id="S" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">S</th>
+<th id="N" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">N</th>
+<th id="EXT" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">EXT</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="status_color" style="background-color: #CF142B; height: 40px"><br>
+</td>
+<td class="gt_row gt_right" headers="i" style="color: #666666; font-size: 13px; font-weight: bold; height: 40px">1</td>
+<td class="gt_row gt_left" headers="type" style="height: 40px"><div aria-label="Expect that values in `N_DURATION_DAY` should be >= `0`. " data-balloon-pos="right" style="width:fit-content;">
+<div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;">
+<svg width="30px" height="30px" viewbox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
+<title>
+col_vals_gte
+</title>
+<g id="All-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="col_vals_gte" transform="translate(0.000000, 0.241379)"> <path d="M56.712234,1 C59.1975153,1 61.4475153,2.00735931 63.076195,3.63603897 C64.7048747,5.26471863 65.712234,7.51471863 65.712234,10 L65.712234,10 L65.712234,65 L10.712234,65 C8.22695259,65 5.97695259,63.9926407 4.34827294,62.363961 C2.71959328,60.7352814 1.71223397,58.4852814 1.71223397,56 L1.71223397,56 L1.71223397,10 C1.71223397,7.51471863 2.71959328,5.26471863 4.34827294,3.63603897 C5.97695259,2.00735931 8.22695259,1 10.712234,1 L10.712234,1 Z" id="rectangle" stroke="#000000" stroke-width="2" fill="#FFFFFF"></path> <path d="M49.712234,12 L17.712234,12 C14.952234,12 12.712234,14.24 12.712234,17 L12.712234,49 C12.712234,51.76 14.952234,54 17.712234,54 L49.712234,54 C52.472234,54 54.712234,51.76 54.712234,49 L54.712234,17 C54.712234,14.24 52.472234,12 49.712234,12 Z M44.712234,47 L22.712234,47 L22.712234,45 L44.712234,45 L44.712234,47 Z M24.182234,40.88 L23.242234,39.12 L40.562234,30 L23.242234,20.88 L24.182234,19.12 L44.862234,30 L24.182234,40.88 Z" id="greater_than_equal" fill="#000000" fill-rule="nonzero"></path> </g> </g>
+</svg>
+</div>
+<code style="font-size:11px;">&nbsp;col_vals_gte()</code>
+</div></td>
+<td class="gt_row gt_left" headers="columns" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="N_DURATION_DAY" data-balloon-pos="left">
+<p><span style="color:purple;"><code>▮</code></span><code>N_DURATION_DAY</code></p>
+</div></td>
+<td class="gt_row gt_left" headers="values" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="0" data-balloon-pos="left">
+<p><code>0</code></p>
+</div></td>
+<td class="gt_row gt_center" headers="precon" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:10px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left">
+<svg width="25px" height="25px" viewbox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="vertical-align: middle;">
+<g id="unchanged" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="unchanged" transform="translate(0.500000, 0.570147)"> <rect id="Rectangle" x="0.125132506" y="0" width="23.749735" height="23.7894737"></rect> <path d="M5.80375046,8.18194736 C3.77191832,8.18194736 2.11875046,9.83495328 2.11875046,11.8669474 C2.11875046,13.8989414 3.77191832,15.5519474 5.80375046,15.5519474 C7.8355826,15.5519474 9.48875046,13.8989414 9.48875046,11.8669474 C9.48875046,9.83495328 7.83552863,8.18194736 5.80375046,8.18194736 Z M5.80375046,14.814915 C4.17821997,14.814915 2.85578285,13.4924778 2.85578285,11.8669474 C2.85578285,10.2414169 4.17821997,8.91897975 5.80375046,8.91897975 C7.42928095,8.91897975 8.75171807,10.2414169 8.75171807,11.8669474 C8.75171807,13.4924778 7.42928095,14.814915 5.80375046,14.814915 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path> <path d="M13.9638189,8.699335 C13.9364621,8.70430925 13.9091059,8.71176968 13.8842359,8.71923074 C13.7822704,8.73663967 13.6877654,8.77643115 13.6056956,8.83860518 L10.2433156,11.3852598 C10.0766886,11.5046343 9.97720993,11.6986181 9.97720993,11.9025491 C9.97720993,12.1064807 10.0766886,12.3004639 10.2433156,12.4198383 L13.6056956,14.966493 C13.891697,15.1803725 14.2970729,15.1231721 14.5109517,14.8371707 C14.7248313,14.5511692 14.6676309,14.145794 14.3816294,13.9319145 L12.5313257,12.5392127 L21.8812495,12.5392127 L21.8812495,11.2658854 L12.5313257,11.2658854 L14.3816294,9.87318364 C14.6377872,9.71650453 14.7497006,9.40066014 14.6477351,9.11714553 C14.5482564,8.83363156 14.262255,8.65954352 13.9638189,8.699335 Z" id="arrow" fill="#000000" transform="translate(15.929230, 11.894737) rotate(-180.000000) translate(-15.929230, -11.894737) "></path> </g> </g>
+</svg>
+</span></td>
+<td class="gt_row gt_center" headers="eval_sym" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></td>
+<td class="gt_row gt_right" headers="units" style="font-size: 11px; height: 40px"><code>139</code></td>
+<td class="gt_row gt_right" headers="n_pass" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>137</code><br>
+<code>0.98561</code></td>
+<td class="gt_row gt_right" headers="n_fail" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>2</code><br>
+<code>0.01439</code></td>
+<td class="gt_row gt_center" headers="W" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
+<td class="gt_row gt_center" headers="S" style="background-color: #FCFCFC; height: 40px"><span style="color: #CF142B;">●</span></td>
+<td class="gt_row gt_center" headers="N" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
+<td class="gt_row gt_center" headers="extract" style="height: 40px"><a href="data:text/csv;base64,IklEX1RSSVAiLCJDQVRfREVTVElOQVRJT05fQ0lUWSIsIkRUX1NUQVJUIiwiRFRfRU5EIiwiTl9EVVJBVElPTl9EQVkiLCJDQVRfVFJBVkVMRVJfTkFNRSIsIlZBTF9BR0VfVFJBVkVMRVIiLCJJTkRfR0VOREVSX1RSQVZFTEVSIiwiQ0FUX1RSQVZFTEVSX05BVElPTkFMSVRZIiwiQ0FUX0FDQ09NTU9EQVRJT05fVFlQRSIsIkFNVF9BQ0NPTU1PREFUSU9OX0NPU1QiLCJDQVRfVFJBTlNQT1JUQVRJT05fVFlQRSIsIkFNVF9UUkFOU1BPUlRBVElPTl9DT1NUIg0KNzIsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkENCjEyOCxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQQ0K" download="extract_0001.csv">
+<button aria-label="There are 2 'fail' rows available as a CSV file." data-balloon-pos="left" style="background-color:#67C2DC;color:#FFFFFF;border:none;padding:5px;font-weight:bold;cursor:pointer;border-radius:4px;">
+CSV
+</button>
+</a></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="status_color" style="background-color: #CF142B; height: 40px"><br>
+</td>
+<td class="gt_row gt_right" headers="i" style="color: #666666; font-size: 13px; font-weight: bold; height: 40px">2</td>
+<td class="gt_row gt_left" headers="type" style="height: 40px"><div aria-label="Expect that values in `VAL_AGE_TRAVELER` should be >= `0`. " data-balloon-pos="right" style="width:fit-content;">
+<div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;">
+<svg width="30px" height="30px" viewbox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
+<title>
+col_vals_gte
+</title>
+<g id="All-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="col_vals_gte" transform="translate(0.000000, 0.241379)"> <path d="M56.712234,1 C59.1975153,1 61.4475153,2.00735931 63.076195,3.63603897 C64.7048747,5.26471863 65.712234,7.51471863 65.712234,10 L65.712234,10 L65.712234,65 L10.712234,65 C8.22695259,65 5.97695259,63.9926407 4.34827294,62.363961 C2.71959328,60.7352814 1.71223397,58.4852814 1.71223397,56 L1.71223397,56 L1.71223397,10 C1.71223397,7.51471863 2.71959328,5.26471863 4.34827294,3.63603897 C5.97695259,2.00735931 8.22695259,1 10.712234,1 L10.712234,1 Z" id="rectangle" stroke="#000000" stroke-width="2" fill="#FFFFFF"></path> <path d="M49.712234,12 L17.712234,12 C14.952234,12 12.712234,14.24 12.712234,17 L12.712234,49 C12.712234,51.76 14.952234,54 17.712234,54 L49.712234,54 C52.472234,54 54.712234,51.76 54.712234,49 L54.712234,17 C54.712234,14.24 52.472234,12 49.712234,12 Z M44.712234,47 L22.712234,47 L22.712234,45 L44.712234,45 L44.712234,47 Z M24.182234,40.88 L23.242234,39.12 L40.562234,30 L23.242234,20.88 L24.182234,19.12 L44.862234,30 L24.182234,40.88 Z" id="greater_than_equal" fill="#000000" fill-rule="nonzero"></path> </g> </g>
+</svg>
+</div>
+<code style="font-size:11px;">&nbsp;col_vals_gte()</code>
+</div></td>
+<td class="gt_row gt_left" headers="columns" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="VAL_AGE_TRAVELER" data-balloon-pos="left">
+<p><span style="color:purple;"><code>▮</code></span><code>VAL_AGE_TRAVELER</code></p>
+</div></td>
+<td class="gt_row gt_left" headers="values" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="0" data-balloon-pos="left">
+<p><code>0</code></p>
+</div></td>
+<td class="gt_row gt_center" headers="precon" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:10px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left">
+<svg width="25px" height="25px" viewbox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="vertical-align: middle;">
+<g id="unchanged" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="unchanged" transform="translate(0.500000, 0.570147)"> <rect id="Rectangle" x="0.125132506" y="0" width="23.749735" height="23.7894737"></rect> <path d="M5.80375046,8.18194736 C3.77191832,8.18194736 2.11875046,9.83495328 2.11875046,11.8669474 C2.11875046,13.8989414 3.77191832,15.5519474 5.80375046,15.5519474 C7.8355826,15.5519474 9.48875046,13.8989414 9.48875046,11.8669474 C9.48875046,9.83495328 7.83552863,8.18194736 5.80375046,8.18194736 Z M5.80375046,14.814915 C4.17821997,14.814915 2.85578285,13.4924778 2.85578285,11.8669474 C2.85578285,10.2414169 4.17821997,8.91897975 5.80375046,8.91897975 C7.42928095,8.91897975 8.75171807,10.2414169 8.75171807,11.8669474 C8.75171807,13.4924778 7.42928095,14.814915 5.80375046,14.814915 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path> <path d="M13.9638189,8.699335 C13.9364621,8.70430925 13.9091059,8.71176968 13.8842359,8.71923074 C13.7822704,8.73663967 13.6877654,8.77643115 13.6056956,8.83860518 L10.2433156,11.3852598 C10.0766886,11.5046343 9.97720993,11.6986181 9.97720993,11.9025491 C9.97720993,12.1064807 10.0766886,12.3004639 10.2433156,12.4198383 L13.6056956,14.966493 C13.891697,15.1803725 14.2970729,15.1231721 14.5109517,14.8371707 C14.7248313,14.5511692 14.6676309,14.145794 14.3816294,13.9319145 L12.5313257,12.5392127 L21.8812495,12.5392127 L21.8812495,11.2658854 L12.5313257,11.2658854 L14.3816294,9.87318364 C14.6377872,9.71650453 14.7497006,9.40066014 14.6477351,9.11714553 C14.5482564,8.83363156 14.262255,8.65954352 13.9638189,8.699335 Z" id="arrow" fill="#000000" transform="translate(15.929230, 11.894737) rotate(-180.000000) translate(-15.929230, -11.894737) "></path> </g> </g>
+</svg>
+</span></td>
+<td class="gt_row gt_center" headers="eval_sym" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></td>
+<td class="gt_row gt_right" headers="units" style="font-size: 11px; height: 40px"><code>139</code></td>
+<td class="gt_row gt_right" headers="n_pass" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>137</code><br>
+<code>0.98561</code></td>
+<td class="gt_row gt_right" headers="n_fail" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>2</code><br>
+<code>0.01439</code></td>
+<td class="gt_row gt_center" headers="W" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
+<td class="gt_row gt_center" headers="S" style="background-color: #FCFCFC; height: 40px"><span style="color: #CF142B;">●</span></td>
+<td class="gt_row gt_center" headers="N" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
+<td class="gt_row gt_center" headers="extract" style="height: 40px"><a href="data:text/csv;base64,IklEX1RSSVAiLCJDQVRfREVTVElOQVRJT05fQ0lUWSIsIkRUX1NUQVJUIiwiRFRfRU5EIiwiTl9EVVJBVElPTl9EQVkiLCJDQVRfVFJBVkVMRVJfTkFNRSIsIlZBTF9BR0VfVFJBVkVMRVIiLCJJTkRfR0VOREVSX1RSQVZFTEVSIiwiQ0FUX1RSQVZFTEVSX05BVElPTkFMSVRZIiwiQ0FUX0FDQ09NTU9EQVRJT05fVFlQRSIsIkFNVF9BQ0NPTU1PREFUSU9OX0NPU1QiLCJDQVRfVFJBTlNQT1JUQVRJT05fVFlQRSIsIkFNVF9UUkFOU1BPUlRBVElPTl9DT1NUIg0KNzIsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkENCjEyOCxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQQ0K" download="extract_0002.csv">
+<button aria-label="There are 2 'fail' rows available as a CSV file." data-balloon-pos="left" style="background-color:#67C2DC;color:#FFFFFF;border:none;padding:5px;font-weight:bold;cursor:pointer;border-radius:4px;">
+CSV
+</button>
+</a></td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="status_color" style="background-color: #CF142B; height: 40px"><br>
+</td>
+<td class="gt_row gt_right" headers="i" style="color: #666666; font-size: 13px; font-weight: bold; height: 40px">3</td>
+<td class="gt_row gt_left" headers="type" style="height: 40px"><div aria-label="Expect that all values in `IND_GENDER_TRAVELER` should not be NULL. " data-balloon-pos="right" style="width:fit-content;">
+<div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;">
+<svg width="30px" height="30px" viewbox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
+<title>
+col_vals_not_null
+</title>
+<g id="All-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="col_vals_not_null" transform="translate(0.000000, 0.551724)"> <path d="M56.712234,1 C59.1975153,1 61.4475153,2.00735931 63.076195,3.63603897 C64.7048747,5.26471863 65.712234,7.51471863 65.712234,10 L65.712234,10 L65.712234,65 L10.712234,65 C8.22695259,65 5.97695259,63.9926407 4.34827294,62.363961 C2.71959328,60.7352814 1.71223397,58.4852814 1.71223397,56 L1.71223397,56 L1.71223397,10 C1.71223397,7.51471863 2.71959328,5.26471863 4.34827294,3.63603897 C5.97695259,2.00735931 8.22695259,1 10.712234,1 L10.712234,1 Z" id="rectangle" stroke="#000000" stroke-width="2" fill="#FFFFFF"></path> <path d="M40.6120805,47.037834 C37.4692348,47.037834 35.0126139,45.9348613 33.712234,44.0140597 C32.4118541,45.9348613 29.9552331,47.037834 26.8123883,47.037834 C22.6574397,47.037834 16.0646712,43.4437723 16.0646712,33.8021619 C16.0646712,29.3401361 17.4715879,18.962166 30.5035862,18.962166 C30.9454018,18.962166 31.3057481,19.3225124 31.3057481,19.7643279 L31.3057481,21.3686518 C31.3057481,21.8104674 30.9454018,22.1708138 30.5035862,22.1708138 C26.6400486,22.1708138 22.4819668,25.8118774 22.4819668,33.8021619 C22.4819668,37.5090277 23.7635456,43.0270243 27.2949384,43.0270243 C29.795428,43.0270243 31.224279,40.4231312 32.0985095,38.2861221 C30.5067194,35.6101596 29.7014243,33.1034035 29.7014243,30.8347892 C29.7014243,25.6238707 31.8603677,23.7751377 33.712234,23.7751377 C35.5641002,23.7751377 37.7230437,25.6238707 37.7230437,30.8347892 C37.7230437,33.1347383 36.9396828,35.5788255 35.3290916,38.2861221 C36.6294715,41.4321009 38.243196,43.0270243 40.1295295,43.0270243 C43.6609223,43.0270243 44.9425012,37.5090277 44.9425012,33.8021619 C44.9425012,25.8118774 40.7844193,22.1708138 36.9208817,22.1708138 C36.4759329,22.1708138 36.1187198,21.8104674 36.1187198,21.3686518 L36.1187198,19.7643279 C36.1187198,19.3225124 36.4759329,18.962166 36.9208817,18.962166 C49.9528801,18.962166 51.3597967,29.3401361 51.3597967,33.8021619 C51.3597967,43.4437723 44.7670282,47.037834 40.6120805,47.037834 Z" id="omega" fill="#000000" fill-rule="nonzero"></path> <path d="M33,7.93597705 C33.2761424,7.93597705 33.5,8.15983467 33.5,8.43597705 L33.5,57.564023 C33.5,57.8401653 33.2761424,58.064023 33,58.064023 C32.7238576,58.064023 32.5,57.8401653 32.5,57.564023 L32.5,8.43597705 C32.5,8.15983467 32.7238576,7.93597705 33,7.93597705 Z" id="line_black" fill="#000000" transform="translate(33.000000, 33.000000) rotate(-320.000000) translate(-33.000000, -33.000000) "></path> <polygon id="line_white" fill="#FFFFFF" transform="translate(34.899496, 32.153303) rotate(-320.000000) translate(-34.899496, -32.153303) " points="34.3994962 8.54160469 35.3994962 8.54160469 35.3994962 55.7650019 34.3994962 55.7650019"></polygon> </g> </g>
+</svg>
+</div>
+<code style="font-size:10px;">&nbsp;col_vals_not_null()</code>
+</div></td>
+<td class="gt_row gt_left" headers="columns" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="IND_GENDER_TRAVELER" data-balloon-pos="left">
+<p><span style="color:purple;"><code>▮</code></span><code>IND_GENDER_TRAVELER</code></p>
+</div></td>
+<td class="gt_row gt_left" headers="values" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px">—</td>
+<td class="gt_row gt_center" headers="precon" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:10px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left">
+<svg width="25px" height="25px" viewbox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="vertical-align: middle;">
+<g id="unchanged" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="unchanged" transform="translate(0.500000, 0.570147)"> <rect id="Rectangle" x="0.125132506" y="0" width="23.749735" height="23.7894737"></rect> <path d="M5.80375046,8.18194736 C3.77191832,8.18194736 2.11875046,9.83495328 2.11875046,11.8669474 C2.11875046,13.8989414 3.77191832,15.5519474 5.80375046,15.5519474 C7.8355826,15.5519474 9.48875046,13.8989414 9.48875046,11.8669474 C9.48875046,9.83495328 7.83552863,8.18194736 5.80375046,8.18194736 Z M5.80375046,14.814915 C4.17821997,14.814915 2.85578285,13.4924778 2.85578285,11.8669474 C2.85578285,10.2414169 4.17821997,8.91897975 5.80375046,8.91897975 C7.42928095,8.91897975 8.75171807,10.2414169 8.75171807,11.8669474 C8.75171807,13.4924778 7.42928095,14.814915 5.80375046,14.814915 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path> <path d="M13.9638189,8.699335 C13.9364621,8.70430925 13.9091059,8.71176968 13.8842359,8.71923074 C13.7822704,8.73663967 13.6877654,8.77643115 13.6056956,8.83860518 L10.2433156,11.3852598 C10.0766886,11.5046343 9.97720993,11.6986181 9.97720993,11.9025491 C9.97720993,12.1064807 10.0766886,12.3004639 10.2433156,12.4198383 L13.6056956,14.966493 C13.891697,15.1803725 14.2970729,15.1231721 14.5109517,14.8371707 C14.7248313,14.5511692 14.6676309,14.145794 14.3816294,13.9319145 L12.5313257,12.5392127 L21.8812495,12.5392127 L21.8812495,11.2658854 L12.5313257,11.2658854 L14.3816294,9.87318364 C14.6377872,9.71650453 14.7497006,9.40066014 14.6477351,9.11714553 C14.5482564,8.83363156 14.262255,8.65954352 13.9638189,8.699335 Z" id="arrow" fill="#000000" transform="translate(15.929230, 11.894737) rotate(-180.000000) translate(-15.929230, -11.894737) "></path> </g> </g>
+</svg>
+</span></td>
+<td class="gt_row gt_center" headers="eval_sym" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></td>
+<td class="gt_row gt_right" headers="units" style="font-size: 11px; height: 40px"><code>139</code></td>
+<td class="gt_row gt_right" headers="n_pass" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>137</code><br>
+<code>0.98561</code></td>
+<td class="gt_row gt_right" headers="n_fail" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>2</code><br>
+<code>0.01439</code></td>
+<td class="gt_row gt_center" headers="W" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
+<td class="gt_row gt_center" headers="S" style="background-color: #FCFCFC; height: 40px"><span style="color: #CF142B;">●</span></td>
+<td class="gt_row gt_center" headers="N" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
+<td class="gt_row gt_center" headers="extract" style="height: 40px"><a href="data:text/csv;base64,IklEX1RSSVAiLCJDQVRfREVTVElOQVRJT05fQ0lUWSIsIkRUX1NUQVJUIiwiRFRfRU5EIiwiTl9EVVJBVElPTl9EQVkiLCJDQVRfVFJBVkVMRVJfTkFNRSIsIlZBTF9BR0VfVFJBVkVMRVIiLCJJTkRfR0VOREVSX1RSQVZFTEVSIiwiQ0FUX1RSQVZFTEVSX05BVElPTkFMSVRZIiwiQ0FUX0FDQ09NTU9EQVRJT05fVFlQRSIsIkFNVF9BQ0NPTU1PREFUSU9OX0NPU1QiLCJDQVRfVFJBTlNQT1JUQVRJT05fVFlQRSIsIkFNVF9UUkFOU1BPUlRBVElPTl9DT1NUIg0KNzIsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkENCjEyOCxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQQ0K" download="extract_0003.csv">
+<button aria-label="There are 2 'fail' rows available as a CSV file." data-balloon-pos="left" style="background-color:#67C2DC;color:#FFFFFF;border:none;padding:5px;font-weight:bold;cursor:pointer;border-radius:4px;">
+CSV
+</button>
+</a></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="status_color" style="background-color: #CF142B; height: 40px"><br>
+</td>
+<td class="gt_row gt_right" headers="i" style="color: #666666; font-size: 13px; font-weight: bold; height: 40px">4</td>
+<td class="gt_row gt_left" headers="type" style="height: 40px"><div aria-label="Expect that values in `IND_GENDER_TRAVELER` should be in the set of `Male`, `Female`. " data-balloon-pos="right" style="width:fit-content;">
+<div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;">
+<svg width="30px" height="30px" viewbox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
+<title>
+col_vals_in_set
+</title>
+<g id="All-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="col_vals_in_set" transform="translate(0.000000, 0.172414)"> <path d="M56.712234,1 C59.1975153,1 61.4475153,2.00735931 63.076195,3.63603897 C64.7048747,5.26471863 65.712234,7.51471863 65.712234,10 L65.712234,10 L65.712234,65 L10.712234,65 C8.22695259,65 5.97695259,63.9926407 4.34827294,62.363961 C2.71959328,60.7352814 1.71223397,58.4852814 1.71223397,56 L1.71223397,56 L1.71223397,10 C1.71223397,7.51471863 2.71959328,5.26471863 4.34827294,3.63603897 C5.97695259,2.00735931 8.22695259,1 10.712234,1 L10.712234,1 Z" id="rectangle" stroke="#000000" stroke-width="2" fill="#FFFFFF"></path> <path d="M44.127969,41.1538382 L31.0814568,41.1538382 C29.9510748,41.1536429 28.8827052,40.9256134 27.9079888,40.5136953 C26.4467442,39.8960136 25.19849,38.8599685 24.3189894,37.5577099 C23.8792391,36.906727 23.5314818,36.1899233 23.2936866,35.4252675 C23.2130217,35.16589 23.1460289,34.9005554 23.0913409,34.6307286 L44.1278714,34.6307286 C45.028466,34.6306309 45.7586488,33.9004481 45.7586488,32.9998535 C45.7586488,32.0992589 45.028466,31.3690761 44.1278714,31.3690761 L23.0905596,31.3690761 C23.1990567,30.8337194 23.3597028,30.3180894 23.5675173,29.8264831 C24.185199,28.3652386 25.2212442,27.1169844 26.5236004,26.2374838 C27.1745833,25.7977334 27.891387,25.4499762 28.6560428,25.2122786 C29.4208939,24.9744833 30.2334994,24.8459665 31.0813591,24.8459665 L44.1277737,24.8459665 C45.0283683,24.8459665 45.7586488,24.1157837 45.7586488,23.2151891 C45.7586488,22.3145945 45.0283683,21.5844117 44.1277737,21.5844117 L31.0813591,21.5844117 C29.5096643,21.5844117 28.0039858,21.9038483 26.6373711,22.4820765 C24.5866678,23.3498583 22.8469049,24.7950871 21.6163267,26.616296 C20.3856508,28.4362354 19.665136,30.6413347 19.6658191,33.0000488 C19.6658191,34.5717436 19.9852563,36.0774222 20.5635822,37.4440369 C21.4312663,39.4947402 22.8765927,41.2345031 24.697704,42.4650813 C26.5176434,43.6957572 28.7227427,44.4155883 31.0814568,44.4155883 L44.1278714,44.4155883 C45.028466,44.4155883 45.7586488,43.6854055 45.7586488,42.7848109 C45.7586488,41.8842163 45.0285636,41.1538382 44.127969,41.1538382 Z" id="set_of" fill="#000000" fill-rule="nonzero"></path> </g> </g>
+</svg>
+</div>
+<code style="font-size:11px;">&nbsp;col_vals_in_set()</code>
+</div></td>
+<td class="gt_row gt_left" headers="columns" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="IND_GENDER_TRAVELER" data-balloon-pos="left">
+<p><span style="color:purple;"><code>▮</code></span><code>IND_GENDER_TRAVELER</code></p>
+</div></td>
+<td class="gt_row gt_left" headers="values" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="Male, Female" data-balloon-pos="left">
+<p><code>Male, Female</code></p>
+</div></td>
+<td class="gt_row gt_center" headers="precon" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:10px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left">
+<svg width="25px" height="25px" viewbox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="vertical-align: middle;">
+<g id="unchanged" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="unchanged" transform="translate(0.500000, 0.570147)"> <rect id="Rectangle" x="0.125132506" y="0" width="23.749735" height="23.7894737"></rect> <path d="M5.80375046,8.18194736 C3.77191832,8.18194736 2.11875046,9.83495328 2.11875046,11.8669474 C2.11875046,13.8989414 3.77191832,15.5519474 5.80375046,15.5519474 C7.8355826,15.5519474 9.48875046,13.8989414 9.48875046,11.8669474 C9.48875046,9.83495328 7.83552863,8.18194736 5.80375046,8.18194736 Z M5.80375046,14.814915 C4.17821997,14.814915 2.85578285,13.4924778 2.85578285,11.8669474 C2.85578285,10.2414169 4.17821997,8.91897975 5.80375046,8.91897975 C7.42928095,8.91897975 8.75171807,10.2414169 8.75171807,11.8669474 C8.75171807,13.4924778 7.42928095,14.814915 5.80375046,14.814915 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path> <path d="M13.9638189,8.699335 C13.9364621,8.70430925 13.9091059,8.71176968 13.8842359,8.71923074 C13.7822704,8.73663967 13.6877654,8.77643115 13.6056956,8.83860518 L10.2433156,11.3852598 C10.0766886,11.5046343 9.97720993,11.6986181 9.97720993,11.9025491 C9.97720993,12.1064807 10.0766886,12.3004639 10.2433156,12.4198383 L13.6056956,14.966493 C13.891697,15.1803725 14.2970729,15.1231721 14.5109517,14.8371707 C14.7248313,14.5511692 14.6676309,14.145794 14.3816294,13.9319145 L12.5313257,12.5392127 L21.8812495,12.5392127 L21.8812495,11.2658854 L12.5313257,11.2658854 L14.3816294,9.87318364 C14.6377872,9.71650453 14.7497006,9.40066014 14.6477351,9.11714553 C14.5482564,8.83363156 14.262255,8.65954352 13.9638189,8.699335 Z" id="arrow" fill="#000000" transform="translate(15.929230, 11.894737) rotate(-180.000000) translate(-15.929230, -11.894737) "></path> </g> </g>
+</svg>
+</span></td>
+<td class="gt_row gt_center" headers="eval_sym" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></td>
+<td class="gt_row gt_right" headers="units" style="font-size: 11px; height: 40px"><code>139</code></td>
+<td class="gt_row gt_right" headers="n_pass" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>137</code><br>
+<code>0.98561</code></td>
+<td class="gt_row gt_right" headers="n_fail" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>2</code><br>
+<code>0.01439</code></td>
+<td class="gt_row gt_center" headers="W" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
+<td class="gt_row gt_center" headers="S" style="background-color: #FCFCFC; height: 40px"><span style="color: #CF142B;">●</span></td>
+<td class="gt_row gt_center" headers="N" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
+<td class="gt_row gt_center" headers="extract" style="height: 40px"><a href="data:text/csv;base64,IklEX1RSSVAiLCJDQVRfREVTVElOQVRJT05fQ0lUWSIsIkRUX1NUQVJUIiwiRFRfRU5EIiwiTl9EVVJBVElPTl9EQVkiLCJDQVRfVFJBVkVMRVJfTkFNRSIsIlZBTF9BR0VfVFJBVkVMRVIiLCJJTkRfR0VOREVSX1RSQVZFTEVSIiwiQ0FUX1RSQVZFTEVSX05BVElPTkFMSVRZIiwiQ0FUX0FDQ09NTU9EQVRJT05fVFlQRSIsIkFNVF9BQ0NPTU1PREFUSU9OX0NPU1QiLCJDQVRfVFJBTlNQT1JUQVRJT05fVFlQRSIsIkFNVF9UUkFOU1BPUlRBVElPTl9DT1NUIg0KNzIsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkENCjEyOCxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQQ0K" download="extract_0004.csv">
+<button aria-label="There are 2 'fail' rows available as a CSV file." data-balloon-pos="left" style="background-color:#67C2DC;color:#FFFFFF;border:none;padding:5px;font-weight:bold;cursor:pointer;border-radius:4px;">
+CSV
+</button>
+</a></td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="status_color" style="background-color: #CF142B; height: 40px"><br>
+</td>
+<td class="gt_row gt_right" headers="i" style="color: #666666; font-size: 13px; font-weight: bold; height: 40px">5</td>
+<td class="gt_row gt_left" headers="type" style="height: 40px"><div aria-label="Expect that column `DT_START` is of type: Date. " data-balloon-pos="right" style="width:fit-content;">
+<div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;">
+<svg width="30px" height="30px" viewbox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
+<title>
+col_is_date
+</title>
+<g id="All-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="col_is_date" transform="translate(0.000000, 0.379310)"> <path d="M56.712234,1.01466935 C59.1975153,1.01466935 61.4475153,2.02202867 63.076195,3.65070832 C64.7048747,5.27938798 65.712234,7.52938798 65.712234,10.0146694 L65.712234,10.0146694 L65.712234,65.0146694 L10.712234,65.0146694 C8.22695259,65.0146694 5.97695259,64.00731 4.34827294,62.3786304 C2.71959328,60.7499507 1.71223397,58.4999507 1.71223397,56.0146694 L1.71223397,56.0146694 L1.71223397,10.0146694 C1.71223397,7.52938798 2.71959328,5.27938798 4.34827294,3.65070832 C5.97695259,2.02202867 8.22695259,1.01466935 10.712234,1.01466935 L10.712234,1.01466935 Z" id="rectangle" stroke="#000000" stroke-width="2" fill="#FFFFFF"></path> <rect id="column" fill="#000000" x="12.2117153" y="12.0146694" width="20" height="42" rx="1"></rect> <path d="M40.7190873,43.0146694 L40.7190873,24.2256069 L46.9651811,24.2256069 C48.8271696,24.2256069 50.3315491,24.4329616 51.4783647,24.8476772 C52.6251803,25.2623928 53.6175206,25.9648597 54.4554155,26.955099 C55.7841981,28.5293257 56.4485795,30.6028726 56.4485795,33.1758022 C56.4485795,36.2988647 55.6233925,38.7194134 53.9729936,40.4375209 C52.3225947,42.1556285 49.9993758,43.0146694 47.003267,43.0146694 L40.7190873,43.0146694 Z M43.385103,41.0215053 L46.800142,41.0215053 C49.2376542,41.0215053 50.9641994,40.3655874 51.9798295,39.0537319 C53.0716319,37.6572405 53.6175248,35.7825848 53.6175248,33.4297084 C53.6175248,31.220713 53.0800953,29.4857043 52.0052202,28.2246303 C51.3535242,27.4544441 50.5748861,26.9275939 49.6692827,26.6440639 C48.7636792,26.3605338 47.4010626,26.2187709 45.581392,26.2187709 L43.385103,26.2187709 L43.385103,41.0215053 Z" id="D" fill="#000000"></path> </g> </g>
+</svg>
+</div>
+<code style="font-size:11px;">&nbsp;col_is_date()</code>
+</div></td>
+<td class="gt_row gt_left" headers="columns" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="DT_START" data-balloon-pos="left">
+<p><span style="color:purple;"><code>▮</code></span><code>DT_START</code></p>
+</div></td>
+<td class="gt_row gt_left" headers="values" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px">—</td>
+<td class="gt_row gt_center" headers="precon" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:10px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left">
+<svg width="25px" height="25px" viewbox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="vertical-align: middle;">
+<g id="unchanged" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="unchanged" transform="translate(0.500000, 0.570147)"> <rect id="Rectangle" x="0.125132506" y="0" width="23.749735" height="23.7894737"></rect> <path d="M5.80375046,8.18194736 C3.77191832,8.18194736 2.11875046,9.83495328 2.11875046,11.8669474 C2.11875046,13.8989414 3.77191832,15.5519474 5.80375046,15.5519474 C7.8355826,15.5519474 9.48875046,13.8989414 9.48875046,11.8669474 C9.48875046,9.83495328 7.83552863,8.18194736 5.80375046,8.18194736 Z M5.80375046,14.814915 C4.17821997,14.814915 2.85578285,13.4924778 2.85578285,11.8669474 C2.85578285,10.2414169 4.17821997,8.91897975 5.80375046,8.91897975 C7.42928095,8.91897975 8.75171807,10.2414169 8.75171807,11.8669474 C8.75171807,13.4924778 7.42928095,14.814915 5.80375046,14.814915 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path> <path d="M13.9638189,8.699335 C13.9364621,8.70430925 13.9091059,8.71176968 13.8842359,8.71923074 C13.7822704,8.73663967 13.6877654,8.77643115 13.6056956,8.83860518 L10.2433156,11.3852598 C10.0766886,11.5046343 9.97720993,11.6986181 9.97720993,11.9025491 C9.97720993,12.1064807 10.0766886,12.3004639 10.2433156,12.4198383 L13.6056956,14.966493 C13.891697,15.1803725 14.2970729,15.1231721 14.5109517,14.8371707 C14.7248313,14.5511692 14.6676309,14.145794 14.3816294,13.9319145 L12.5313257,12.5392127 L21.8812495,12.5392127 L21.8812495,11.2658854 L12.5313257,11.2658854 L14.3816294,9.87318364 C14.6377872,9.71650453 14.7497006,9.40066014 14.6477351,9.11714553 C14.5482564,8.83363156 14.262255,8.65954352 13.9638189,8.699335 Z" id="arrow" fill="#000000" transform="translate(15.929230, 11.894737) rotate(-180.000000) translate(-15.929230, -11.894737) "></path> </g> </g>
+</svg>
+</span></td>
+<td class="gt_row gt_center" headers="eval_sym" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></td>
+<td class="gt_row gt_right" headers="units" style="font-size: 11px; height: 40px"><code>1</code></td>
+<td class="gt_row gt_right" headers="n_pass" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>0</code><br>
+<code>0</code></td>
+<td class="gt_row gt_right" headers="n_fail" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>1</code><br>
+<code>1</code></td>
+<td class="gt_row gt_center" headers="W" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
+<td class="gt_row gt_center" headers="S" style="background-color: #FCFCFC; height: 40px"><span style="color: #CF142B;">●</span></td>
+<td class="gt_row gt_center" headers="N" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
+<td class="gt_row gt_center" headers="extract" style="height: 40px">—</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="status_color" style="background-color: #CF142B; height: 40px"><br>
+</td>
+<td class="gt_row gt_right" headers="i" style="color: #666666; font-size: 13px; font-weight: bold; height: 40px">6</td>
+<td class="gt_row gt_left" headers="type" style="height: 40px"><div aria-label="Expect that column `DT_END` is of type: Date. " data-balloon-pos="right" style="width:fit-content;">
+<div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;">
+<svg width="30px" height="30px" viewbox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
+<title>
+col_is_date
+</title>
+<g id="All-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="col_is_date" transform="translate(0.000000, 0.379310)"> <path d="M56.712234,1.01466935 C59.1975153,1.01466935 61.4475153,2.02202867 63.076195,3.65070832 C64.7048747,5.27938798 65.712234,7.52938798 65.712234,10.0146694 L65.712234,10.0146694 L65.712234,65.0146694 L10.712234,65.0146694 C8.22695259,65.0146694 5.97695259,64.00731 4.34827294,62.3786304 C2.71959328,60.7499507 1.71223397,58.4999507 1.71223397,56.0146694 L1.71223397,56.0146694 L1.71223397,10.0146694 C1.71223397,7.52938798 2.71959328,5.27938798 4.34827294,3.65070832 C5.97695259,2.02202867 8.22695259,1.01466935 10.712234,1.01466935 L10.712234,1.01466935 Z" id="rectangle" stroke="#000000" stroke-width="2" fill="#FFFFFF"></path> <rect id="column" fill="#000000" x="12.2117153" y="12.0146694" width="20" height="42" rx="1"></rect> <path d="M40.7190873,43.0146694 L40.7190873,24.2256069 L46.9651811,24.2256069 C48.8271696,24.2256069 50.3315491,24.4329616 51.4783647,24.8476772 C52.6251803,25.2623928 53.6175206,25.9648597 54.4554155,26.955099 C55.7841981,28.5293257 56.4485795,30.6028726 56.4485795,33.1758022 C56.4485795,36.2988647 55.6233925,38.7194134 53.9729936,40.4375209 C52.3225947,42.1556285 49.9993758,43.0146694 47.003267,43.0146694 L40.7190873,43.0146694 Z M43.385103,41.0215053 L46.800142,41.0215053 C49.2376542,41.0215053 50.9641994,40.3655874 51.9798295,39.0537319 C53.0716319,37.6572405 53.6175248,35.7825848 53.6175248,33.4297084 C53.6175248,31.220713 53.0800953,29.4857043 52.0052202,28.2246303 C51.3535242,27.4544441 50.5748861,26.9275939 49.6692827,26.6440639 C48.7636792,26.3605338 47.4010626,26.2187709 45.581392,26.2187709 L43.385103,26.2187709 L43.385103,41.0215053 Z" id="D" fill="#000000"></path> </g> </g>
+</svg>
+</div>
+<code style="font-size:11px;">&nbsp;col_is_date()</code>
+</div></td>
+<td class="gt_row gt_left" headers="columns" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="DT_END" data-balloon-pos="left">
+<p><span style="color:purple;"><code>▮</code></span><code>DT_END</code></p>
+</div></td>
+<td class="gt_row gt_left" headers="values" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px">—</td>
+<td class="gt_row gt_center" headers="precon" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:10px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left">
+<svg width="25px" height="25px" viewbox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="vertical-align: middle;">
+<g id="unchanged" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="unchanged" transform="translate(0.500000, 0.570147)"> <rect id="Rectangle" x="0.125132506" y="0" width="23.749735" height="23.7894737"></rect> <path d="M5.80375046,8.18194736 C3.77191832,8.18194736 2.11875046,9.83495328 2.11875046,11.8669474 C2.11875046,13.8989414 3.77191832,15.5519474 5.80375046,15.5519474 C7.8355826,15.5519474 9.48875046,13.8989414 9.48875046,11.8669474 C9.48875046,9.83495328 7.83552863,8.18194736 5.80375046,8.18194736 Z M5.80375046,14.814915 C4.17821997,14.814915 2.85578285,13.4924778 2.85578285,11.8669474 C2.85578285,10.2414169 4.17821997,8.91897975 5.80375046,8.91897975 C7.42928095,8.91897975 8.75171807,10.2414169 8.75171807,11.8669474 C8.75171807,13.4924778 7.42928095,14.814915 5.80375046,14.814915 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path> <path d="M13.9638189,8.699335 C13.9364621,8.70430925 13.9091059,8.71176968 13.8842359,8.71923074 C13.7822704,8.73663967 13.6877654,8.77643115 13.6056956,8.83860518 L10.2433156,11.3852598 C10.0766886,11.5046343 9.97720993,11.6986181 9.97720993,11.9025491 C9.97720993,12.1064807 10.0766886,12.3004639 10.2433156,12.4198383 L13.6056956,14.966493 C13.891697,15.1803725 14.2970729,15.1231721 14.5109517,14.8371707 C14.7248313,14.5511692 14.6676309,14.145794 14.3816294,13.9319145 L12.5313257,12.5392127 L21.8812495,12.5392127 L21.8812495,11.2658854 L12.5313257,11.2658854 L14.3816294,9.87318364 C14.6377872,9.71650453 14.7497006,9.40066014 14.6477351,9.11714553 C14.5482564,8.83363156 14.262255,8.65954352 13.9638189,8.699335 Z" id="arrow" fill="#000000" transform="translate(15.929230, 11.894737) rotate(-180.000000) translate(-15.929230, -11.894737) "></path> </g> </g>
+</svg>
+</span></td>
+<td class="gt_row gt_center" headers="eval_sym" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></td>
+<td class="gt_row gt_right" headers="units" style="font-size: 11px; height: 40px"><code>1</code></td>
+<td class="gt_row gt_right" headers="n_pass" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>0</code><br>
+<code>0</code></td>
+<td class="gt_row gt_right" headers="n_fail" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>1</code><br>
+<code>1</code></td>
+<td class="gt_row gt_center" headers="W" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
+<td class="gt_row gt_center" headers="S" style="background-color: #FCFCFC; height: 40px"><span style="color: #CF142B;">●</span></td>
+<td class="gt_row gt_center" headers="N" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
+<td class="gt_row gt_center" headers="extract" style="height: 40px">—</td>
+</tr>
+</tbody><tfoot class="gt_sourcenotes">
+<tr class="odd">
+<td colspan="14" class="gt_sourcenote"><span style="background-color:#FFF;color:#444;padding:0.5em 0.5em;position:inherit;text-transform:uppercase;margin-left:10px;border:solid 1px #999999;font-variant-numeric:tabular-nums;border-radius:0;padding:2px 10px 2px 10px;padding:2px 10px 2px 10px;">2024-06-06 23:38:28 +07</span> <span style="background-color:#FFF;color:#444;padding:0.5em 0.5em;position:inherit;margin:5px 1px 5px 0;border:solid 1px #999999;font-variant-numeric:tabular-nums;border-radius:0;padding:2px 10px 2px 10px;">&lt; 1 s</span> <span style="background-color:#FFF;color:#444;padding:0.5em 0.5em;position:inherit;text-transform:uppercase;margin:5px 1px 5px -1px;border:solid 1px #999999;font-variant-numeric:tabular-nums;border-radius:0;padding:2px 10px 2px 10px;">2024-06-06 23:38:28 +07</span></td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>Cool! Không chỉ kiểm tra được tính đúng đắn của dữ liệu, cũng có thể xác định được biến nào không tuân theo quy tắc đặt tên.</p>
 </section>
 <section id="data-discoverability" class="level1">
 <h1>Data Discoverability</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>cols_data <span class="ot">&lt;-</span> <span class="fu">names</span>(trip_data)</span>
+<span id="cb6-2"><a href="#cb6-2"></a>cols_data_split <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(cols_data,<span class="st">"_"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3"></a>cols_components <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb6-4"><a href="#cb6-4"></a>  <span class="at">variable =</span> cols_data,</span>
+<span id="cb6-5"><a href="#cb6-5"></a>  <span class="at">level1 =</span> <span class="fu">vapply</span>(cols_data_split, <span class="at">FUN =</span> <span class="cf">function</span>(x) x[<span class="dv">1</span>], <span class="at">FUN.VALUE =</span> <span class="fu">character</span>(<span class="dv">1</span>)),</span>
+<span id="cb6-6"><a href="#cb6-6"></a>  <span class="at">level2 =</span> <span class="fu">vapply</span>(cols_data_split, <span class="at">FUN =</span> <span class="cf">function</span>(x) x[<span class="dv">2</span>], <span class="at">FUN.VALUE =</span> <span class="fu">character</span>(<span class="dv">1</span>))</span>
+<span id="cb6-7"><a href="#cb6-7"></a>)</span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="fu">head</span>(cols_components)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              variable level1      level2
+1              ID_TRIP     ID        TRIP
+2 CAT_DESTINATION_CITY    CAT DESTINATION
+3             DT_START     DT       START
+4               DT_END     DT         END
+5       N_DURATION_DAY      N    DURATION
+6    CAT_TRAVELER_NAME    CAT    TRAVELER</code></pre>
+</div>
+</div>
+<p>Đây là một cách để xây dựng metadata, chúng ta có thể touch một cách interactive với:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">library</span>(DT)</span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="fu">datatable</span>(cols_components,  <span class="at">filter =</span> <span class="fu">list</span>(<span class="at">position =</span> <span class="st">'top'</span>, <span class="at">clear =</span> <span class="cn">FALSE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-f8b1d3a40fdcda6d1947" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-f8b1d3a40fdcda6d1947">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td><\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n    <\/div>\n  <\/td>\n<\/tr>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13"],["ID_TRIP","CAT_DESTINATION_CITY","DT_START","DT_END","N_DURATION_DAY","CAT_TRAVELER_NAME","VAL_AGE_TRAVELER","IND_GENDER_TRAVELER","CAT_TRAVELER_NATIONALITY","CAT_ACCOMMODATION_TYPE","AMT_ACCOMMODATION_COST","CAT_TRANSPORTATION_TYPE","AMT_TRANSPORTATION_COST"],["ID","CAT","DT","DT","N","CAT","VAL","IND","CAT","CAT","AMT","CAT","AMT"],["TRIP","DESTINATION","START","END","DURATION","TRAVELER","AGE","GENDER","TRAVELER","ACCOMMODATION","ACCOMMODATION","TRANSPORTATION","TRANSPORTATION"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>variable<\/th>\n      <th>level1<\/th>\n      <th>level2<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"variable","targets":1},{"name":"level1","targets":2},{"name":"level2","targets":3}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Cũng có thể visualize thành một tree như bên dưới:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">library</span>(collapsibleTree)</span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="fu">collapsibleTree</span>(cols_components, </span>
+<span id="cb9-3"><a href="#cb9-3"></a>                <span class="at">hierarchy =</span> <span class="fu">paste0</span>(<span class="st">"level"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>),</span>
+<span id="cb9-4"><a href="#cb9-4"></a>                <span class="at">nodeSize =</span> <span class="st">"leafCount"</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a>                )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="collapsibleTree html-widget html-fill-item" id="htmlwidget-cc4023d8d3de0fb5af27" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-cc4023d8d3de0fb5af27">{"x":{"data":{"name":"cols_components","SizeOfNode":34.41,"children":[{"name":"ID","SizeOfNode":9.93,"children":[{"name":"TRIP","SizeOfNode":9.93}]},{"name":"CAT","SizeOfNode":19.87,"children":[{"name":"DESTINATION","SizeOfNode":9.93},{"name":"TRAVELER","SizeOfNode":9.93},{"name":"ACCOMMODATION","SizeOfNode":9.93},{"name":"TRANSPORTATION","SizeOfNode":9.93}]},{"name":"DT","SizeOfNode":14.05,"children":[{"name":"START","SizeOfNode":9.93},{"name":"END","SizeOfNode":9.93}]},{"name":"N","SizeOfNode":9.93,"children":[{"name":"DURATION","SizeOfNode":9.93}]},{"name":"VAL","SizeOfNode":9.93,"children":[{"name":"AGE","SizeOfNode":9.93}]},{"name":"IND","SizeOfNode":9.93,"children":[{"name":"GENDER","SizeOfNode":9.93}]},{"name":"AMT","SizeOfNode":14.05,"children":[{"name":"ACCOMMODATION","SizeOfNode":9.93},{"name":"TRANSPORTATION","SizeOfNode":9.93}]}]},"options":{"hierarchy":["level1","level2"],"input":null,"attribute":"leafCount","linkLength":null,"fontSize":10,"tooltip":false,"collapsed":true,"zoomable":true,"margin":{"top":20,"bottom":20,"left":124.41,"right":95},"fill":"lightsteelblue"}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Đây là cách xem từ kiểu dữ liệu -&gt; chủ thể, chúng ta cũng có thể làm ngược lại:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">collapsibleTree</span>(cols_components, </span>
+<span id="cb10-2"><a href="#cb10-2"></a>                <span class="at">hierarchy =</span> <span class="fu">paste0</span>(<span class="st">"level"</span>, <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>)),</span>
+<span id="cb10-3"><a href="#cb10-3"></a>                <span class="at">nodeSize =</span> <span class="st">"leafCount"</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a>                )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="collapsibleTree html-widget html-fill-item" id="htmlwidget-723d88b9ec0a907ff91f" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-723d88b9ec0a907ff91f">{"x":{"data":{"name":"cols_components","SizeOfNode":34.41,"children":[{"name":"TRIP","SizeOfNode":9.93,"children":[{"name":"ID","SizeOfNode":9.93}]},{"name":"DESTINATION","SizeOfNode":9.93,"children":[{"name":"CAT","SizeOfNode":9.93}]},{"name":"START","SizeOfNode":9.93,"children":[{"name":"DT","SizeOfNode":9.93}]},{"name":"END","SizeOfNode":9.93,"children":[{"name":"DT","SizeOfNode":9.93}]},{"name":"DURATION","SizeOfNode":9.93,"children":[{"name":"N","SizeOfNode":9.93}]},{"name":"TRAVELER","SizeOfNode":9.93,"children":[{"name":"CAT","SizeOfNode":9.93}]},{"name":"AGE","SizeOfNode":9.93,"children":[{"name":"VAL","SizeOfNode":9.93}]},{"name":"GENDER","SizeOfNode":9.93,"children":[{"name":"IND","SizeOfNode":9.93}]},{"name":"ACCOMMODATION","SizeOfNode":14.05,"children":[{"name":"CAT","SizeOfNode":9.93},{"name":"AMT","SizeOfNode":9.93}]},{"name":"TRANSPORTATION","SizeOfNode":14.05,"children":[{"name":"CAT","SizeOfNode":9.93},{"name":"AMT","SizeOfNode":9.93}]}]},"options":{"hierarchy":["level2","level1"],"input":null,"attribute":"leafCount","linkLength":null,"fontSize":10,"tooltip":false,"collapsed":true,"zoomable":true,"margin":{"top":20,"bottom":20,"left":124.41,"right":40},"fill":"lightsteelblue"}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Bộ dữ liệu mình sử dụng khá nghèo nàn và tập trung về một chủ thể duy nhất là <code>TRIP</code>, nên khả năng minh họa không được phong phú 😂. Ngoài ra, việc đặt tên như thế cũng giúp ta dễ dàng gọi biến ở IDE.</p>
 </section>
 <section id="data-wrangling" class="level1">
 <h1>Data Wrangling</h1>
+<p>Tương tự, với việc sử dụng một bộ từ điển có hệ thống, lớp lang cũng support chúng ta trong việc biến đổi dữ liệu. Ví dụ chúng ta có thể tận dụng “select helpers” trong gói <code>dplyr</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb11-2"><a href="#cb11-2"></a>trip_data <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(trip_data)</span>
+<span id="cb11-3"><a href="#cb11-3"></a>trip_data <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a>  <span class="fu">filter</span>(<span class="fu">if_any</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="sc">!</span><span class="fu">is.na</span>(.))) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-5"><a href="#cb11-5"></a>  <span class="fu">group_by</span>(CAT_TRAVELER_NATIONALITY) <span class="sc">%&gt;%</span></span>
+<span id="cb11-6"><a href="#cb11-6"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb11-7"><a href="#cb11-7"></a>    <span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"DT_"</span>), <span class="fu">c</span>(min,max))</span>
+<span id="cb11-8"><a href="#cb11-8"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 42 × 5
+   CAT_TRAVELER_NATIONALITY DT_START_1 DT_START_2 DT_END_1   DT_END_2 
+   &lt;chr&gt;                    &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;    
+ 1 American                 1/1/2023   9/15/2022  1/1/2023   9/22/2022
+ 2 Australian               11/20/2023 9/5/2022   11/30/2023 9/14/2022
+ 3 Brazil                   4/3/2024   4/3/2024   4/10/2024  4/10/2024
+ 4 Brazilian                1/15/2024  8/1/2023   1/12/2024  8/10/2023
+ 5 British                  1/1/2025   8/20/2022  1/15/2023  9/2/2022 
+ 6 Cambodia                 9/10/2022  9/10/2022  9/15/2022  9/15/2022
+ 7 Canada                   7/1/2022   9/1/2022   7/10/2022  9/10/2022
+ 8 Canadian                 1/2/2023   8/15/2023  1/9/2023   8/22/2023
+ 9 China                    5/8/2023   5/8/2023   5/14/2023  5/14/2023
+10 Chinese                  11/11/2022 9/1/2023   11/21/2022 9/8/2023 
+# ℹ 32 more rows</code></pre>
+</div>
+</div>
 </section>
 <section id="other-languages" class="level1">
 <h1>Other languages</h1>
 <section id="generating-sql" class="level2">
 <h2 class="anchored" data-anchor-id="generating-sql">Generating SQL</h2>
+<p>Sử dụng R để generate SQL query</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="fu">library</span>(dbplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dbplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:dplyr':
+
+    ident, sql</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="fu">library</span>(RSQLite)</span>
+<span id="cb16-2"><a href="#cb16-2"></a>df_mem <span class="ot">&lt;-</span> <span class="fu">memdb_frame</span>(trip_data, <span class="at">.name =</span> <span class="st">"example_table"</span>)</span>
+<span id="cb16-3"><a href="#cb16-3"></a></span>
+<span id="cb16-4"><a href="#cb16-4"></a>df_mem <span class="sc">%&gt;%</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a>  <span class="fu">group_by</span>(CAT_TRAVELER_NATIONALITY) <span class="sc">%&gt;%</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a>  <span class="fu">summarize_at</span>(<span class="fu">vars</span>(<span class="fu">starts_with</span>(<span class="st">"N_"</span>)), mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a>  <span class="fu">show_query</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;SQL&gt;
+SELECT `CAT_TRAVELER_NATIONALITY`, AVG(`N_DURATION_DAY`) AS `N_DURATION_DAY`
+FROM `example_table`
+GROUP BY `CAT_TRAVELER_NATIONALITY`</code></pre>
+</div>
+</div>
 </section>
 <section id="r---base-data.table" class="level2">
-<h2 class="anchored" data-anchor-id="r---base-data.table">R - base &amp; data.table</h2>
+<h2 class="anchored" data-anchor-id="r---base-data.table">R - <code>base</code> &amp; <code>data.table</code></h2>
+<p>sử dụng <code>base::grep</code> để tìm tất cả các columns bắt đầu bằng <code>AMT_</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>cols_n <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">"^AMT_"</span>, <span class="fu">names</span>(trip_data), <span class="at">value =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="fu">print</span>(cols_n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "AMT_ACCOMMODATION_COST"  "AMT_TRANSPORTATION_COST"</code></pre>
+</div>
+</div>
+<p>sử dụng vector để lưu các cột chúng ta muốn group by:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>cols_grp <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"CAT_TRAVELER_NATIONALITY"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>chúng ta có thể dùng vector này trong <code>stats::aggregate</code></p>
+<p>hoặc trong <code>data.table</code></p>
 </section>
 <section id="python-pandas" class="level2">
-<h2 class="anchored" data-anchor-id="python-pandas">python pandas</h2>
+<h2 class="anchored" data-anchor-id="python-pandas">python <code>pandas</code></h2>
+<p>tương tự trong python, sử dụng list comprehension:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb21-1"><a href="#cb21-1"></a><span class="in">```{python}</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a></span>
+<span id="cb21-3"><a href="#cb21-3"></a><span class="in">import pandas as pd</span></span>
+<span id="cb21-4"><a href="#cb21-4"></a><span class="in">cols_n   = [vbl for vbl in trip_data.columns if vbl[0:2] == 'AMT_']</span></span>
+<span id="cb21-5"><a href="#cb21-5"></a><span class="in">cols_grp = ["CAT_TRAVELER_NATIONALITY"]</span></span>
+<span id="cb21-6"><a href="#cb21-6"></a><span class="in">trip_data.groupby(cols_grp)[cols_n].sum()</span></span>
+<span id="cb21-7"><a href="#cb21-7"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 <section id="updates-by-emily" class="level1">
 <h1>Updates by Emily</h1>
 <section id="concept-map" class="level2">
 <h2 class="anchored" data-anchor-id="concept-map">Concept Map</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: {'theme':'dark'}}%%
+flowchart LR
+  A(dataframe)-- has --&gt; B(columns)
+  A(dataframe)-- has --&gt; C(names)
+  B -- have --&gt; D(data types)
+  B -- have --&gt; E(units)
+  B -- have --&gt; F(meaning)
+  C -- should encode --&gt; D
+  C -- should encode --&gt; E
+  C -- should encode --&gt; F
+  C -- can support --&gt; G(validation)
+  C -- explained in --&gt; H(documentation)
+  G -- should check consistency of --&gt; C
+  G -- should check consistency of --&gt; H
+  H --&gt; I(data dictionary)
+  H --&gt; K(ERD)
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 </section>
 <section id="new-package-dec-2020" class="level2">
 <h2 class="anchored" data-anchor-id="new-package-dec-2020">New Package (Dec 2020)</h2>
-<p><a href="https://emilyriederer.github.io/convo/articles/quickstart-guide.html"><code>convo</code></a></p>
+<p><a href="https://emilyriederer.github.io/convo/articles/quickstart-guide.html"><code>convo</code></a> là một thư viện released bởi Emily phục vụ cho việc quản lý controlled vocabulary:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="fu">library</span>(convo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>vocab.yaml</strong></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb23-1"><a href="#cb23-1"></a><span class="fu">level1</span><span class="kw">:</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a><span class="at">  </span><span class="fu">ID</span><span class="kw">:</span></span>
+<span id="cb23-3"><a href="#cb23-3"></a><span class="at">    </span><span class="fu">desc</span><span class="kw">:</span><span class="at"> Unique identifier</span></span>
+<span id="cb23-4"><a href="#cb23-4"></a><span class="at">    </span><span class="fu">valid</span><span class="kw">:</span></span>
+<span id="cb23-5"><a href="#cb23-5"></a><span class="at">      </span><span class="kw">-</span><span class="at"> col_vals_not_null()</span></span>
+<span id="cb23-6"><a href="#cb23-6"></a><span class="at">      </span><span class="kw">-</span><span class="at"> col_is_numeric()</span></span>
+<span id="cb23-7"><a href="#cb23-7"></a><span class="at">      </span><span class="kw">-</span><span class="at"> col_vals_between(1000, 99999)</span></span>
+<span id="cb23-8"><a href="#cb23-8"></a><span class="at">  </span><span class="fu">IND</span><span class="kw">:</span></span>
+<span id="cb23-9"><a href="#cb23-9"></a><span class="at">    </span><span class="fu">desc</span><span class="kw">:</span><span class="at"> Binary indicator</span></span>
+<span id="cb23-10"><a href="#cb23-10"></a><span class="at">    </span><span class="fu">valid</span><span class="kw">:</span></span>
+<span id="cb23-11"><a href="#cb23-11"></a><span class="at">      </span><span class="kw">-</span><span class="at"> col_is_numeric()</span></span>
+<span id="cb23-12"><a href="#cb23-12"></a><span class="at">      </span><span class="kw">-</span><span class="at"> col_vals_in_set(c(0,1))</span></span>
+<span id="cb23-13"><a href="#cb23-13"></a><span class="at">    </span><span class="fu">rename</span><span class="kw">:</span></span>
+<span id="cb23-14"><a href="#cb23-14"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">when</span><span class="kw">:</span><span class="at"> SUM</span></span>
+<span id="cb23-15"><a href="#cb23-15"></a><span class="at">        </span><span class="fu">then</span><span class="kw">:</span><span class="at"> </span><span class="st">'N'</span></span>
+<span id="cb23-16"><a href="#cb23-16"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">when</span><span class="kw">:</span><span class="at"> AVG</span></span>
+<span id="cb23-17"><a href="#cb23-17"></a><span class="at">        </span><span class="fu">then</span><span class="kw">:</span><span class="at"> P</span></span>
+<span id="cb23-18"><a href="#cb23-18"></a><span class="at">  </span><span class="fu">AMT</span><span class="kw">:</span></span>
+<span id="cb23-19"><a href="#cb23-19"></a><span class="at">    </span><span class="fu">desc</span><span class="kw">:</span><span class="at"> Non-negative, summable quantity</span></span>
+<span id="cb23-20"><a href="#cb23-20"></a><span class="at">    </span><span class="fu">valid</span><span class="kw">:</span></span>
+<span id="cb23-21"><a href="#cb23-21"></a><span class="at">      </span><span class="kw">-</span><span class="at"> col_is_numeric()</span></span>
+<span id="cb23-22"><a href="#cb23-22"></a><span class="at">      </span><span class="kw">-</span><span class="at"> col_vals_gte(0)</span></span>
+<span id="cb23-23"><a href="#cb23-23"></a><span class="at">  </span><span class="fu">VAL</span><span class="kw">:</span></span>
+<span id="cb23-24"><a href="#cb23-24"></a><span class="at">    </span><span class="fu">desc</span><span class="kw">:</span><span class="at"> Value</span></span>
+<span id="cb23-25"><a href="#cb23-25"></a><span class="at">    </span><span class="fu">valid</span><span class="kw">:</span></span>
+<span id="cb23-26"><a href="#cb23-26"></a><span class="at">      </span><span class="kw">-</span><span class="at"> col_is_numeric()</span></span>
+<span id="cb23-27"><a href="#cb23-27"></a><span class="at">    </span><span class="fu">rename</span><span class="kw">:</span></span>
+<span id="cb23-28"><a href="#cb23-28"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">when</span><span class="kw">:</span><span class="at"> AVG</span></span>
+<span id="cb23-29"><a href="#cb23-29"></a><span class="at">        </span><span class="fu">then</span><span class="kw">:</span><span class="at"> VALAV</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
 </section>
 <section id="new-package-april-2021" class="level2">
 <h2 class="anchored" data-anchor-id="new-package-april-2021">New Package (April 2021)</h2>
-<p><a href="https://emilyriederer.github.io/dbtplyr/#!/overview"><code>dbtplyr</code></a></p>
-<p>https://gist.github.com/bluet/23e7697b86144561c4a3d804903d059d</p>
+<p><a href="https://emilyriederer.github.io/dbtplyr/#!/overview"><code>dbtplyr</code></a> là một package port tính năng “select helpers” của <code>dplyr</code> sang <code>dbt</code>.</p>
 
 
 <!-- -->
@@ -778,77 +1823,307 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="an">title:</span><span class="co"> "Về quy ước đặt tên dữ liệu"</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="an">description:</span><span class="co"> "Danh pháp quy ước để đặt tên cho dữ liệu dạng bảng, tăng tốc độ hiểu biết và sử dụng dữ liệu"</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="an">author:</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="an">date:</span><span class="co"> 06-05-2024</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="an">modified-date:</span><span class="co"> 06-06-2024</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a><span class="an">categories:</span><span class="co"> [data quality, name convention, controlled vocabulary, metadata] </span></span>
-<span id="cb1-10"><a href="#cb1-10"></a><span class="an">image:</span><span class="co"> ""</span></span>
-<span id="cb1-11"><a href="#cb1-11"></a><span class="an">draft:</span><span class="co"> true </span></span>
-<span id="cb1-12"><a href="#cb1-12"></a><span class="an">format:</span><span class="co"> </span></span>
-<span id="cb1-13"><a href="#cb1-13"></a><span class="co">  html: </span></span>
-<span id="cb1-14"><a href="#cb1-14"></a><span class="co">    code-fold: false</span></span>
-<span id="cb1-15"><a href="#cb1-15"></a><span class="co">    code-summary: "Show the code"</span></span>
-<span id="cb1-16"><a href="#cb1-16"></a><span class="co">    code-line-numbers: true</span></span>
-<span id="cb1-17"><a href="#cb1-17"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
-<span id="cb1-18"><a href="#cb1-18"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
-<span id="cb1-19"><a href="#cb1-19"></a><span class="an">editor:</span><span class="co"> visual</span></span>
-<span id="cb1-20"><a href="#cb1-20"></a><span class="co">---</span></span>
-<span id="cb1-21"><a href="#cb1-21"></a></span>
-<span id="cb1-22"><a href="#cb1-22"></a>Đây là keynote từ article <span class="co">[</span><span class="ot">Column Names as Contracts</span><span class="co">](https://emilyriederer.netlify.app/post/column-name-contracts/)</span> của <span class="co">[</span><span class="ot">Emily Riederer</span><span class="co">](https://emilyriederer.netlify.app/about)</span>.</span>
-<span id="cb1-23"><a href="#cb1-23"></a></span>
-<span id="cb1-24"><a href="#cb1-24"></a>Các sản phẩm phần mềm luôn tuân theo một quy ước nhất định (về hình ảnh, ký tự) nhằm để người dùng có thể ngay lập tức nắm bắt được cách thức sử dụng, giao tiếp với nó. Ví dụ, nút Home thường sẽ đưa người dùng về trang chủ của một mobile app, nút "blog" trên blog của tôi sẽ đưa các bạn tiếp cận danh mục bài viết, etc. Ở layer phía sau, các API được BE viết cần tuân thủ documented inputs &amp; outputs, để các BE khác hay FE có thể sử dụng.</span>
-<span id="cb1-25"><a href="#cb1-25"></a></span>
-<span id="cb1-26"><a href="#cb1-26"></a>Tuy nhiên các bảng dữ liệu lại nằm ở một vùng màu xám không rõ ràng. Data service (từ producer i.e DE -&gt; user i.e DA, DS) đủ tĩnh để không được xem là normal service, nhưng cũng đủ thô để người ta ít chú ý đến nó về mặt giao diện. DE cứ thể lấy hết mọi dữ liệu trong hệ thống, DA nhìn dữ liệu và ngay lập tức giả định được nội dung của (cột) dữ liệu đó.</span>
-<span id="cb1-27"><a href="#cb1-27"></a></span>
-<span id="cb1-28"><a href="#cb1-28"></a><span class="at">&gt; Producers wonder why consumers aren’t satisfied, and consumers wonder why the data is never “right”.</span></span>
-<span id="cb1-29"><a href="#cb1-29"></a></span>
-<span id="cb1-30"><a href="#cb1-30"></a>Cũng có một cách được nhiều tổ chức sử dụng như là Metadata managament, như:</span>
-<span id="cb1-31"><a href="#cb1-31"></a></span>
-<span id="cb1-32"><a href="#cb1-32"></a><span class="ss">- </span>Lyft’s <span class="co">[</span><span class="ot">Amundsen</span><span class="co">](https://eng.lyft.com/amundsen-lyfts-data-discovery-metadata-engine-62d27254fbb9)</span></span>
-<span id="cb1-33"><a href="#cb1-33"></a><span class="ss">- </span>LinkedIn’s <span class="co">[</span><span class="ot">DataHub</span><span class="co">](https://www.linkedin.com/blog/engineering/archive/data-hub)</span></span>
-<span id="cb1-34"><a href="#cb1-34"></a><span class="ss">- </span>Netflix’s <span class="co">[</span><span class="ot">Metacat</span><span class="co">](https://netflixtechblog.com/building-and-scaling-data-lineage-at-netflix-to-improve-data-infrastructure-reliability-and-1a52526a7977)</span></span>
-<span id="cb1-35"><a href="#cb1-35"></a></span>
-<span id="cb1-36"><a href="#cb1-36"></a>Tuy nhiên giải pháp này là documentation oriented, producer và user đều phải tuân thủ nghiêm ngặt. Nó không *trực diện* khi DE đặt tên cột, hay DA đọc dữ liệu.</span>
-<span id="cb1-37"><a href="#cb1-37"></a></span>
-<span id="cb1-38"><a href="#cb1-38"></a>Ý tưởng của Emily là chuẩn hóa các quy ước đặt tên dữ liệu bằng <span class="co">[</span><span class="ot">Controlled vocabulary</span><span class="co">](https://en.wikipedia.org/wiki/Controlled_vocabulary)</span>. Minh họa bằng <span class="in">`pointblank`</span>, <span class="in">`collapsibleTree`</span>, và <span class="in">`dplyr`</span>.</span>
-<span id="cb1-39"><a href="#cb1-39"></a></span>
-<span id="cb1-40"><a href="#cb1-40"></a><span class="fu"># Controlled Vocabulary</span></span>
-<span id="cb1-41"><a href="#cb1-41"></a></span>
-<span id="cb1-42"><a href="#cb1-42"></a><span class="fu">## Level 1: Kiểu dữ liệu, kiểu đo lường</span></span>
-<span id="cb1-43"><a href="#cb1-43"></a><span class="fu">## Level 2: Đối tượng, chủ đề</span></span>
-<span id="cb1-44"><a href="#cb1-44"></a><span class="fu">## Level 3-n: Chi tiết</span></span>
-<span id="cb1-45"><a href="#cb1-45"></a><span class="fu">## Kết hợp chúng lại</span></span>
-<span id="cb1-46"><a href="#cb1-46"></a></span>
-<span id="cb1-47"><a href="#cb1-47"></a><span class="fu"># Data Validation</span></span>
-<span id="cb1-48"><a href="#cb1-48"></a></span>
-<span id="cb1-49"><a href="#cb1-49"></a><span class="fu"># Data Discoverability</span></span>
-<span id="cb1-50"><a href="#cb1-50"></a></span>
-<span id="cb1-51"><a href="#cb1-51"></a><span class="fu"># Data Wrangling</span></span>
-<span id="cb1-52"><a href="#cb1-52"></a></span>
-<span id="cb1-53"><a href="#cb1-53"></a><span class="fu"># Other languages</span></span>
-<span id="cb1-54"><a href="#cb1-54"></a></span>
-<span id="cb1-55"><a href="#cb1-55"></a><span class="fu">## Generating SQL</span></span>
-<span id="cb1-56"><a href="#cb1-56"></a><span class="fu">## R - base &amp; data.table</span></span>
-<span id="cb1-57"><a href="#cb1-57"></a><span class="fu">## python pandas</span></span>
-<span id="cb1-58"><a href="#cb1-58"></a></span>
-<span id="cb1-59"><a href="#cb1-59"></a><span class="fu"># Updates by Emily</span></span>
-<span id="cb1-60"><a href="#cb1-60"></a></span>
-<span id="cb1-61"><a href="#cb1-61"></a><span class="fu">## Concept Map</span></span>
-<span id="cb1-62"><a href="#cb1-62"></a></span>
-<span id="cb1-63"><a href="#cb1-63"></a><span class="fu">## New Package (Dec 2020)</span></span>
-<span id="cb1-64"><a href="#cb1-64"></a><span class="co">[</span><span class="ot">`convo`</span><span class="co">](https://emilyriederer.github.io/convo/articles/quickstart-guide.html)</span> </span>
-<span id="cb1-65"><a href="#cb1-65"></a></span>
-<span id="cb1-66"><a href="#cb1-66"></a><span class="fu">## New Package (April 2021)</span></span>
-<span id="cb1-67"><a href="#cb1-67"></a></span>
-<span id="cb1-68"><a href="#cb1-68"></a><span class="co">[</span><span class="ot">`dbtplyr`</span><span class="co">](https://emilyriederer.github.io/dbtplyr/#!/overview)</span> </span>
-<span id="cb1-69"><a href="#cb1-69"></a></span>
-<span id="cb1-70"><a href="#cb1-70"></a></span>
-<span id="cb1-71"><a href="#cb1-71"></a>https://gist.github.com/bluet/23e7697b86144561c4a3d804903d059d</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb24" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb24-1"><a href="#cb24-1"></a><span class="co">---</span></span>
+<span id="cb24-2"><a href="#cb24-2"></a><span class="an">title:</span><span class="co"> "Về quy ước đặt tên dữ liệu"</span></span>
+<span id="cb24-3"><a href="#cb24-3"></a><span class="an">description:</span><span class="co"> "Danh pháp quy ước để đặt tên cho dữ liệu dạng bảng, tăng tốc độ hiểu biết và sử dụng dữ liệu"</span></span>
+<span id="cb24-4"><a href="#cb24-4"></a><span class="an">author:</span></span>
+<span id="cb24-5"><a href="#cb24-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
+<span id="cb24-6"><a href="#cb24-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
+<span id="cb24-7"><a href="#cb24-7"></a><span class="an">date:</span><span class="co"> 06-05-2024</span></span>
+<span id="cb24-8"><a href="#cb24-8"></a><span class="an">modified-date:</span><span class="co"> 06-06-2024</span></span>
+<span id="cb24-9"><a href="#cb24-9"></a><span class="an">categories:</span><span class="co"> [data quality, name convention, controlled vocabulary, metadata] </span></span>
+<span id="cb24-10"><a href="#cb24-10"></a><span class="an">image:</span><span class="co"> ""</span></span>
+<span id="cb24-11"><a href="#cb24-11"></a><span class="an">draft:</span><span class="co"> false</span></span>
+<span id="cb24-12"><a href="#cb24-12"></a><span class="an">format:</span><span class="co"> </span></span>
+<span id="cb24-13"><a href="#cb24-13"></a><span class="co">  html: </span></span>
+<span id="cb24-14"><a href="#cb24-14"></a><span class="co">    code-fold: false</span></span>
+<span id="cb24-15"><a href="#cb24-15"></a><span class="co">    code-summary: "Show the code"</span></span>
+<span id="cb24-16"><a href="#cb24-16"></a><span class="co">    code-line-numbers: true</span></span>
+<span id="cb24-17"><a href="#cb24-17"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
+<span id="cb24-18"><a href="#cb24-18"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
+<span id="cb24-19"><a href="#cb24-19"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb24-20"><a href="#cb24-20"></a><span class="co">---</span></span>
+<span id="cb24-21"><a href="#cb24-21"></a></span>
+<span id="cb24-22"><a href="#cb24-22"></a>Đây là keynote từ article <span class="co">[</span><span class="ot">Column Names as Contracts</span><span class="co">](https://emilyriederer.netlify.app/post/column-name-contracts/)</span> của <span class="co">[</span><span class="ot">Emily Riederer</span><span class="co">](https://emilyriederer.netlify.app/about)</span>.</span>
+<span id="cb24-23"><a href="#cb24-23"></a></span>
+<span id="cb24-24"><a href="#cb24-24"></a>Các sản phẩm phần mềm luôn tuân theo một quy ước nhất định (về hình ảnh, ký tự) nhằm để người dùng có thể ngay lập tức nắm bắt được cách thức sử dụng, giao tiếp với nó. Ví dụ, nút Home thường sẽ đưa người dùng về trang chủ của một mobile app, nút "blog" trên blog của tôi sẽ đưa các bạn tiếp cận danh mục bài viết, etc. Ở layer phía sau, các API được BE viết cần tuân thủ documented inputs &amp; outputs, để các BE khác hay FE có thể sử dụng.</span>
+<span id="cb24-25"><a href="#cb24-25"></a></span>
+<span id="cb24-26"><a href="#cb24-26"></a>Tuy nhiên các bảng dữ liệu lại nằm ở một vùng màu xám không rõ ràng. Data service (từ producer i.e DE -&gt; user i.e DA, DS) đủ tĩnh để không được xem là normal service, nhưng cũng đủ thô để người ta ít chú ý đến nó về mặt giao diện. DE cứ thể lấy hết mọi dữ liệu trong hệ thống, DA nhìn dữ liệu và ngay lập tức giả định được nội dung của (cột) dữ liệu đó.</span>
+<span id="cb24-27"><a href="#cb24-27"></a></span>
+<span id="cb24-28"><a href="#cb24-28"></a><span class="at">&gt; Producers wonder why consumers aren’t satisfied, and consumers wonder why the data is never “right”.</span></span>
+<span id="cb24-29"><a href="#cb24-29"></a></span>
+<span id="cb24-30"><a href="#cb24-30"></a>Cũng có một cách được nhiều tổ chức sử dụng như là Metadata managament, như:</span>
+<span id="cb24-31"><a href="#cb24-31"></a></span>
+<span id="cb24-32"><a href="#cb24-32"></a><span class="ss">- </span>Lyft’s <span class="co">[</span><span class="ot">Amundsen</span><span class="co">](https://eng.lyft.com/amundsen-lyfts-data-discovery-metadata-engine-62d27254fbb9)</span></span>
+<span id="cb24-33"><a href="#cb24-33"></a><span class="ss">- </span>LinkedIn’s <span class="co">[</span><span class="ot">DataHub</span><span class="co">](https://www.linkedin.com/blog/engineering/archive/data-hub)</span></span>
+<span id="cb24-34"><a href="#cb24-34"></a><span class="ss">- </span>Netflix’s <span class="co">[</span><span class="ot">Metacat</span><span class="co">](https://netflixtechblog.com/building-and-scaling-data-lineage-at-netflix-to-improve-data-infrastructure-reliability-and-1a52526a7977)</span></span>
+<span id="cb24-35"><a href="#cb24-35"></a></span>
+<span id="cb24-36"><a href="#cb24-36"></a>Tuy nhiên giải pháp này là documentation oriented, producer và user đều phải tuân thủ nghiêm ngặt. Nó không *trực diện* khi DE đặt tên cột, hay DA đọc dữ liệu.</span>
+<span id="cb24-37"><a href="#cb24-37"></a></span>
+<span id="cb24-38"><a href="#cb24-38"></a>Ý tưởng của Emily là chuẩn hóa các quy ước đặt tên dữ liệu bằng <span class="co">[</span><span class="ot">Controlled vocabulary</span><span class="co">](https://en.wikipedia.org/wiki/Controlled_vocabulary)</span>. Minh họa bằng <span class="in">`pointblank`</span>, <span class="in">`collapsibleTree`</span>, và <span class="in">`dplyr`</span>.</span>
+<span id="cb24-39"><a href="#cb24-39"></a></span>
+<span id="cb24-40"><a href="#cb24-40"></a><span class="fu"># Controlled Vocabulary</span></span>
+<span id="cb24-41"><a href="#cb24-41"></a></span>
+<span id="cb24-42"><a href="#cb24-42"></a>CV là phương pháp sử dụng một tập hợp các từ, cụm từ, từ viết tắt để ký hiệu thông tin. Quy ước này cần được định nghĩa đề phù hợp cho tính chất bộ dữ liệu, và cũng đủ đơn giản để người tạo dữ liệu, người sử dụng dữ liệu sử dụng.</span>
+<span id="cb24-43"><a href="#cb24-43"></a></span>
+<span id="cb24-44"><a href="#cb24-44"></a>Ví dụ, 1 ứng dụng booking.</span>
+<span id="cb24-45"><a href="#cb24-45"></a></span>
+<span id="cb24-46"><a href="#cb24-46"></a><span class="fu">## Level 1: Kiểu dữ liệu, kiểu đo lường</span></span>
+<span id="cb24-47"><a href="#cb24-47"></a><span class="ss">- </span><span class="in">`ID`</span>: chỉ đối tượng, dạng numberic, tối ưu cho việc lưu trữ và thường làm khóa chính các bảng'</span>
+<span id="cb24-48"><a href="#cb24-48"></a><span class="ss">- </span><span class="in">`IND`</span>: giá trị boolean 0/1, tôi thì thường sử dụng các từ như <span class="in">`IS`</span>, <span class="in">`FLAG`</span>;</span>
+<span id="cb24-49"><a href="#cb24-49"></a><span class="ss">- </span><span class="in">`N`</span>: chỉ các dạng thông tin *có thể đếm (count)* được;</span>
+<span id="cb24-50"><a href="#cb24-50"></a><span class="ss">- </span><span class="in">`AMT`</span>: chỉ các dạng thông tin có thể tổng, thường đề cập đến *currency*;</span>
+<span id="cb24-51"><a href="#cb24-51"></a><span class="ss">- </span><span class="in">`VAL`</span>: cũng là số nhưng không thể tổng được (không có ý nghĩa), ví dụ như *kinh độ*, *vĩ độ*;</span>
+<span id="cb24-52"><a href="#cb24-52"></a><span class="ss">- </span><span class="in">`DT`</span>: ngày;</span>
+<span id="cb24-53"><a href="#cb24-53"></a><span class="ss">- </span><span class="in">`TM`</span>: giờ hoặc ngày giờ;</span>
+<span id="cb24-54"><a href="#cb24-54"></a><span class="ss">- </span><span class="in">`CAT`</span>: category</span>
+<span id="cb24-55"><a href="#cb24-55"></a></span>
+<span id="cb24-56"><a href="#cb24-56"></a>Cũng tùy vào dữ liệu, có thể thêm các cụm từ nhất định đề đề cập đến thông tin dữ liệu đó mang lại, ví dụ <span class="in">`ADD`</span> cho address.</span>
+<span id="cb24-57"><a href="#cb24-57"></a></span>
+<span id="cb24-58"><a href="#cb24-58"></a><span class="fu">## Level 2: Đối tượng, chủ đề</span></span>
+<span id="cb24-59"><a href="#cb24-59"></a></span>
+<span id="cb24-60"><a href="#cb24-60"></a>Mối quan tâm của người dùng dữ liệu cũng giống như nhà quản trị, xung quanh các đối tượng của business: <span class="in">`USER`</span>, <span class="in">`TRANSACTION`</span>, etc. </span>
+<span id="cb24-61"><a href="#cb24-61"></a></span>
+<span id="cb24-62"><a href="#cb24-62"></a>Đối với ứng dụng đặt xe, các chủ thể có thể cần quan tâm là <span class="in">`TRIP`</span>, <span class="in">`TRAVELER`</span>, <span class="in">`ACCOMODATION`</span>, <span class="in">`TRANSPORTATION`</span>, etc.</span>
+<span id="cb24-63"><a href="#cb24-63"></a></span>
+<span id="cb24-64"><a href="#cb24-64"></a><span class="fu">## Level 3-n: Chi tiết</span></span>
+<span id="cb24-65"><a href="#cb24-65"></a></span>
+<span id="cb24-66"><a href="#cb24-66"></a>Hai tầng trên về cơ bản đã cho phép chúng ta mô tả được cột thông tin, chúng đều thể hiện được thuộc tính của chủ thể. Ví dụ:</span>
+<span id="cb24-67"><a href="#cb24-67"></a></span>
+<span id="cb24-68"><a href="#cb24-68"></a><span class="ss">- </span><span class="in">`AMT_TRIP`</span>: giá trị deal của Trip;</span>
+<span id="cb24-69"><a href="#cb24-69"></a><span class="ss">- </span><span class="in">`ADD_DESTINATION`</span>: Điểm đến của trip.</span>
+<span id="cb24-70"><a href="#cb24-70"></a></span>
+<span id="cb24-71"><a href="#cb24-71"></a>Tuy nhiên tùy vào từng use case, chúng ta hoàn toàn có thể mở rộng được về cả hai phía. Ví dụ:</span>
+<span id="cb24-72"><a href="#cb24-72"></a></span>
+<span id="cb24-73"><a href="#cb24-73"></a><span class="ss">- </span>Về phía trước: khi làm việc với nhiều layer dữ liệu, ta có thể dùng <span class="in">`RAW`</span>, <span class="in">`STAGING`</span>, <span class="in">`DW`</span>, <span class="in">`DL`</span>, <span class="in">`DM`</span>, etc  </span>
+<span id="cb24-74"><a href="#cb24-74"></a><span class="ss">- </span>Về phía sau: <span class="in">`DAY`</span> hoặc <span class="in">`MONTH`</span> cho <span class="in">`N_DURATION`</span>, <span class="in">`VND`</span> hoặc <span class="in">`USD`</span> cho currency <span class="in">`AMT`</span>. </span>
+<span id="cb24-75"><a href="#cb24-75"></a></span>
+<span id="cb24-76"><a href="#cb24-76"></a>Miễn là có một quy chuẩn, và nó đủ đơn giản để sử dụng.</span>
+<span id="cb24-77"><a href="#cb24-77"></a></span>
+<span id="cb24-78"><a href="#cb24-78"></a><span class="fu">## Kết hợp chúng lại</span></span>
+<span id="cb24-79"><a href="#cb24-79"></a></span>
+<span id="cb24-80"><a href="#cb24-80"></a>Tất nhiên ràng buộc việc đặt tên như vậy không chỉ để trang trí, nó sẽ giúp chúng ta tự động hóa quy trình kiểm soát chất lượng dữ liệu, .</span>
+<span id="cb24-81"><a href="#cb24-81"></a></span>
+<span id="cb24-82"><a href="#cb24-82"></a>Tôi sử dụng <span class="co">[</span><span class="ot">bộ dữ liệu</span><span class="co">](https://www.kaggle.com/datasets/rkiattisak/traveler-trip-data)</span> này để thực hành (cột dữ liệu đã được đổi tên).</span>
+<span id="cb24-85"><a href="#cb24-85"></a><span class="in">```{r}</span></span>
+<span id="cb24-86"><a href="#cb24-86"></a><span class="co">#| eval: true # Do evaluate this chunk</span></span>
+<span id="cb24-87"><a href="#cb24-87"></a><span class="co">#| echo: false # Do show this chunk in the final rendered document</span></span>
+<span id="cb24-88"><a href="#cb24-88"></a><span class="co">#| output: false # Do show the output / results of this chunk in the rendered document</span></span>
+<span id="cb24-89"><a href="#cb24-89"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb24-90"><a href="#cb24-90"></a>trip_data <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">'C:</span><span class="sc">\\</span><span class="st">Users</span><span class="sc">\\</span><span class="st">Tuan Le</span><span class="sc">\\</span><span class="st">git</span><span class="sc">\\</span><span class="st">lktuan.github.io</span><span class="sc">\\</span><span class="st">blog</span><span class="sc">\\</span><span class="st">2024-06-05-cnac</span><span class="sc">\\</span><span class="st">Travel details dataset.csv'</span>)</span>
+<span id="cb24-91"><a href="#cb24-91"></a><span class="fu">names</span>(trip_data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"ID_TRIP"</span>, <span class="st">"CAT_DESTINATION_CITY"</span>, <span class="st">"DT_START"</span>, <span class="st">"DT_END"</span>,<span class="st">"N_DURATION_DAY"</span>,<span class="st">"CAT_TRAVELER_NAME"</span>,<span class="st">"VAL_AGE_TRAVELER"</span>,<span class="st">"IND_GENDER_TRAVELER"</span>,<span class="st">"CAT_TRAVELER_NATIONALITY"</span>, <span class="st">"CAT_ACCOMMODATION_TYPE"</span>, <span class="st">"AMT_ACCOMMODATION_COST"</span>, <span class="st">"CAT_TRANSPORTATION_TYPE"</span>,<span class="st">"AMT_TRANSPORTATION_COST"</span>)</span>
+<span id="cb24-92"><a href="#cb24-92"></a><span class="in">```</span></span>
+<span id="cb24-93"><a href="#cb24-93"></a></span>
+<span id="cb24-96"><a href="#cb24-96"></a><span class="in">```{r}</span></span>
+<span id="cb24-97"><a href="#cb24-97"></a><span class="fu">head</span>(trip_data)</span>
+<span id="cb24-98"><a href="#cb24-98"></a><span class="in">```</span></span>
+<span id="cb24-99"><a href="#cb24-99"></a></span>
+<span id="cb24-100"><a href="#cb24-100"></a><span class="fu"># Data Validation</span></span>
+<span id="cb24-101"><a href="#cb24-101"></a></span>
+<span id="cb24-102"><a href="#cb24-102"></a>Sử dụng <span class="in">`pointblank`</span> của R để kiếm tra một số tính chất của dữ liệu:</span>
+<span id="cb24-103"><a href="#cb24-103"></a></span>
+<span id="cb24-106"><a href="#cb24-106"></a><span class="in">```{r}</span></span>
+<span id="cb24-107"><a href="#cb24-107"></a><span class="fu">library</span>(pointblank)</span>
+<span id="cb24-108"><a href="#cb24-108"></a></span>
+<span id="cb24-109"><a href="#cb24-109"></a>agent <span class="ot">&lt;-</span></span>
+<span id="cb24-110"><a href="#cb24-110"></a>  trip_data  <span class="sc">%&gt;%</span> </span>
+<span id="cb24-111"><a href="#cb24-111"></a>  <span class="fu">create_agent</span>(<span class="at">actions =</span> <span class="fu">action_levels</span>(<span class="at">stop_at =</span> <span class="fl">0.001</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-112"><a href="#cb24-112"></a>  <span class="fu">col_vals_gte</span>(<span class="fu">starts_with</span>(<span class="st">"N"</span>), <span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="co"># check if cols start with N is GTE 0 or not</span></span>
+<span id="cb24-113"><a href="#cb24-113"></a>  <span class="fu">col_vals_gte</span>(<span class="fu">starts_with</span>(<span class="st">"VAL"</span>), <span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="co"># check if cols start with VAL is GTE 0 or not</span></span>
+<span id="cb24-114"><a href="#cb24-114"></a>  <span class="fu">col_vals_not_null</span>(<span class="fu">starts_with</span>(<span class="st">"IND"</span>)) <span class="sc">%&gt;%</span> <span class="co"># check if cols start with IND contain Null or not</span></span>
+<span id="cb24-115"><a href="#cb24-115"></a>  <span class="fu">col_vals_in_set</span>(<span class="fu">starts_with</span>(<span class="st">"IND"</span>), <span class="fu">c</span>(<span class="st">"Male"</span>,<span class="st">"Female"</span>)) <span class="sc">%&gt;%</span> <span class="co"># validate the value of only column started with IND - Gender</span></span>
+<span id="cb24-116"><a href="#cb24-116"></a>  <span class="fu">col_is_date</span>(<span class="fu">starts_with</span>(<span class="st">"DT"</span>)) <span class="sc">%&gt;%</span> <span class="co"># check validation of date columns</span></span>
+<span id="cb24-117"><a href="#cb24-117"></a>  <span class="fu">interrogate</span>()</span>
+<span id="cb24-118"><a href="#cb24-118"></a><span class="in">```</span></span>
+<span id="cb24-119"><a href="#cb24-119"></a></span>
+<span id="cb24-120"><a href="#cb24-120"></a>:::{.column-margin}</span>
+<span id="cb24-121"><a href="#cb24-121"></a>Note: To type <span class="in">`pipe`</span> operator in VS Code, use this in the <span class="in">`keybindings.json`</span> file:</span>
+<span id="cb24-122"><a href="#cb24-122"></a><span class="in">```json</span></span>
+<span id="cb24-123"><a href="#cb24-123"></a><span class="fu">{</span></span>
+<span id="cb24-124"><a href="#cb24-124"></a>  <span class="dt">"key"</span><span class="fu">:</span> <span class="st">"Ctrl+Shift+m"</span><span class="fu">,</span>             </span>
+<span id="cb24-125"><a href="#cb24-125"></a>  <span class="dt">"command"</span><span class="fu">:</span> <span class="st">"type"</span><span class="fu">,</span> </span>
+<span id="cb24-126"><a href="#cb24-126"></a>  <span class="dt">"args"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"text"</span><span class="fu">:</span> <span class="st">" %&gt;% "</span> <span class="fu">},</span></span>
+<span id="cb24-127"><a href="#cb24-127"></a>  <span class="dt">"when"</span><span class="fu">:</span> <span class="st">"editorTextFocus </span></span>
+<span id="cb24-128"><a href="#cb24-128"></a><span class="st">            &amp;&amp; !editorHasSelection </span></span>
+<span id="cb24-129"><a href="#cb24-129"></a><span class="st">            &amp;&amp; editorLangId </span></span>
+<span id="cb24-130"><a href="#cb24-130"></a><span class="st">            == 'quarto'"</span> </span>
+<span id="cb24-131"><a href="#cb24-131"></a><span class="fu">}</span></span>
+<span id="cb24-132"><a href="#cb24-132"></a><span class="in">```</span></span>
+<span id="cb24-133"><a href="#cb24-133"></a>Then you can get the <span class="in">`pipe`</span> when type <span class="in">`Ctrl + Shift + M`</span>.</span>
+<span id="cb24-134"><a href="#cb24-134"></a>:::</span>
+<span id="cb24-135"><a href="#cb24-135"></a></span>
+<span id="cb24-136"><a href="#cb24-136"></a></span>
+<span id="cb24-137"><a href="#cb24-137"></a></span>
+<span id="cb24-140"><a href="#cb24-140"></a><span class="in">```{r}</span></span>
+<span id="cb24-141"><a href="#cb24-141"></a>agent</span>
+<span id="cb24-142"><a href="#cb24-142"></a><span class="in">```</span></span>
+<span id="cb24-143"><a href="#cb24-143"></a>Cool! Không chỉ kiểm tra được tính đúng đắn của dữ liệu, cũng có thể xác định được biến nào không tuân theo quy tắc đặt tên.</span>
+<span id="cb24-144"><a href="#cb24-144"></a></span>
+<span id="cb24-145"><a href="#cb24-145"></a><span class="fu"># Data Discoverability</span></span>
+<span id="cb24-146"><a href="#cb24-146"></a></span>
+<span id="cb24-149"><a href="#cb24-149"></a><span class="in">```{r}</span></span>
+<span id="cb24-150"><a href="#cb24-150"></a>cols_data <span class="ot">&lt;-</span> <span class="fu">names</span>(trip_data)</span>
+<span id="cb24-151"><a href="#cb24-151"></a>cols_data_split <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(cols_data,<span class="st">"_"</span>)</span>
+<span id="cb24-152"><a href="#cb24-152"></a>cols_components <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb24-153"><a href="#cb24-153"></a>  <span class="at">variable =</span> cols_data,</span>
+<span id="cb24-154"><a href="#cb24-154"></a>  <span class="at">level1 =</span> <span class="fu">vapply</span>(cols_data_split, <span class="at">FUN =</span> <span class="cf">function</span>(x) x[<span class="dv">1</span>], <span class="at">FUN.VALUE =</span> <span class="fu">character</span>(<span class="dv">1</span>)),</span>
+<span id="cb24-155"><a href="#cb24-155"></a>  <span class="at">level2 =</span> <span class="fu">vapply</span>(cols_data_split, <span class="at">FUN =</span> <span class="cf">function</span>(x) x[<span class="dv">2</span>], <span class="at">FUN.VALUE =</span> <span class="fu">character</span>(<span class="dv">1</span>))</span>
+<span id="cb24-156"><a href="#cb24-156"></a>)</span>
+<span id="cb24-157"><a href="#cb24-157"></a><span class="fu">head</span>(cols_components)</span>
+<span id="cb24-158"><a href="#cb24-158"></a><span class="in">```</span></span>
+<span id="cb24-159"><a href="#cb24-159"></a></span>
+<span id="cb24-160"><a href="#cb24-160"></a>Đây là một cách để xây dựng metadata, chúng ta có thể touch một cách interactive với:</span>
+<span id="cb24-163"><a href="#cb24-163"></a><span class="in">```{r}</span></span>
+<span id="cb24-164"><a href="#cb24-164"></a><span class="fu">library</span>(DT)</span>
+<span id="cb24-165"><a href="#cb24-165"></a><span class="fu">datatable</span>(cols_components,  <span class="at">filter =</span> <span class="fu">list</span>(<span class="at">position =</span> <span class="st">'top'</span>, <span class="at">clear =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb24-166"><a href="#cb24-166"></a><span class="in">```</span></span>
+<span id="cb24-167"><a href="#cb24-167"></a>Cũng có thể visualize thành một tree như bên dưới:</span>
+<span id="cb24-170"><a href="#cb24-170"></a><span class="in">```{r}</span></span>
+<span id="cb24-171"><a href="#cb24-171"></a><span class="fu">library</span>(collapsibleTree)</span>
+<span id="cb24-172"><a href="#cb24-172"></a><span class="fu">collapsibleTree</span>(cols_components, </span>
+<span id="cb24-173"><a href="#cb24-173"></a>                <span class="at">hierarchy =</span> <span class="fu">paste0</span>(<span class="st">"level"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>),</span>
+<span id="cb24-174"><a href="#cb24-174"></a>                <span class="at">nodeSize =</span> <span class="st">"leafCount"</span></span>
+<span id="cb24-175"><a href="#cb24-175"></a>                )</span>
+<span id="cb24-176"><a href="#cb24-176"></a><span class="in">```</span></span>
+<span id="cb24-177"><a href="#cb24-177"></a>Đây là cách xem từ kiểu dữ liệu -&gt; chủ thể, chúng ta cũng có thể làm ngược lại:</span>
+<span id="cb24-180"><a href="#cb24-180"></a><span class="in">```{r}</span></span>
+<span id="cb24-181"><a href="#cb24-181"></a><span class="fu">collapsibleTree</span>(cols_components, </span>
+<span id="cb24-182"><a href="#cb24-182"></a>                <span class="at">hierarchy =</span> <span class="fu">paste0</span>(<span class="st">"level"</span>, <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>)),</span>
+<span id="cb24-183"><a href="#cb24-183"></a>                <span class="at">nodeSize =</span> <span class="st">"leafCount"</span></span>
+<span id="cb24-184"><a href="#cb24-184"></a>                )</span>
+<span id="cb24-185"><a href="#cb24-185"></a><span class="in">```</span></span>
+<span id="cb24-186"><a href="#cb24-186"></a></span>
+<span id="cb24-187"><a href="#cb24-187"></a>Bộ dữ liệu mình sử dụng khá nghèo nàn và tập trung về một chủ thể duy nhất là <span class="in">`TRIP`</span>, nên khả năng minh họa không được phong phú 😂. Ngoài ra, việc đặt tên như thế cũng giúp ta dễ dàng gọi biến ở IDE.</span>
+<span id="cb24-188"><a href="#cb24-188"></a></span>
+<span id="cb24-189"><a href="#cb24-189"></a><span class="fu"># Data Wrangling</span></span>
+<span id="cb24-190"><a href="#cb24-190"></a></span>
+<span id="cb24-191"><a href="#cb24-191"></a>Tương tự, với việc sử dụng một bộ từ điển có hệ thống, lớp lang cũng support chúng ta trong việc biến đổi dữ liệu. Ví dụ chúng ta có thể tận dụng "select helpers" trong gói <span class="in">`dplyr`</span>:</span>
+<span id="cb24-192"><a href="#cb24-192"></a></span>
+<span id="cb24-195"><a href="#cb24-195"></a><span class="in">```{r}</span></span>
+<span id="cb24-196"><a href="#cb24-196"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb24-197"><a href="#cb24-197"></a>trip_data <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(trip_data)</span>
+<span id="cb24-198"><a href="#cb24-198"></a>trip_data <span class="sc">%&gt;%</span></span>
+<span id="cb24-199"><a href="#cb24-199"></a>  <span class="fu">filter</span>(<span class="fu">if_any</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="sc">!</span><span class="fu">is.na</span>(.))) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-200"><a href="#cb24-200"></a>  <span class="fu">group_by</span>(CAT_TRAVELER_NATIONALITY) <span class="sc">%&gt;%</span></span>
+<span id="cb24-201"><a href="#cb24-201"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb24-202"><a href="#cb24-202"></a>    <span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"DT_"</span>), <span class="fu">c</span>(min,max))</span>
+<span id="cb24-203"><a href="#cb24-203"></a>  )</span>
+<span id="cb24-204"><a href="#cb24-204"></a><span class="in">```</span></span>
+<span id="cb24-205"><a href="#cb24-205"></a></span>
+<span id="cb24-206"><a href="#cb24-206"></a></span>
+<span id="cb24-207"><a href="#cb24-207"></a><span class="fu"># Other languages</span></span>
+<span id="cb24-208"><a href="#cb24-208"></a></span>
+<span id="cb24-209"><a href="#cb24-209"></a><span class="fu">## Generating SQL</span></span>
+<span id="cb24-210"><a href="#cb24-210"></a>Sử dụng R để generate SQL query</span>
+<span id="cb24-213"><a href="#cb24-213"></a><span class="in">```{r}</span></span>
+<span id="cb24-214"><a href="#cb24-214"></a><span class="fu">library</span>(dbplyr)</span>
+<span id="cb24-215"><a href="#cb24-215"></a><span class="fu">library</span>(RSQLite)</span>
+<span id="cb24-216"><a href="#cb24-216"></a>df_mem <span class="ot">&lt;-</span> <span class="fu">memdb_frame</span>(trip_data, <span class="at">.name =</span> <span class="st">"example_table"</span>)</span>
+<span id="cb24-217"><a href="#cb24-217"></a></span>
+<span id="cb24-218"><a href="#cb24-218"></a>df_mem <span class="sc">%&gt;%</span></span>
+<span id="cb24-219"><a href="#cb24-219"></a>  <span class="fu">group_by</span>(CAT_TRAVELER_NATIONALITY) <span class="sc">%&gt;%</span></span>
+<span id="cb24-220"><a href="#cb24-220"></a>  <span class="fu">summarize_at</span>(<span class="fu">vars</span>(<span class="fu">starts_with</span>(<span class="st">"N_"</span>)), mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-221"><a href="#cb24-221"></a>  <span class="fu">show_query</span>()</span>
+<span id="cb24-222"><a href="#cb24-222"></a><span class="in">```</span></span>
+<span id="cb24-223"><a href="#cb24-223"></a><span class="fu">## R - `base` &amp; `data.table`</span></span>
+<span id="cb24-224"><a href="#cb24-224"></a>sử dụng <span class="in">`base::grep`</span> để tìm tất cả các columns bắt đầu bằng <span class="in">`AMT_`</span></span>
+<span id="cb24-227"><a href="#cb24-227"></a><span class="in">```{r}</span></span>
+<span id="cb24-228"><a href="#cb24-228"></a>cols_n <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">"^AMT_"</span>, <span class="fu">names</span>(trip_data), <span class="at">value =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb24-229"><a href="#cb24-229"></a><span class="fu">print</span>(cols_n)</span>
+<span id="cb24-230"><a href="#cb24-230"></a><span class="in">```</span></span>
+<span id="cb24-231"><a href="#cb24-231"></a>sử dụng vector để lưu các cột chúng ta muốn group by:</span>
+<span id="cb24-234"><a href="#cb24-234"></a><span class="in">```{r}</span></span>
+<span id="cb24-235"><a href="#cb24-235"></a>cols_grp <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"CAT_TRAVELER_NATIONALITY"</span>)</span>
+<span id="cb24-236"><a href="#cb24-236"></a><span class="in">```</span></span>
+<span id="cb24-237"><a href="#cb24-237"></a>chúng ta có thể dùng vector này trong <span class="in">`stats::aggregate`</span></span>
+<span id="cb24-240"><a href="#cb24-240"></a><span class="in">```{r}</span></span>
+<span id="cb24-241"><a href="#cb24-241"></a><span class="co">#| eval: false </span></span>
+<span id="cb24-242"><a href="#cb24-242"></a><span class="co">#| echo: false</span></span>
+<span id="cb24-243"><a href="#cb24-243"></a><span class="fu">aggregate</span>(trip_data[cols_n], <span class="at">by =</span> trip_data[cols_grp], <span class="at">FUN =</span> sum)</span>
+<span id="cb24-244"><a href="#cb24-244"></a><span class="in">```</span></span>
+<span id="cb24-245"><a href="#cb24-245"></a>hoặc trong <span class="in">`data.table`</span> </span>
+<span id="cb24-248"><a href="#cb24-248"></a><span class="in">```{r}</span></span>
+<span id="cb24-249"><a href="#cb24-249"></a><span class="co">#| eval: false </span></span>
+<span id="cb24-250"><a href="#cb24-250"></a><span class="co">#| echo: false</span></span>
+<span id="cb24-251"><a href="#cb24-251"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb24-252"><a href="#cb24-252"></a>dt <span class="ot">&lt;-</span> <span class="fu">as.data.table</span>(trip_data)</span>
+<span id="cb24-253"><a href="#cb24-253"></a>dt[, <span class="fu">lapply</span>(.SD, sum), by <span class="ot">=</span> cols_grp, .SDcols <span class="ot">=</span> cols_n]</span>
+<span id="cb24-254"><a href="#cb24-254"></a><span class="in">```</span></span>
+<span id="cb24-255"><a href="#cb24-255"></a><span class="fu">## python `pandas`</span></span>
+<span id="cb24-256"><a href="#cb24-256"></a>tương tự trong python, sử dụng list comprehension:</span>
+<span id="cb24-257"><a href="#cb24-257"></a><span class="in">```{python}</span></span>
+<span id="cb24-258"><a href="#cb24-258"></a></span>
+<span id="cb24-259"><a href="#cb24-259"></a><span class="in">import pandas as pd</span></span>
+<span id="cb24-260"><a href="#cb24-260"></a><span class="in">cols_n   = [vbl for vbl in trip_data.columns if vbl[0:2] == 'AMT_']</span></span>
+<span id="cb24-261"><a href="#cb24-261"></a><span class="in">cols_grp = ["CAT_TRAVELER_NATIONALITY"]</span></span>
+<span id="cb24-262"><a href="#cb24-262"></a><span class="in">trip_data.groupby(cols_grp)[cols_n].sum()</span></span>
+<span id="cb24-263"><a href="#cb24-263"></a><span class="in">```</span></span>
+<span id="cb24-264"><a href="#cb24-264"></a><span class="fu"># Updates by Emily</span></span>
+<span id="cb24-265"><a href="#cb24-265"></a></span>
+<span id="cb24-266"><a href="#cb24-266"></a><span class="fu">## Concept Map</span></span>
+<span id="cb24-269"><a href="#cb24-269"></a><span class="in">```{mermaid}</span></span>
+<span id="cb24-270"><a href="#cb24-270"></a><span class="in">%%{init: {'theme':'dark'}}%%</span></span>
+<span id="cb24-271"><a href="#cb24-271"></a><span class="in">flowchart LR</span></span>
+<span id="cb24-272"><a href="#cb24-272"></a><span class="in">  A(dataframe)-- has --&gt; B(columns)</span></span>
+<span id="cb24-273"><a href="#cb24-273"></a><span class="in">  A(dataframe)-- has --&gt; C(names)</span></span>
+<span id="cb24-274"><a href="#cb24-274"></a><span class="in">  B -- have --&gt; D(data types)</span></span>
+<span id="cb24-275"><a href="#cb24-275"></a><span class="in">  B -- have --&gt; E(units)</span></span>
+<span id="cb24-276"><a href="#cb24-276"></a><span class="in">  B -- have --&gt; F(meaning)</span></span>
+<span id="cb24-277"><a href="#cb24-277"></a><span class="in">  C -- should encode --&gt; D</span></span>
+<span id="cb24-278"><a href="#cb24-278"></a><span class="in">  C -- should encode --&gt; E</span></span>
+<span id="cb24-279"><a href="#cb24-279"></a><span class="in">  C -- should encode --&gt; F</span></span>
+<span id="cb24-280"><a href="#cb24-280"></a><span class="in">  C -- can support --&gt; G(validation)</span></span>
+<span id="cb24-281"><a href="#cb24-281"></a><span class="in">  C -- explained in --&gt; H(documentation)</span></span>
+<span id="cb24-282"><a href="#cb24-282"></a><span class="in">  G -- should check consistency of --&gt; C</span></span>
+<span id="cb24-283"><a href="#cb24-283"></a><span class="in">  G -- should check consistency of --&gt; H</span></span>
+<span id="cb24-284"><a href="#cb24-284"></a><span class="in">  H --&gt; I(data dictionary)</span></span>
+<span id="cb24-285"><a href="#cb24-285"></a><span class="in">  H --&gt; K(ERD)</span></span>
+<span id="cb24-286"><a href="#cb24-286"></a><span class="in">```</span></span>
+<span id="cb24-287"><a href="#cb24-287"></a><span class="fu">## New Package (Dec 2020)</span></span>
+<span id="cb24-288"><a href="#cb24-288"></a><span class="co">[</span><span class="ot">`convo`</span><span class="co">](https://emilyriederer.github.io/convo/articles/quickstart-guide.html)</span> là một thư viện released bởi Emily phục vụ cho việc quản lý controlled vocabulary:</span>
+<span id="cb24-289"><a href="#cb24-289"></a></span>
+<span id="cb24-292"><a href="#cb24-292"></a><span class="in">```{r}</span></span>
+<span id="cb24-293"><a href="#cb24-293"></a><span class="co">#| eval: false </span></span>
+<span id="cb24-294"><a href="#cb24-294"></a><span class="co">#| echo: true</span></span>
+<span id="cb24-295"><a href="#cb24-295"></a><span class="fu">library</span>(convo)</span>
+<span id="cb24-296"><a href="#cb24-296"></a><span class="in">```</span></span>
+<span id="cb24-297"><a href="#cb24-297"></a></span>
+<span id="cb24-298"><a href="#cb24-298"></a><span class="in">```{yaml filename = 'vocab.yaml'}</span></span>
+<span id="cb24-299"><a href="#cb24-299"></a><span class="in">level1:</span></span>
+<span id="cb24-300"><a href="#cb24-300"></a><span class="in">  ID:</span></span>
+<span id="cb24-301"><a href="#cb24-301"></a><span class="in">    desc: Unique identifier</span></span>
+<span id="cb24-302"><a href="#cb24-302"></a><span class="in">    valid:</span></span>
+<span id="cb24-303"><a href="#cb24-303"></a><span class="in">      - col_vals_not_null()</span></span>
+<span id="cb24-304"><a href="#cb24-304"></a><span class="in">      - col_is_numeric()</span></span>
+<span id="cb24-305"><a href="#cb24-305"></a><span class="in">      - col_vals_between(1000, 99999)</span></span>
+<span id="cb24-306"><a href="#cb24-306"></a><span class="in">  IND:</span></span>
+<span id="cb24-307"><a href="#cb24-307"></a><span class="in">    desc: Binary indicator</span></span>
+<span id="cb24-308"><a href="#cb24-308"></a><span class="in">    valid:</span></span>
+<span id="cb24-309"><a href="#cb24-309"></a><span class="in">      - col_is_numeric()</span></span>
+<span id="cb24-310"><a href="#cb24-310"></a><span class="in">      - col_vals_in_set(c(0,1))</span></span>
+<span id="cb24-311"><a href="#cb24-311"></a><span class="in">    rename:</span></span>
+<span id="cb24-312"><a href="#cb24-312"></a><span class="in">      - when: SUM</span></span>
+<span id="cb24-313"><a href="#cb24-313"></a><span class="in">        then: 'N'</span></span>
+<span id="cb24-314"><a href="#cb24-314"></a><span class="in">      - when: AVG</span></span>
+<span id="cb24-315"><a href="#cb24-315"></a><span class="in">        then: P</span></span>
+<span id="cb24-316"><a href="#cb24-316"></a><span class="in">  AMT:</span></span>
+<span id="cb24-317"><a href="#cb24-317"></a><span class="in">    desc: Non-negative, summable quantity</span></span>
+<span id="cb24-318"><a href="#cb24-318"></a><span class="in">    valid:</span></span>
+<span id="cb24-319"><a href="#cb24-319"></a><span class="in">      - col_is_numeric()</span></span>
+<span id="cb24-320"><a href="#cb24-320"></a><span class="in">      - col_vals_gte(0)</span></span>
+<span id="cb24-321"><a href="#cb24-321"></a><span class="in">  VAL:</span></span>
+<span id="cb24-322"><a href="#cb24-322"></a><span class="in">    desc: Value</span></span>
+<span id="cb24-323"><a href="#cb24-323"></a><span class="in">    valid:</span></span>
+<span id="cb24-324"><a href="#cb24-324"></a><span class="in">      - col_is_numeric()</span></span>
+<span id="cb24-325"><a href="#cb24-325"></a><span class="in">    rename:</span></span>
+<span id="cb24-326"><a href="#cb24-326"></a><span class="in">      - when: AVG</span></span>
+<span id="cb24-327"><a href="#cb24-327"></a><span class="in">        then: VALAV</span></span>
+<span id="cb24-328"><a href="#cb24-328"></a><span class="in">```</span></span>
+<span id="cb24-329"><a href="#cb24-329"></a></span>
+<span id="cb24-330"><a href="#cb24-330"></a><span class="fu">## New Package (April 2021)</span></span>
+<span id="cb24-331"><a href="#cb24-331"></a></span>
+<span id="cb24-332"><a href="#cb24-332"></a><span class="co">[</span><span class="ot">`dbtplyr`</span><span class="co">](https://emilyriederer.github.io/dbtplyr/#!/overview)</span> là một package port tính năng "select helpers" của <span class="in">`dplyr`</span> sang <span class="in">`dbt`</span>.</span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
