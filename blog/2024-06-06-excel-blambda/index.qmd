@@ -1,0 +1,161 @@
+---
+title: "TIL: Xử lý mảng dynamic-ragged trong Excel"
+description: "Các mảng"
+author:
+  - name: "Tuan Le Khac"
+    url: https://lktuan.github.io/
+date: 06-06-2024
+modified-date: 06-06-2024
+categories: [excel, lambda, til] 
+image: excel-lambda.jpg
+draft: false
+format: 
+  html: 
+    code-fold: false
+    code-summary: "Show the code"
+    code-line-numbers: true
+css: html/styles.scss
+fig-cap-location: bottom
+editor: visual
+---
+
+# Problem statement
+
+TIL: Hôm nay mình thử giải một [challenge](https://www.linkedin.com/posts/owenhprice_data-analytics-sql-activity-7204129483144986624-R73I) của bác [Owen Price](https://www.linkedin.com/in/owenhprice/). Bác là Microsoft MVP, master ở khía cạnh xử lí, làm sạch, thậm chí là tối ưu việc xử lí đó trong Excel, trang blog của bác là [FLEX YOUR DATA](https://www.flexyourdata.com/), mình học được rất nhiều các sử dụng formulas, đặc biệt là các hàm mới từ `LAMBDA()`, `MAP()`, `REDUCE()` cho đến gần đây là **Python in Excel**, `GROUPBY()`, `PIVOTBY`, và các hàm `REGEX`.
+
+Nội dung challeng là, với **một phần** (1000 records) của bộ dữ liệu [Citi Bike](https://citibikenyc.com/system-data), trong đó chứa hai cột `start_station_name`, `end_station_name`, mỗi cột lại chứa thông tin các "station" ~ trạm, liệt kê 5 **địa chỉ** cùng số lần xuất hiện với số lượng lớn nhất!. Hình dưới là 10 dòng đầu tiên của dữ liệu.
+
+::: {layout-ncol=1}
+![10 dòng đầu tiên của dữ liệu](data.png){width=100%}
+:::
+
+Well lúc đầu mình nghĩ nó cũng đơn giản 😂, thậm chí cũng không hiểu tại sao mỗi start hoặc end station lại có *hai station*, cách nhau bởi ký tự ` & ` (space before & after). Mình lập tức đưa ra lời giải như sau:
+
+``` txt
+=LET(
+    _d, " & ",
+    _all_records, TOCOL(
+        BYROW(
+            BYROW(
+                _tbl_CityBike[[start_station_name]:[end_station_name]],
+                LAMBDA(x, TEXTJOIN(_d, TRUE, x))
+            ),
+        LAMBDA(x, TEXTSPLIT(x, _d))
+        )
+    ),
+    _stations, UNIQUE(_all_records),
+    _cnt, BYROW(
+        --(_stations = TRANSPOSE(_all_records)), 
+        // "--" equals to "+" will convert the boolean TRUE/FALSE to value 1/0
+        LAMBDA(x, SUM(x))
+    ),
+    TAKE(SORTBY(HSTACK(_stations, _cnt), _cnt, -1), 5, )
+)
+```
+
+Kết quả:
+
+::: {layout-ncol=1}
+![Kết quả đầu tiên của mình](my_initial_result.png){width=50%}
+:::
+
+Đối chiếu với các kết quả của những người tham gia khách thì nó sai! Ý tưởng của mình là đầu tiên với mỗi hàng, join chúng lại với ` & ` (`_d`), sau đó lại split chúng ra với cùng `_d` đó, từ đó có được danh sách occurence của tất cả các **địa chỉ**. Tuy nhiên mình nhận ra dữ liệu trả về cho `_all_records` bị thiếu sót. Lý do là các trạm (station) thường là các giao lộ, kết hợp từ hai địa chỉ với dấu ` & `, tuy nhiên có một số trạm lại nằm trên một con đường. Và vì chất lượng dữ liệu, cũng có một số station là `null`. Hàm `TOCOL()` là hàm mảng xử lí cách mảng con nhận được từ `BYROW(...,LAMBDA(...,TEXTSPLIT()))`, các mảng con này có độ dài **không đều**, dẫn đến `TOCOL()` chỉ take record đầu tiên của mỗi mảng con, trả về `_all_records` chỉ gồm *1000 dòng dữ liệu*.
+
+::: {layout-ncol=1}
+![Các điểm dữ liệu đặc biệt](special_data_points.png){width=100%}
+:::
+
+# Solution
+
+Các mảng lởm chởm hay ragged/jagged array là các mảng gồm các mảng con có độ dài không đều nhau. [In computer science, a **jagged array**, also known as a **ragged array**, or **irregular array**, is an array of arrays of which the member arrays can be of different lengths, producing rows of jagged edges when visualized as output. In contrast, two-dimensional arrays are always rectangular, so jagged arrays should not be confused with multidimensional arrays, but the former is often used to emulate the latter. [Wiki](https://en.wikipedia.org/wiki/Jagged_array#:~:text=In%20computer%20science%2C%20a%20jagged,edges%20when%20visualized%20as%20output.)]{.aside}
+
+Một [comment](https://www.linkedin.com/feed/update/urn:li:activity:7204129483144986624?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7204129483144986624%2C7204309739827044353%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287204309739827044353%2Curn%3Ali%3Aactivity%3A7204129483144986624%29) đưa mình tới hàm [`BLAMBDAλ()`](https://gist.github.com/ncalm/0e72b08272ec14f411e8aaa763c0c0b5) của bác MVP [Peter Bartholemew](https://www.linkedin.com/in/peterbartholomew/) và [bài giải thích](https://www.linkedin.com/pulse/excel-lambda-spotlight-bisected-map-bmap%2525CE%2525BB-owen-price/?trackingId=8qiw9B83QGuOUZNX2I7OMg%3D%3D) của Owen Price.
+
+::: {layout-ncol=1}
+![Ragged or Jagged array, photo credit to [Geeks for Geeks](https://www.geeksforgeeks.org/jagged-array-in-java/)](g4g_ragged_array.png){width=80%}
+::: 
+
+Và lời giải đúng, được dựa trên ý tưởng của `BLAMBDAλ()` là:
+
+``` txt
+=LET(
+    B, LAMBDA(B, v,
+        LET(
+            n, ROWS(v),
+            IF(
+                n > 1,
+                VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))),
+                TEXTSPLIT(TEXTJOIN(" & ", , v), , " & ")
+            )
+        )
+    ),
+    str, B(B, CHOOSECOLS(_tbl_CityBike, 4, 5)),
+    _u_str, UNIQUE(str),
+    _cnt, BYROW(--(_u_str = TRANSPOSE(str)), LAMBDA(x, SUM(x))),
+    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)
+)
+
+```
+
+Nếu sử dụng `GROUPBY()` thì việc tính toán cuối cùng sẽ gọn hơn, tuy nhiên vào thời điểm viết bài, hàm này vẫn chưa được MS đưa lên 365 Production mà chỉ ở kênh Insider.
+
+Kết quả cuối cùng:
+
+::: {layout-ncol=1}
+![Kết quả đúng](final_result.png){width=50%}
+:::
+
+# `BLAMBDAλ()`
+
+Nguyên văn mục đích của `BLAMBDAλ()` của Peter:
+
+> Recursively bisects an array and applies a function to the leaf nodes. 
+Useful for when the result of the Fnλ(leaf) calls are not of equal length.
+As such, BMAPλ can produce ragged arrays. 
+
+Owen cũng nhận xét là hàm này "more computationally efficient" so với [`STACKER()`](https://gist.github.com/ncalm/ef7ed953571eec1475c291948aa2dbc3) của ổng. Chi tiết về ý tưởng hàm gốc có thể tham khảo ở các link trên, giờ mình sẽ tìm hiểu `BLAMBDAλ()` được áp dụng cho use case này.
+
+Đầu tiên `B()` (stands for Bisected) là một hàm recursive:
+
+``` txt
+B = LAMBDA(B, v,
+        LET(
+            n, ROWS(v),
+            IF(
+                n > 1,
+                VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))),
+                TEXTSPLIT(TEXTJOIN(" & ", , v), , " & ")
+            )
+        )
+    )
+```
+
+Trong đó:
+
+- `n` là số dòng của `v` ~ mảng cần tính toán
+- nếu `n` > 1, trả về kết hợp `VSTACK()` khi hàm `B()` được áp dụng cho hai nửa của mảng `v`, `TAKE()` sẽ lấy "phân nửa" đầu tiên, `DROP()` sẽ bỏ đi phân nửa đầu tiên ~ nghĩa là lấy phân nửa thứ 2 (lưu ý rằng hai hàm này đều lấy số nguyên nhỏ hơn gần nhất của `n / 2`, do đó không cần lấy phần nguyên bằng `QUOTIENT(n,2)` như hàm gốc của Peter).
+- khi n = 1, nghĩa là với mỗi phần tử của mảng `v`, thực hiện động tác `TEXTSPLIT(TEXTJOIN(...))` ~ trước hết join hai cột rồi sau đó split.
+- hàm này đệ quy và sẽ `VSTACK()` tất cả các mảng dọc sinh từ việc `TEXTSPLIT()` kết quả của `TEXTJOIN()` hai cột trên mỗi dòng của mảng `v`.
+
+Mình cũng thử viết lại hàm `B()`, thay đổi một chút ~ thay vì thực hiện trên 1 mảng 2 cột mình cố gắng chuyển mảng `v` thành một cột, tuy nhiên chưa thành công 😪 **(chưa hiểu tại sao)**:
+
+```txt
+=LET(
+    B, LAMBDA(B, v,
+        LET(
+            n, ROWS(v),
+            IF(n > 1, VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))), TEXTSPLIT(v, " & "))
+        )
+    ),
+    _data, VSTACK(_tbl_CityBike[start_station_name], _tbl_CityBike[end_station_name]),
+    str, B(B, FILTER(_data, LEN(_data) > 0)),
+    _u_str, UNIQUE(str),
+    _cnt, BYROW(--(_u_str = TRANSPOSE(str)), LAMBDA(x, SUM(x))),
+    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)
+)
+```
+
+
+Thanks Peter & Owen for this great use of recursion presented in such a concise manner. 
+
+
