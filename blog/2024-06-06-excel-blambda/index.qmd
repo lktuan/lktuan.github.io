@@ -1,6 +1,6 @@
 ---
-title: "TIL: Xử lý mảng dynamic-ragged trong Excel"
-description: "Các mảng"
+title: "TIL: Xử lý dynamic-ragged array trong Excel"
+description: "Từ khi các hàm mảng như VTACK() xuất hiện, mình thường xuyên sử dụng các patterns như REDUCE/VSTACK để mở rộng khả năng xử lí các phần tử của mảng: thay vì chỉ tính toán với đầu ra là value, nay đã có thể tạo ra các mảng. Tuy nhiên không phải lúc nào cũng có thể làm việc với mảng trong mảng một cáhc đơn giản"
 author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
@@ -21,9 +21,9 @@ editor: visual
 
 # Problem statement
 
-TIL: Hôm nay mình thử giải một [challenge](https://www.linkedin.com/posts/owenhprice_data-analytics-sql-activity-7204129483144986624-R73I) của bác [Owen Price](https://www.linkedin.com/in/owenhprice/). Bác là Microsoft MVP, master ở khía cạnh xử lí, làm sạch, thậm chí là tối ưu việc xử lí đó trong Excel, trang blog của bác là [FLEX YOUR DATA](https://www.flexyourdata.com/), mình học được rất nhiều các sử dụng formulas, đặc biệt là các hàm mới từ `LAMBDA()`, `MAP()`, `REDUCE()` cho đến gần đây là **Python in Excel**, `GROUPBY()`, `PIVOTBY`, và các hàm `REGEX`.
+TIL: Hôm nay mình thử giải một [challenge](https://www.linkedin.com/posts/owenhprice_data-analytics-sql-activity-7204129483144986624-R73I) của bác [Owen Price](https://www.linkedin.com/in/owenhprice/). Bác là Microsoft MVP, master ở khía cạnh xử lí, làm sạch, thậm chí là tối ưu việc xử lí đó trong Excel, trang blog của bác là [FLEX YOUR DATA](https://www.flexyourdata.com/), mình học được rất nhiều cách sử dụng formulas, đặc biệt là các hàm mới từ `LAMBDA()`, `MAP()`, `REDUCE()` cho đến gần đây là **Python in Excel**, `GROUPBY()`, `PIVOTBY`, và các hàm `REGEX_()`.
 
-Nội dung challeng là, với **một phần** (1000 records) của bộ dữ liệu [Citi Bike](https://citibikenyc.com/system-data), trong đó chứa hai cột `start_station_name`, `end_station_name`, mỗi cột lại chứa thông tin các "station" ~ trạm, liệt kê 5 **địa chỉ** cùng số lần xuất hiện với số lượng lớn nhất!. Hình dưới là 10 dòng đầu tiên của dữ liệu.
+Nội dung challenge là, với **một phần** (1000 records) của bộ dữ liệu [Citi Bike](https://citibikenyc.com/system-data), trong đó chứa hai cột `start_station_name`, `end_station_name`, mỗi cột lại chứa thông tin các "station" ~ trạm, liệt kê 5 **địa chỉ** cùng số lần xuất hiện với số lượng lớn nhất!. Hình dưới là 10 dòng đầu tiên của dữ liệu.
 
 ::: {layout-ncol=1}
 ![10 dòng đầu tiên của dữ liệu](data.png){width=100%}
@@ -67,9 +67,9 @@ Kết quả:
 
 # Solution
 
-Các mảng lởm chởm hay ragged/jagged array là các mảng gồm các mảng con có độ dài không đều nhau. [In computer science, a **jagged array**, also known as a **ragged array**, or **irregular array**, is an array of arrays of which the member arrays can be of different lengths, producing rows of jagged edges when visualized as output. In contrast, two-dimensional arrays are always rectangular, so jagged arrays should not be confused with multidimensional arrays, but the former is often used to emulate the latter. [Wiki](https://en.wikipedia.org/wiki/Jagged_array#:~:text=In%20computer%20science%2C%20a%20jagged,edges%20when%20visualized%20as%20output.)]{.aside}
+Các mảng lởm chởm hay ragged/jagged array là các mảng gồm các mảng con có độ dài không đều nhau. [In computer science, a **jagged array**, also known as a **ragged array**, or **irregular array**, is an array of arrays of which the member arrays can be of different lengths, producing rows of jagged edges when visualized as output. In contrast, two-dimensional arrays are always rectangular, so jagged arrays should not be confused with multidimensional arrays, but the former is often used to emulate the latter. [Wiki](https://en.wikipedia.org/wiki/Jagged_array#:~:text=In%20computer%20science%2C%20a%20jagged,edges%20when%20visualized%20as%20output.)]{.aside} Excel **không thể** merge các bảng có kích cỡ không bằng nhau.
 
-Một [comment](https://www.linkedin.com/feed/update/urn:li:activity:7204129483144986624?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7204129483144986624%2C7204309739827044353%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287204309739827044353%2Curn%3Ali%3Aactivity%3A7204129483144986624%29) đưa mình tới hàm [`BLAMBDAλ()`](https://gist.github.com/ncalm/0e72b08272ec14f411e8aaa763c0c0b5) của bác MVP [Peter Bartholemew](https://www.linkedin.com/in/peterbartholomew/) và [bài giải thích](https://www.linkedin.com/pulse/excel-lambda-spotlight-bisected-map-bmap%2525CE%2525BB-owen-price/?trackingId=8qiw9B83QGuOUZNX2I7OMg%3D%3D) của Owen Price.
+Một [comment](https://www.linkedin.com/feed/update/urn:li:activity:7204129483144986624?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7204129483144986624%2C7204309739827044353%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287204309739827044353%2Curn%3Ali%3Aactivity%3A7204129483144986624%29) đưa mình tới hàm [`BLAMBDAλ()`](https://gist.github.com/ncalm/0e72b08272ec14f411e8aaa763c0c0b5) của bác MVP [Peter Bartholemew](https://www.linkedin.com/in/peterbartholomew/) và [bài giải thích](https://www.linkedin.com/pulse/excel-lambda-spotlight-bisected-map-bmap%2525CE%2525BB-owen-price/) của Owen Price.
 
 ::: {layout-ncol=1}
 ![Ragged or Jagged array, photo credit to [Geeks for Geeks](https://www.geeksforgeeks.org/jagged-array-in-java/)](g4g_ragged_array.png){width=80%}
@@ -154,7 +154,19 @@ Mình cũng thử viết lại hàm `B()`, thay đổi một chút ~ thay vì th
     TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)
 )
 ```
+## 🚀 Edit: sau khi mày mò thêm sửa lỗi cho giải pháp trên mình back to basic với lời giải sau:
 
+```txt
+=LET(
+    _data, TOCOL(_tbl_CityBike[[start_station_name]:[end_station_name]], 3),
+    _str, DROP(REDUCE("", _data, LAMBDA(a, x, VSTACK(a, TEXTSPLIT(x, , " & ")))), 1),
+    _u_str, UNIQUE(_str),
+    _cnt, BYROW(--(_u_str = TRANSPOSE(_str)), LAMBDA(x, SUM(x))),
+    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)
+)
+```
+
+Tất nhiên tốc độ xử lí sẽ chậm hơn `BLAMBDAλ()` - O_log(n), giải pháp này duyệt qua từng phần tử, nên BigO là O(n)
 
 Thanks Peter & Owen for this great use of recursion presented in such a concise manner. 
 
