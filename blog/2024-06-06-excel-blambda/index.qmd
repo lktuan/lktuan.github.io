@@ -1,11 +1,11 @@
 ---
 title: "TIL: Xử lý dynamic-ragged array trong Excel"
-description: "Từ khi các hàm mảng như VTACK() xuất hiện, mình thường xuyên sử dụng các patterns như REDUCE/VSTACK để mở rộng khả năng xử lí các phần tử của mảng: thay vì chỉ tính toán với đầu ra là value, nay đã có thể tạo ra các mảng. Tuy nhiên không phải lúc nào cũng có thể làm việc với mảng trong mảng một cáhc đơn giản"
+description: "Từ khi các hàm mảng như VTACK() xuất hiện, mình thường xuyên sử dụng các patterns như REDUCE/VSTACK để mở rộng khả năng xử lí các phần tử của mảng: thay vì chỉ tính toán với đầu ra là aggregate value, nay đã có thể tạo ra các mảng con. Tuy nhiên không phải lúc nào cũng có thể làm việc với mảng trong mảng một cách đơn giản"
 author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
 date: 06-06-2024
-modified-date: 06-06-2024
+modified-date: 06-07-2024
 categories: [excel, lambda, til] 
 image: excel-lambda.jpg
 draft: false
@@ -59,7 +59,7 @@ Kết quả:
 ![Kết quả đầu tiên của mình](my_initial_result.png){width=50%}
 :::
 
-Đối chiếu với các kết quả của những người tham gia khách thì nó sai! Ý tưởng của mình là đầu tiên với mỗi hàng, join chúng lại với ` & ` (`_d`), sau đó lại split chúng ra với cùng `_d` đó, từ đó có được danh sách occurence của tất cả các **địa chỉ**. Tuy nhiên mình nhận ra dữ liệu trả về cho `_all_records` bị thiếu sót. Lý do là các trạm (station) thường là các giao lộ, kết hợp từ hai địa chỉ với dấu ` & `, tuy nhiên có một số trạm lại nằm trên một con đường. Và vì chất lượng dữ liệu, cũng có một số station là `null`. Hàm `TOCOL()` là hàm mảng xử lí cách mảng con nhận được từ `BYROW(...,LAMBDA(...,TEXTSPLIT()))`, các mảng con này có độ dài **không đều**, dẫn đến `TOCOL()` chỉ take record đầu tiên của mỗi mảng con, trả về `_all_records` chỉ gồm *1000 dòng dữ liệu*.
+Đối chiếu với các kết quả của những người tham gia khách thì nó sai! Ý tưởng của mình là đầu tiên với mỗi hàng, join chúng lại với ` & ` (`_d`), sau đó lại split chúng ra với cùng `_d` đó, từ đó có được danh sách occurence của tất cả các **địa chỉ**. Tuy nhiên mình nhận ra dữ liệu trả về cho `_all_records` bị thiếu sót. Lý do là các trạm (station) thường là các giao lộ, kết hợp từ hai địa chỉ với dấu ` & `, tuy nhiên có một số trạm lại nằm trên một con đường. Và vì chất lượng dữ liệu, cũng có một số station là `null`. Hàm `TOCOL()` là hàm mảng xử lí các mảng con nhận được từ `BYROW(...,LAMBDA(...,TEXTSPLIT()))`, các mảng con này có độ dài **không đều**, dẫn đến `TOCOL()` chỉ take record đầu tiên của mỗi mảng con, trả về `_all_records` chỉ gồm *1000 dòng dữ liệu*.
 
 ::: {layout-ncol=1}
 ![Các điểm dữ liệu đặc biệt](special_data_points.png){width=100%}
