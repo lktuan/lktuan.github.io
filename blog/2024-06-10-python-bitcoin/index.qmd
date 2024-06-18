@@ -1,13 +1,13 @@
 ---
 title: "Bitcoin tour in Python"
-description: "Nhân dịp thánh Andrej Karpathy ra ~~MV~~ [tutorial mới](https://www.youtube.com/watch?v=l8pRSuU81PU&t=9160s) về build GPT-2 from scratch, tôi lại ghé thăm trang web cá nhân của anh ấy."
+description: "Nhân việc thánh Andrej Karpathy ra ~~MV~~ [tutorial mới](https://www.youtube.com/watch?v=l8pRSuU81PU&t=9160s) về build GPT-2 from scratch, tôi lại ghé thăm trang web cá nhân của anh ấy."
 author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
-date: 05-10-2024
-modified-date: 06-10-2024
+date: 06-10-2024
+date-modified: 06-10-2024
 categories: [crypto, bitcoin, python, andrej karpathy] 
-image: ""
+image: python_bitcoin.png
 draft: false
 css: html/styles.scss
 fig-cap-location: bottom
@@ -27,19 +27,67 @@ A from-scratch implementation of Bitcoin in Python under tuturial from Andrej Ka
 
 , cách tốt nhất để học nó là thực hiện nó. Tôi cũng cho là thế!
 
+::: {layout-ncol=1}
+![Andrej Karpathy trong podcast với Lex Fridman](karpathy-podcast.jpg){width=100%}
+:::
+
 Phạm vi bài thực hành này là **tạo, ký số, phát hành các giao dịch Bitcoin thuần Python, từ con số 0, không thư viện phụ thuộc**.
+
+Đây là môi trường Python của mình:
+```{python}
+#| code-fold: true
+import sys
+print(sys.version)
+```
 
 # Step 1: generating a crypto identity
 
 Đầu tiên cần tạo ra Danh tính (identity) - một cặp private key / public key. Bitcoin sử dụng Hệ mật trên đường cong Elliptic (ECC) để bảo mật giao dịch [Xem thêm: 1. [Viblo](https://viblo.asia/p/gioi-thieu-ve-he-mat-tren-duong-cong-elliptic-ecc-XL6lA2PR5ek), 2. [Wiki](https://en.wikipedia.org/wiki/Elliptic-curve_cryptography), quá khó cho tôi tại thời điểm bây giờ - nên tôi sẽ tạm bỏ qua, dù gì cũng cần phác thảo một khung tranh "mờ mờ" trước, việc vẽ chi tiết để sau.]{.aside}.
 
-Đây là tài liệu mà Andrej gợi ý cho chúng ta đọc về ECC: [blog post](https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/) của Andrea Corbellini.
+Đường cong $E: y^2 = x^3 + ax + b \:(mod\:p)$ trên trường hữu hạn $Z_p$ (cũng có người gọi là $Z/p$,$GF_(p)$,hoặc $F_p$, với p là số nguyên tố) được xác định bởi 6 tham số $T = (p,a,b,G,n,h)$ sau:
 
-Bitcoin (hay Ethereum) sử dụng một đường cong theo tiêu chuẩn [secp256k1](https://en.bitcoin.it/wiki/Secp256k1) do *Viện Tiêu Chuẩn và Kỹ Thuật Quốc Gia Mỹ (NIST)* đặt ra.
+- $p = FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE FFFFFC2F$
+
+    $= 2^{256} - 2^{32} - 2^9 - 2^8 - 2^7 - 2^6 - 2^4 - 1$
+
+    $= 2^{256} - 2^{32} - 977$
+
+-  $a = 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000$
+-  $b = 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000007$
+
+Vì được xác định trên $Z_p$, nên trên thực tế nó là một đường không liên lục, và trông sẽ như các điểm ngẫu nhiên trên một biểu đồ phân tán. Khi xác định trên trường số thực, EC sẽ trông như thế này:
+
+::: {layout-ncol=1}
+![[What does the curve used in Bitcoin, secp256k1, look like?](https://bitcoin.stackexchange.com/questions/21907/what-does-the-curve-used-in-bitcoin-secp256k1-look-like)](what_does_ec_look_like.png){width=100%}
+:::
+
+Đây là tài liệu mà Andrej gợi ý cho chúng ta đọc về ECC: [blog post](https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/) của Andrea Corbellini. Bài viết đầu tiên của ông giới thiệu EC trên **trường số thực và luật nhóm**. Theo đó, với EC được xác định bằng $\{(x,y)\in R^2 | y^2 = x^3 + ax + b, 4a^3 + 27b^2 \neq 0\} \cup \{0\}$ ($4a^3 + 27b^2 \neq 0$ là để tránh điểm kỳ dị singular), cùng với các tiên đề về phép toán cộng ($+$) được trang bị gồm:
+
+1. Tính đóng (closure): nếu $a$ và $b$ thuộc $G$, thì $a+b$ cũng thuộc $G$;
+2. Tính kết hợp (associativity): $(a+b)+c = a + (b+c)$;
+3. Sự tồn tại của phần tử đơn vị (identity element 0): $a+0=0+a=a$;
+4. Tính khả nghịch (commutativity): với mọi $a$, tồn tại $b$ sao cho $a+b=0$;
+
+Nếu chúng ta có thêm tính chất thứ 5 sau:
+
+5. Tính giao hoán (commutativity): $a+b = b+a$.
+
+Thì nhóm đó được xem là một nhóm Abel. (Tập hợp các số nguyên $Z$ là một nhóm - Abel, còn tập hợp các số nguyên $N$ thì không phải như vậy).
+
+Tập hợp các điểm trên EC là một nhóm Abel, do đó nó cũng có tính chất trên: có sự tồn tại của **phần tử đơn vị** 0 (cũng là vô hạn); phần tử **nghịch đảo** của $P$, ký hiệu $-P$, là điểm đối xứng của P qua trục hoành; **phép cộng** được định nghĩa như sau: với ba điểm $P$, $Q$, $R$ khác 0 và thẳng hàng trên EC, thì $P + Q + R = 0$, bất kể thứ tự của các điểm - ta thấy nó thỏa mãn các tính chất kết hợp và giao hoán của một nhóm Abel!.
+
+**Phép cộng hình học và đại số** và **phép nhân vô hướng** sẽ được trình bày ở phía sau - trực tiếp trong không gian hữu hạn. Hiện tại ình chỉ cố gắng **hình dung** các tính chất của EC thông qua việc xem xét nó trên **trường số thực**.
+
+Block code dưới đây định nghĩa đường cong EC. Bitcoin (hay Ethereum) sử dụng một đường cong theo tiêu chuẩn [secp256k1](https://en.bitcoin.it/wiki/Secp256k1) do *Viện Tiêu Chuẩn và Kỹ Thuật Quốc Gia Mỹ (NIST)* đặt ra. Với $a=0$, $b=7$, định nghĩa đường cong trên trường $Z_p$ giờ sẽ là:
+
+$\{(x,y)\in (Z_p)^2 |\: y^2 \equiv x^3 + 7 \: (mod \: p)\} \cup \{0\}$
 
 ```{python}
-from __future__ import annotations # PEP 563
-from dataclasses import dataclass
+# from __future__ import annotations # PEP 563: Postponed evaluation of annotations
+# since my python version is 3.11.4 so no need to use future annotation feature 
+# which redefined since python 3.5
+from dataclasses import dataclass # replace constructor __init__, 
+# help us to easily declare class attributes.
 
 @dataclass
 class Curve:
@@ -47,7 +95,8 @@ class Curve:
     Elliptic Curve over the field of integers modulo a prime.
     Points on the curve satisfy y^2 = x^3 + a*x + b (mod p).
 
-    Z_p là một TẬP HỢP, khi p là số nguyên tố thì có thể coi nó là một TRƯỜNG https://forum.mathscope.org/archive/index.php/t-11835.html
+    Z_p là một TẬP HỢP, khi p là số nguyên tố thì có thể coi nó là một TRƯỜNG 
+    https://forum.mathscope.org/archive/index.php/t-11835.html
     """
     p: int # ta nói secp256k1 có đặc trưng p, được định trong trường Z_p
     a: int
@@ -61,7 +110,7 @@ bitcoin_curve = Curve(
 )
 ```
 
-
+Chúng ta chưa thấy phương trình của EC được thể hiện trong class `Curve`, chúng ta implement nó bằng cách tạo một class `Point`.
 Sau khi xác định curve, ta xác định generator (là một điểm dùng để khởi tạo quá trình "walk" trên đường cong)
 
 ```{python}
