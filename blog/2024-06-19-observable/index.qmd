@@ -1,0 +1,151 @@
+---
+title: "Observable Framework try-out"
+description: "My first Observable Framework project"
+author:
+  - name: "Tuan Le Khac"
+    url: https://lktuan.github.io/
+categories: [Dashboard, Observable] 
+date: 06-19-2024
+date-modified: 06-19-2024
+image: ""
+code-tools: true
+code-fold: show
+code-annotations: hover
+draft: false
+css: html/styles.scss
+fig-cap-location: bottom
+editor: visual
+
+format:
+  html:
+    code-overflow: wrap
+---
+
+I've heard that Quarto supported Observable natively since version 1.4 (?), thus decided to give it a try. Could not agree more with their slogan:
+
+> The best dashboards are built with `code`.
+
+This is my [repo](https://github.com/lktuan/first-observable-project) for the practice.
+
+# Inititate a new Project
+
+The prerequisite is we must have [`npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) installed on our machine. Running `npm -v`, I know that I have version `10.5.0` installed.
+
+We first create a folder and navigate to it:
+
+``` bash
+#| eval: false
+#| echo: true
+mkdir first-observable-project
+cd first-observable-project
+```
+
+Then simply run this command to initiate the project:
+
+``` bash
+#| eval: false
+#| echo: true
+npm init "@observablehq"
+```
+
+We gotta fill some basic params:
+
+``` bash
+#| eval: false
+#| echo: true
+┌   observable create  v1.5.1
+│
+◇  Where to create your project?
+│  hi-observable
+│
+◇  What to title your project?
+│  Hi Observable
+│
+◇  Include sample files to help you get started?
+│  Yes, include sample files
+│
+◇  Install dependencies?
+│  Yes, via npm
+│
+◇  Initialize git repository?
+│  No
+│
+◇  Installed! 🎉
+│
+◇  Next steps… ──────╮
+│                    │
+│  cd hi-observable  │
+│  npm run dev       │
+│                    │
+├────────────────────╯
+│
+└  Problems? https://observablehq.com/framework/getting-started
+```
+
+We can now easilly preview the app with `npm run dev`, and access out dashboard via `http://127.0.0.1:3000/`. Let's play a little bit, we can modify the `h1` tags in `docs\index.md`, then the dashboard will be updated once we save the file, instantly. Cool!
+
+::: {layout-ncol="1"}
+![Home page layout](ojs_fig_1.png){width="100%"}
+:::
+
+# Write first Data Loader
+
+In Observable project we can write Data Loader in JavaScript, Python, R or any other languages. Data Loader helps you to (1) minimize file sizes and (2) reduce client side processing.
+
+A data loader file has the name like: `dataloader.data_extension.engine_extension`. For example, with the American weather forecast API we can have 2 kinds of Data Loader as below:
+
+**Javascript 🟨**:
+
+``` {.julia filename="forecast.json.js"}
+const longitude = -122.47;
+const latitude = 37.8;
+
+async function json(url) {
+  const response = await fetch(url, {headers: {"User-Agent": "(observablehq.com, support@observablehq.com)"}});
+  if (!response.ok) throw new Error(`fetch failed: ${response.status}`);
+  return await response.json();
+}
+
+const station = await json(`https://api.weather.gov/points/${latitude},${longitude}`);
+const forecast = await json(station.properties.forecastHourly);
+
+process.stdout.write(JSON.stringify(forecast));
+```
+
+**Python 🐍**:
+
+``` {.python filename="forecast.json.py"}
+import json
+import requests
+import sys
+
+longitude = -122.47
+latitude = 37.80
+
+station = requests.get(f"https://api.weather.gov/points/{latitude},{longitude}").json()
+forecast = requests.get(station["properties"]["forecastHourly"]).json()
+
+json.dump(forecast, sys.stdout)
+```
+
+Run the data loader, testing if it work:
+
+``` bash
+#| eval: false
+#| echo: true
+node hi-observable\docs\data\forecast.json.js
+
+# or
+
+python hi-observable\docs\data\forecast.json.py
+```
+
+Now if we refresh the dashboard page, the weather forecasting tab should be there. My first run was failed as I miss a comma in JS file 😂. If we change the data loader, the dashboard will change concurrently.
+
+# SQL in Observable Framework
+
+# Grids, Cards, and Themes
+
+# Deployment a Project
+
+# Imports: from npm, local files, remote URLs, and lazy loading
