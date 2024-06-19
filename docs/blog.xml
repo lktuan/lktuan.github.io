@@ -10,7 +10,365 @@
 <atom:link href="https://lktuan.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>I am a Risk Modeler 🚀</description>
 <generator>quarto-1.4.554</generator>
-<lastBuildDate>Sat, 15 Jun 2024 17:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 18 Jun 2024 17:00:00 GMT</lastBuildDate>
+<item>
+  <title>Observable Framework try-out</title>
+  <dc:creator>Tuan Le Khac</dc:creator>
+  <link>https://lktuan.github.io/blog/2024-06-19-observable/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>I’ve heard that Quarto supported Observable natively since version 1.4 (?), thus decided to give it a try. Could not agree more with their slogan:</p>
+<blockquote class="blockquote">
+<p>The best dashboards are built with <code>code</code>.</p>
+</blockquote>
+<p>This is my <a href="https://github.com/lktuan/first-observable-project">repo</a> for the practice.</p>
+<section id="inititate-a-new-project" class="level1">
+<h1>Inititate a new Project</h1>
+<p>The prerequisite is we must have <a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm"><code>npm</code></a> installed on our machine. Running <code>npm -v</code>, I know that I have version <code>10.5.0</code> installed.</p>
+<p>We first create a folder and navigate to it:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| eval: false</span></span>
+<span id="cb1-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| echo: true</span></span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mkdir</span> first-observable-project</span>
+<span id="cb1-4"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cd</span> first-observable-project</span></code></pre></div>
+<p>Then simply run this command to initiate the project:</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| eval: false</span></span>
+<span id="cb2-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| echo: true</span></span>
+<span id="cb2-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">npm</span> init <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"@observablehq"</span></span></code></pre></div>
+<p>We gotta fill some basic params:</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| eval: false</span></span>
+<span id="cb3-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| echo: true</span></span>
+<span id="cb3-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">┌</span>   observable create  v1.5.1</span>
+<span id="cb3-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span></span>
+<span id="cb3-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">◇</span>  Where to create your project<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">?</span></span>
+<span id="cb3-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span>  hi-observable</span>
+<span id="cb3-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span></span>
+<span id="cb3-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">◇</span>  What to title your project<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">?</span></span>
+<span id="cb3-9"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span>  Hi Observable</span>
+<span id="cb3-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span></span>
+<span id="cb3-11"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">◇</span>  Include sample files to help you get started<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">?</span></span>
+<span id="cb3-12"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span>  Yes, include sample files</span>
+<span id="cb3-13"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span></span>
+<span id="cb3-14"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">◇</span>  Install dependencies<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">?</span></span>
+<span id="cb3-15"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span>  Yes, via npm</span>
+<span id="cb3-16"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span></span>
+<span id="cb3-17"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">◇</span>  Initialize git repository<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">?</span></span>
+<span id="cb3-18"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span>  No</span>
+<span id="cb3-19"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span></span>
+<span id="cb3-20"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">◇</span>  Installed! 🎉</span>
+<span id="cb3-21"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span></span>
+<span id="cb3-22"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">◇</span>  Next steps… ──────╮</span>
+<span id="cb3-23"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span>                    │</span>
+<span id="cb3-24"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span>  cd hi-observable  │</span>
+<span id="cb3-25"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span>  npm run dev       │</span>
+<span id="cb3-26"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span>                    │</span>
+<span id="cb3-27"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">├────────────────────╯</span></span>
+<span id="cb3-28"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span></span>
+<span id="cb3-29"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">└</span>  Problems<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">?</span> https://observablehq.com/framework/getting-started</span></code></pre></div>
+<p>We can now easilly preview the app with <code>npm run dev</code>, and access out dashboard via <code>http://127.0.0.1:3000/</code>. Let’s play a little bit, we can modify the <code>h1</code> tags in <code>docs\index.md</code>, then the dashboard will be updated once we save the file, instantly. Cool!</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-06-19-observable/ojs_fig_1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Home page layout</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="write-first-data-loader" class="level1">
+<h1>Write first Data Loader</h1>
+<p>In Observable project we can write Data Loader in JavaScript, Python, R or any other languages. Data Loader helps you to (1) minimize file sizes and (2) reduce client side processing.</p>
+<p>A data loader file has the name like: <code>dataloader.data_extension.engine_extension</code>. For example, with the American weather forecast API we can have 2 kinds of Data Loader as below:</p>
+<p><strong>Javascript 🟨</strong>:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>forecast.json.js</strong></pre>
+</div>
+<div class="sourceCode" id="cb4" data-filename="forecast.json.js" style="background: #f1f3f5;"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">const</span> longitude <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">122.47</span>;</span>
+<span id="cb4-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">const</span> latitude <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">37.8</span>;</span>
+<span id="cb4-3"></span>
+<span id="cb4-4">async <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">json</span>(url) {</span>
+<span id="cb4-5">  <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">const</span> response <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> await <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fetch</span>(url, {headers<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span> {<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"User-Agent"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"(observablehq.com, support@observablehq.com)"</span>}});</span>
+<span id="cb4-6">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> (!response.ok) throw <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">new</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">Error</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`fetch failed: ${response.status}`</span>);</span>
+<span id="cb4-7">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> await response.<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">json</span>();</span>
+<span id="cb4-8">}</span>
+<span id="cb4-9"></span>
+<span id="cb4-10"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">const</span> station <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> await <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">json</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`https://api.weather.gov/points/${latitude},${longitude}`</span>);</span>
+<span id="cb4-11"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">const</span> forecast <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> await <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">json</span>(station.properties.forecastHourly);</span>
+<span id="cb4-12"></span>
+<span id="cb4-13">process.<span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">stdout</span>.<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">write</span>(JSON.<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">stringify</span>(forecast));</span></code></pre></div>
+</div>
+<p><strong>Python 🐍</strong>:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>forecast.json.py</strong></pre>
+</div>
+<div class="sourceCode" id="cb5" data-filename="forecast.json.py" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> json</span>
+<span id="cb5-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> requests</span>
+<span id="cb5-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> sys</span>
+<span id="cb5-4"></span>
+<span id="cb5-5">longitude <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">122.47</span></span>
+<span id="cb5-6">latitude <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">37.80</span></span>
+<span id="cb5-7"></span>
+<span id="cb5-8">station <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> requests.get(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"https://api.weather.gov/points/</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>latitude<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">,</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>longitude<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>).json()</span>
+<span id="cb5-9">forecast <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> requests.get(station[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"properties"</span>][<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"forecastHourly"</span>]).json()</span>
+<span id="cb5-10"></span>
+<span id="cb5-11">json.dump(forecast, sys.stdout)</span></code></pre></div>
+</div>
+<p>Run the data loader, testing if it work:</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| eval: false</span></span>
+<span id="cb6-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| echo: true</span></span>
+<span id="cb6-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">node</span> hi-observable<span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\d</span>ocs<span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\d</span>ata<span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\f</span>orecast.json.js</span>
+<span id="cb6-4"></span>
+<span id="cb6-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># or</span></span>
+<span id="cb6-6"></span>
+<span id="cb6-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">python</span> hi-observable<span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\d</span>ocs<span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\d</span>ata<span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\f</span>orecast.json.py</span></code></pre></div>
+<p>Now if we refresh the dashboard page, the weather forecasting tab should be there. My first run was failed as I miss a comma in JS file 😂. If we change the data loader, the dashboard will change concurrently.</p>
+</section>
+<section id="sql-in-observable-framework" class="level1">
+<h1>SQL in Observable Framework</h1>
+</section>
+<section id="grids-cards-and-themes" class="level1">
+<h1>Grids, Cards, and Themes</h1>
+</section>
+<section id="deployment-a-project" class="level1">
+<h1>Deployment a Project</h1>
+</section>
+<section id="imports-from-npm-local-files-remote-urls-and-lazy-loading" class="level1">
+<h1>Imports: from npm, local files, remote URLs, and lazy loading</h1>
+
+
+<!-- -->
+
+</section>
+
+ ]]></description>
+  <category>Dashboard</category>
+  <category>Observable</category>
+  <guid>https://lktuan.github.io/blog/2024-06-19-observable/</guid>
+  <pubDate>Tue, 18 Jun 2024 17:00:00 GMT</pubDate>
+  <media:content url="https://lktuan.github.io/blog/2024-06-19-observable" medium="image"/>
+</item>
 <item>
   <title>NN-Z2H Lesson 1: The spelled-out intro to neural networks and backpropagation - building micrograd</title>
   <dc:creator>Tuan Le Khac</dc:creator>
