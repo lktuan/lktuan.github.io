@@ -5,8 +5,8 @@ author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
 date: 06-10-2024
-date-modified: 06-10-2024
-categories: [crypto, bitcoin, python, andrej karpathy] 
+date-modified: 06-20-2024
+categories: [til, crypto, bitcoin, python, andrej karpathy] 
 image: python_bitcoin.png
 draft: false
 css: html/styles.scss
@@ -21,7 +21,7 @@ A from-scratch implementation of Bitcoin in Python under tuturial from Andrej Ka
 
 Đây là bài thực hành implement Bitcoin sử dụng Python mà tôi học được trên trang blog của Andrej Karpathy, nhà Khoa học máy tính, cựu Director mảng AI của Open AI.
 
-[Andrej Karpathy](https://karpathy.ai/) cho rằng blockchain đang giúp nới rộng trạng thái của ngành công nghiệp phát triển phần mềm, từ open source thành open source plus. Nghĩa là chúng ta đang không chỉ chia sẻ, công khai mã nguồn, mà còn cả tài nguyên. Và với tinh thần:
+[Andrej Karpathy](https://karpathy.ai/) cho rằng blockchain đang giúp nới rộng trạng thái của ngành công nghiệp phát triển phần mềm, từ open source thành open source plus. Nghĩa là chúng ta đang không chỉ chia sẻ, công khai mã nguồn, mà còn cả tài nguyên (run time, computing machine). Và với tinh thần:
 
 > "what I cannot create I do not understand"
 
@@ -42,7 +42,11 @@ print(sys.version)
 
 # Step 1: generating a crypto identity
 
-Đầu tiên cần tạo ra Danh tính (identity) - một cặp private key / public key. Bitcoin sử dụng Hệ mật trên đường cong Elliptic (ECC) để bảo mật giao dịch [Xem thêm: 1. [Viblo](https://viblo.asia/p/gioi-thieu-ve-he-mat-tren-duong-cong-elliptic-ecc-XL6lA2PR5ek), 2. [Wiki](https://en.wikipedia.org/wiki/Elliptic-curve_cryptography), quá khó cho tôi tại thời điểm bây giờ - nên tôi sẽ tạm bỏ qua, dù gì cũng cần phác thảo một khung tranh "mờ mờ" trước, việc vẽ chi tiết để sau.]{.aside}.
+Một trong những đặc tính quan trọng nhất của Bitcoin nói riêng và Blockchain (chuỗi khối) nói chung là tính bảo mật. Blockchain sử dụng các phương thức bảo mật như: **ECC**, **ECDH** hoặc **ECDSA**, trong đó `EC` chính là viết tắt của Elliptic Curve. Không chỉ trong lĩnh vực blockchain, `EC` còn được sử dụng rộng rãi trong bảo mật [`TLS`](https://datatracker.ietf.org/doc/html/rfc4492), [`PGP`](https://datatracker.ietf.org/doc/html/rfc6637), [`SSH`](https://datatracker.ietf.org/doc/html/rfc5656). 
+
+Khác với các bảo mật **đối xứng** thông thường, ta có một key duy nhất để mã hóa và giải mã ~ có key là có tất cả, không có key là không có gì, các thuật toán mã hóa EC là **Bất đối xứng**. Trong đó, ta có một cặp `private key`/`public key` (khóa bí mật và khóa công khai). Khóa bí mật chỉ là một con số ngẫu nhiên, cần được chủ nhân của nó **giữ bí mật hoàn toàn**, ví nó là thứ duy nhất tạo ra được **chữ kí** cho họ. Khác với khóa bí mật, khóa công khai được công khai cho tất cả mọi người. `public key` được tạo ra bởi **phép nhân** với `private key` trong **đường cong Elliptic**. Phép nhân đường cong Elliptic là một phép toán **trap door** (cửa lật), có nghĩa là nó dễ tính theo **một chiều** (phép nhân) và không thể tính được theo chiều ngược lại (phép chia) ~ đó là lý do ta gọi nó là mã hóa bất đối xứng.
+
+Bitcoin sử dụng Hệ mật trên đường cong Elliptic (ECC) để bảo mật giao dịch [Xem thêm: 1. [Viblo](https://viblo.asia/p/gioi-thieu-ve-he-mat-tren-duong-cong-elliptic-ecc-XL6lA2PR5ek), 2. [Wiki](https://en.wikipedia.org/wiki/Elliptic-curve_cryptography), 3. [Wolfram](https://mathworld.wolfram.com/EllipticCurve.html), quá khó cho tôi tại thời điểm bây giờ - nên tôi sẽ tạm bỏ qua, dù gì cũng cần phác thảo một khung tranh "mờ mờ" trước, việc vẽ chi tiết để sau.]{.aside}.
 
 Đường cong $E: y^2 = x^3 + ax + b \:(mod\:p)$ trên trường hữu hạn $Z_p$ (cũng có người gọi là $Z/p$,$GF_(p)$,hoặc $F_p$, với p là số nguyên tố) được xác định bởi 6 tham số $T = (p,a,b,G,n,h)$ sau:
 
@@ -55,7 +59,7 @@ print(sys.version)
 -  $a = 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000$
 -  $b = 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000007$
 
-Vì được xác định trên $Z_p$, nên trên thực tế nó là một đường không liên lục, và trông sẽ như các điểm ngẫu nhiên trên một biểu đồ phân tán. Khi xác định trên trường số thực, EC sẽ trông như thế này:
+Vì được xác định trên $Z_p$, nên trên thực tế nó là một đường không liên lục, và trông sẽ như các điểm ngẫu nhiên trên một biểu đồ phân tán. Để dễ tưởng tượng và min họa, khi xác định trên trường số thực, EC sẽ trông như thế này:
 
 ::: {layout-ncol=1}
 ![[What does the curve used in Bitcoin, secp256k1, look like?](https://bitcoin.stackexchange.com/questions/21907/what-does-the-curve-used-in-bitcoin-secp256k1-look-like)](what_does_ec_look_like.png){width=100%}
@@ -72,7 +76,7 @@ Nếu chúng ta có thêm tính chất thứ 5 sau:
 
 5. Tính giao hoán (commutativity): $a+b = b+a$.
 
-Thì nhóm đó được xem là một nhóm Abel. (Tập hợp các số nguyên $Z$ là một nhóm - Abel, còn tập hợp các số nguyên $N$ thì không phải như vậy).
+Thì nhóm đó được xem là một nhóm Abel (Ví dụ: tập hợp các số nguyên $Z$ là một nhóm - Abel).
 
 Tập hợp các điểm trên EC là một nhóm Abel, do đó nó cũng có tính chất trên: có sự tồn tại của **phần tử đơn vị** 0 (cũng là vô hạn); phần tử **nghịch đảo** của $P$, ký hiệu $-P$, là điểm đối xứng của P qua trục hoành; **phép cộng** được định nghĩa như sau: với ba điểm $P$, $Q$, $R$ khác 0 và thẳng hàng trên EC, thì $P + Q + R = 0$, bất kể thứ tự của các điểm - ta thấy nó thỏa mãn các tính chất kết hợp và giao hoán của một nhóm Abel!.
 
@@ -157,7 +161,7 @@ bitcoin_gen = Generator(
 
 ```
 
-Như vậy đã định nghĩa xong Đường Cong, Điểm bắt đầu (`G`), và Trình tạo. Giờ ta sẽ tạo `private key` (hay `secret key`) - một số nguyên ngẫu nhiên thỏa `1<= key < n` (n đại diện cho order).
+Như vậy đã định nghĩa xong Đường Cong, Điểm sinh (`G`), và Trình tạo. Giờ ta sẽ tạo `private key` (hay `secret key`) - một số nguyên ngẫu nhiên thỏa `1<= key < n` (n đại diện cho order).
 
 ```{python}
 secret_key = int.from_bytes(b'Hi, this is Tuan', 'big') # this is how I will do it for reproducibility
@@ -235,7 +239,7 @@ print(f" secret key: {sk}\n public key: {(pk.x, pk.y)}")
 print("Verify the public key is on the curve: ", (pk.y**2 - pk.x**3 - 7) % bitcoin_curve.p == 0)
 ```
 
-Chúng ta cần tăng tốc việc công `G` với chính nó với số lần cực kì lớn, do đó Andrej sử dụng 1 thuật toán `double_and_add` như sau:
+Chúng ta cần tăng tốc việc cộng `G` với chính nó với số lần cực kì lớn, do đó Andrej sử dụng 1 thuật toán `double_and_add` như sau:
 
 ```{python}
 def double_and_add(self, k: int) -> Point:
@@ -803,3 +807,19 @@ class PublicKey(Point):
         b58check_address = b58encode(byte_address)
         return b58check_address
 ```
+
+Step 1 not completed yet.
+
+## Part 1: summary so far
+
+# Part 2: Obtaining seed funds + intro to Bitcoin under the hood
+
+# Part 3: Crafting our transaction
+
+# Digital Signature
+
+# Putting it all together: One more consolidating transaction
+
+# Resources
+
+Andrej Karpathy's [blog post](https://karpathy.github.io/2021/06/21/blockchain/)
