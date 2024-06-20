@@ -184,6 +184,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
                           <div class="quarto-categories">
                 <div class="quarto-category">Dashboard</div>
                 <div class="quarto-category">Observable</div>
+                <div class="quarto-category">til</div>
               </div>
                   </div>
   </div>
@@ -223,7 +224,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#inititate-a-new-project" id="toc-inititate-a-new-project" class="nav-link active" data-scroll-target="#inititate-a-new-project">Inititate a new Project</a></li>
+  <li><a href="#inititate-a-new-project" id="toc-inititate-a-new-project" class="nav-link active" data-scroll-target="#inititate-a-new-project">Inititate a new Project</a>
+  <ul class="collapse">
+  <li><a href="#self-hosting" id="toc-self-hosting" class="nav-link" data-scroll-target="#self-hosting">Self hosting</a></li>
+  </ul></li>
   <li><a href="#write-first-data-loader" id="toc-write-first-data-loader" class="nav-link" data-scroll-target="#write-first-data-loader">Write first Data Loader</a></li>
   <li><a href="#sql-in-observable-framework" id="toc-sql-in-observable-framework" class="nav-link" data-scroll-target="#sql-in-observable-framework">SQL in Observable Framework</a></li>
   <li><a href="#grids-cards-and-themes" id="toc-grids-cards-and-themes" class="nav-link" data-scroll-target="#grids-cards-and-themes">Grids, Cards, and Themes</a></li>
@@ -239,13 +243,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<p>I’ve heard that Quarto supported Observable natively since version 1.4 (?), thus decided to give it a try. Could not agree more with their slogan:</p>
+<p>I’ve heard that Observable released their Framework as open source in April 2024, and Quarto also supported Observable natively since version 1.4 (?), thus decided to give it a try. Could not agree more with their slogan:</p>
 <blockquote class="blockquote">
 <p>The best dashboards are built with <code>code</code>.</p>
 </blockquote>
 <p>This is my <a href="https://github.com/lktuan/first-observable-project">repo</a> for the practice.</p>
+<p>🚀 <strong>Observable Framwork</strong> <a href="https://observablehq.com/framework/">documentation</a>.</p>
+<blockquote class="blockquote">
+<p>Observable Framework — or “Framework” for short — is an open-source static-site generator for data apps. By data app we mean an application that is primarily a display of data. Data apps help you derive insights (to understand) and evaluate potential decisions (to take action).</p>
+</blockquote>
+<p>It can be a set of coordinated <strong>interactive visualizations</strong> for “self-service” analysis, a <strong>live dashboard</strong>, or a <strong>point-in-time report</strong> that combines graphics and prose to present in-depth analysis.</p>
+<p>Why use Framework for your data app?</p>
+<ul>
+<li>The power of code: Empowered by D3 and Observable Plot library, there’s no limit to what you can create.</li>
+<li>Polyglot meets the web: Framework is <em>polyglot</em> ~ it brings multiple languages together.</li>
+<li>Static-site architecture: Framework’s data architecture practically forces your app to be fast because data is precomputed at build time. Furthermore, data snapshots can be highly-optimized (and aggregated and anonymized), minimizing what you send to the client.</li>
+<li>Automatic reactivity: Instead of wrangling hooks or signals, you can write declarative code in vanilla JavaScript that automatically re-runs whenever variables change, like a spreadsheet.</li>
+<li>An end-to-end solution: Well-designed tools let developers focus on high-value, creative work and build better apps.</li>
+</ul>
+<p>Let’s start!</p>
 <section id="inititate-a-new-project" class="level1">
 <h1>Inititate a new Project</h1>
+<p>🚀 <strong>Observable Framwork</strong> <a href="">getting started</a></p>
 <p>The prerequisite is we must have <a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm"><code>npm</code></a> installed on our machine. Running <code>npm -v</code>, I know that I have version <code>10.5.0</code> installed.</p>
 <p>We first create a folder and navigate to it:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">#| eval: false</span></span>
@@ -268,7 +287,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-9"><a href="#cb3-9"></a><span class="ex">│</span>  Hi Observable</span>
 <span id="cb3-10"><a href="#cb3-10"></a><span class="ex">│</span></span>
 <span id="cb3-11"><a href="#cb3-11"></a><span class="ex">◇</span>  Include sample files to help you get started<span class="pp">?</span></span>
-<span id="cb3-12"><a href="#cb3-12"></a><span class="ex">│</span>  Yes, include sample files</span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="ex">│</span>  No</span>
 <span id="cb3-13"><a href="#cb3-13"></a><span class="ex">│</span></span>
 <span id="cb3-14"><a href="#cb3-14"></a><span class="ex">◇</span>  Install dependencies<span class="pp">?</span></span>
 <span id="cb3-15"><a href="#cb3-15"></a><span class="ex">│</span>  Yes, via npm</span>
@@ -302,6 +321,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>Here is the structure of my project (after adding those Data Loader, SQL, etc steps below):</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource ini number-lines code-with-copy"><code class="sourceCode ini"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="self-hosting" class="level2">
+<h2 class="anchored" data-anchor-id="self-hosting">Self hosting</h2>
+<p>Wou don’t have to deploy to Observable — Framework projects are simply static sites, so we can host them anywhere. With <code>npm</code>, we can run <code>npm run build</code>, which will generates the <code>dist</code> directory. We can then copy this directory to your static site server or preferred hosting service, like <a href="https://github.com/http-party/http-server"><code>http-server</code></a>, with command <code>npx http-server dist</code>.</p>
+<p>For deployment, see the final section at the bottom of this article.</p>
+</section>
 </section>
 <section id="write-first-data-loader" class="level1">
 <h1>Write first Data Loader</h1>
@@ -312,45 +338,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-with-filename-file">
 <pre><strong>forecast.json.js</strong></pre>
 </div>
-<div class="sourceCode" id="cb4" data-filename="forecast.json.js"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">const</span> longitude <span class="op">=</span> <span class="op">-</span><span class="fl">122.47</span>;</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="kw">const</span> latitude <span class="op">=</span> <span class="fl">37.8</span>;</span>
-<span id="cb4-3"><a href="#cb4-3"></a></span>
-<span id="cb4-4"><a href="#cb4-4"></a>async <span class="kw">function</span> <span class="fu">json</span>(url) {</span>
-<span id="cb4-5"><a href="#cb4-5"></a>  <span class="kw">const</span> response <span class="op">=</span> await <span class="fu">fetch</span>(url, {headers<span class="op">:</span> {<span class="st">"User-Agent"</span><span class="op">:</span> <span class="st">"(observablehq.com, support@observablehq.com)"</span>}});</span>
-<span id="cb4-6"><a href="#cb4-6"></a>  <span class="cf">if</span> (!response.ok) throw <span class="kw">new</span> <span class="fu">Error</span>(<span class="ss">`fetch failed: ${response.status}`</span>);</span>
-<span id="cb4-7"><a href="#cb4-7"></a>  <span class="cf">return</span> await response.<span class="fu">json</span>();</span>
-<span id="cb4-8"><a href="#cb4-8"></a>}</span>
-<span id="cb4-9"><a href="#cb4-9"></a></span>
-<span id="cb4-10"><a href="#cb4-10"></a><span class="kw">const</span> station <span class="op">=</span> await <span class="fu">json</span>(<span class="ss">`https://api.weather.gov/points/${latitude},${longitude}`</span>);</span>
-<span id="cb4-11"><a href="#cb4-11"></a><span class="kw">const</span> forecast <span class="op">=</span> await <span class="fu">json</span>(station.properties.forecastHourly);</span>
-<span id="cb4-12"><a href="#cb4-12"></a></span>
-<span id="cb4-13"><a href="#cb4-13"></a>process.<span class="cn">stdout</span>.<span class="fu">write</span>(JSON.<span class="fu">stringify</span>(forecast));</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5" data-filename="forecast.json.js"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">const</span> longitude <span class="op">=</span> <span class="op">-</span><span class="fl">122.47</span>;</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="kw">const</span> latitude <span class="op">=</span> <span class="fl">37.8</span>;</span>
+<span id="cb5-3"><a href="#cb5-3"></a></span>
+<span id="cb5-4"><a href="#cb5-4"></a>async <span class="kw">function</span> <span class="fu">json</span>(url) {</span>
+<span id="cb5-5"><a href="#cb5-5"></a>  <span class="kw">const</span> response <span class="op">=</span> await <span class="fu">fetch</span>(url, {headers<span class="op">:</span> {<span class="st">"User-Agent"</span><span class="op">:</span> <span class="st">"(observablehq.com, support@observablehq.com)"</span>}});</span>
+<span id="cb5-6"><a href="#cb5-6"></a>  <span class="cf">if</span> (!response.ok) throw <span class="kw">new</span> <span class="fu">Error</span>(<span class="ss">`fetch failed: ${response.status}`</span>);</span>
+<span id="cb5-7"><a href="#cb5-7"></a>  <span class="cf">return</span> await response.<span class="fu">json</span>();</span>
+<span id="cb5-8"><a href="#cb5-8"></a>}</span>
+<span id="cb5-9"><a href="#cb5-9"></a></span>
+<span id="cb5-10"><a href="#cb5-10"></a><span class="kw">const</span> station <span class="op">=</span> await <span class="fu">json</span>(<span class="ss">`https://api.weather.gov/points/${latitude},${longitude}`</span>);</span>
+<span id="cb5-11"><a href="#cb5-11"></a><span class="kw">const</span> forecast <span class="op">=</span> await <span class="fu">json</span>(station.properties.forecastHourly);</span>
+<span id="cb5-12"><a href="#cb5-12"></a></span>
+<span id="cb5-13"><a href="#cb5-13"></a>process.<span class="cn">stdout</span>.<span class="fu">write</span>(JSON.<span class="fu">stringify</span>(forecast));</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Python 🐍</strong>:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>forecast.json.py</strong></pre>
 </div>
-<div class="sourceCode" id="cb5" data-filename="forecast.json.py"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="im">import</span> json</span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="im">import</span> requests</span>
-<span id="cb5-3"><a href="#cb5-3"></a><span class="im">import</span> sys</span>
-<span id="cb5-4"><a href="#cb5-4"></a></span>
-<span id="cb5-5"><a href="#cb5-5"></a>longitude <span class="op">=</span> <span class="op">-</span><span class="fl">122.47</span></span>
-<span id="cb5-6"><a href="#cb5-6"></a>latitude <span class="op">=</span> <span class="fl">37.80</span></span>
-<span id="cb5-7"><a href="#cb5-7"></a></span>
-<span id="cb5-8"><a href="#cb5-8"></a>station <span class="op">=</span> requests.get(<span class="ss">f"https://api.weather.gov/points/</span><span class="sc">{</span>latitude<span class="sc">}</span><span class="ss">,</span><span class="sc">{</span>longitude<span class="sc">}</span><span class="ss">"</span>).json()</span>
-<span id="cb5-9"><a href="#cb5-9"></a>forecast <span class="op">=</span> requests.get(station[<span class="st">"properties"</span>][<span class="st">"forecastHourly"</span>]).json()</span>
-<span id="cb5-10"><a href="#cb5-10"></a></span>
-<span id="cb5-11"><a href="#cb5-11"></a>json.dump(forecast, sys.stdout)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6" data-filename="forecast.json.py"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">import</span> json</span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="im">import</span> requests</span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="im">import</span> sys</span>
+<span id="cb6-4"><a href="#cb6-4"></a></span>
+<span id="cb6-5"><a href="#cb6-5"></a>longitude <span class="op">=</span> <span class="op">-</span><span class="fl">122.47</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>latitude <span class="op">=</span> <span class="fl">37.80</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a></span>
+<span id="cb6-8"><a href="#cb6-8"></a>station <span class="op">=</span> requests.get(<span class="ss">f"https://api.weather.gov/points/</span><span class="sc">{</span>latitude<span class="sc">}</span><span class="ss">,</span><span class="sc">{</span>longitude<span class="sc">}</span><span class="ss">"</span>).json()</span>
+<span id="cb6-9"><a href="#cb6-9"></a>forecast <span class="op">=</span> requests.get(station[<span class="st">"properties"</span>][<span class="st">"forecastHourly"</span>]).json()</span>
+<span id="cb6-10"><a href="#cb6-10"></a></span>
+<span id="cb6-11"><a href="#cb6-11"></a>json.dump(forecast, sys.stdout)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Run the data loader, testing if it work:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="co">#| echo: true</span></span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="ex">node</span> hi-observable<span class="dt">\d</span>ocs<span class="dt">\d</span>ata<span class="dt">\f</span>orecast.json.js</span>
-<span id="cb6-4"><a href="#cb6-4"></a></span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="co"># or</span></span>
-<span id="cb6-6"><a href="#cb6-6"></a></span>
-<span id="cb6-7"><a href="#cb6-7"></a><span class="ex">python</span> hi-observable<span class="dt">\d</span>ocs<span class="dt">\d</span>ata<span class="dt">\f</span>orecast.json.py</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="co">#| echo: true</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="ex">node</span> hi-observable<span class="dt">\d</span>ocs<span class="dt">\d</span>ata<span class="dt">\f</span>orecast.json.js</span>
+<span id="cb7-4"><a href="#cb7-4"></a></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="co"># or</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="ex">python</span> hi-observable<span class="dt">\d</span>ocs<span class="dt">\d</span>ata<span class="dt">\f</span>orecast.json.py</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Now if we refresh the dashboard page, the weather forecasting tab should be there. My first run was failed as I miss a comma in JS file 😂. If we change the data loader, the dashboard will change concurrently.</p>
 </section>
 <section id="sql-in-observable-framework" class="level1">
@@ -358,6 +384,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="grids-cards-and-themes" class="level1">
 <h1>Grids, Cards, and Themes</h1>
+<p>The <code>Grid</code> class allow us to organize multiple vizualization in a denser format, like a dashboard. The <code>Grid</code> class declares a grid container.</p>
 </section>
 <section id="deployment-a-project" class="level1">
 <h1>Deployment a Project</h1>
@@ -870,157 +897,191 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb7" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1"></a><span class="co">---</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="an">title:</span><span class="co"> "Observable Framework try-out"</span></span>
-<span id="cb7-3"><a href="#cb7-3"></a><span class="an">description:</span><span class="co"> "My first Observable Framework project"</span></span>
-<span id="cb7-4"><a href="#cb7-4"></a><span class="an">author:</span></span>
-<span id="cb7-5"><a href="#cb7-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
-<span id="cb7-6"><a href="#cb7-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
-<span id="cb7-7"><a href="#cb7-7"></a><span class="an">categories:</span><span class="co"> [Dashboard, Observable] </span></span>
-<span id="cb7-8"><a href="#cb7-8"></a><span class="an">date:</span><span class="co"> 06-19-2024</span></span>
-<span id="cb7-9"><a href="#cb7-9"></a><span class="an">date-modified:</span><span class="co"> 06-19-2024</span></span>
-<span id="cb7-10"><a href="#cb7-10"></a><span class="an">image:</span><span class="co"> ojs_forum.png</span></span>
-<span id="cb7-11"><a href="#cb7-11"></a><span class="an">code-tools:</span><span class="co"> true</span></span>
-<span id="cb7-12"><a href="#cb7-12"></a><span class="an">code-fold:</span><span class="co"> show</span></span>
-<span id="cb7-13"><a href="#cb7-13"></a><span class="an">code-annotations:</span><span class="co"> hover</span></span>
-<span id="cb7-14"><a href="#cb7-14"></a><span class="an">draft:</span><span class="co"> false</span></span>
-<span id="cb7-15"><a href="#cb7-15"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
-<span id="cb7-16"><a href="#cb7-16"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
-<span id="cb7-17"><a href="#cb7-17"></a><span class="an">editor:</span><span class="co"> visual</span></span>
-<span id="cb7-18"><a href="#cb7-18"></a></span>
-<span id="cb7-19"><a href="#cb7-19"></a><span class="an">format:</span></span>
-<span id="cb7-20"><a href="#cb7-20"></a><span class="co">  html:</span></span>
-<span id="cb7-21"><a href="#cb7-21"></a><span class="co">    code-overflow: wrap</span></span>
-<span id="cb7-22"><a href="#cb7-22"></a><span class="co">---</span></span>
-<span id="cb7-23"><a href="#cb7-23"></a></span>
-<span id="cb7-24"><a href="#cb7-24"></a>I've heard that Quarto supported Observable natively since version 1.4 (?), thus decided to give it a try. Could not agree more with their slogan:</span>
-<span id="cb7-25"><a href="#cb7-25"></a></span>
-<span id="cb7-26"><a href="#cb7-26"></a><span class="at">&gt; The best dashboards are built with </span><span class="in">`code`</span><span class="at">.</span></span>
-<span id="cb7-27"><a href="#cb7-27"></a></span>
-<span id="cb7-28"><a href="#cb7-28"></a>This is my <span class="co">[</span><span class="ot">repo</span><span class="co">](https://github.com/lktuan/first-observable-project)</span> for the practice.</span>
-<span id="cb7-29"><a href="#cb7-29"></a></span>
-<span id="cb7-30"><a href="#cb7-30"></a><span class="fu"># Inititate a new Project</span></span>
-<span id="cb7-31"><a href="#cb7-31"></a></span>
-<span id="cb7-32"><a href="#cb7-32"></a>The prerequisite is we must have <span class="co">[</span><span class="ot">`npm`</span><span class="co">](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)</span> installed on our machine. Running <span class="in">`npm -v`</span>, I know that I have version <span class="in">`10.5.0`</span> installed.</span>
-<span id="cb7-33"><a href="#cb7-33"></a></span>
-<span id="cb7-34"><a href="#cb7-34"></a>We first create a folder and navigate to it:</span>
-<span id="cb7-35"><a href="#cb7-35"></a></span>
-<span id="cb7-36"><a href="#cb7-36"></a><span class="in">``` bash</span></span>
-<span id="cb7-37"><a href="#cb7-37"></a><span class="co">#| eval: false</span></span>
-<span id="cb7-38"><a href="#cb7-38"></a><span class="co">#| echo: true</span></span>
-<span id="cb7-39"><a href="#cb7-39"></a><span class="fu">mkdir</span> first-observable-project</span>
-<span id="cb7-40"><a href="#cb7-40"></a><span class="bu">cd</span> first-observable-project</span>
-<span id="cb7-41"><a href="#cb7-41"></a><span class="in">```</span></span>
-<span id="cb7-42"><a href="#cb7-42"></a></span>
-<span id="cb7-43"><a href="#cb7-43"></a>Then simply run this command to initiate the project:</span>
-<span id="cb7-44"><a href="#cb7-44"></a></span>
-<span id="cb7-45"><a href="#cb7-45"></a><span class="in">``` bash</span></span>
-<span id="cb7-46"><a href="#cb7-46"></a><span class="co">#| eval: false</span></span>
-<span id="cb7-47"><a href="#cb7-47"></a><span class="co">#| echo: true</span></span>
-<span id="cb7-48"><a href="#cb7-48"></a><span class="ex">npm</span> init <span class="st">"@observablehq"</span></span>
-<span id="cb7-49"><a href="#cb7-49"></a><span class="in">```</span></span>
-<span id="cb7-50"><a href="#cb7-50"></a></span>
-<span id="cb7-51"><a href="#cb7-51"></a>We gotta fill some basic params:</span>
-<span id="cb7-52"><a href="#cb7-52"></a></span>
-<span id="cb7-53"><a href="#cb7-53"></a><span class="in">``` bash</span></span>
-<span id="cb7-54"><a href="#cb7-54"></a><span class="co">#| eval: false</span></span>
-<span id="cb7-55"><a href="#cb7-55"></a><span class="co">#| echo: true</span></span>
-<span id="cb7-56"><a href="#cb7-56"></a><span class="ex">┌</span>   observable create  v1.5.1</span>
-<span id="cb7-57"><a href="#cb7-57"></a><span class="ex">│</span></span>
-<span id="cb7-58"><a href="#cb7-58"></a><span class="ex">◇</span>  Where to create your project<span class="pp">?</span></span>
-<span id="cb7-59"><a href="#cb7-59"></a><span class="ex">│</span>  hi-observable</span>
-<span id="cb7-60"><a href="#cb7-60"></a><span class="ex">│</span></span>
-<span id="cb7-61"><a href="#cb7-61"></a><span class="ex">◇</span>  What to title your project<span class="pp">?</span></span>
-<span id="cb7-62"><a href="#cb7-62"></a><span class="ex">│</span>  Hi Observable</span>
-<span id="cb7-63"><a href="#cb7-63"></a><span class="ex">│</span></span>
-<span id="cb7-64"><a href="#cb7-64"></a><span class="ex">◇</span>  Include sample files to help you get started<span class="pp">?</span></span>
-<span id="cb7-65"><a href="#cb7-65"></a><span class="ex">│</span>  Yes, include sample files</span>
-<span id="cb7-66"><a href="#cb7-66"></a><span class="ex">│</span></span>
-<span id="cb7-67"><a href="#cb7-67"></a><span class="ex">◇</span>  Install dependencies<span class="pp">?</span></span>
-<span id="cb7-68"><a href="#cb7-68"></a><span class="ex">│</span>  Yes, via npm</span>
-<span id="cb7-69"><a href="#cb7-69"></a><span class="ex">│</span></span>
-<span id="cb7-70"><a href="#cb7-70"></a><span class="ex">◇</span>  Initialize git repository<span class="pp">?</span></span>
-<span id="cb7-71"><a href="#cb7-71"></a><span class="ex">│</span>  No</span>
-<span id="cb7-72"><a href="#cb7-72"></a><span class="ex">│</span></span>
-<span id="cb7-73"><a href="#cb7-73"></a><span class="ex">◇</span>  Installed! 🎉</span>
-<span id="cb7-74"><a href="#cb7-74"></a><span class="ex">│</span></span>
-<span id="cb7-75"><a href="#cb7-75"></a><span class="ex">◇</span>  Next steps… ──────╮</span>
-<span id="cb7-76"><a href="#cb7-76"></a><span class="ex">│</span>                    │</span>
-<span id="cb7-77"><a href="#cb7-77"></a><span class="ex">│</span>  cd hi-observable  │</span>
-<span id="cb7-78"><a href="#cb7-78"></a><span class="ex">│</span>  npm run dev       │</span>
-<span id="cb7-79"><a href="#cb7-79"></a><span class="ex">│</span>                    │</span>
-<span id="cb7-80"><a href="#cb7-80"></a><span class="ex">├────────────────────╯</span></span>
-<span id="cb7-81"><a href="#cb7-81"></a><span class="ex">│</span></span>
-<span id="cb7-82"><a href="#cb7-82"></a><span class="ex">└</span>  Problems<span class="pp">?</span> https://observablehq.com/framework/getting-started</span>
-<span id="cb7-83"><a href="#cb7-83"></a><span class="in">```</span></span>
-<span id="cb7-84"><a href="#cb7-84"></a></span>
-<span id="cb7-85"><a href="#cb7-85"></a>We can now easilly preview the app with <span class="in">`npm run dev`</span>, and access out dashboard via <span class="in">`http://127.0.0.1:3000/`</span>. Let's play a little bit, we can modify the <span class="in">`h1`</span> tags in <span class="in">`docs\index.md`</span>, then the dashboard will be updated once we save the file, instantly. Cool!</span>
-<span id="cb7-86"><a href="#cb7-86"></a></span>
-<span id="cb7-87"><a href="#cb7-87"></a>::: {layout-ncol="1"}</span>
-<span id="cb7-88"><a href="#cb7-88"></a><span class="al">![Home page layout](ojs_fig_1.png)</span>{width="100%"}</span>
-<span id="cb7-89"><a href="#cb7-89"></a>:::</span>
-<span id="cb7-90"><a href="#cb7-90"></a></span>
-<span id="cb7-91"><a href="#cb7-91"></a><span class="fu"># Write first Data Loader</span></span>
-<span id="cb7-92"><a href="#cb7-92"></a></span>
-<span id="cb7-93"><a href="#cb7-93"></a>In Observable project we can write Data Loader in JavaScript, Python, R or any other languages. Data Loader helps you to (1) minimize file sizes and (2) reduce client side processing.</span>
-<span id="cb7-94"><a href="#cb7-94"></a></span>
-<span id="cb7-95"><a href="#cb7-95"></a>A data loader file has the name like: <span class="in">`dataloader.data_extension.engine_extension`</span>. For example, with the American weather forecast API we can have 2 kinds of Data Loader as below:</span>
-<span id="cb7-96"><a href="#cb7-96"></a></span>
-<span id="cb7-97"><a href="#cb7-97"></a>**Javascript 🟨**:</span>
-<span id="cb7-98"><a href="#cb7-98"></a></span>
-<span id="cb7-99"><a href="#cb7-99"></a><span class="in">``` {.julia filename="forecast.json.js"}</span></span>
-<span id="cb7-100"><a href="#cb7-100"></a><span class="in">const longitude = -122.47;</span></span>
-<span id="cb7-101"><a href="#cb7-101"></a><span class="in">const latitude = 37.8;</span></span>
-<span id="cb7-102"><a href="#cb7-102"></a></span>
-<span id="cb7-103"><a href="#cb7-103"></a><span class="in">async function json(url) {</span></span>
-<span id="cb7-104"><a href="#cb7-104"></a><span class="in">  const response = await fetch(url, {headers: {"User-Agent": "(observablehq.com, support@observablehq.com)"}});</span></span>
-<span id="cb7-105"><a href="#cb7-105"></a><span class="in">  if (!response.ok) throw new Error(`fetch failed: ${response.status}`);</span></span>
-<span id="cb7-106"><a href="#cb7-106"></a><span class="in">  return await response.json();</span></span>
-<span id="cb7-107"><a href="#cb7-107"></a><span class="in">}</span></span>
-<span id="cb7-108"><a href="#cb7-108"></a></span>
-<span id="cb7-109"><a href="#cb7-109"></a><span class="in">const station = await json(`https://api.weather.gov/points/${latitude},${longitude}`);</span></span>
-<span id="cb7-110"><a href="#cb7-110"></a><span class="in">const forecast = await json(station.properties.forecastHourly);</span></span>
-<span id="cb7-111"><a href="#cb7-111"></a></span>
-<span id="cb7-112"><a href="#cb7-112"></a><span class="in">process.stdout.write(JSON.stringify(forecast));</span></span>
-<span id="cb7-113"><a href="#cb7-113"></a><span class="in">```</span></span>
-<span id="cb7-114"><a href="#cb7-114"></a></span>
-<span id="cb7-115"><a href="#cb7-115"></a>**Python 🐍**:</span>
-<span id="cb7-116"><a href="#cb7-116"></a></span>
-<span id="cb7-117"><a href="#cb7-117"></a><span class="in">``` {.python filename="forecast.json.py"}</span></span>
-<span id="cb7-118"><a href="#cb7-118"></a><span class="in">import json</span></span>
-<span id="cb7-119"><a href="#cb7-119"></a><span class="in">import requests</span></span>
-<span id="cb7-120"><a href="#cb7-120"></a><span class="in">import sys</span></span>
-<span id="cb7-121"><a href="#cb7-121"></a></span>
-<span id="cb7-122"><a href="#cb7-122"></a><span class="in">longitude = -122.47</span></span>
-<span id="cb7-123"><a href="#cb7-123"></a><span class="in">latitude = 37.80</span></span>
-<span id="cb7-124"><a href="#cb7-124"></a></span>
-<span id="cb7-125"><a href="#cb7-125"></a><span class="in">station = requests.get(f"https://api.weather.gov/points/{latitude},{longitude}").json()</span></span>
-<span id="cb7-126"><a href="#cb7-126"></a><span class="in">forecast = requests.get(station["properties"]["forecastHourly"]).json()</span></span>
-<span id="cb7-127"><a href="#cb7-127"></a></span>
-<span id="cb7-128"><a href="#cb7-128"></a><span class="in">json.dump(forecast, sys.stdout)</span></span>
-<span id="cb7-129"><a href="#cb7-129"></a><span class="in">```</span></span>
-<span id="cb7-130"><a href="#cb7-130"></a></span>
-<span id="cb7-131"><a href="#cb7-131"></a>Run the data loader, testing if it work:</span>
-<span id="cb7-132"><a href="#cb7-132"></a></span>
-<span id="cb7-133"><a href="#cb7-133"></a><span class="in">``` bash</span></span>
-<span id="cb7-134"><a href="#cb7-134"></a><span class="co">#| eval: false</span></span>
-<span id="cb7-135"><a href="#cb7-135"></a><span class="co">#| echo: true</span></span>
-<span id="cb7-136"><a href="#cb7-136"></a><span class="ex">node</span> hi-observable<span class="dt">\d</span>ocs<span class="dt">\d</span>ata<span class="dt">\f</span>orecast.json.js</span>
-<span id="cb7-137"><a href="#cb7-137"></a></span>
-<span id="cb7-138"><a href="#cb7-138"></a><span class="co"># or</span></span>
-<span id="cb7-139"><a href="#cb7-139"></a></span>
-<span id="cb7-140"><a href="#cb7-140"></a><span class="ex">python</span> hi-observable<span class="dt">\d</span>ocs<span class="dt">\d</span>ata<span class="dt">\f</span>orecast.json.py</span>
-<span id="cb7-141"><a href="#cb7-141"></a><span class="in">```</span></span>
-<span id="cb7-142"><a href="#cb7-142"></a></span>
-<span id="cb7-143"><a href="#cb7-143"></a>Now if we refresh the dashboard page, the weather forecasting tab should be there. My first run was failed as I miss a comma in JS file 😂. If we change the data loader, the dashboard will change concurrently.</span>
-<span id="cb7-144"><a href="#cb7-144"></a></span>
-<span id="cb7-145"><a href="#cb7-145"></a><span class="fu"># SQL in Observable Framework</span></span>
-<span id="cb7-146"><a href="#cb7-146"></a></span>
-<span id="cb7-147"><a href="#cb7-147"></a><span class="fu"># Grids, Cards, and Themes</span></span>
-<span id="cb7-148"><a href="#cb7-148"></a></span>
-<span id="cb7-149"><a href="#cb7-149"></a><span class="fu"># Deployment a Project</span></span>
-<span id="cb7-150"><a href="#cb7-150"></a></span>
-<span id="cb7-151"><a href="#cb7-151"></a><span class="fu"># Imports: from npm, local files, remote URLs, and lazy loading</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1"></a><span class="co">---</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="an">title:</span><span class="co"> "Observable Framework try-out"</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="an">description:</span><span class="co"> "My first Observable Framework project"</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="an">author:</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="an">categories:</span><span class="co"> [Dashboard, Observable, til] </span></span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="an">date:</span><span class="co"> 06-19-2024</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="an">date-modified:</span><span class="co"> 06-19-2024</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="an">image:</span><span class="co"> ojs_forum.png</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="an">code-tools:</span><span class="co"> true</span></span>
+<span id="cb8-12"><a href="#cb8-12"></a><span class="an">code-fold:</span><span class="co"> show</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a><span class="an">code-annotations:</span><span class="co"> hover</span></span>
+<span id="cb8-14"><a href="#cb8-14"></a><span class="an">draft:</span><span class="co"> false</span></span>
+<span id="cb8-15"><a href="#cb8-15"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
+<span id="cb8-17"><a href="#cb8-17"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb8-18"><a href="#cb8-18"></a></span>
+<span id="cb8-19"><a href="#cb8-19"></a><span class="an">format:</span></span>
+<span id="cb8-20"><a href="#cb8-20"></a><span class="co">  html:</span></span>
+<span id="cb8-21"><a href="#cb8-21"></a><span class="co">    code-overflow: wrap</span></span>
+<span id="cb8-22"><a href="#cb8-22"></a><span class="co">---</span></span>
+<span id="cb8-23"><a href="#cb8-23"></a></span>
+<span id="cb8-24"><a href="#cb8-24"></a>I've heard that Observable released their Framework as open source in April 2024, and Quarto also supported Observable natively since version 1.4 (?), thus decided to give it a try. Could not agree more with their slogan:</span>
+<span id="cb8-25"><a href="#cb8-25"></a></span>
+<span id="cb8-26"><a href="#cb8-26"></a><span class="at">&gt; The best dashboards are built with </span><span class="in">`code`</span><span class="at">.</span></span>
+<span id="cb8-27"><a href="#cb8-27"></a></span>
+<span id="cb8-28"><a href="#cb8-28"></a>This is my <span class="co">[</span><span class="ot">repo</span><span class="co">](https://github.com/lktuan/first-observable-project)</span> for the practice.</span>
+<span id="cb8-29"><a href="#cb8-29"></a></span>
+<span id="cb8-30"><a href="#cb8-30"></a>🚀 **Observable Framwork** <span class="co">[</span><span class="ot">documentation</span><span class="co">](https://observablehq.com/framework/)</span>.</span>
+<span id="cb8-31"><a href="#cb8-31"></a></span>
+<span id="cb8-32"><a href="#cb8-32"></a><span class="at">&gt; Observable Framework — or “Framework” for short — is an open-source static-site generator for data apps. By data app we mean an application that is primarily a display of data. Data apps help you derive insights (to understand) and evaluate potential decisions (to take action).</span></span>
+<span id="cb8-33"><a href="#cb8-33"></a></span>
+<span id="cb8-34"><a href="#cb8-34"></a>It can be a set of coordinated **interactive visualizations** for “self-service” analysis, a **live dashboard**, or a **point-in-time report** that combines graphics and prose to present in-depth analysis.</span>
+<span id="cb8-35"><a href="#cb8-35"></a></span>
+<span id="cb8-36"><a href="#cb8-36"></a>Why use Framework for your data app?</span>
+<span id="cb8-37"><a href="#cb8-37"></a></span>
+<span id="cb8-38"><a href="#cb8-38"></a><span class="ss">- </span>The power of code: Empowered by D3 and Observable Plot library, there’s no limit to what you can create.</span>
+<span id="cb8-39"><a href="#cb8-39"></a><span class="ss">- </span>Polyglot meets the web: Framework is *polyglot* ~ it brings multiple languages together.</span>
+<span id="cb8-40"><a href="#cb8-40"></a><span class="ss">- </span>Static-site architecture: Framework’s data architecture practically forces your app to be fast because data is precomputed at build time. Furthermore, data snapshots can be highly-optimized (and aggregated and anonymized), minimizing what you send to the client.</span>
+<span id="cb8-41"><a href="#cb8-41"></a><span class="ss">- </span>Automatic reactivity: Instead of wrangling hooks or signals, you can write declarative code in vanilla JavaScript that automatically re-runs whenever variables change, like a spreadsheet.</span>
+<span id="cb8-42"><a href="#cb8-42"></a><span class="ss">- </span>An end-to-end solution: Well-designed tools let developers focus on high-value, creative work and build better apps.</span>
+<span id="cb8-43"><a href="#cb8-43"></a></span>
+<span id="cb8-44"><a href="#cb8-44"></a>Let's start!</span>
+<span id="cb8-45"><a href="#cb8-45"></a></span>
+<span id="cb8-46"><a href="#cb8-46"></a><span class="fu"># Inititate a new Project</span></span>
+<span id="cb8-47"><a href="#cb8-47"></a></span>
+<span id="cb8-48"><a href="#cb8-48"></a>🚀 **Observable Framwork** <span class="co">[</span><span class="ot">getting started</span><span class="co">]()</span></span>
+<span id="cb8-49"><a href="#cb8-49"></a></span>
+<span id="cb8-50"><a href="#cb8-50"></a>The prerequisite is we must have <span class="co">[</span><span class="ot">`npm`</span><span class="co">](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)</span> installed on our machine. Running <span class="in">`npm -v`</span>, I know that I have version <span class="in">`10.5.0`</span> installed.</span>
+<span id="cb8-51"><a href="#cb8-51"></a></span>
+<span id="cb8-52"><a href="#cb8-52"></a>We first create a folder and navigate to it:</span>
+<span id="cb8-53"><a href="#cb8-53"></a></span>
+<span id="cb8-54"><a href="#cb8-54"></a><span class="in">``` bash</span></span>
+<span id="cb8-55"><a href="#cb8-55"></a><span class="co">#| eval: false</span></span>
+<span id="cb8-56"><a href="#cb8-56"></a><span class="co">#| echo: true</span></span>
+<span id="cb8-57"><a href="#cb8-57"></a><span class="fu">mkdir</span> first-observable-project</span>
+<span id="cb8-58"><a href="#cb8-58"></a><span class="bu">cd</span> first-observable-project</span>
+<span id="cb8-59"><a href="#cb8-59"></a><span class="in">```</span></span>
+<span id="cb8-60"><a href="#cb8-60"></a></span>
+<span id="cb8-61"><a href="#cb8-61"></a>Then simply run this command to initiate the project:</span>
+<span id="cb8-62"><a href="#cb8-62"></a></span>
+<span id="cb8-63"><a href="#cb8-63"></a><span class="in">``` bash</span></span>
+<span id="cb8-64"><a href="#cb8-64"></a><span class="co">#| eval: false</span></span>
+<span id="cb8-65"><a href="#cb8-65"></a><span class="co">#| echo: true</span></span>
+<span id="cb8-66"><a href="#cb8-66"></a><span class="ex">npm</span> init <span class="st">"@observablehq"</span></span>
+<span id="cb8-67"><a href="#cb8-67"></a><span class="in">```</span></span>
+<span id="cb8-68"><a href="#cb8-68"></a></span>
+<span id="cb8-69"><a href="#cb8-69"></a>We gotta fill some basic params:</span>
+<span id="cb8-70"><a href="#cb8-70"></a></span>
+<span id="cb8-71"><a href="#cb8-71"></a><span class="in">``` bash</span></span>
+<span id="cb8-72"><a href="#cb8-72"></a><span class="co">#| eval: false</span></span>
+<span id="cb8-73"><a href="#cb8-73"></a><span class="co">#| echo: true</span></span>
+<span id="cb8-74"><a href="#cb8-74"></a><span class="ex">┌</span>   observable create  v1.5.1</span>
+<span id="cb8-75"><a href="#cb8-75"></a><span class="ex">│</span></span>
+<span id="cb8-76"><a href="#cb8-76"></a><span class="ex">◇</span>  Where to create your project<span class="pp">?</span></span>
+<span id="cb8-77"><a href="#cb8-77"></a><span class="ex">│</span>  hi-observable</span>
+<span id="cb8-78"><a href="#cb8-78"></a><span class="ex">│</span></span>
+<span id="cb8-79"><a href="#cb8-79"></a><span class="ex">◇</span>  What to title your project<span class="pp">?</span></span>
+<span id="cb8-80"><a href="#cb8-80"></a><span class="ex">│</span>  Hi Observable</span>
+<span id="cb8-81"><a href="#cb8-81"></a><span class="ex">│</span></span>
+<span id="cb8-82"><a href="#cb8-82"></a><span class="ex">◇</span>  Include sample files to help you get started<span class="pp">?</span></span>
+<span id="cb8-83"><a href="#cb8-83"></a><span class="ex">│</span>  No</span>
+<span id="cb8-84"><a href="#cb8-84"></a><span class="ex">│</span></span>
+<span id="cb8-85"><a href="#cb8-85"></a><span class="ex">◇</span>  Install dependencies<span class="pp">?</span></span>
+<span id="cb8-86"><a href="#cb8-86"></a><span class="ex">│</span>  Yes, via npm</span>
+<span id="cb8-87"><a href="#cb8-87"></a><span class="ex">│</span></span>
+<span id="cb8-88"><a href="#cb8-88"></a><span class="ex">◇</span>  Initialize git repository<span class="pp">?</span></span>
+<span id="cb8-89"><a href="#cb8-89"></a><span class="ex">│</span>  No</span>
+<span id="cb8-90"><a href="#cb8-90"></a><span class="ex">│</span></span>
+<span id="cb8-91"><a href="#cb8-91"></a><span class="ex">◇</span>  Installed! 🎉</span>
+<span id="cb8-92"><a href="#cb8-92"></a><span class="ex">│</span></span>
+<span id="cb8-93"><a href="#cb8-93"></a><span class="ex">◇</span>  Next steps… ──────╮</span>
+<span id="cb8-94"><a href="#cb8-94"></a><span class="ex">│</span>                    │</span>
+<span id="cb8-95"><a href="#cb8-95"></a><span class="ex">│</span>  cd hi-observable  │</span>
+<span id="cb8-96"><a href="#cb8-96"></a><span class="ex">│</span>  npm run dev       │</span>
+<span id="cb8-97"><a href="#cb8-97"></a><span class="ex">│</span>                    │</span>
+<span id="cb8-98"><a href="#cb8-98"></a><span class="ex">├────────────────────╯</span></span>
+<span id="cb8-99"><a href="#cb8-99"></a><span class="ex">│</span></span>
+<span id="cb8-100"><a href="#cb8-100"></a><span class="ex">└</span>  Problems<span class="pp">?</span> https://observablehq.com/framework/getting-started</span>
+<span id="cb8-101"><a href="#cb8-101"></a><span class="in">```</span></span>
+<span id="cb8-102"><a href="#cb8-102"></a></span>
+<span id="cb8-103"><a href="#cb8-103"></a>We can now easilly preview the app with <span class="in">`npm run dev`</span>, and access out dashboard via <span class="in">`http://127.0.0.1:3000/`</span>. Let's play a little bit, we can modify the <span class="in">`h1`</span> tags in <span class="in">`docs\index.md`</span>, then the dashboard will be updated once we save the file, instantly. Cool!</span>
+<span id="cb8-104"><a href="#cb8-104"></a></span>
+<span id="cb8-105"><a href="#cb8-105"></a>::: {layout-ncol="1"}</span>
+<span id="cb8-106"><a href="#cb8-106"></a><span class="al">![Home page layout](ojs_fig_1.png)</span>{width="100%"}</span>
+<span id="cb8-107"><a href="#cb8-107"></a>:::</span>
+<span id="cb8-108"><a href="#cb8-108"></a></span>
+<span id="cb8-109"><a href="#cb8-109"></a>Here is the structure of my project (after adding those Data Loader, SQL, etc steps below):</span>
+<span id="cb8-110"><a href="#cb8-110"></a></span>
+<span id="cb8-111"><a href="#cb8-111"></a><span class="in">```ini</span></span>
+<span id="cb8-112"><a href="#cb8-112"></a><span class="in">```</span></span>
+<span id="cb8-113"><a href="#cb8-113"></a></span>
+<span id="cb8-114"><a href="#cb8-114"></a><span class="fu">## Self hosting</span></span>
+<span id="cb8-115"><a href="#cb8-115"></a></span>
+<span id="cb8-116"><a href="#cb8-116"></a>Wou don’t have to deploy to Observable — Framework projects are simply static sites, so we can host them anywhere. With <span class="in">`npm`</span>, we can run <span class="in">`npm run build`</span>, which will generates the <span class="in">`dist`</span> directory. We can then copy this directory to your static site server or preferred hosting service, like <span class="co">[</span><span class="ot">` http-server`</span><span class="co">](https://github.com/http-party/http-server)</span>, with command <span class="in">`npx http-server dist`</span>. </span>
+<span id="cb8-117"><a href="#cb8-117"></a></span>
+<span id="cb8-118"><a href="#cb8-118"></a>For deployment, see the final section at the bottom of this article.</span>
+<span id="cb8-119"><a href="#cb8-119"></a></span>
+<span id="cb8-120"><a href="#cb8-120"></a><span class="fu"># Write first Data Loader</span></span>
+<span id="cb8-121"><a href="#cb8-121"></a></span>
+<span id="cb8-122"><a href="#cb8-122"></a>In Observable project we can write Data Loader in JavaScript, Python, R or any other languages. Data Loader helps you to (1) minimize file sizes and (2) reduce client side processing.</span>
+<span id="cb8-123"><a href="#cb8-123"></a></span>
+<span id="cb8-124"><a href="#cb8-124"></a>A data loader file has the name like: <span class="in">`dataloader.data_extension.engine_extension`</span>. For example, with the American weather forecast API we can have 2 kinds of Data Loader as below:</span>
+<span id="cb8-125"><a href="#cb8-125"></a></span>
+<span id="cb8-126"><a href="#cb8-126"></a>**Javascript 🟨**:</span>
+<span id="cb8-127"><a href="#cb8-127"></a></span>
+<span id="cb8-128"><a href="#cb8-128"></a><span class="in">``` {.julia filename="forecast.json.js"}</span></span>
+<span id="cb8-129"><a href="#cb8-129"></a><span class="in">const longitude = -122.47;</span></span>
+<span id="cb8-130"><a href="#cb8-130"></a><span class="in">const latitude = 37.8;</span></span>
+<span id="cb8-131"><a href="#cb8-131"></a></span>
+<span id="cb8-132"><a href="#cb8-132"></a><span class="in">async function json(url) {</span></span>
+<span id="cb8-133"><a href="#cb8-133"></a><span class="in">  const response = await fetch(url, {headers: {"User-Agent": "(observablehq.com, support@observablehq.com)"}});</span></span>
+<span id="cb8-134"><a href="#cb8-134"></a><span class="in">  if (!response.ok) throw new Error(`fetch failed: ${response.status}`);</span></span>
+<span id="cb8-135"><a href="#cb8-135"></a><span class="in">  return await response.json();</span></span>
+<span id="cb8-136"><a href="#cb8-136"></a><span class="in">}</span></span>
+<span id="cb8-137"><a href="#cb8-137"></a></span>
+<span id="cb8-138"><a href="#cb8-138"></a><span class="in">const station = await json(`https://api.weather.gov/points/${latitude},${longitude}`);</span></span>
+<span id="cb8-139"><a href="#cb8-139"></a><span class="in">const forecast = await json(station.properties.forecastHourly);</span></span>
+<span id="cb8-140"><a href="#cb8-140"></a></span>
+<span id="cb8-141"><a href="#cb8-141"></a><span class="in">process.stdout.write(JSON.stringify(forecast));</span></span>
+<span id="cb8-142"><a href="#cb8-142"></a><span class="in">```</span></span>
+<span id="cb8-143"><a href="#cb8-143"></a></span>
+<span id="cb8-144"><a href="#cb8-144"></a>**Python 🐍**:</span>
+<span id="cb8-145"><a href="#cb8-145"></a></span>
+<span id="cb8-146"><a href="#cb8-146"></a><span class="in">``` {.python filename="forecast.json.py"}</span></span>
+<span id="cb8-147"><a href="#cb8-147"></a><span class="in">import json</span></span>
+<span id="cb8-148"><a href="#cb8-148"></a><span class="in">import requests</span></span>
+<span id="cb8-149"><a href="#cb8-149"></a><span class="in">import sys</span></span>
+<span id="cb8-150"><a href="#cb8-150"></a></span>
+<span id="cb8-151"><a href="#cb8-151"></a><span class="in">longitude = -122.47</span></span>
+<span id="cb8-152"><a href="#cb8-152"></a><span class="in">latitude = 37.80</span></span>
+<span id="cb8-153"><a href="#cb8-153"></a></span>
+<span id="cb8-154"><a href="#cb8-154"></a><span class="in">station = requests.get(f"https://api.weather.gov/points/{latitude},{longitude}").json()</span></span>
+<span id="cb8-155"><a href="#cb8-155"></a><span class="in">forecast = requests.get(station["properties"]["forecastHourly"]).json()</span></span>
+<span id="cb8-156"><a href="#cb8-156"></a></span>
+<span id="cb8-157"><a href="#cb8-157"></a><span class="in">json.dump(forecast, sys.stdout)</span></span>
+<span id="cb8-158"><a href="#cb8-158"></a><span class="in">```</span></span>
+<span id="cb8-159"><a href="#cb8-159"></a></span>
+<span id="cb8-160"><a href="#cb8-160"></a>Run the data loader, testing if it work:</span>
+<span id="cb8-161"><a href="#cb8-161"></a></span>
+<span id="cb8-162"><a href="#cb8-162"></a><span class="in">``` bash</span></span>
+<span id="cb8-163"><a href="#cb8-163"></a><span class="co">#| eval: false</span></span>
+<span id="cb8-164"><a href="#cb8-164"></a><span class="co">#| echo: true</span></span>
+<span id="cb8-165"><a href="#cb8-165"></a><span class="ex">node</span> hi-observable<span class="dt">\d</span>ocs<span class="dt">\d</span>ata<span class="dt">\f</span>orecast.json.js</span>
+<span id="cb8-166"><a href="#cb8-166"></a></span>
+<span id="cb8-167"><a href="#cb8-167"></a><span class="co"># or</span></span>
+<span id="cb8-168"><a href="#cb8-168"></a></span>
+<span id="cb8-169"><a href="#cb8-169"></a><span class="ex">python</span> hi-observable<span class="dt">\d</span>ocs<span class="dt">\d</span>ata<span class="dt">\f</span>orecast.json.py</span>
+<span id="cb8-170"><a href="#cb8-170"></a><span class="in">```</span></span>
+<span id="cb8-171"><a href="#cb8-171"></a></span>
+<span id="cb8-172"><a href="#cb8-172"></a>Now if we refresh the dashboard page, the weather forecasting tab should be there. My first run was failed as I miss a comma in JS file 😂. If we change the data loader, the dashboard will change concurrently.</span>
+<span id="cb8-173"><a href="#cb8-173"></a></span>
+<span id="cb8-174"><a href="#cb8-174"></a><span class="fu"># SQL in Observable Framework</span></span>
+<span id="cb8-175"><a href="#cb8-175"></a></span>
+<span id="cb8-176"><a href="#cb8-176"></a></span>
+<span id="cb8-177"><a href="#cb8-177"></a></span>
+<span id="cb8-178"><a href="#cb8-178"></a><span class="fu"># Grids, Cards, and Themes</span></span>
+<span id="cb8-179"><a href="#cb8-179"></a></span>
+<span id="cb8-180"><a href="#cb8-180"></a>The <span class="in">`Grid`</span> class allow us to organize multiple vizualization in a denser format, like a dashboard. The <span class="in">`Grid`</span> class declares a grid container.</span>
+<span id="cb8-181"><a href="#cb8-181"></a></span>
+<span id="cb8-182"><a href="#cb8-182"></a></span>
+<span id="cb8-183"><a href="#cb8-183"></a><span class="fu"># Deployment a Project</span></span>
+<span id="cb8-184"><a href="#cb8-184"></a></span>
+<span id="cb8-185"><a href="#cb8-185"></a><span class="fu"># Imports: from npm, local files, remote URLs, and lazy loading</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

@@ -21,13 +21,28 @@
 
 
 
-<p>I’ve heard that Quarto supported Observable natively since version 1.4 (?), thus decided to give it a try. Could not agree more with their slogan:</p>
+<p>I’ve heard that Observable released their Framework as open source in April 2024, and Quarto also supported Observable natively since version 1.4 (?), thus decided to give it a try. Could not agree more with their slogan:</p>
 <blockquote class="blockquote">
 <p>The best dashboards are built with <code>code</code>.</p>
 </blockquote>
 <p>This is my <a href="https://github.com/lktuan/first-observable-project">repo</a> for the practice.</p>
+<p>🚀 <strong>Observable Framwork</strong> <a href="https://observablehq.com/framework/">documentation</a>.</p>
+<blockquote class="blockquote">
+<p>Observable Framework — or “Framework” for short — is an open-source static-site generator for data apps. By data app we mean an application that is primarily a display of data. Data apps help you derive insights (to understand) and evaluate potential decisions (to take action).</p>
+</blockquote>
+<p>It can be a set of coordinated <strong>interactive visualizations</strong> for “self-service” analysis, a <strong>live dashboard</strong>, or a <strong>point-in-time report</strong> that combines graphics and prose to present in-depth analysis.</p>
+<p>Why use Framework for your data app?</p>
+<ul>
+<li>The power of code: Empowered by D3 and Observable Plot library, there’s no limit to what you can create.</li>
+<li>Polyglot meets the web: Framework is <em>polyglot</em> ~ it brings multiple languages together.</li>
+<li>Static-site architecture: Framework’s data architecture practically forces your app to be fast because data is precomputed at build time. Furthermore, data snapshots can be highly-optimized (and aggregated and anonymized), minimizing what you send to the client.</li>
+<li>Automatic reactivity: Instead of wrangling hooks or signals, you can write declarative code in vanilla JavaScript that automatically re-runs whenever variables change, like a spreadsheet.</li>
+<li>An end-to-end solution: Well-designed tools let developers focus on high-value, creative work and build better apps.</li>
+</ul>
+<p>Let’s start!</p>
 <section id="inititate-a-new-project" class="level1">
 <h1>Inititate a new Project</h1>
+<p>🚀 <strong>Observable Framwork</strong> <a href="">getting started</a></p>
 <p>The prerequisite is we must have <a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm"><code>npm</code></a> installed on our machine. Running <code>npm -v</code>, I know that I have version <code>10.5.0</code> installed.</p>
 <p>We first create a folder and navigate to it:</p>
 <div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
@@ -96,7 +111,7 @@ background-color: null;
 font-style: inherit;">?</span></span>
 <span id="cb3-12"><span class="ex" style="color: null;
 background-color: null;
-font-style: inherit;">│</span>  Yes, include sample files</span>
+font-style: inherit;">│</span>  No</span>
 <span id="cb3-13"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">│</span></span>
@@ -170,6 +185,13 @@ font-style: inherit;">?</span> https://observablehq.com/framework/getting-starte
 </div>
 </div>
 </div>
+<p>Here is the structure of my project (after adding those Data Loader, SQL, etc steps below):</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource ini number-lines code-with-copy"><code class="sourceCode ini"></code></pre></div>
+<section id="self-hosting" class="level2">
+<h2 class="anchored" data-anchor-id="self-hosting">Self hosting</h2>
+<p>Wou don’t have to deploy to Observable — Framework projects are simply static sites, so we can host them anywhere. With <code>npm</code>, we can run <code>npm run build</code>, which will generates the <code>dist</code> directory. We can then copy this directory to your static site server or preferred hosting service, like <a href="https://github.com/http-party/http-server"><code>http-server</code></a>, with command <code>npx http-server dist</code>.</p>
+<p>For deployment, see the final section at the bottom of this article.</p>
+</section>
 </section>
 <section id="write-first-data-loader" class="level1">
 <h1>Write first Data Loader</h1>
@@ -180,7 +202,7 @@ font-style: inherit;">?</span> https://observablehq.com/framework/getting-starte
 <div class="code-with-filename-file">
 <pre><strong>forecast.json.js</strong></pre>
 </div>
-<div class="sourceCode" id="cb4" data-filename="forecast.json.js" style="background: #f1f3f5;"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><span class="kw" style="color: #003B4F;
+<div class="sourceCode" id="cb5" data-filename="forecast.json.js" style="background: #f1f3f5;"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">const</span> longitude <span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -189,20 +211,20 @@ background-color: null;
 font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">122.47</span>;</span>
-<span id="cb4-2"><span class="kw" style="color: #003B4F;
+<span id="cb5-2"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">const</span> latitude <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">37.8</span>;</span>
-<span id="cb4-3"></span>
-<span id="cb4-4">async <span class="kw" style="color: #003B4F;
+<span id="cb5-3"></span>
+<span id="cb5-4">async <span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">function</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">json</span>(url) {</span>
-<span id="cb4-5">  <span class="kw" style="color: #003B4F;
+<span id="cb5-5">  <span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">const</span> response <span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -217,7 +239,7 @@ background-color: null;
 font-style: inherit;">:</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"(observablehq.com, support@observablehq.com)"</span>}});</span>
-<span id="cb4-6">  <span class="cf" style="color: #003B4F;
+<span id="cb5-6">  <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> (!response.ok) throw <span class="kw" style="color: #003B4F;
 background-color: null;
@@ -226,14 +248,14 @@ background-color: null;
 font-style: inherit;">Error</span>(<span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">`fetch failed: ${response.status}`</span>);</span>
-<span id="cb4-7">  <span class="cf" style="color: #003B4F;
+<span id="cb5-7">  <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">return</span> await response.<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">json</span>();</span>
-<span id="cb4-8">}</span>
-<span id="cb4-9"></span>
-<span id="cb4-10"><span class="kw" style="color: #003B4F;
+<span id="cb5-8">}</span>
+<span id="cb5-9"></span>
+<span id="cb5-10"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">const</span> station <span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -242,15 +264,15 @@ background-color: null;
 font-style: inherit;">json</span>(<span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">`https://api.weather.gov/points/${latitude},${longitude}`</span>);</span>
-<span id="cb4-11"><span class="kw" style="color: #003B4F;
+<span id="cb5-11"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">const</span> forecast <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> await <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">json</span>(station.properties.forecastHourly);</span>
-<span id="cb4-12"></span>
-<span id="cb4-13">process.<span class="cn" style="color: #8f5902;
+<span id="cb5-12"></span>
+<span id="cb5-13">process.<span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">stdout</span>.<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -263,30 +285,30 @@ font-style: inherit;">stringify</span>(forecast));</span></code></pre></div>
 <div class="code-with-filename-file">
 <pre><strong>forecast.json.py</strong></pre>
 </div>
-<div class="sourceCode" id="cb5" data-filename="forecast.json.py" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="im" style="color: #00769E;
+<div class="sourceCode" id="cb6" data-filename="forecast.json.py" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> json</span>
-<span id="cb5-2"><span class="im" style="color: #00769E;
+<span id="cb6-2"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> requests</span>
-<span id="cb5-3"><span class="im" style="color: #00769E;
+<span id="cb6-3"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> sys</span>
-<span id="cb5-4"></span>
-<span id="cb5-5">longitude <span class="op" style="color: #5E5E5E;
+<span id="cb6-4"></span>
+<span id="cb6-5">longitude <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">122.47</span></span>
-<span id="cb5-6">latitude <span class="op" style="color: #5E5E5E;
+<span id="cb6-6">latitude <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">37.80</span></span>
-<span id="cb5-7"></span>
-<span id="cb5-8">station <span class="op" style="color: #5E5E5E;
+<span id="cb6-7"></span>
+<span id="cb6-8">station <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> requests.get(<span class="ss" style="color: #20794D;
 background-color: null;
@@ -303,24 +325,24 @@ background-color: null;
 font-style: inherit;">}</span><span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span>).json()</span>
-<span id="cb5-9">forecast <span class="op" style="color: #5E5E5E;
+<span id="cb6-9">forecast <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> requests.get(station[<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"properties"</span>][<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"forecastHourly"</span>]).json()</span>
-<span id="cb5-10"></span>
-<span id="cb5-11">json.dump(forecast, sys.stdout)</span></code></pre></div>
+<span id="cb6-10"></span>
+<span id="cb6-11">json.dump(forecast, sys.stdout)</span></code></pre></div>
 </div>
 <p>Run the data loader, testing if it work:</p>
-<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">#| eval: false</span></span>
-<span id="cb6-2"><span class="co" style="color: #5E5E5E;
+<span id="cb7-2"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">#| echo: true</span></span>
-<span id="cb6-3"><span class="ex" style="color: null;
+<span id="cb7-3"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">node</span> hi-observable<span class="dt" style="color: #AD0000;
 background-color: null;
@@ -329,12 +351,12 @@ background-color: null;
 font-style: inherit;">\d</span>ata<span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">\f</span>orecast.json.js</span>
-<span id="cb6-4"></span>
-<span id="cb6-5"><span class="co" style="color: #5E5E5E;
+<span id="cb7-4"></span>
+<span id="cb7-5"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># or</span></span>
-<span id="cb6-6"></span>
-<span id="cb6-7"><span class="ex" style="color: null;
+<span id="cb7-6"></span>
+<span id="cb7-7"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">python</span> hi-observable<span class="dt" style="color: #AD0000;
 background-color: null;
@@ -350,6 +372,7 @@ font-style: inherit;">\f</span>orecast.json.py</span></code></pre></div>
 </section>
 <section id="grids-cards-and-themes" class="level1">
 <h1>Grids, Cards, and Themes</h1>
+<p>The <code>Grid</code> class allow us to organize multiple vizualization in a denser format, like a dashboard. The <code>Grid</code> class declares a grid container.</p>
 </section>
 <section id="deployment-a-project" class="level1">
 <h1>Deployment a Project</h1>
@@ -3990,7 +4013,7 @@ font-style: inherit;">print</span>(k, loss.data)</span></code></pre></div>
 </div>
 <p>Phạm vi bài thực hành này là <strong>tạo, ký số, phát hành các giao dịch Bitcoin thuần Python, từ con số 0, không thư viện phụ thuộc</strong>.</p>
 <p>Đây là môi trường Python của mình:</p>
-<div id="9b74eaed" class="cell" data-execution_count="1">
+<div id="3789c07c" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
@@ -4034,7 +4057,7 @@ font-style: inherit;">print</span>(sys.version)</span></code></pre></div>
 </div>
 </div>
 </div>
-<p>Đây là tài liệu mà Andrej gợi ý cho chúng ta đọc về ECC: <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">blog post</a> của Andrea Corbellini. Bài viết đầu tiên của ông giới thiệu EC trên <strong>trường số thực và luật nhóm</strong>. Theo đó, với EC được xác định bằng <img src="https://latex.codecogs.com/png.latex?%5C%7B(x,y)%5Cin%20R%5E2%20%7C%20y%5E2%20=%20x%5E3%20+%20ax%20+%20b,%204a%5E3%20+%2027b%5E2%20%5Cneq%200%5C%7D%20%5Ccup%20%5C%7B0%5C%7D"> (<img src="https://latex.codecogs.com/png.latex?4a%5E3%20+%2027b%5E2%20%5Cneq%200"> là để tránh điểm kỳ dị singular), cùng với các tiên đề về phép toán cộng (<img src="https://latex.codecogs.com/png.latex?+">) được trang bị gồm:</p>
+<p>Đây là tài liệu mà Andrej gợi ý cho chúng ta đọc về ECC: <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">blog post</a> của Andrea Corbellini. Bài viết đầu tiên của ông giới thiệu EC trên <strong>trường số thực và luật nhóm</strong>. Theo đó, với EC được xác định bằng <img src="https://latex.codecogs.com/png.latex?%5C%7B(x,y)%5Cin%20R%5E2%20%7C%20y%5E2%20=%20x%5E3%20+%20ax%20+%20b,%204a%5E3%20+%2027b%5E2%20%5Cneq%200%5C%7D%20%5Ccup%20%5C%7B0%5C%7D">, trong đó (<img src="https://latex.codecogs.com/png.latex?4a%5E3%20+%2027b%5E2%20%5Cneq%200"> là để tránh điểm kỳ dị singular), cùng với các tiên đề về phép toán cộng (<img src="https://latex.codecogs.com/png.latex?+">) được trang bị gồm:</p>
 <ol type="1">
 <li>Tính đóng (closure): nếu <img src="https://latex.codecogs.com/png.latex?a"> và <img src="https://latex.codecogs.com/png.latex?b"> thuộc <img src="https://latex.codecogs.com/png.latex?G">, thì <img src="https://latex.codecogs.com/png.latex?a+b"> cũng thuộc <img src="https://latex.codecogs.com/png.latex?G">;</li>
 <li>Tính kết hợp (associativity): <img src="https://latex.codecogs.com/png.latex?(a+b)+c%20=%20a%20+%20(b+c)">;</li>
@@ -4050,7 +4073,7 @@ font-style: inherit;">print</span>(sys.version)</span></code></pre></div>
 <p><strong>Phép cộng hình học và đại số</strong> và <strong>phép nhân vô hướng</strong> sẽ được trình bày ở phía sau - trực tiếp trong không gian hữu hạn. Hiện tại ình chỉ cố gắng <strong>hình dung</strong> các tính chất của EC thông qua việc xem xét nó trên <strong>trường số thực</strong>.</p>
 <p>Block code dưới đây định nghĩa đường cong EC. Bitcoin (hay Ethereum) sử dụng một đường cong theo tiêu chuẩn <a href="https://en.bitcoin.it/wiki/Secp256k1">secp256k1</a> do <em>Viện Tiêu Chuẩn và Kỹ Thuật Quốc Gia Mỹ (NIST)</em> đặt ra. Với <img src="https://latex.codecogs.com/png.latex?a=0">, <img src="https://latex.codecogs.com/png.latex?b=7">, định nghĩa đường cong trên trường <img src="https://latex.codecogs.com/png.latex?Z_p"> giờ sẽ là:</p>
 <p><img src="https://latex.codecogs.com/png.latex?%5C%7B(x,y)%5Cin%20(Z_p)%5E2%20%7C%5C:%20y%5E2%20%5Cequiv%20x%5E3%20+%207%20%5C:%20(mod%20%5C:%20p)%5C%7D%20%5Ccup%20%5C%7B0%5C%7D"></p>
-<div id="ffd15393" class="cell" data-execution_count="2">
+<div id="30597419" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
@@ -4138,8 +4161,8 @@ font-style: inherit;"># b = 7</span></span>
 <span id="cb3-25">)</span></code></pre></div>
 </details>
 </div>
-<p>Chúng ta chưa thấy phương trình của EC được thể hiện trong class <code>Curve</code>, chúng ta implement nó bằng cách tạo một class <code>Point</code>. Sau khi xác định curve, ta xác định generator (là một điểm dùng để khởi tạo quá trình “walk” trên đường cong)</p>
-<div id="3e54d341" class="cell" data-execution_count="3">
+<p>Chúng ta chưa thấy phương trình của EC được thể hiện trong class <code>Curve</code>, chúng ta implement nó bằng cách tạo một class <code>Point</code>. Sau khi xác định curve, ta xác định generator - điểm sinh G (là một điểm dùng để khởi tạo quá trình “walk” trên đường cong)</p>
+<div id="aba59c9c" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="at" style="color: #657422;
@@ -4257,7 +4280,7 @@ G is on the curve: False</code></pre>
 </div>
 </div>
 <p>Some notes to be updated here</p>
-<div id="9c8d276b" class="cell" data-execution_count="4">
+<div id="13491355" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="at" style="color: #657422;
@@ -4302,7 +4325,7 @@ font-style: inherit;">0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8C
 </details>
 </div>
 <p>Như vậy đã định nghĩa xong Đường Cong, Điểm sinh (<code>G</code>), và Trình tạo. Giờ ta sẽ tạo <code>private key</code> (hay <code>secret key</code>) - một số nguyên ngẫu nhiên thỏa <code>1&lt;= key &lt; n</code> (n đại diện cho order).</p>
-<div id="12e92102" class="cell" data-execution_count="5">
+<div id="3d3042bf" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1">secret_key <span class="op" style="color: #5E5E5E;
@@ -4334,7 +4357,7 @@ font-style: inherit;">print</span>(secret_key)</span></code></pre></div>
 </div>
 </div>
 <p>Giờ chúng ta sẽ tạo <code>public key</code>, chỉnh là cộng <code>G</code> <code>private key</code> lần.</p>
-<div id="c25b425d" class="cell" data-execution_count="6">
+<div id="5a9f1c81" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1">INF <span class="op" style="color: #5E5E5E;
@@ -4602,7 +4625,7 @@ font-style: inherit;"># monkey patch addition into the Point class</span></span>
 </details>
 </div>
 <p>Giờ ta sẽ thử gen một số bộ <code>private key</code>, <code>public key</code>:</p>
-<div id="794660d5" class="cell" data-execution_count="7">
+<div id="d26875a2" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="co" style="color: #5E5E5E;
@@ -4793,7 +4816,7 @@ Verify the public key is on the curve:  True</code></pre>
 </div>
 </div>
 <p>Chúng ta cần tăng tốc việc cộng <code>G</code> với chính nó với số lần cực kì lớn, do đó Andrej sử dụng 1 thuật toán <code>double_and_add</code> như sau:</p>
-<div id="20689955" class="cell" data-execution_count="8">
+<div id="170ec2b6" class="cell" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="kw" style="color: #003B4F;
@@ -4904,7 +4927,7 @@ True</code></pre>
 </div>
 </div>
 <p>Giờ test với <code>private_key</code> mà chúng ta tạo lúc đầu:</p>
-<div id="0983f8c2" class="cell" data-execution_count="9">
+<div id="16574aa1" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="co" style="color: #5E5E5E;
@@ -4974,7 +4997,7 @@ Verify the public key is on the curve:  True</code></pre>
 <p>Với cặp private/public key ta đã implement được khả năng định danh cho Bitcoin. Giờ ta cần liên kết nó với địa chỉ ví. Trước hết ta cần triển khai một số hàm hash.</p>
 <p>Có thể sử dụng <code>hashlib</code> của Python tuy nhiên Andrej không muốn sử dụng thư viện phụ thuộc. Andrej đã viết lại hai hàm hash mà Bitcoin sử dụng là <code>SHA-256</code> và <code>RIPEMD-160</code>, lần lượt dưới đây, mình note giải thích của Andrej ở phần code comment.</p>
 <p>Có lẽ sẽ cần một dịp khác để hiểu hai hàm băm này, nó nằm ngoài khả năng của mình.</p>
-<div id="03775f11" class="cell" data-execution_count="10">
+<div id="b56be535" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><span class="kw" style="color: #003B4F;
@@ -5789,7 +5812,7 @@ number of bytes in a sha256 digest:  32</code></pre>
 </div>
 </div>
 <p>Hàm băm thứ hai là <code>RIPEMD-160</code>:</p>
-<div id="764c4733" class="cell" data-execution_count="11">
+<div id="f5582013" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><span class="kw" style="color: #003B4F;
@@ -7651,7 +7674,7 @@ number of bytes in a RIPEMD-160 digest:  20</code></pre>
 </div>
 </div>
 <p>Ok giờ thì có thể làm việc với Bitcoin Address. Chúng ta sẽ tạo một class <code>PublicKet</code>, là con của <code>Point</code>, cũng là một điểm trên <code>Curve</code>.</p>
-<div id="5118cb28" class="cell" data-execution_count="12">
+<div id="c40b7f40" class="cell" data-execution_count="12">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><span class="kw" style="color: #003B4F;

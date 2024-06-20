@@ -65,7 +65,7 @@ Vì được xác định trên $Z_p$, nên trên thực tế nó là một đư
 ![[What does the curve used in Bitcoin, secp256k1, look like?](https://bitcoin.stackexchange.com/questions/21907/what-does-the-curve-used-in-bitcoin-secp256k1-look-like)](what_does_ec_look_like.png){width=100%}
 :::
 
-Đây là tài liệu mà Andrej gợi ý cho chúng ta đọc về ECC: [blog post](https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/) của Andrea Corbellini. Bài viết đầu tiên của ông giới thiệu EC trên **trường số thực và luật nhóm**. Theo đó, với EC được xác định bằng $\{(x,y)\in R^2 | y^2 = x^3 + ax + b, 4a^3 + 27b^2 \neq 0\} \cup \{0\}$ ($4a^3 + 27b^2 \neq 0$ là để tránh điểm kỳ dị singular), cùng với các tiên đề về phép toán cộng ($+$) được trang bị gồm:
+Đây là tài liệu mà Andrej gợi ý cho chúng ta đọc về ECC: [blog post](https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/) của Andrea Corbellini. Bài viết đầu tiên của ông giới thiệu EC trên **trường số thực và luật nhóm**. Theo đó, với EC được xác định bằng $\{(x,y)\in R^2 | y^2 = x^3 + ax + b, 4a^3 + 27b^2 \neq 0\} \cup \{0\}$, trong đó ($4a^3 + 27b^2 \neq 0$ là để tránh điểm kỳ dị singular), cùng với các tiên đề về phép toán cộng ($+$) được trang bị gồm:
 
 1. Tính đóng (closure): nếu $a$ và $b$ thuộc $G$, thì $a+b$ cũng thuộc $G$;
 2. Tính kết hợp (associativity): $(a+b)+c = a + (b+c)$;
@@ -115,7 +115,7 @@ bitcoin_curve = Curve(
 ```
 
 Chúng ta chưa thấy phương trình của EC được thể hiện trong class `Curve`, chúng ta implement nó bằng cách tạo một class `Point`.
-Sau khi xác định curve, ta xác định generator (là một điểm dùng để khởi tạo quá trình "walk" trên đường cong)
+Sau khi xác định curve, ta xác định generator - điểm sinh G (là một điểm dùng để khởi tạo quá trình "walk" trên đường cong)
 
 ```{python}
 @dataclass
