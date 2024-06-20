@@ -301,7 +301,7 @@ window.Quarto = {
 </div>
 <p>Phạm vi bài thực hành này là <strong>tạo, ký số, phát hành các giao dịch Bitcoin thuần Python, từ con số 0, không thư viện phụ thuộc</strong>.</p>
 <p>Đây là môi trường Python của mình:</p>
-<div id="9b74eaed" class="cell" data-execution_count="1">
+<div id="3789c07c" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> sys</span>
@@ -341,7 +341,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Đây là tài liệu mà Andrej gợi ý cho chúng ta đọc về ECC: <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">blog post</a> của Andrea Corbellini. Bài viết đầu tiên của ông giới thiệu EC trên <strong>trường số thực và luật nhóm</strong>. Theo đó, với EC được xác định bằng <span class="math inline">\(\{(x,y)\in R^2 | y^2 = x^3 + ax + b, 4a^3 + 27b^2 \neq 0\} \cup \{0\}\)</span> (<span class="math inline">\(4a^3 + 27b^2 \neq 0\)</span> là để tránh điểm kỳ dị singular), cùng với các tiên đề về phép toán cộng (<span class="math inline">\(+\)</span>) được trang bị gồm:</p>
+<p>Đây là tài liệu mà Andrej gợi ý cho chúng ta đọc về ECC: <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">blog post</a> của Andrea Corbellini. Bài viết đầu tiên của ông giới thiệu EC trên <strong>trường số thực và luật nhóm</strong>. Theo đó, với EC được xác định bằng <span class="math inline">\(\{(x,y)\in R^2 | y^2 = x^3 + ax + b, 4a^3 + 27b^2 \neq 0\} \cup \{0\}\)</span>, trong đó (<span class="math inline">\(4a^3 + 27b^2 \neq 0\)</span> là để tránh điểm kỳ dị singular), cùng với các tiên đề về phép toán cộng (<span class="math inline">\(+\)</span>) được trang bị gồm:</p>
 <ol type="1">
 <li>Tính đóng (closure): nếu <span class="math inline">\(a\)</span> và <span class="math inline">\(b\)</span> thuộc <span class="math inline">\(G\)</span>, thì <span class="math inline">\(a+b\)</span> cũng thuộc <span class="math inline">\(G\)</span>;</li>
 <li>Tính kết hợp (associativity): <span class="math inline">\((a+b)+c = a + (b+c)\)</span>;</li>
@@ -357,7 +357,7 @@ window.Quarto = {
 <p><strong>Phép cộng hình học và đại số</strong> và <strong>phép nhân vô hướng</strong> sẽ được trình bày ở phía sau - trực tiếp trong không gian hữu hạn. Hiện tại ình chỉ cố gắng <strong>hình dung</strong> các tính chất của EC thông qua việc xem xét nó trên <strong>trường số thực</strong>.</p>
 <p>Block code dưới đây định nghĩa đường cong EC. Bitcoin (hay Ethereum) sử dụng một đường cong theo tiêu chuẩn <a href="https://en.bitcoin.it/wiki/Secp256k1">secp256k1</a> do <em>Viện Tiêu Chuẩn và Kỹ Thuật Quốc Gia Mỹ (NIST)</em> đặt ra. Với <span class="math inline">\(a=0\)</span>, <span class="math inline">\(b=7\)</span>, định nghĩa đường cong trên trường <span class="math inline">\(Z_p\)</span> giờ sẽ là:</p>
 <p><span class="math inline">\(\{(x,y)\in (Z_p)^2 |\: y^2 \equiv x^3 + 7 \: (mod \: p)\} \cup \{0\}\)</span></p>
-<div id="ffd15393" class="cell" data-execution_count="2">
+<div id="30597419" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># from __future__ import annotations # PEP 563: Postponed evaluation of annotations</span></span>
@@ -387,8 +387,8 @@ window.Quarto = {
 <span id="cb3-25"><a href="#cb3-25"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Chúng ta chưa thấy phương trình của EC được thể hiện trong class <code>Curve</code>, chúng ta implement nó bằng cách tạo một class <code>Point</code>. Sau khi xác định curve, ta xác định generator (là một điểm dùng để khởi tạo quá trình “walk” trên đường cong)</p>
-<div id="3e54d341" class="cell" data-execution_count="3">
+<p>Chúng ta chưa thấy phương trình của EC được thể hiện trong class <code>Curve</code>, chúng ta implement nó bằng cách tạo một class <code>Point</code>. Sau khi xác định curve, ta xác định generator - điểm sinh G (là một điểm dùng để khởi tạo quá trình “walk” trên đường cong)</p>
+<div id="aba59c9c" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="at">@dataclass</span></span>
@@ -420,7 +420,7 @@ G is on the curve: False</code></pre>
 </div>
 </div>
 <p>Some notes to be updated here</p>
-<div id="9c8d276b" class="cell" data-execution_count="4">
+<div id="13491355" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="at">@dataclass</span></span>
@@ -439,7 +439,7 @@ G is on the curve: False</code></pre>
 </details>
 </div>
 <p>Như vậy đã định nghĩa xong Đường Cong, Điểm sinh (<code>G</code>), và Trình tạo. Giờ ta sẽ tạo <code>private key</code> (hay <code>secret key</code>) - một số nguyên ngẫu nhiên thỏa <code>1&lt;= key &lt; n</code> (n đại diện cho order).</p>
-<div id="12e92102" class="cell" data-execution_count="5">
+<div id="3d3042bf" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>secret_key <span class="op">=</span> <span class="bu">int</span>.from_bytes(<span class="st">b'Hi, this is Tuan'</span>, <span class="st">'big'</span>) <span class="co"># this is how I will do it for reproducibility</span></span>
@@ -451,7 +451,7 @@ G is on the curve: False</code></pre>
 </div>
 </div>
 <p>Giờ chúng ta sẽ tạo <code>public key</code>, chỉnh là cộng <code>G</code> <code>private key</code> lần.</p>
-<div id="c25b425d" class="cell" data-execution_count="6">
+<div id="5a9f1c81" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>INF <span class="op">=</span> Point(<span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>) <span class="co"># special point at "infinity", kind of like a zero</span></span>
@@ -501,7 +501,7 @@ G is on the curve: False</code></pre>
 </details>
 </div>
 <p>Giờ ta sẽ thử gen một số bộ <code>private key</code>, <code>public key</code>:</p>
-<div id="794660d5" class="cell" data-execution_count="7">
+<div id="d26875a2" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># if our secret key was the integer 1, then our public key would just be G:</span></span>
@@ -534,7 +534,7 @@ Verify the public key is on the curve:  True</code></pre>
 </div>
 </div>
 <p>Chúng ta cần tăng tốc việc cộng <code>G</code> với chính nó với số lần cực kì lớn, do đó Andrej sử dụng 1 thuật toán <code>double_and_add</code> như sau:</p>
-<div id="20689955" class="cell" data-execution_count="8">
+<div id="170ec2b6" class="cell" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">def</span> double_and_add(<span class="va">self</span>, k: <span class="bu">int</span>) <span class="op">-&gt;</span> Point:</span>
@@ -563,7 +563,7 @@ True</code></pre>
 </div>
 </div>
 <p>Giờ test với <code>private_key</code> mà chúng ta tạo lúc đầu:</p>
-<div id="0983f8c2" class="cell" data-execution_count="9">
+<div id="16574aa1" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># efficiently calculate our actual public key!</span></span>
@@ -581,7 +581,7 @@ Verify the public key is on the curve:  True</code></pre>
 <p>Với cặp private/public key ta đã implement được khả năng định danh cho Bitcoin. Giờ ta cần liên kết nó với địa chỉ ví. Trước hết ta cần triển khai một số hàm hash.</p>
 <p>Có thể sử dụng <code>hashlib</code> của Python tuy nhiên Andrej không muốn sử dụng thư viện phụ thuộc. Andrej đã viết lại hai hàm hash mà Bitcoin sử dụng là <code>SHA-256</code> và <code>RIPEMD-160</code>, lần lượt dưới đây, mình note giải thích của Andrej ở phần code comment.</p>
 <p>Có lẽ sẽ cần một dịp khác để hiểu hai hàm băm này, nó nằm ngoài khả năng của mình.</p>
-<div id="03775f11" class="cell" data-execution_count="10">
+<div id="b56be535" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">def</span> gen_sha256_with_variable_scope_protector_to_not_pollute_global_namespace():</span>
@@ -766,7 +766,7 @@ number of bytes in a sha256 digest:  32</code></pre>
 </div>
 </div>
 <p>Hàm băm thứ hai là <code>RIPEMD-160</code>:</p>
-<div id="764c4733" class="cell" data-execution_count="11">
+<div id="f5582013" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">def</span> gen_ripemd160_with_variable_scope_protector_to_not_pollute_global_namespace():</span>
@@ -1074,7 +1074,7 @@ number of bytes in a RIPEMD-160 digest:  20</code></pre>
 </div>
 </div>
 <p>Ok giờ thì có thể làm việc với Bitcoin Address. Chúng ta sẽ tạo một class <code>PublicKet</code>, là con của <code>Point</code>, cũng là một điểm trên <code>Curve</code>.</p>
-<div id="5118cb28" class="cell" data-execution_count="12">
+<div id="c40b7f40" class="cell" data-execution_count="12">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">class</span> PublicKey(Point):</span>
@@ -1674,7 +1674,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb21-67"><a href="#cb21-67"></a>![<span class="co">[</span><span class="ot">What does the curve used in Bitcoin, secp256k1, look like?</span><span class="co">](https://bitcoin.stackexchange.com/questions/21907/what-does-the-curve-used-in-bitcoin-secp256k1-look-like)</span>](what_does_ec_look_like.png){width=100%}</span>
 <span id="cb21-68"><a href="#cb21-68"></a>:::</span>
 <span id="cb21-69"><a href="#cb21-69"></a></span>
-<span id="cb21-70"><a href="#cb21-70"></a>Đây là tài liệu mà Andrej gợi ý cho chúng ta đọc về ECC: <span class="co">[</span><span class="ot">blog post</span><span class="co">](https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/)</span> của Andrea Corbellini. Bài viết đầu tiên của ông giới thiệu EC trên **trường số thực và luật nhóm**. Theo đó, với EC được xác định bằng $<span class="sc">\{</span>(x,y)\in R^2 | y^2 = x^3 + ax + b, 4a^3 + 27b^2 \neq 0<span class="sc">\}</span> \cup <span class="sc">\{</span>0<span class="sc">\}</span>$ ($4a^3 + 27b^2 \neq 0$ là để tránh điểm kỳ dị singular), cùng với các tiên đề về phép toán cộng ($+$) được trang bị gồm:</span>
+<span id="cb21-70"><a href="#cb21-70"></a>Đây là tài liệu mà Andrej gợi ý cho chúng ta đọc về ECC: <span class="co">[</span><span class="ot">blog post</span><span class="co">](https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/)</span> của Andrea Corbellini. Bài viết đầu tiên của ông giới thiệu EC trên **trường số thực và luật nhóm**. Theo đó, với EC được xác định bằng $<span class="sc">\{</span>(x,y)\in R^2 | y^2 = x^3 + ax + b, 4a^3 + 27b^2 \neq 0<span class="sc">\}</span> \cup <span class="sc">\{</span>0<span class="sc">\}</span>$, trong đó ($4a^3 + 27b^2 \neq 0$ là để tránh điểm kỳ dị singular), cùng với các tiên đề về phép toán cộng ($+$) được trang bị gồm:</span>
 <span id="cb21-71"><a href="#cb21-71"></a></span>
 <span id="cb21-72"><a href="#cb21-72"></a><span class="ss">1. </span>Tính đóng (closure): nếu $a$ và $b$ thuộc $G$, thì $a+b$ cũng thuộc $G$;</span>
 <span id="cb21-73"><a href="#cb21-73"></a><span class="ss">2. </span>Tính kết hợp (associativity): $(a+b)+c = a + (b+c)$;</span>
@@ -1724,7 +1724,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb21-119"><a href="#cb21-119"></a><span class="in">```</span></span>
 <span id="cb21-120"><a href="#cb21-120"></a></span>
 <span id="cb21-121"><a href="#cb21-121"></a>Chúng ta chưa thấy phương trình của EC được thể hiện trong class <span class="in">`Curve`</span>, chúng ta implement nó bằng cách tạo một class <span class="in">`Point`</span>.</span>
-<span id="cb21-122"><a href="#cb21-122"></a>Sau khi xác định curve, ta xác định generator (là một điểm dùng để khởi tạo quá trình "walk" trên đường cong)</span>
+<span id="cb21-122"><a href="#cb21-122"></a>Sau khi xác định curve, ta xác định generator - điểm sinh G (là một điểm dùng để khởi tạo quá trình "walk" trên đường cong)</span>
 <span id="cb21-123"><a href="#cb21-123"></a></span>
 <span id="cb21-126"><a href="#cb21-126"></a><span class="in">```{python}</span></span>
 <span id="cb21-127"><a href="#cb21-127"></a><span class="at">@dataclass</span></span>
