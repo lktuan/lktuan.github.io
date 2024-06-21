@@ -106,10 +106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
-
-
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
-
 
 
 <link rel="stylesheet" href="html/styles.scss">
@@ -211,6 +208,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">May 23, 2024</p>
+      </div>
+    </div>
       
     </div>
     
@@ -268,7 +271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="import-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="import-the-data">2.1. Import the data</h2>
 <p>Okay đầu tiên cần import và làm sạch dữ liệu. Bảng có sẵn trong file Exercise có vẻ dùng để báo cáo hơn là lưu trữ dữ liệu.</p>
-<div id="1f560f59" class="cell" data-execution_count="1">
+<div id="562db42c" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2"></a></span>
 <span id="cb1-3"><a href="#cb1-3"></a>data <span class="op">=</span> pd.read_excel(</span>
@@ -288,7 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="data-manipulation" class="level2">
 <h2 class="anchored" data-anchor-id="data-manipulation">2.2. Data manipulation</h2>
 <p>Yep giờ ta đã có 1 bảng data khá sạch, tuy nhiên lưu ý là bảng đang không thể hiện toàn bộ dữ liệu (total của <code>pct_of_account</code> chỉ là <code>81.86%</code>). Ta cần tính toán thêm <code>All other</code> và <code>Grand Total</code> (lý do là mình chưa tìm thấy function hiển thị Grand Total với package đang sử dụng, ngay cả trong ví dụ <a href="https://posit-dev.github.io/great-tables/blog/pycon-2024-great-tables-are-possible/">này</a>, GT cũng sử dụng data đã có sẵn Grand Total).</p>
-<div id="53c42e53" class="cell" data-execution_count="2">
+<div id="19805bdd" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>all_other_pct_of_account <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> data[<span class="st">"pct_of_account"</span>].<span class="bu">sum</span>()</span>
 <span id="cb2-2"><a href="#cb2-2"></a>all_other_no_of_account <span class="op">=</span> <span class="bu">round</span>(all_other_pct_of_account <span class="op">/</span> data[<span class="st">"pct_of_account"</span>][<span class="dv">0</span>] <span class="op">*</span> data[<span class="st">"no_of_account"</span>][<span class="dv">0</span>],<span class="dv">0</span>)</span>
 <span id="cb2-3"><a href="#cb2-3"></a></span>
@@ -307,7 +310,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-16"><a href="#cb2-16"></a>data.loc[data.index[<span class="op">-</span><span class="dv">1</span>], <span class="st">'tier'</span>] <span class="op">=</span> <span class="st">'Grand Total'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Show the data:</p>
-<div id="96daf7f1" class="cell" data-execution_count="3">
+<div id="f85da960" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="im">from</span> great_tables <span class="im">import</span> GT</span>
 <span id="cb3-2"><a href="#cb3-2"></a></span>
 <span id="cb3-3"><a href="#cb3-3"></a>( </span>
@@ -315,51 +318,51 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-5"><a href="#cb3-5"></a>  .fmt_number(columns<span class="op">=</span> [<span class="st">"no_of_account"</span>,<span class="st">"pct_of_account"</span>,<span class="st">"revenue"</span>,<span class="st">"pct_of_revenue"</span>],decimals<span class="op">=</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
-<div id="uczndrmske" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="craneejhel" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>
-#uczndrmske table {
+#craneejhel table {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
 
-#uczndrmske thead, tbody, tfoot, tr, td, th { border-style: none; }
+#craneejhel thead, tbody, tfoot, tr, td, th { border-style: none; }
  tr { background-color: transparent; }
-#uczndrmske p { margin: 0; padding: 0; }
- #uczndrmske .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
- #uczndrmske .gt_caption { padding-top: 4px; padding-bottom: 4px; }
- #uczndrmske .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
- #uczndrmske .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
- #uczndrmske .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #uczndrmske .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #uczndrmske .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #uczndrmske .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
- #uczndrmske .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
- #uczndrmske .gt_column_spanner_outer:first-child { padding-left: 0; }
- #uczndrmske .gt_column_spanner_outer:last-child { padding-right: 0; }
- #uczndrmske .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
- #uczndrmske .gt_spanner_row { border-bottom-style: hidden; }
- #uczndrmske .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
- #uczndrmske .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
- #uczndrmske .gt_from_md> :first-child { margin-top: 0; }
- #uczndrmske .gt_from_md> :last-child { margin-bottom: 0; }
- #uczndrmske .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
- #uczndrmske .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
- #uczndrmske .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
- #uczndrmske .gt_row_group_first td { border-top-width: 2px; }
- #uczndrmske .gt_row_group_first th { border-top-width: 2px; }
- #uczndrmske .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #uczndrmske .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #uczndrmske .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #uczndrmske .gt_left { text-align: left; }
- #uczndrmske .gt_center { text-align: center; }
- #uczndrmske .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
- #uczndrmske .gt_font_normal { font-weight: normal; }
- #uczndrmske .gt_font_bold { font-weight: bold; }
- #uczndrmske .gt_font_italic { font-style: italic; }
- #uczndrmske .gt_super { font-size: 65%; }
- #uczndrmske .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
- #uczndrmske .gt_asterisk { font-size: 100%; vertical-align: 0; }
+#craneejhel p { margin: 0; padding: 0; }
+ #craneejhel .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #craneejhel .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #craneejhel .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #craneejhel .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #craneejhel .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #craneejhel .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #craneejhel .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #craneejhel .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #craneejhel .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #craneejhel .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #craneejhel .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #craneejhel .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #craneejhel .gt_spanner_row { border-bottom-style: hidden; }
+ #craneejhel .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #craneejhel .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #craneejhel .gt_from_md> :first-child { margin-top: 0; }
+ #craneejhel .gt_from_md> :last-child { margin-bottom: 0; }
+ #craneejhel .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #craneejhel .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #craneejhel .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #craneejhel .gt_row_group_first td { border-top-width: 2px; }
+ #craneejhel .gt_row_group_first th { border-top-width: 2px; }
+ #craneejhel .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #craneejhel .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #craneejhel .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #craneejhel .gt_left { text-align: left; }
+ #craneejhel .gt_center { text-align: center; }
+ #craneejhel .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #craneejhel .gt_font_normal { font-weight: normal; }
+ #craneejhel .gt_font_bold { font-weight: bold; }
+ #craneejhel .gt_font_italic { font-style: italic; }
+ #craneejhel .gt_super { font-size: 65%; }
+ #craneejhel .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #craneejhel .gt_asterisk { font-size: 100%; vertical-align: 0; }
  
 </style>
 
@@ -437,7 +440,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="visualization">2.3. Visualization</h2>
 <p>Được rồi, giờ ta có thể dùng <code>great_tables</code> để tiến hành visualize. Về cơ bản, chỉ cần khởi tạo một object <code>GT()</code> có thể mở rộng được, các element/hoặc format được định nghĩa về sau.</p>
 <p>Dưới đây chúng ta trình bày một bảng đơn giản với tiêu đề, tên cột, cũng như định dạng lại dữ liệu.</p>
-<div id="2ef6693d" class="cell" data-execution_count="4">
+<div id="de0bc25c" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>(</span>
 <span id="cb4-2"><a href="#cb4-2"></a>  GT(data)</span>
 <span id="cb4-3"><a href="#cb4-3"></a>  .tab_header(title<span class="op">=</span><span class="st">"New client tier share"</span>)</span>
@@ -455,51 +458,51 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-15"><a href="#cb4-15"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
-<div id="yglrxdglqz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="owjzkcqqrj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>
-#yglrxdglqz table {
+#owjzkcqqrj table {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
 
-#yglrxdglqz thead, tbody, tfoot, tr, td, th { border-style: none; }
+#owjzkcqqrj thead, tbody, tfoot, tr, td, th { border-style: none; }
  tr { background-color: transparent; }
-#yglrxdglqz p { margin: 0; padding: 0; }
- #yglrxdglqz .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
- #yglrxdglqz .gt_caption { padding-top: 4px; padding-bottom: 4px; }
- #yglrxdglqz .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
- #yglrxdglqz .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
- #yglrxdglqz .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #yglrxdglqz .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #yglrxdglqz .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #yglrxdglqz .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
- #yglrxdglqz .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
- #yglrxdglqz .gt_column_spanner_outer:first-child { padding-left: 0; }
- #yglrxdglqz .gt_column_spanner_outer:last-child { padding-right: 0; }
- #yglrxdglqz .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
- #yglrxdglqz .gt_spanner_row { border-bottom-style: hidden; }
- #yglrxdglqz .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
- #yglrxdglqz .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
- #yglrxdglqz .gt_from_md> :first-child { margin-top: 0; }
- #yglrxdglqz .gt_from_md> :last-child { margin-bottom: 0; }
- #yglrxdglqz .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
- #yglrxdglqz .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
- #yglrxdglqz .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
- #yglrxdglqz .gt_row_group_first td { border-top-width: 2px; }
- #yglrxdglqz .gt_row_group_first th { border-top-width: 2px; }
- #yglrxdglqz .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #yglrxdglqz .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #yglrxdglqz .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #yglrxdglqz .gt_left { text-align: left; }
- #yglrxdglqz .gt_center { text-align: center; }
- #yglrxdglqz .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
- #yglrxdglqz .gt_font_normal { font-weight: normal; }
- #yglrxdglqz .gt_font_bold { font-weight: bold; }
- #yglrxdglqz .gt_font_italic { font-style: italic; }
- #yglrxdglqz .gt_super { font-size: 65%; }
- #yglrxdglqz .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
- #yglrxdglqz .gt_asterisk { font-size: 100%; vertical-align: 0; }
+#owjzkcqqrj p { margin: 0; padding: 0; }
+ #owjzkcqqrj .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #owjzkcqqrj .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #owjzkcqqrj .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #owjzkcqqrj .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #owjzkcqqrj .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #owjzkcqqrj .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #owjzkcqqrj .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #owjzkcqqrj .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #owjzkcqqrj .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #owjzkcqqrj .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #owjzkcqqrj .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #owjzkcqqrj .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #owjzkcqqrj .gt_spanner_row { border-bottom-style: hidden; }
+ #owjzkcqqrj .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #owjzkcqqrj .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #owjzkcqqrj .gt_from_md> :first-child { margin-top: 0; }
+ #owjzkcqqrj .gt_from_md> :last-child { margin-bottom: 0; }
+ #owjzkcqqrj .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #owjzkcqqrj .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #owjzkcqqrj .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #owjzkcqqrj .gt_row_group_first td { border-top-width: 2px; }
+ #owjzkcqqrj .gt_row_group_first th { border-top-width: 2px; }
+ #owjzkcqqrj .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #owjzkcqqrj .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #owjzkcqqrj .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #owjzkcqqrj .gt_left { text-align: left; }
+ #owjzkcqqrj .gt_center { text-align: center; }
+ #owjzkcqqrj .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #owjzkcqqrj .gt_font_normal { font-weight: normal; }
+ #owjzkcqqrj .gt_font_bold { font-weight: bold; }
+ #owjzkcqqrj .gt_font_italic { font-style: italic; }
+ #owjzkcqqrj .gt_super { font-size: 65%; }
+ #owjzkcqqrj .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #owjzkcqqrj .gt_asterisk { font-size: 100%; vertical-align: 0; }
  
 </style>
 
@@ -584,7 +587,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Trông ổn (ít nhất là trình bày số liệu một cách toàn vẹn) so với bản gốc rồi!</p>
 <p>Tiếp tục, ta dùng - helper <code>md()</code> để định dạng lại tiêu đề; - sử dụng <code>.data_color()</code> để tạo heatmapping; - sử dụng <code>tab_style()</code> để format dòng Grand Total; - sử dụng <code>.opt_stylize()</code> để theming.</p>
-<div id="0e479dcf" class="cell" data-execution_count="5">
+<div id="35220963" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="im">from</span> great_tables <span class="im">import</span> md, style, loc</span>
 <span id="cb5-2"><a href="#cb5-2"></a></span>
 <span id="cb5-3"><a href="#cb5-3"></a>(</span>
@@ -621,51 +624,51 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-34"><a href="#cb5-34"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
-<div id="dkntzakcdq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="xlwzucecqv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>
-#dkntzakcdq table {
+#xlwzucecqv table {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
 
-#dkntzakcdq thead, tbody, tfoot, tr, td, th { border-style: none; }
+#xlwzucecqv thead, tbody, tfoot, tr, td, th { border-style: none; }
  tr { background-color: transparent; }
-#dkntzakcdq p { margin: 0; padding: 0; }
- #dkntzakcdq .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #D5D5D5; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
- #dkntzakcdq .gt_caption { padding-top: 4px; padding-bottom: 4px; }
- #dkntzakcdq .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
- #dkntzakcdq .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
- #dkntzakcdq .gt_heading { background-color: #FFFFFF; text-align: left; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #dkntzakcdq .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; }
- #dkntzakcdq .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D5D5D5; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #dkntzakcdq .gt_col_heading { color: #FFFFFF; background-color: #004D80; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
- #dkntzakcdq .gt_column_spanner_outer { color: #FFFFFF; background-color: #004D80; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
- #dkntzakcdq .gt_column_spanner_outer:first-child { padding-left: 0; }
- #dkntzakcdq .gt_column_spanner_outer:last-child { padding-right: 0; }
- #dkntzakcdq .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
- #dkntzakcdq .gt_spanner_row { border-bottom-style: hidden; }
- #dkntzakcdq .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D5D5D5; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
- #dkntzakcdq .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D5D5D5; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; vertical-align: middle; }
- #dkntzakcdq .gt_from_md> :first-child { margin-top: 0; }
- #dkntzakcdq .gt_from_md> :last-child { margin-bottom: 0; }
- #dkntzakcdq .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D5D5D5; border-left-style: solid; border-left-width: 1px; border-left-color: #D5D5D5; border-right-style: solid; border-right-width: 1px; border-right-color: #D5D5D5; vertical-align: middle; overflow-x: hidden; }
- #dkntzakcdq .gt_stub { color: #333333; background-color: #929292; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D5D5D5; padding-left: 5px; padding-right: 5px; }
- #dkntzakcdq .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
- #dkntzakcdq .gt_row_group_first td { border-top-width: 2px; }
- #dkntzakcdq .gt_row_group_first th { border-top-width: 2px; }
- #dkntzakcdq .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D5D5D5; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; }
- #dkntzakcdq .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #dkntzakcdq .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #dkntzakcdq .gt_left { text-align: left; }
- #dkntzakcdq .gt_center { text-align: center; }
- #dkntzakcdq .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
- #dkntzakcdq .gt_font_normal { font-weight: normal; }
- #dkntzakcdq .gt_font_bold { font-weight: bold; }
- #dkntzakcdq .gt_font_italic { font-style: italic; }
- #dkntzakcdq .gt_super { font-size: 65%; }
- #dkntzakcdq .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
- #dkntzakcdq .gt_asterisk { font-size: 100%; vertical-align: 0; }
+#xlwzucecqv p { margin: 0; padding: 0; }
+ #xlwzucecqv .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #D5D5D5; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #xlwzucecqv .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #xlwzucecqv .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #xlwzucecqv .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #xlwzucecqv .gt_heading { background-color: #FFFFFF; text-align: left; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #xlwzucecqv .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; }
+ #xlwzucecqv .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D5D5D5; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #xlwzucecqv .gt_col_heading { color: #FFFFFF; background-color: #004D80; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #xlwzucecqv .gt_column_spanner_outer { color: #FFFFFF; background-color: #004D80; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #xlwzucecqv .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #xlwzucecqv .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #xlwzucecqv .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #xlwzucecqv .gt_spanner_row { border-bottom-style: hidden; }
+ #xlwzucecqv .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D5D5D5; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #xlwzucecqv .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D5D5D5; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; vertical-align: middle; }
+ #xlwzucecqv .gt_from_md> :first-child { margin-top: 0; }
+ #xlwzucecqv .gt_from_md> :last-child { margin-bottom: 0; }
+ #xlwzucecqv .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D5D5D5; border-left-style: solid; border-left-width: 1px; border-left-color: #D5D5D5; border-right-style: solid; border-right-width: 1px; border-right-color: #D5D5D5; vertical-align: middle; overflow-x: hidden; }
+ #xlwzucecqv .gt_stub { color: #333333; background-color: #929292; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D5D5D5; padding-left: 5px; padding-right: 5px; }
+ #xlwzucecqv .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #xlwzucecqv .gt_row_group_first td { border-top-width: 2px; }
+ #xlwzucecqv .gt_row_group_first th { border-top-width: 2px; }
+ #xlwzucecqv .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D5D5D5; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; }
+ #xlwzucecqv .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #xlwzucecqv .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #xlwzucecqv .gt_left { text-align: left; }
+ #xlwzucecqv .gt_center { text-align: center; }
+ #xlwzucecqv .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #xlwzucecqv .gt_font_normal { font-weight: normal; }
+ #xlwzucecqv .gt_font_bold { font-weight: bold; }
+ #xlwzucecqv .gt_font_italic { font-style: italic; }
+ #xlwzucecqv .gt_super { font-size: 65%; }
+ #xlwzucecqv .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #xlwzucecqv .gt_asterisk { font-size: 100%; vertical-align: 0; }
  
 </style>
 
@@ -751,7 +754,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Tiếp theo, chúng ta sẽ thử dùng <code>fmt_nanoplot()</code> để tạo một bar plots thay cho hai cột percentage.</p>
 <p>Đây là một tính năng trong giai đoạn thử nghiệm nên mình thấy chưa thực sử ổn định và tuân theo document mà nhà phát triển đề cập. Trong ví dụ dưới đây mình sử dụng data bar, loại bỏ format do hàng cuối cùng. Tuy nhiên, đồ thị vẫn include giá trị <code>100%</code> ở hàng Grand Total để điều chỉnh bar scale.</p>
 <p>Thêm nữa mình cần chuyển dataframe về polar dataframe, khi đó một column của dl.df là iterable.</p>
-<div id="2f9f54d2" class="cell" data-execution_count="6">
+<div id="be86356a" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">from</span> great_tables <span class="im">import</span> md, style, loc, nanoplot_options</span>
 <span id="cb6-2"><a href="#cb6-2"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb6-3"><a href="#cb6-3"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
@@ -826,51 +829,51 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-72"><a href="#cb6-72"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div>
-<div id="mwlfvwwzhq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="xsdfljskly" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>
-#mwlfvwwzhq table {
+#xsdfljskly table {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
 
-#mwlfvwwzhq thead, tbody, tfoot, tr, td, th { border-style: none; }
+#xsdfljskly thead, tbody, tfoot, tr, td, th { border-style: none; }
  tr { background-color: transparent; }
-#mwlfvwwzhq p { margin: 0; padding: 0; }
- #mwlfvwwzhq .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #929292; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
- #mwlfvwwzhq .gt_caption { padding-top: 4px; padding-bottom: 4px; }
- #mwlfvwwzhq .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
- #mwlfvwwzhq .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
- #mwlfvwwzhq .gt_heading { background-color: #FFFFFF; text-align: left; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #mwlfvwwzhq .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; }
- #mwlfvwwzhq .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #929292; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #mwlfvwwzhq .gt_col_heading { color: #FFFFFF; background-color: #004D80; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
- #mwlfvwwzhq .gt_column_spanner_outer { color: #FFFFFF; background-color: #004D80; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
- #mwlfvwwzhq .gt_column_spanner_outer:first-child { padding-left: 0; }
- #mwlfvwwzhq .gt_column_spanner_outer:last-child { padding-right: 0; }
- #mwlfvwwzhq .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
- #mwlfvwwzhq .gt_spanner_row { border-bottom-style: hidden; }
- #mwlfvwwzhq .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #929292; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
- #mwlfvwwzhq .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #929292; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; vertical-align: middle; }
- #mwlfvwwzhq .gt_from_md> :first-child { margin-top: 0; }
- #mwlfvwwzhq .gt_from_md> :last-child { margin-bottom: 0; }
- #mwlfvwwzhq .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: dashed; border-top-width: 1px; border-top-color: #929292; border-left-style: none; border-left-width: 1px; border-left-color: #929292; border-right-style: none; border-right-width: 1px; border-right-color: #929292; vertical-align: middle; overflow-x: hidden; }
- #mwlfvwwzhq .gt_stub { color: #333333; background-color: #D5D5D5; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: none; border-right-width: 2px; border-right-color: #FFFFFF; padding-left: 5px; padding-right: 5px; }
- #mwlfvwwzhq .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
- #mwlfvwwzhq .gt_row_group_first td { border-top-width: 2px; }
- #mwlfvwwzhq .gt_row_group_first th { border-top-width: 2px; }
- #mwlfvwwzhq .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #929292; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; }
- #mwlfvwwzhq .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #mwlfvwwzhq .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #mwlfvwwzhq .gt_left { text-align: left; }
- #mwlfvwwzhq .gt_center { text-align: center; }
- #mwlfvwwzhq .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
- #mwlfvwwzhq .gt_font_normal { font-weight: normal; }
- #mwlfvwwzhq .gt_font_bold { font-weight: bold; }
- #mwlfvwwzhq .gt_font_italic { font-style: italic; }
- #mwlfvwwzhq .gt_super { font-size: 65%; }
- #mwlfvwwzhq .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
- #mwlfvwwzhq .gt_asterisk { font-size: 100%; vertical-align: 0; }
+#xsdfljskly p { margin: 0; padding: 0; }
+ #xsdfljskly .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #929292; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #xsdfljskly .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #xsdfljskly .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #xsdfljskly .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #xsdfljskly .gt_heading { background-color: #FFFFFF; text-align: left; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #xsdfljskly .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; }
+ #xsdfljskly .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #929292; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #xsdfljskly .gt_col_heading { color: #FFFFFF; background-color: #004D80; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #xsdfljskly .gt_column_spanner_outer { color: #FFFFFF; background-color: #004D80; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #xsdfljskly .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #xsdfljskly .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #xsdfljskly .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #xsdfljskly .gt_spanner_row { border-bottom-style: hidden; }
+ #xsdfljskly .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #929292; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #xsdfljskly .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #929292; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; vertical-align: middle; }
+ #xsdfljskly .gt_from_md> :first-child { margin-top: 0; }
+ #xsdfljskly .gt_from_md> :last-child { margin-bottom: 0; }
+ #xsdfljskly .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: dashed; border-top-width: 1px; border-top-color: #929292; border-left-style: none; border-left-width: 1px; border-left-color: #929292; border-right-style: none; border-right-width: 1px; border-right-color: #929292; vertical-align: middle; overflow-x: hidden; }
+ #xsdfljskly .gt_stub { color: #333333; background-color: #D5D5D5; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: none; border-right-width: 2px; border-right-color: #FFFFFF; padding-left: 5px; padding-right: 5px; }
+ #xsdfljskly .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #xsdfljskly .gt_row_group_first td { border-top-width: 2px; }
+ #xsdfljskly .gt_row_group_first th { border-top-width: 2px; }
+ #xsdfljskly .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #929292; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; }
+ #xsdfljskly .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #xsdfljskly .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #xsdfljskly .gt_left { text-align: left; }
+ #xsdfljskly .gt_center { text-align: center; }
+ #xsdfljskly .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #xsdfljskly .gt_font_normal { font-weight: normal; }
+ #xsdfljskly .gt_font_bold { font-weight: bold; }
+ #xsdfljskly .gt_font_italic { font-style: italic; }
+ #xsdfljskly .gt_super { font-size: 65%; }
+ #xsdfljskly .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #xsdfljskly .gt_asterisk { font-size: 100%; vertical-align: 0; }
  
 </style>
 
@@ -1517,235 +1520,236 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb7-5"><a href="#cb7-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
 <span id="cb7-6"><a href="#cb7-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
 <span id="cb7-7"><a href="#cb7-7"></a><span class="an">date:</span><span class="co"> 05-22-2024</span></span>
-<span id="cb7-8"><a href="#cb7-8"></a><span class="an">categories:</span><span class="co"> [Python, Visualization] # self-defined categories</span></span>
-<span id="cb7-9"><a href="#cb7-9"></a><span class="an">image:</span><span class="co"> SWD-Cover-FULL-R5-MED.png</span></span>
-<span id="cb7-10"><a href="#cb7-10"></a><span class="an">draft:</span><span class="co"> false # setting this to `true` will prevent your post from appearing on your listing page until you're ready!</span></span>
-<span id="cb7-11"><a href="#cb7-11"></a></span>
-<span id="cb7-12"><a href="#cb7-12"></a><span class="an">format:</span><span class="co"> </span></span>
-<span id="cb7-13"><a href="#cb7-13"></a><span class="co">  html: </span></span>
-<span id="cb7-14"><a href="#cb7-14"></a><span class="co">    code-fold: false</span></span>
-<span id="cb7-15"><a href="#cb7-15"></a><span class="co">    code-summary: "Show the code"</span></span>
-<span id="cb7-16"><a href="#cb7-16"></a><span class="co">    code-line-numbers: true</span></span>
-<span id="cb7-17"><a href="#cb7-17"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
-<span id="cb7-18"><a href="#cb7-18"></a><span class="an">editor:</span><span class="co"> visual</span></span>
-<span id="cb7-19"><a href="#cb7-19"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
-<span id="cb7-20"><a href="#cb7-20"></a><span class="co">---</span></span>
-<span id="cb7-21"><a href="#cb7-21"></a></span>
-<span id="cb7-22"><a href="#cb7-22"></a><span class="fu"># 1. Motivation</span></span>
-<span id="cb7-23"><a href="#cb7-23"></a>Lấy cảm hứng từ bài <span class="co">[</span><span class="ot">post</span><span class="co">](https://rpubs.com/chidungkt/1139405)</span> của thầy Nguyễn Chí Dũng về việc giải các exercise thuộc Chương 2 cuốn sách **Storytelling with Data: Let’s Practice** của tác giả <span class="co">[</span><span class="ot">Cole Nussbaumer Knaflic</span><span class="co">](https://www.linkedin.com/in/colenussbaumer/)</span> sử dụng R, mình muốn cải thiện 1 bảng biểu nhưng sử dụng Python (trong cuốn sách gốc, tác giả sử dụng Excel để makeover các graph).</span>
-<span id="cb7-24"><a href="#cb7-24"></a></span>
-<span id="cb7-25"><a href="#cb7-25"></a>Đây là một cuốn sách hay về chủ để visualization, dành cho những người sử dụng biểu đồ nhiều để communicate trong công việc. Cụm từ "storytelling" đang được sử dụng rất nhiều, thậm chí như là một buzzword, một keyword cần có trong CV của mỗi người làm data. Đối với mình, "storytelling" chỉ nên được sử dụng khi bạn đã có sẵn các kết quả phân tích, được thực hiện một cách khoa học, và bạn muốn truyền tải nó tới business unit/management một cách hiệu quả. "Storytelling" nên không bao giờ là động cơ để bạn thực hiện một phân tích (thứ thay vào đó nên là một **câu hỏi**), thiên kiến sẽ ảnh hưởng tới phương pháp thực hiện, và rất dễ nảy sinh ngụy biện khi kết luận. Hãy xem bài viết này của <span class="co">[</span><span class="ot">Keith McNulty</span><span class="co">](https://www.linkedin.com/pulse/data-professionals-beware-storytelling-keith-mcnulty/)</span> và <span class="co">[</span><span class="ot">discussion</span><span class="co">](https://www.linkedin.com/posts/keith-mcnulty_my-most-hated-word-in-data-science-activity-7017097392759918592-2Atc/)</span> trên Linked In.</span>
-<span id="cb7-26"><a href="#cb7-26"></a></span>
-<span id="cb7-27"><a href="#cb7-27"></a>::: {layout-ncol=1}</span>
-<span id="cb7-28"><a href="#cb7-28"></a>!<span class="co">[</span><span class="ot">Photo credit to [swd](https://www.storytellingwithdata.com/blog/2019/8/27/lets-practice)</span><span class="co">](swd_chap5.png)</span>{width=100%}</span>
-<span id="cb7-29"><a href="#cb7-29"></a>:::</span>
-<span id="cb7-30"><a href="#cb7-30"></a></span>
-<span id="cb7-31"><a href="#cb7-31"></a><span class="fu"># 2. Let's Practice</span></span>
-<span id="cb7-32"><a href="#cb7-32"></a>Mình đang học <span class="in">`{ggplot2}`</span> trên R để thực hành hình ảnh hóa dữ liệu, tuy nhiên có vẻ package này (và tương ứng là <span class="in">`plotnine`</span> trên Python không phù hợp cho báo cáo bảng). Trong bài post, thầy Dũng cũng sử dụng một library khác là <span class="in">`kableExtra`</span> (tham khảo <span class="co">[</span><span class="ot">đây</span><span class="co">](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html)</span>).</span>
-<span id="cb7-33"><a href="#cb7-33"></a></span>
-<span id="cb7-34"><a href="#cb7-34"></a>Sau một lúc google thì có vẻ có một package của Python phù hợp để làm nhiệm vụ này, đó là <span class="in">`great_tables`</span> (tham khảo <span class="co">[</span><span class="ot">đây</span><span class="co">](https://posit-dev.github.io/great-tables/articles/intro.html)</span>). Package này cũng được khuyến khích sử dụng cho mục đích communication bởi <span class="co">[</span><span class="ot">Emily Riederer</span><span class="co">](https://www.emilyriederer.com/post/py-rgo/#the-stack)</span>.</span>
-<span id="cb7-35"><a href="#cb7-35"></a></span>
-<span id="cb7-36"><a href="#cb7-36"></a><span class="fu">## 2.1. Import the data</span></span>
-<span id="cb7-37"><a href="#cb7-37"></a>Okay đầu tiên cần import và làm sạch dữ liệu. Bảng có sẵn trong file Exercise có vẻ dùng để báo cáo hơn là lưu trữ dữ liệu.</span>
-<span id="cb7-40"><a href="#cb7-40"></a><span class="in">```{python}</span></span>
-<span id="cb7-41"><a href="#cb7-41"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb7-42"><a href="#cb7-42"></a></span>
-<span id="cb7-43"><a href="#cb7-43"></a>data <span class="op">=</span> pd.read_excel(</span>
-<span id="cb7-44"><a href="#cb7-44"></a>  <span class="st">"2.1 EXERCISE.xlsx"</span>,</span>
-<span id="cb7-45"><a href="#cb7-45"></a>  sheet_name <span class="op">=</span> <span class="st">"EXERCISE 2.1"</span>,</span>
-<span id="cb7-46"><a href="#cb7-46"></a>  skiprows<span class="op">=</span><span class="dv">6</span></span>
-<span id="cb7-47"><a href="#cb7-47"></a>)</span>
-<span id="cb7-48"><a href="#cb7-48"></a></span>
-<span id="cb7-49"><a href="#cb7-49"></a>data <span class="op">=</span> data.drop(<span class="st">'Unnamed: 0'</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb7-50"><a href="#cb7-50"></a>data <span class="op">=</span> data.rename(columns<span class="op">=</span>{ <span class="st">"Tier"</span>: <span class="st">"tier"</span></span>
-<span id="cb7-51"><a href="#cb7-51"></a>                    ,<span class="st">"# of Accounts"</span>: <span class="st">"no_of_account"</span></span>
-<span id="cb7-52"><a href="#cb7-52"></a>                    ,<span class="st">"% Accounts"</span>: <span class="st">"pct_of_account"</span></span>
-<span id="cb7-53"><a href="#cb7-53"></a>                    ,<span class="st">"Revenue ($M)"</span>: <span class="st">"revenue"</span></span>
-<span id="cb7-54"><a href="#cb7-54"></a>                    ,<span class="st">"% Revenue"</span>: <span class="st">"pct_of_revenue"</span>})</span>
-<span id="cb7-55"><a href="#cb7-55"></a><span class="in">```</span></span>
-<span id="cb7-56"><a href="#cb7-56"></a></span>
-<span id="cb7-57"><a href="#cb7-57"></a><span class="fu">## 2.2. Data manipulation</span></span>
-<span id="cb7-58"><a href="#cb7-58"></a>Yep giờ ta đã có 1 bảng data khá sạch, tuy nhiên lưu ý là bảng đang không thể hiện toàn bộ dữ liệu (total của <span class="in">`pct_of_account`</span> chỉ là <span class="in">`81.86%`</span>). Ta cần tính toán thêm <span class="in">`All other`</span> và <span class="in">`Grand Total`</span> (lý do là mình chưa tìm thấy function hiển thị Grand Total với package đang sử dụng, ngay cả trong ví dụ <span class="co">[</span><span class="ot">này</span><span class="co">](https://posit-dev.github.io/great-tables/blog/pycon-2024-great-tables-are-possible/)</span>, GT cũng sử dụng data đã có sẵn Grand Total).</span>
-<span id="cb7-59"><a href="#cb7-59"></a></span>
-<span id="cb7-62"><a href="#cb7-62"></a><span class="in">```{python}</span></span>
-<span id="cb7-63"><a href="#cb7-63"></a>all_other_pct_of_account <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> data[<span class="st">"pct_of_account"</span>].<span class="bu">sum</span>()</span>
-<span id="cb7-64"><a href="#cb7-64"></a>all_other_no_of_account <span class="op">=</span> <span class="bu">round</span>(all_other_pct_of_account <span class="op">/</span> data[<span class="st">"pct_of_account"</span>][<span class="dv">0</span>] <span class="op">*</span> data[<span class="st">"no_of_account"</span>][<span class="dv">0</span>],<span class="dv">0</span>)</span>
-<span id="cb7-65"><a href="#cb7-65"></a></span>
-<span id="cb7-66"><a href="#cb7-66"></a>all_other_pct_of_revenue <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> data[<span class="st">"pct_of_revenue"</span>].<span class="bu">sum</span>()</span>
-<span id="cb7-67"><a href="#cb7-67"></a>all_other_revenue <span class="op">=</span> <span class="bu">round</span>(all_other_pct_of_revenue <span class="op">/</span> data[<span class="st">"pct_of_revenue"</span>][<span class="dv">0</span>] <span class="op">*</span> data[<span class="st">"revenue"</span>][<span class="dv">0</span>],<span class="dv">3</span>)</span>
-<span id="cb7-68"><a href="#cb7-68"></a></span>
-<span id="cb7-69"><a href="#cb7-69"></a>all_other <span class="op">=</span> pd.Series({ <span class="st">"tier"</span>: <span class="st">"All other"</span>,</span>
-<span id="cb7-70"><a href="#cb7-70"></a>                        <span class="st">"no_of_account"</span>: all_other_no_of_account,</span>
-<span id="cb7-71"><a href="#cb7-71"></a>                        <span class="st">"pct_of_account"</span>: all_other_pct_of_account,</span>
-<span id="cb7-72"><a href="#cb7-72"></a>                        <span class="st">"revenue"</span>:all_other_revenue,</span>
-<span id="cb7-73"><a href="#cb7-73"></a>                        <span class="st">"pct_of_revenue"</span>: all_other_pct_of_revenue})</span>
-<span id="cb7-74"><a href="#cb7-74"></a></span>
-<span id="cb7-75"><a href="#cb7-75"></a>data <span class="op">=</span> pd.concat([data, all_other.to_frame().T], ignore_index<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb7-76"><a href="#cb7-76"></a></span>
-<span id="cb7-77"><a href="#cb7-77"></a>data.loc[<span class="bu">len</span>(data.index)] <span class="op">=</span> data.<span class="bu">sum</span>()</span>
-<span id="cb7-78"><a href="#cb7-78"></a>data.loc[data.index[<span class="op">-</span><span class="dv">1</span>], <span class="st">'tier'</span>] <span class="op">=</span> <span class="st">'Grand Total'</span></span>
-<span id="cb7-79"><a href="#cb7-79"></a><span class="in">```</span></span>
-<span id="cb7-80"><a href="#cb7-80"></a>Show the data:</span>
-<span id="cb7-83"><a href="#cb7-83"></a><span class="in">```{python}</span></span>
-<span id="cb7-84"><a href="#cb7-84"></a><span class="im">from</span> great_tables <span class="im">import</span> GT</span>
-<span id="cb7-85"><a href="#cb7-85"></a></span>
-<span id="cb7-86"><a href="#cb7-86"></a>( </span>
-<span id="cb7-87"><a href="#cb7-87"></a>  GT(data)</span>
-<span id="cb7-88"><a href="#cb7-88"></a>  .fmt_number(columns<span class="op">=</span> [<span class="st">"no_of_account"</span>,<span class="st">"pct_of_account"</span>,<span class="st">"revenue"</span>,<span class="st">"pct_of_revenue"</span>],decimals<span class="op">=</span><span class="dv">2</span>))</span>
-<span id="cb7-89"><a href="#cb7-89"></a><span class="in">```</span></span>
-<span id="cb7-90"><a href="#cb7-90"></a><span class="fu">## 2.3. Visualization</span></span>
-<span id="cb7-91"><a href="#cb7-91"></a>Được rồi, giờ ta có thể dùng <span class="in">`great_tables`</span> để tiến hành visualize. Về cơ bản, chỉ cần khởi tạo một object <span class="in">`GT()`</span> có  thể mở rộng được, các element/hoặc format được định nghĩa về sau.</span>
-<span id="cb7-92"><a href="#cb7-92"></a></span>
-<span id="cb7-93"><a href="#cb7-93"></a>Dưới đây chúng ta trình bày một bảng đơn giản với tiêu đề, tên cột, cũng như định dạng lại dữ liệu.</span>
-<span id="cb7-96"><a href="#cb7-96"></a><span class="in">```{python}</span></span>
-<span id="cb7-97"><a href="#cb7-97"></a>(</span>
-<span id="cb7-98"><a href="#cb7-98"></a>  GT(data)</span>
-<span id="cb7-99"><a href="#cb7-99"></a>  .tab_header(title<span class="op">=</span><span class="st">"New client tier share"</span>)</span>
-<span id="cb7-100"><a href="#cb7-100"></a>  .cols_label(</span>
-<span id="cb7-101"><a href="#cb7-101"></a>    tier <span class="op">=</span> <span class="st">"Tier"</span>,</span>
-<span id="cb7-102"><a href="#cb7-102"></a>    no_of_account <span class="op">=</span> <span class="st">"# of Accounts"</span>,</span>
-<span id="cb7-103"><a href="#cb7-103"></a>    pct_of_account <span class="op">=</span> <span class="st">"% Accounts"</span>,</span>
-<span id="cb7-104"><a href="#cb7-104"></a>    revenue <span class="op">=</span> <span class="st">"Revenue ($M)"</span>,</span>
-<span id="cb7-105"><a href="#cb7-105"></a>    pct_of_revenue <span class="op">=</span> <span class="st">"% Revenue"</span></span>
-<span id="cb7-106"><a href="#cb7-106"></a>  )</span>
-<span id="cb7-107"><a href="#cb7-107"></a>  .fmt_number(columns<span class="op">=</span><span class="st">"no_of_account"</span>,decimals<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb7-108"><a href="#cb7-108"></a>  .fmt_percent(columns<span class="op">=</span>[<span class="st">"pct_of_account"</span>, <span class="st">"pct_of_revenue"</span>], decimals<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb7-109"><a href="#cb7-109"></a>  .fmt_currency(columns <span class="op">=</span> <span class="st">"revenue"</span>, currency<span class="op">=</span><span class="st">"USD"</span>, decimals<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb7-110"><a href="#cb7-110"></a>  .tab_source_note(source_note<span class="op">=</span><span class="st">"Figure 2.1b: Slightly improved table"</span>)</span>
-<span id="cb7-111"><a href="#cb7-111"></a>)</span>
-<span id="cb7-112"><a href="#cb7-112"></a><span class="in">```</span></span>
-<span id="cb7-113"><a href="#cb7-113"></a>Trông ổn (ít nhất là trình bày số liệu một cách toàn vẹn) so với bản gốc rồi!</span>
-<span id="cb7-114"><a href="#cb7-114"></a></span>
-<span id="cb7-115"><a href="#cb7-115"></a>Tiếp tục, ta dùng</span>
-<span id="cb7-116"><a href="#cb7-116"></a><span class="ss">- </span>helper <span class="in">`md()`</span> để định dạng lại tiêu đề;</span>
-<span id="cb7-117"><a href="#cb7-117"></a><span class="ss">- </span>sử dụng <span class="in">`.data_color()`</span> để tạo heatmapping;</span>
-<span id="cb7-118"><a href="#cb7-118"></a><span class="ss">- </span>sử dụng <span class="in">`tab_style()`</span> để format dòng Grand Total;</span>
-<span id="cb7-119"><a href="#cb7-119"></a><span class="ss">- </span>sử dụng <span class="in">`.opt_stylize()`</span> để theming.</span>
-<span id="cb7-120"><a href="#cb7-120"></a></span>
-<span id="cb7-123"><a href="#cb7-123"></a><span class="in">```{python}</span></span>
-<span id="cb7-124"><a href="#cb7-124"></a><span class="im">from</span> great_tables <span class="im">import</span> md, style, loc</span>
-<span id="cb7-125"><a href="#cb7-125"></a></span>
-<span id="cb7-126"><a href="#cb7-126"></a>(</span>
-<span id="cb7-127"><a href="#cb7-127"></a>  GT(data)</span>
-<span id="cb7-128"><a href="#cb7-128"></a>  .tab_header(title<span class="op">=</span>md(<span class="st">"&lt;strong&gt;New client tier share&lt;/strong&gt;"</span>))</span>
-<span id="cb7-129"><a href="#cb7-129"></a>  .opt_align_table_header(align<span class="op">=</span><span class="st">"left"</span>)</span>
-<span id="cb7-130"><a href="#cb7-130"></a>  .cols_label(</span>
-<span id="cb7-131"><a href="#cb7-131"></a>    tier <span class="op">=</span> <span class="st">"Tier"</span>,</span>
-<span id="cb7-132"><a href="#cb7-132"></a>    no_of_account <span class="op">=</span> <span class="st">"# of Accounts"</span>,</span>
-<span id="cb7-133"><a href="#cb7-133"></a>    pct_of_account <span class="op">=</span> <span class="st">"% Accounts"</span>,</span>
-<span id="cb7-134"><a href="#cb7-134"></a>    revenue <span class="op">=</span> <span class="st">"($M) Revenue"</span>, <span class="co"># change the label</span></span>
-<span id="cb7-135"><a href="#cb7-135"></a>    pct_of_revenue <span class="op">=</span> <span class="st">"% Revenue"</span></span>
-<span id="cb7-136"><a href="#cb7-136"></a>  )</span>
-<span id="cb7-137"><a href="#cb7-137"></a>  .fmt_number(columns<span class="op">=</span><span class="st">"no_of_account"</span>,decimals<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb7-138"><a href="#cb7-138"></a>  .fmt_percent(columns<span class="op">=</span>[<span class="st">"pct_of_account"</span>, <span class="st">"pct_of_revenue"</span>], decimals<span class="op">=</span><span class="dv">0</span>) <span class="co"># changed decimals</span></span>
-<span id="cb7-139"><a href="#cb7-139"></a>  .fmt_currency(columns <span class="op">=</span> <span class="st">"revenue"</span>, currency<span class="op">=</span><span class="st">"USD"</span>, decimals<span class="op">=</span><span class="dv">1</span>)<span class="co"># changed decimals</span></span>
-<span id="cb7-140"><a href="#cb7-140"></a>  .tab_source_note(source_note<span class="op">=</span><span class="st">"Figure 2.1c: Table with heatmapping"</span>)</span>
-<span id="cb7-141"><a href="#cb7-141"></a>  .data_color(</span>
-<span id="cb7-142"><a href="#cb7-142"></a>    columns<span class="op">=</span>[<span class="st">"pct_of_account"</span>, <span class="st">"pct_of_revenue"</span>],</span>
-<span id="cb7-143"><a href="#cb7-143"></a>    palette<span class="op">=</span>[<span class="st">"#57A6A1"</span>, <span class="st">"#577B8D"</span>, <span class="st">"#344C64"</span>, <span class="st">"#240750"</span>],</span>
-<span id="cb7-144"><a href="#cb7-144"></a>    domain<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">1</span>],</span>
-<span id="cb7-145"><a href="#cb7-145"></a>    na_color<span class="op">=</span><span class="st">"lightgray"</span>,</span>
-<span id="cb7-146"><a href="#cb7-146"></a>    autocolor_text <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb7-147"><a href="#cb7-147"></a>  )</span>
-<span id="cb7-148"><a href="#cb7-148"></a>  .tab_style(</span>
-<span id="cb7-149"><a href="#cb7-149"></a>        style<span class="op">=</span>[</span>
-<span id="cb7-150"><a href="#cb7-150"></a>          style.text(style<span class="op">=</span><span class="st">"bolder"</span>),</span>
-<span id="cb7-151"><a href="#cb7-151"></a>          style.fill(<span class="st">"#EEEEEE"</span>),</span>
-<span id="cb7-152"><a href="#cb7-152"></a>          style.borders(sides<span class="op">=</span>[<span class="st">"top"</span>, <span class="st">"bottom"</span>], weight<span class="op">=</span><span class="st">'2px'</span>, color<span class="op">=</span><span class="st">"grey"</span>)</span>
-<span id="cb7-153"><a href="#cb7-153"></a>          ],</span>
-<span id="cb7-154"><a href="#cb7-154"></a>        locations<span class="op">=</span>loc.body(rows<span class="op">=</span>[<span class="dv">6</span>])</span>
-<span id="cb7-155"><a href="#cb7-155"></a>  )</span>
-<span id="cb7-156"><a href="#cb7-156"></a>  .opt_stylize(style<span class="op">=</span><span class="dv">5</span> ,color<span class="op">=</span><span class="st">'blue'</span>)</span>
-<span id="cb7-157"><a href="#cb7-157"></a>)</span>
-<span id="cb7-158"><a href="#cb7-158"></a><span class="in">```</span></span>
-<span id="cb7-159"><a href="#cb7-159"></a>Tiếp theo, chúng ta sẽ thử dùng <span class="in">`fmt_nanoplot()`</span> để tạo một bar plots thay cho hai cột percentage.</span>
-<span id="cb7-160"><a href="#cb7-160"></a></span>
-<span id="cb7-161"><a href="#cb7-161"></a>Đây là một tính năng trong giai đoạn thử nghiệm nên mình thấy chưa thực sử ổn định và tuân theo document mà nhà phát triển đề cập. Trong ví dụ dưới đây mình sử dụng data bar, loại bỏ format do hàng cuối cùng. Tuy nhiên, đồ thị vẫn include giá trị <span class="in">`100%`</span> ở hàng Grand Total để điều chỉnh bar scale.</span>
-<span id="cb7-162"><a href="#cb7-162"></a></span>
-<span id="cb7-163"><a href="#cb7-163"></a>Thêm nữa mình cần chuyển dataframe về polar dataframe, khi đó một column của dl.df là iterable.</span>
-<span id="cb7-166"><a href="#cb7-166"></a><span class="in">```{python}</span></span>
-<span id="cb7-167"><a href="#cb7-167"></a><span class="im">from</span> great_tables <span class="im">import</span> md, style, loc, nanoplot_options</span>
-<span id="cb7-168"><a href="#cb7-168"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb7-169"><a href="#cb7-169"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
-<span id="cb7-170"><a href="#cb7-170"></a></span>
-<span id="cb7-171"><a href="#cb7-171"></a>data.at[<span class="dv">6</span>, <span class="st">"pct_of_account"</span>] <span class="op">=</span> np.nan</span>
-<span id="cb7-172"><a href="#cb7-172"></a>data.at[<span class="dv">6</span>, <span class="st">"pct_of_revenue"</span>] <span class="op">=</span> np.nan</span>
-<span id="cb7-173"><a href="#cb7-173"></a><span class="co"># so that the data scale looks better</span></span>
-<span id="cb7-174"><a href="#cb7-174"></a></span>
-<span id="cb7-175"><a href="#cb7-175"></a>pl_data <span class="op">=</span> pl.from_pandas(data)</span>
-<span id="cb7-176"><a href="#cb7-176"></a></span>
-<span id="cb7-177"><a href="#cb7-177"></a>(</span>
-<span id="cb7-178"><a href="#cb7-178"></a>  GT(pl_data, rowname_col<span class="op">=</span><span class="st">"tier"</span>)</span>
-<span id="cb7-179"><a href="#cb7-179"></a>  .tab_header(title<span class="op">=</span>md(<span class="st">"&lt;strong&gt;New client tier share&lt;/strong&gt;"</span>))</span>
-<span id="cb7-180"><a href="#cb7-180"></a>  .opt_align_table_header(align<span class="op">=</span><span class="st">"left"</span>)</span>
-<span id="cb7-181"><a href="#cb7-181"></a>  .tab_source_note(source_note<span class="op">=</span><span class="st">"Figure 2.1d: Table with data bar"</span>)</span>
-<span id="cb7-182"><a href="#cb7-182"></a>  .cols_label(</span>
-<span id="cb7-183"><a href="#cb7-183"></a>    tier <span class="op">=</span> <span class="st">"Tier"</span>,</span>
-<span id="cb7-184"><a href="#cb7-184"></a>    no_of_account <span class="op">=</span> <span class="st">"# of Accounts"</span>,</span>
-<span id="cb7-185"><a href="#cb7-185"></a>    pct_of_account <span class="op">=</span> <span class="st">"% Accounts"</span>,</span>
-<span id="cb7-186"><a href="#cb7-186"></a>    revenue <span class="op">=</span> <span class="st">"($M) Revenue"</span>, <span class="co"># change the label</span></span>
-<span id="cb7-187"><a href="#cb7-187"></a>    pct_of_revenue <span class="op">=</span> <span class="st">"% Revenue"</span></span>
-<span id="cb7-188"><a href="#cb7-188"></a>  )</span>
-<span id="cb7-189"><a href="#cb7-189"></a>  .fmt_number(columns<span class="op">=</span><span class="st">"no_of_account"</span>,decimals<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb7-190"><a href="#cb7-190"></a>  .fmt_currency(columns <span class="op">=</span> <span class="st">"revenue"</span>, currency<span class="op">=</span><span class="st">"USD"</span>, decimals<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb7-191"><a href="#cb7-191"></a>  .fmt_percent(columns<span class="op">=</span>[<span class="st">"pct_of_account"</span>, <span class="st">"pct_of_revenue"</span>], decimals<span class="op">=</span><span class="dv">0</span>) <span class="co"># changed decimals</span></span>
-<span id="cb7-192"><a href="#cb7-192"></a>  .cols_width(</span>
-<span id="cb7-193"><a href="#cb7-193"></a>    cases<span class="op">=</span>{</span>
-<span id="cb7-194"><a href="#cb7-194"></a>        <span class="st">"tier"</span>: <span class="st">"20%"</span>,</span>
-<span id="cb7-195"><a href="#cb7-195"></a>        <span class="st">"no_of_account"</span>: <span class="st">"20%"</span>,</span>
-<span id="cb7-196"><a href="#cb7-196"></a>        <span class="st">"pct_of_account"</span>: <span class="st">"20%"</span>,</span>
-<span id="cb7-197"><a href="#cb7-197"></a>        <span class="st">"revenue"</span>: <span class="st">"20%"</span>,</span>
-<span id="cb7-198"><a href="#cb7-198"></a>        <span class="st">"pct_of_revenue"</span>: <span class="st">"20%"</span>      </span>
-<span id="cb7-199"><a href="#cb7-199"></a>    }</span>
-<span id="cb7-200"><a href="#cb7-200"></a>    )</span>
-<span id="cb7-201"><a href="#cb7-201"></a>  .fmt_nanoplot(</span>
-<span id="cb7-202"><a href="#cb7-202"></a>    columns<span class="op">=</span><span class="st">"pct_of_account"</span>,</span>
-<span id="cb7-203"><a href="#cb7-203"></a>    rows <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],</span>
-<span id="cb7-204"><a href="#cb7-204"></a>    plot_type<span class="op">=</span><span class="st">"bar"</span>,</span>
-<span id="cb7-205"><a href="#cb7-205"></a>    plot_height <span class="op">=</span> <span class="st">"3em"</span>,</span>
-<span id="cb7-206"><a href="#cb7-206"></a>    autoscale<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb7-207"><a href="#cb7-207"></a>    options<span class="op">=</span>nanoplot_options(</span>
-<span id="cb7-208"><a href="#cb7-208"></a>      data_bar_stroke_color<span class="op">=</span><span class="st">"#577B8D"</span>,</span>
-<span id="cb7-209"><a href="#cb7-209"></a>      data_bar_stroke_width<span class="op">=</span><span class="dv">80</span>,</span>
-<span id="cb7-210"><a href="#cb7-210"></a>      data_bar_fill_color<span class="op">=</span><span class="st">"#577B8D"</span>,)</span>
-<span id="cb7-211"><a href="#cb7-211"></a>    )</span>
-<span id="cb7-212"><a href="#cb7-212"></a>  .fmt_nanoplot(</span>
-<span id="cb7-213"><a href="#cb7-213"></a>    columns<span class="op">=</span><span class="st">"pct_of_revenue"</span>,</span>
-<span id="cb7-214"><a href="#cb7-214"></a>    rows <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],</span>
-<span id="cb7-215"><a href="#cb7-215"></a>    plot_type<span class="op">=</span><span class="st">"bar"</span>,</span>
-<span id="cb7-216"><a href="#cb7-216"></a>    plot_height <span class="op">=</span> <span class="st">"3em"</span>,</span>
-<span id="cb7-217"><a href="#cb7-217"></a>    autoscale<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb7-218"><a href="#cb7-218"></a>    options<span class="op">=</span>nanoplot_options(</span>
-<span id="cb7-219"><a href="#cb7-219"></a>      data_bar_stroke_color<span class="op">=</span><span class="st">"#577B8D"</span>,</span>
-<span id="cb7-220"><a href="#cb7-220"></a>      data_bar_stroke_width<span class="op">=</span><span class="dv">80</span>,</span>
-<span id="cb7-221"><a href="#cb7-221"></a>      data_bar_fill_color<span class="op">=</span><span class="st">"#577B8D"</span>,)</span>
-<span id="cb7-222"><a href="#cb7-222"></a>  )</span>
-<span id="cb7-223"><a href="#cb7-223"></a>  .tab_style(</span>
-<span id="cb7-224"><a href="#cb7-224"></a>        style<span class="op">=</span>[</span>
-<span id="cb7-225"><a href="#cb7-225"></a>          style.text(style<span class="op">=</span><span class="st">"bolder"</span>),</span>
-<span id="cb7-226"><a href="#cb7-226"></a>          style.fill(<span class="st">"#EEEEEE"</span>),</span>
-<span id="cb7-227"><a href="#cb7-227"></a>          style.borders(sides<span class="op">=</span>[<span class="st">"top"</span>, <span class="st">"bottom"</span>], weight<span class="op">=</span><span class="st">'2px'</span>, color<span class="op">=</span><span class="st">"grey"</span>)</span>
-<span id="cb7-228"><a href="#cb7-228"></a>          ],</span>
-<span id="cb7-229"><a href="#cb7-229"></a>        locations<span class="op">=</span>loc.body(rows<span class="op">=</span>[<span class="dv">6</span>])</span>
-<span id="cb7-230"><a href="#cb7-230"></a>  )</span>
-<span id="cb7-231"><a href="#cb7-231"></a>  .tab_style(</span>
-<span id="cb7-232"><a href="#cb7-232"></a>        style<span class="op">=</span>[</span>
-<span id="cb7-233"><a href="#cb7-233"></a>          style.text(color<span class="op">=</span><span class="st">"#EEEEEE"</span>, size<span class="op">=</span><span class="fl">0.5</span>),</span>
-<span id="cb7-234"><a href="#cb7-234"></a>          ],</span>
-<span id="cb7-235"><a href="#cb7-235"></a>        locations<span class="op">=</span>loc.body(rows<span class="op">=</span>[<span class="dv">6</span>], columns<span class="op">=</span>[<span class="st">"pct_of_account"</span>, <span class="st">"pct_of_revenue"</span>])</span>
-<span id="cb7-236"><a href="#cb7-236"></a>  )</span>
-<span id="cb7-237"><a href="#cb7-237"></a>  .opt_stylize(style<span class="op">=</span><span class="dv">3</span> ,color<span class="op">=</span><span class="st">'blue'</span>)</span>
-<span id="cb7-238"><a href="#cb7-238"></a>)</span>
-<span id="cb7-239"><a href="#cb7-239"></a><span class="in">```</span></span>
-<span id="cb7-240"><a href="#cb7-240"></a></span>
-<span id="cb7-241"><a href="#cb7-241"></a><span class="in">`great_tables`</span> vẫn chưa thực sự render ra được bảng biểu đúng như setting.</span>
-<span id="cb7-242"><a href="#cb7-242"></a></span>
-<span id="cb7-243"><a href="#cb7-243"></a>Bài thực hành đến đây là kết thúc! 🚀</span>
-<span id="cb7-244"><a href="#cb7-244"></a></span>
-<span id="cb7-245"><a href="#cb7-245"></a><span class="fu"># References</span></span>
-<span id="cb7-246"><a href="#cb7-246"></a><span class="ss">1. </span><span class="ot">&lt;https://www.storytellingwithdata.com/books&gt;</span></span>
-<span id="cb7-247"><a href="#cb7-247"></a><span class="ss">2. </span><span class="ot">&lt;https://rpubs.com/chidungkt/1139405&gt;</span></span>
-<span id="cb7-248"><a href="#cb7-248"></a><span class="ss">3. </span><span class="ot">&lt;https://posit-dev.github.io/great-tables/articles/intro.html&gt;</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="an">date-modified:</span><span class="co"> 05-23-2024</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="an">categories:</span><span class="co"> [Python, Visualization] # self-defined categories</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="an">image:</span><span class="co"> SWD-Cover-FULL-R5-MED.png</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="an">draft:</span><span class="co"> false # setting this to `true` will prevent your post from appearing on your listing page until you're ready!</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a></span>
+<span id="cb7-13"><a href="#cb7-13"></a><span class="an">format:</span><span class="co"> </span></span>
+<span id="cb7-14"><a href="#cb7-14"></a><span class="co">  html: </span></span>
+<span id="cb7-15"><a href="#cb7-15"></a><span class="co">    code-fold: false</span></span>
+<span id="cb7-16"><a href="#cb7-16"></a><span class="co">    code-summary: "Show the code"</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a><span class="co">    code-line-numbers: true</span></span>
+<span id="cb7-18"><a href="#cb7-18"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
+<span id="cb7-19"><a href="#cb7-19"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb7-20"><a href="#cb7-20"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a><span class="co">---</span></span>
+<span id="cb7-22"><a href="#cb7-22"></a></span>
+<span id="cb7-23"><a href="#cb7-23"></a><span class="fu"># 1. Motivation</span></span>
+<span id="cb7-24"><a href="#cb7-24"></a>Lấy cảm hứng từ bài <span class="co">[</span><span class="ot">post</span><span class="co">](https://rpubs.com/chidungkt/1139405)</span> của thầy Nguyễn Chí Dũng về việc giải các exercise thuộc Chương 2 cuốn sách **Storytelling with Data: Let’s Practice** của tác giả <span class="co">[</span><span class="ot">Cole Nussbaumer Knaflic</span><span class="co">](https://www.linkedin.com/in/colenussbaumer/)</span> sử dụng R, mình muốn cải thiện 1 bảng biểu nhưng sử dụng Python (trong cuốn sách gốc, tác giả sử dụng Excel để makeover các graph).</span>
+<span id="cb7-25"><a href="#cb7-25"></a></span>
+<span id="cb7-26"><a href="#cb7-26"></a>Đây là một cuốn sách hay về chủ để visualization, dành cho những người sử dụng biểu đồ nhiều để communicate trong công việc. Cụm từ "storytelling" đang được sử dụng rất nhiều, thậm chí như là một buzzword, một keyword cần có trong CV của mỗi người làm data. Đối với mình, "storytelling" chỉ nên được sử dụng khi bạn đã có sẵn các kết quả phân tích, được thực hiện một cách khoa học, và bạn muốn truyền tải nó tới business unit/management một cách hiệu quả. "Storytelling" nên không bao giờ là động cơ để bạn thực hiện một phân tích (thứ thay vào đó nên là một **câu hỏi**), thiên kiến sẽ ảnh hưởng tới phương pháp thực hiện, và rất dễ nảy sinh ngụy biện khi kết luận. Hãy xem bài viết này của <span class="co">[</span><span class="ot">Keith McNulty</span><span class="co">](https://www.linkedin.com/pulse/data-professionals-beware-storytelling-keith-mcnulty/)</span> và <span class="co">[</span><span class="ot">discussion</span><span class="co">](https://www.linkedin.com/posts/keith-mcnulty_my-most-hated-word-in-data-science-activity-7017097392759918592-2Atc/)</span> trên Linked In.</span>
+<span id="cb7-27"><a href="#cb7-27"></a></span>
+<span id="cb7-28"><a href="#cb7-28"></a>::: {layout-ncol=1}</span>
+<span id="cb7-29"><a href="#cb7-29"></a>!<span class="co">[</span><span class="ot">Photo credit to [swd](https://www.storytellingwithdata.com/blog/2019/8/27/lets-practice)</span><span class="co">](swd_chap5.png)</span>{width=100%}</span>
+<span id="cb7-30"><a href="#cb7-30"></a>:::</span>
+<span id="cb7-31"><a href="#cb7-31"></a></span>
+<span id="cb7-32"><a href="#cb7-32"></a><span class="fu"># 2. Let's Practice</span></span>
+<span id="cb7-33"><a href="#cb7-33"></a>Mình đang học <span class="in">`{ggplot2}`</span> trên R để thực hành hình ảnh hóa dữ liệu, tuy nhiên có vẻ package này (và tương ứng là <span class="in">`plotnine`</span> trên Python không phù hợp cho báo cáo bảng). Trong bài post, thầy Dũng cũng sử dụng một library khác là <span class="in">`kableExtra`</span> (tham khảo <span class="co">[</span><span class="ot">đây</span><span class="co">](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html)</span>).</span>
+<span id="cb7-34"><a href="#cb7-34"></a></span>
+<span id="cb7-35"><a href="#cb7-35"></a>Sau một lúc google thì có vẻ có một package của Python phù hợp để làm nhiệm vụ này, đó là <span class="in">`great_tables`</span> (tham khảo <span class="co">[</span><span class="ot">đây</span><span class="co">](https://posit-dev.github.io/great-tables/articles/intro.html)</span>). Package này cũng được khuyến khích sử dụng cho mục đích communication bởi <span class="co">[</span><span class="ot">Emily Riederer</span><span class="co">](https://www.emilyriederer.com/post/py-rgo/#the-stack)</span>.</span>
+<span id="cb7-36"><a href="#cb7-36"></a></span>
+<span id="cb7-37"><a href="#cb7-37"></a><span class="fu">## 2.1. Import the data</span></span>
+<span id="cb7-38"><a href="#cb7-38"></a>Okay đầu tiên cần import và làm sạch dữ liệu. Bảng có sẵn trong file Exercise có vẻ dùng để báo cáo hơn là lưu trữ dữ liệu.</span>
+<span id="cb7-41"><a href="#cb7-41"></a><span class="in">```{python}</span></span>
+<span id="cb7-42"><a href="#cb7-42"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb7-43"><a href="#cb7-43"></a></span>
+<span id="cb7-44"><a href="#cb7-44"></a>data <span class="op">=</span> pd.read_excel(</span>
+<span id="cb7-45"><a href="#cb7-45"></a>  <span class="st">"2.1 EXERCISE.xlsx"</span>,</span>
+<span id="cb7-46"><a href="#cb7-46"></a>  sheet_name <span class="op">=</span> <span class="st">"EXERCISE 2.1"</span>,</span>
+<span id="cb7-47"><a href="#cb7-47"></a>  skiprows<span class="op">=</span><span class="dv">6</span></span>
+<span id="cb7-48"><a href="#cb7-48"></a>)</span>
+<span id="cb7-49"><a href="#cb7-49"></a></span>
+<span id="cb7-50"><a href="#cb7-50"></a>data <span class="op">=</span> data.drop(<span class="st">'Unnamed: 0'</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb7-51"><a href="#cb7-51"></a>data <span class="op">=</span> data.rename(columns<span class="op">=</span>{ <span class="st">"Tier"</span>: <span class="st">"tier"</span></span>
+<span id="cb7-52"><a href="#cb7-52"></a>                    ,<span class="st">"# of Accounts"</span>: <span class="st">"no_of_account"</span></span>
+<span id="cb7-53"><a href="#cb7-53"></a>                    ,<span class="st">"% Accounts"</span>: <span class="st">"pct_of_account"</span></span>
+<span id="cb7-54"><a href="#cb7-54"></a>                    ,<span class="st">"Revenue ($M)"</span>: <span class="st">"revenue"</span></span>
+<span id="cb7-55"><a href="#cb7-55"></a>                    ,<span class="st">"% Revenue"</span>: <span class="st">"pct_of_revenue"</span>})</span>
+<span id="cb7-56"><a href="#cb7-56"></a><span class="in">```</span></span>
+<span id="cb7-57"><a href="#cb7-57"></a></span>
+<span id="cb7-58"><a href="#cb7-58"></a><span class="fu">## 2.2. Data manipulation</span></span>
+<span id="cb7-59"><a href="#cb7-59"></a>Yep giờ ta đã có 1 bảng data khá sạch, tuy nhiên lưu ý là bảng đang không thể hiện toàn bộ dữ liệu (total của <span class="in">`pct_of_account`</span> chỉ là <span class="in">`81.86%`</span>). Ta cần tính toán thêm <span class="in">`All other`</span> và <span class="in">`Grand Total`</span> (lý do là mình chưa tìm thấy function hiển thị Grand Total với package đang sử dụng, ngay cả trong ví dụ <span class="co">[</span><span class="ot">này</span><span class="co">](https://posit-dev.github.io/great-tables/blog/pycon-2024-great-tables-are-possible/)</span>, GT cũng sử dụng data đã có sẵn Grand Total).</span>
+<span id="cb7-60"><a href="#cb7-60"></a></span>
+<span id="cb7-63"><a href="#cb7-63"></a><span class="in">```{python}</span></span>
+<span id="cb7-64"><a href="#cb7-64"></a>all_other_pct_of_account <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> data[<span class="st">"pct_of_account"</span>].<span class="bu">sum</span>()</span>
+<span id="cb7-65"><a href="#cb7-65"></a>all_other_no_of_account <span class="op">=</span> <span class="bu">round</span>(all_other_pct_of_account <span class="op">/</span> data[<span class="st">"pct_of_account"</span>][<span class="dv">0</span>] <span class="op">*</span> data[<span class="st">"no_of_account"</span>][<span class="dv">0</span>],<span class="dv">0</span>)</span>
+<span id="cb7-66"><a href="#cb7-66"></a></span>
+<span id="cb7-67"><a href="#cb7-67"></a>all_other_pct_of_revenue <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> data[<span class="st">"pct_of_revenue"</span>].<span class="bu">sum</span>()</span>
+<span id="cb7-68"><a href="#cb7-68"></a>all_other_revenue <span class="op">=</span> <span class="bu">round</span>(all_other_pct_of_revenue <span class="op">/</span> data[<span class="st">"pct_of_revenue"</span>][<span class="dv">0</span>] <span class="op">*</span> data[<span class="st">"revenue"</span>][<span class="dv">0</span>],<span class="dv">3</span>)</span>
+<span id="cb7-69"><a href="#cb7-69"></a></span>
+<span id="cb7-70"><a href="#cb7-70"></a>all_other <span class="op">=</span> pd.Series({ <span class="st">"tier"</span>: <span class="st">"All other"</span>,</span>
+<span id="cb7-71"><a href="#cb7-71"></a>                        <span class="st">"no_of_account"</span>: all_other_no_of_account,</span>
+<span id="cb7-72"><a href="#cb7-72"></a>                        <span class="st">"pct_of_account"</span>: all_other_pct_of_account,</span>
+<span id="cb7-73"><a href="#cb7-73"></a>                        <span class="st">"revenue"</span>:all_other_revenue,</span>
+<span id="cb7-74"><a href="#cb7-74"></a>                        <span class="st">"pct_of_revenue"</span>: all_other_pct_of_revenue})</span>
+<span id="cb7-75"><a href="#cb7-75"></a></span>
+<span id="cb7-76"><a href="#cb7-76"></a>data <span class="op">=</span> pd.concat([data, all_other.to_frame().T], ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-77"><a href="#cb7-77"></a></span>
+<span id="cb7-78"><a href="#cb7-78"></a>data.loc[<span class="bu">len</span>(data.index)] <span class="op">=</span> data.<span class="bu">sum</span>()</span>
+<span id="cb7-79"><a href="#cb7-79"></a>data.loc[data.index[<span class="op">-</span><span class="dv">1</span>], <span class="st">'tier'</span>] <span class="op">=</span> <span class="st">'Grand Total'</span></span>
+<span id="cb7-80"><a href="#cb7-80"></a><span class="in">```</span></span>
+<span id="cb7-81"><a href="#cb7-81"></a>Show the data:</span>
+<span id="cb7-84"><a href="#cb7-84"></a><span class="in">```{python}</span></span>
+<span id="cb7-85"><a href="#cb7-85"></a><span class="im">from</span> great_tables <span class="im">import</span> GT</span>
+<span id="cb7-86"><a href="#cb7-86"></a></span>
+<span id="cb7-87"><a href="#cb7-87"></a>( </span>
+<span id="cb7-88"><a href="#cb7-88"></a>  GT(data)</span>
+<span id="cb7-89"><a href="#cb7-89"></a>  .fmt_number(columns<span class="op">=</span> [<span class="st">"no_of_account"</span>,<span class="st">"pct_of_account"</span>,<span class="st">"revenue"</span>,<span class="st">"pct_of_revenue"</span>],decimals<span class="op">=</span><span class="dv">2</span>))</span>
+<span id="cb7-90"><a href="#cb7-90"></a><span class="in">```</span></span>
+<span id="cb7-91"><a href="#cb7-91"></a><span class="fu">## 2.3. Visualization</span></span>
+<span id="cb7-92"><a href="#cb7-92"></a>Được rồi, giờ ta có thể dùng <span class="in">`great_tables`</span> để tiến hành visualize. Về cơ bản, chỉ cần khởi tạo một object <span class="in">`GT()`</span> có  thể mở rộng được, các element/hoặc format được định nghĩa về sau.</span>
+<span id="cb7-93"><a href="#cb7-93"></a></span>
+<span id="cb7-94"><a href="#cb7-94"></a>Dưới đây chúng ta trình bày một bảng đơn giản với tiêu đề, tên cột, cũng như định dạng lại dữ liệu.</span>
+<span id="cb7-97"><a href="#cb7-97"></a><span class="in">```{python}</span></span>
+<span id="cb7-98"><a href="#cb7-98"></a>(</span>
+<span id="cb7-99"><a href="#cb7-99"></a>  GT(data)</span>
+<span id="cb7-100"><a href="#cb7-100"></a>  .tab_header(title<span class="op">=</span><span class="st">"New client tier share"</span>)</span>
+<span id="cb7-101"><a href="#cb7-101"></a>  .cols_label(</span>
+<span id="cb7-102"><a href="#cb7-102"></a>    tier <span class="op">=</span> <span class="st">"Tier"</span>,</span>
+<span id="cb7-103"><a href="#cb7-103"></a>    no_of_account <span class="op">=</span> <span class="st">"# of Accounts"</span>,</span>
+<span id="cb7-104"><a href="#cb7-104"></a>    pct_of_account <span class="op">=</span> <span class="st">"% Accounts"</span>,</span>
+<span id="cb7-105"><a href="#cb7-105"></a>    revenue <span class="op">=</span> <span class="st">"Revenue ($M)"</span>,</span>
+<span id="cb7-106"><a href="#cb7-106"></a>    pct_of_revenue <span class="op">=</span> <span class="st">"% Revenue"</span></span>
+<span id="cb7-107"><a href="#cb7-107"></a>  )</span>
+<span id="cb7-108"><a href="#cb7-108"></a>  .fmt_number(columns<span class="op">=</span><span class="st">"no_of_account"</span>,decimals<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb7-109"><a href="#cb7-109"></a>  .fmt_percent(columns<span class="op">=</span>[<span class="st">"pct_of_account"</span>, <span class="st">"pct_of_revenue"</span>], decimals<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb7-110"><a href="#cb7-110"></a>  .fmt_currency(columns <span class="op">=</span> <span class="st">"revenue"</span>, currency<span class="op">=</span><span class="st">"USD"</span>, decimals<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb7-111"><a href="#cb7-111"></a>  .tab_source_note(source_note<span class="op">=</span><span class="st">"Figure 2.1b: Slightly improved table"</span>)</span>
+<span id="cb7-112"><a href="#cb7-112"></a>)</span>
+<span id="cb7-113"><a href="#cb7-113"></a><span class="in">```</span></span>
+<span id="cb7-114"><a href="#cb7-114"></a>Trông ổn (ít nhất là trình bày số liệu một cách toàn vẹn) so với bản gốc rồi!</span>
+<span id="cb7-115"><a href="#cb7-115"></a></span>
+<span id="cb7-116"><a href="#cb7-116"></a>Tiếp tục, ta dùng</span>
+<span id="cb7-117"><a href="#cb7-117"></a><span class="ss">- </span>helper <span class="in">`md()`</span> để định dạng lại tiêu đề;</span>
+<span id="cb7-118"><a href="#cb7-118"></a><span class="ss">- </span>sử dụng <span class="in">`.data_color()`</span> để tạo heatmapping;</span>
+<span id="cb7-119"><a href="#cb7-119"></a><span class="ss">- </span>sử dụng <span class="in">`tab_style()`</span> để format dòng Grand Total;</span>
+<span id="cb7-120"><a href="#cb7-120"></a><span class="ss">- </span>sử dụng <span class="in">`.opt_stylize()`</span> để theming.</span>
+<span id="cb7-121"><a href="#cb7-121"></a></span>
+<span id="cb7-124"><a href="#cb7-124"></a><span class="in">```{python}</span></span>
+<span id="cb7-125"><a href="#cb7-125"></a><span class="im">from</span> great_tables <span class="im">import</span> md, style, loc</span>
+<span id="cb7-126"><a href="#cb7-126"></a></span>
+<span id="cb7-127"><a href="#cb7-127"></a>(</span>
+<span id="cb7-128"><a href="#cb7-128"></a>  GT(data)</span>
+<span id="cb7-129"><a href="#cb7-129"></a>  .tab_header(title<span class="op">=</span>md(<span class="st">"&lt;strong&gt;New client tier share&lt;/strong&gt;"</span>))</span>
+<span id="cb7-130"><a href="#cb7-130"></a>  .opt_align_table_header(align<span class="op">=</span><span class="st">"left"</span>)</span>
+<span id="cb7-131"><a href="#cb7-131"></a>  .cols_label(</span>
+<span id="cb7-132"><a href="#cb7-132"></a>    tier <span class="op">=</span> <span class="st">"Tier"</span>,</span>
+<span id="cb7-133"><a href="#cb7-133"></a>    no_of_account <span class="op">=</span> <span class="st">"# of Accounts"</span>,</span>
+<span id="cb7-134"><a href="#cb7-134"></a>    pct_of_account <span class="op">=</span> <span class="st">"% Accounts"</span>,</span>
+<span id="cb7-135"><a href="#cb7-135"></a>    revenue <span class="op">=</span> <span class="st">"($M) Revenue"</span>, <span class="co"># change the label</span></span>
+<span id="cb7-136"><a href="#cb7-136"></a>    pct_of_revenue <span class="op">=</span> <span class="st">"% Revenue"</span></span>
+<span id="cb7-137"><a href="#cb7-137"></a>  )</span>
+<span id="cb7-138"><a href="#cb7-138"></a>  .fmt_number(columns<span class="op">=</span><span class="st">"no_of_account"</span>,decimals<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb7-139"><a href="#cb7-139"></a>  .fmt_percent(columns<span class="op">=</span>[<span class="st">"pct_of_account"</span>, <span class="st">"pct_of_revenue"</span>], decimals<span class="op">=</span><span class="dv">0</span>) <span class="co"># changed decimals</span></span>
+<span id="cb7-140"><a href="#cb7-140"></a>  .fmt_currency(columns <span class="op">=</span> <span class="st">"revenue"</span>, currency<span class="op">=</span><span class="st">"USD"</span>, decimals<span class="op">=</span><span class="dv">1</span>)<span class="co"># changed decimals</span></span>
+<span id="cb7-141"><a href="#cb7-141"></a>  .tab_source_note(source_note<span class="op">=</span><span class="st">"Figure 2.1c: Table with heatmapping"</span>)</span>
+<span id="cb7-142"><a href="#cb7-142"></a>  .data_color(</span>
+<span id="cb7-143"><a href="#cb7-143"></a>    columns<span class="op">=</span>[<span class="st">"pct_of_account"</span>, <span class="st">"pct_of_revenue"</span>],</span>
+<span id="cb7-144"><a href="#cb7-144"></a>    palette<span class="op">=</span>[<span class="st">"#57A6A1"</span>, <span class="st">"#577B8D"</span>, <span class="st">"#344C64"</span>, <span class="st">"#240750"</span>],</span>
+<span id="cb7-145"><a href="#cb7-145"></a>    domain<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">1</span>],</span>
+<span id="cb7-146"><a href="#cb7-146"></a>    na_color<span class="op">=</span><span class="st">"lightgray"</span>,</span>
+<span id="cb7-147"><a href="#cb7-147"></a>    autocolor_text <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb7-148"><a href="#cb7-148"></a>  )</span>
+<span id="cb7-149"><a href="#cb7-149"></a>  .tab_style(</span>
+<span id="cb7-150"><a href="#cb7-150"></a>        style<span class="op">=</span>[</span>
+<span id="cb7-151"><a href="#cb7-151"></a>          style.text(style<span class="op">=</span><span class="st">"bolder"</span>),</span>
+<span id="cb7-152"><a href="#cb7-152"></a>          style.fill(<span class="st">"#EEEEEE"</span>),</span>
+<span id="cb7-153"><a href="#cb7-153"></a>          style.borders(sides<span class="op">=</span>[<span class="st">"top"</span>, <span class="st">"bottom"</span>], weight<span class="op">=</span><span class="st">'2px'</span>, color<span class="op">=</span><span class="st">"grey"</span>)</span>
+<span id="cb7-154"><a href="#cb7-154"></a>          ],</span>
+<span id="cb7-155"><a href="#cb7-155"></a>        locations<span class="op">=</span>loc.body(rows<span class="op">=</span>[<span class="dv">6</span>])</span>
+<span id="cb7-156"><a href="#cb7-156"></a>  )</span>
+<span id="cb7-157"><a href="#cb7-157"></a>  .opt_stylize(style<span class="op">=</span><span class="dv">5</span> ,color<span class="op">=</span><span class="st">'blue'</span>)</span>
+<span id="cb7-158"><a href="#cb7-158"></a>)</span>
+<span id="cb7-159"><a href="#cb7-159"></a><span class="in">```</span></span>
+<span id="cb7-160"><a href="#cb7-160"></a>Tiếp theo, chúng ta sẽ thử dùng <span class="in">`fmt_nanoplot()`</span> để tạo một bar plots thay cho hai cột percentage.</span>
+<span id="cb7-161"><a href="#cb7-161"></a></span>
+<span id="cb7-162"><a href="#cb7-162"></a>Đây là một tính năng trong giai đoạn thử nghiệm nên mình thấy chưa thực sử ổn định và tuân theo document mà nhà phát triển đề cập. Trong ví dụ dưới đây mình sử dụng data bar, loại bỏ format do hàng cuối cùng. Tuy nhiên, đồ thị vẫn include giá trị <span class="in">`100%`</span> ở hàng Grand Total để điều chỉnh bar scale.</span>
+<span id="cb7-163"><a href="#cb7-163"></a></span>
+<span id="cb7-164"><a href="#cb7-164"></a>Thêm nữa mình cần chuyển dataframe về polar dataframe, khi đó một column của dl.df là iterable.</span>
+<span id="cb7-167"><a href="#cb7-167"></a><span class="in">```{python}</span></span>
+<span id="cb7-168"><a href="#cb7-168"></a><span class="im">from</span> great_tables <span class="im">import</span> md, style, loc, nanoplot_options</span>
+<span id="cb7-169"><a href="#cb7-169"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb7-170"><a href="#cb7-170"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+<span id="cb7-171"><a href="#cb7-171"></a></span>
+<span id="cb7-172"><a href="#cb7-172"></a>data.at[<span class="dv">6</span>, <span class="st">"pct_of_account"</span>] <span class="op">=</span> np.nan</span>
+<span id="cb7-173"><a href="#cb7-173"></a>data.at[<span class="dv">6</span>, <span class="st">"pct_of_revenue"</span>] <span class="op">=</span> np.nan</span>
+<span id="cb7-174"><a href="#cb7-174"></a><span class="co"># so that the data scale looks better</span></span>
+<span id="cb7-175"><a href="#cb7-175"></a></span>
+<span id="cb7-176"><a href="#cb7-176"></a>pl_data <span class="op">=</span> pl.from_pandas(data)</span>
+<span id="cb7-177"><a href="#cb7-177"></a></span>
+<span id="cb7-178"><a href="#cb7-178"></a>(</span>
+<span id="cb7-179"><a href="#cb7-179"></a>  GT(pl_data, rowname_col<span class="op">=</span><span class="st">"tier"</span>)</span>
+<span id="cb7-180"><a href="#cb7-180"></a>  .tab_header(title<span class="op">=</span>md(<span class="st">"&lt;strong&gt;New client tier share&lt;/strong&gt;"</span>))</span>
+<span id="cb7-181"><a href="#cb7-181"></a>  .opt_align_table_header(align<span class="op">=</span><span class="st">"left"</span>)</span>
+<span id="cb7-182"><a href="#cb7-182"></a>  .tab_source_note(source_note<span class="op">=</span><span class="st">"Figure 2.1d: Table with data bar"</span>)</span>
+<span id="cb7-183"><a href="#cb7-183"></a>  .cols_label(</span>
+<span id="cb7-184"><a href="#cb7-184"></a>    tier <span class="op">=</span> <span class="st">"Tier"</span>,</span>
+<span id="cb7-185"><a href="#cb7-185"></a>    no_of_account <span class="op">=</span> <span class="st">"# of Accounts"</span>,</span>
+<span id="cb7-186"><a href="#cb7-186"></a>    pct_of_account <span class="op">=</span> <span class="st">"% Accounts"</span>,</span>
+<span id="cb7-187"><a href="#cb7-187"></a>    revenue <span class="op">=</span> <span class="st">"($M) Revenue"</span>, <span class="co"># change the label</span></span>
+<span id="cb7-188"><a href="#cb7-188"></a>    pct_of_revenue <span class="op">=</span> <span class="st">"% Revenue"</span></span>
+<span id="cb7-189"><a href="#cb7-189"></a>  )</span>
+<span id="cb7-190"><a href="#cb7-190"></a>  .fmt_number(columns<span class="op">=</span><span class="st">"no_of_account"</span>,decimals<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb7-191"><a href="#cb7-191"></a>  .fmt_currency(columns <span class="op">=</span> <span class="st">"revenue"</span>, currency<span class="op">=</span><span class="st">"USD"</span>, decimals<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb7-192"><a href="#cb7-192"></a>  .fmt_percent(columns<span class="op">=</span>[<span class="st">"pct_of_account"</span>, <span class="st">"pct_of_revenue"</span>], decimals<span class="op">=</span><span class="dv">0</span>) <span class="co"># changed decimals</span></span>
+<span id="cb7-193"><a href="#cb7-193"></a>  .cols_width(</span>
+<span id="cb7-194"><a href="#cb7-194"></a>    cases<span class="op">=</span>{</span>
+<span id="cb7-195"><a href="#cb7-195"></a>        <span class="st">"tier"</span>: <span class="st">"20%"</span>,</span>
+<span id="cb7-196"><a href="#cb7-196"></a>        <span class="st">"no_of_account"</span>: <span class="st">"20%"</span>,</span>
+<span id="cb7-197"><a href="#cb7-197"></a>        <span class="st">"pct_of_account"</span>: <span class="st">"20%"</span>,</span>
+<span id="cb7-198"><a href="#cb7-198"></a>        <span class="st">"revenue"</span>: <span class="st">"20%"</span>,</span>
+<span id="cb7-199"><a href="#cb7-199"></a>        <span class="st">"pct_of_revenue"</span>: <span class="st">"20%"</span>      </span>
+<span id="cb7-200"><a href="#cb7-200"></a>    }</span>
+<span id="cb7-201"><a href="#cb7-201"></a>    )</span>
+<span id="cb7-202"><a href="#cb7-202"></a>  .fmt_nanoplot(</span>
+<span id="cb7-203"><a href="#cb7-203"></a>    columns<span class="op">=</span><span class="st">"pct_of_account"</span>,</span>
+<span id="cb7-204"><a href="#cb7-204"></a>    rows <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],</span>
+<span id="cb7-205"><a href="#cb7-205"></a>    plot_type<span class="op">=</span><span class="st">"bar"</span>,</span>
+<span id="cb7-206"><a href="#cb7-206"></a>    plot_height <span class="op">=</span> <span class="st">"3em"</span>,</span>
+<span id="cb7-207"><a href="#cb7-207"></a>    autoscale<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb7-208"><a href="#cb7-208"></a>    options<span class="op">=</span>nanoplot_options(</span>
+<span id="cb7-209"><a href="#cb7-209"></a>      data_bar_stroke_color<span class="op">=</span><span class="st">"#577B8D"</span>,</span>
+<span id="cb7-210"><a href="#cb7-210"></a>      data_bar_stroke_width<span class="op">=</span><span class="dv">80</span>,</span>
+<span id="cb7-211"><a href="#cb7-211"></a>      data_bar_fill_color<span class="op">=</span><span class="st">"#577B8D"</span>,)</span>
+<span id="cb7-212"><a href="#cb7-212"></a>    )</span>
+<span id="cb7-213"><a href="#cb7-213"></a>  .fmt_nanoplot(</span>
+<span id="cb7-214"><a href="#cb7-214"></a>    columns<span class="op">=</span><span class="st">"pct_of_revenue"</span>,</span>
+<span id="cb7-215"><a href="#cb7-215"></a>    rows <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],</span>
+<span id="cb7-216"><a href="#cb7-216"></a>    plot_type<span class="op">=</span><span class="st">"bar"</span>,</span>
+<span id="cb7-217"><a href="#cb7-217"></a>    plot_height <span class="op">=</span> <span class="st">"3em"</span>,</span>
+<span id="cb7-218"><a href="#cb7-218"></a>    autoscale<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb7-219"><a href="#cb7-219"></a>    options<span class="op">=</span>nanoplot_options(</span>
+<span id="cb7-220"><a href="#cb7-220"></a>      data_bar_stroke_color<span class="op">=</span><span class="st">"#577B8D"</span>,</span>
+<span id="cb7-221"><a href="#cb7-221"></a>      data_bar_stroke_width<span class="op">=</span><span class="dv">80</span>,</span>
+<span id="cb7-222"><a href="#cb7-222"></a>      data_bar_fill_color<span class="op">=</span><span class="st">"#577B8D"</span>,)</span>
+<span id="cb7-223"><a href="#cb7-223"></a>  )</span>
+<span id="cb7-224"><a href="#cb7-224"></a>  .tab_style(</span>
+<span id="cb7-225"><a href="#cb7-225"></a>        style<span class="op">=</span>[</span>
+<span id="cb7-226"><a href="#cb7-226"></a>          style.text(style<span class="op">=</span><span class="st">"bolder"</span>),</span>
+<span id="cb7-227"><a href="#cb7-227"></a>          style.fill(<span class="st">"#EEEEEE"</span>),</span>
+<span id="cb7-228"><a href="#cb7-228"></a>          style.borders(sides<span class="op">=</span>[<span class="st">"top"</span>, <span class="st">"bottom"</span>], weight<span class="op">=</span><span class="st">'2px'</span>, color<span class="op">=</span><span class="st">"grey"</span>)</span>
+<span id="cb7-229"><a href="#cb7-229"></a>          ],</span>
+<span id="cb7-230"><a href="#cb7-230"></a>        locations<span class="op">=</span>loc.body(rows<span class="op">=</span>[<span class="dv">6</span>])</span>
+<span id="cb7-231"><a href="#cb7-231"></a>  )</span>
+<span id="cb7-232"><a href="#cb7-232"></a>  .tab_style(</span>
+<span id="cb7-233"><a href="#cb7-233"></a>        style<span class="op">=</span>[</span>
+<span id="cb7-234"><a href="#cb7-234"></a>          style.text(color<span class="op">=</span><span class="st">"#EEEEEE"</span>, size<span class="op">=</span><span class="fl">0.5</span>),</span>
+<span id="cb7-235"><a href="#cb7-235"></a>          ],</span>
+<span id="cb7-236"><a href="#cb7-236"></a>        locations<span class="op">=</span>loc.body(rows<span class="op">=</span>[<span class="dv">6</span>], columns<span class="op">=</span>[<span class="st">"pct_of_account"</span>, <span class="st">"pct_of_revenue"</span>])</span>
+<span id="cb7-237"><a href="#cb7-237"></a>  )</span>
+<span id="cb7-238"><a href="#cb7-238"></a>  .opt_stylize(style<span class="op">=</span><span class="dv">3</span> ,color<span class="op">=</span><span class="st">'blue'</span>)</span>
+<span id="cb7-239"><a href="#cb7-239"></a>)</span>
+<span id="cb7-240"><a href="#cb7-240"></a><span class="in">```</span></span>
+<span id="cb7-241"><a href="#cb7-241"></a></span>
+<span id="cb7-242"><a href="#cb7-242"></a><span class="in">`great_tables`</span> vẫn chưa thực sự render ra được bảng biểu đúng như setting.</span>
+<span id="cb7-243"><a href="#cb7-243"></a></span>
+<span id="cb7-244"><a href="#cb7-244"></a>Bài thực hành đến đây là kết thúc! 🚀</span>
+<span id="cb7-245"><a href="#cb7-245"></a></span>
+<span id="cb7-246"><a href="#cb7-246"></a><span class="fu"># References</span></span>
+<span id="cb7-247"><a href="#cb7-247"></a><span class="ss">1. </span><span class="ot">&lt;https://www.storytellingwithdata.com/books&gt;</span></span>
+<span id="cb7-248"><a href="#cb7-248"></a><span class="ss">2. </span><span class="ot">&lt;https://rpubs.com/chidungkt/1139405&gt;</span></span>
+<span id="cb7-249"><a href="#cb7-249"></a><span class="ss">3. </span><span class="ot">&lt;https://posit-dev.github.io/great-tables/articles/intro.html&gt;</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
