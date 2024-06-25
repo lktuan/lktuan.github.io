@@ -1,0 +1,237 @@
+---
+title: "Hi Docker 🐳"
+description: "A single-member full-stack data team me learning Docker 😂"
+author:
+  - name: "Tuan Le Khac"
+    url: https://lktuan.github.io/
+categories: [Docker, Python] 
+date: 06-24-2024
+date-modified: 06-25-2024
+image: docker.png
+code-tools: true
+code-fold: show
+code-annotations: hover
+draft: false
+css: html/styles.scss
+fig-cap-location: bottom
+editor: visual
+
+format:
+  html:
+    code-overflow: wrap
+---
+
+:::: {.columns}
+
+::: {.column width="40%"}
+Xuất phát là dân Kinh tế và hiện tại đi theo hướng DS, mình không giỏi làm việc với các công cụ phát triển phần mềm, Docker là một trong số đó. Tuy nhiên trong một dự án Data của team, mình cần sử dụng các công vụ như Airflow, Airbyte hay DBT. Hầu hết các setup đều cần Docker. Do đó thì, phải học thôi!
+
+Mình học tập theo video ["Hướng dẫn từ A-Z tự xây dựng ứng dụng với Docker"](https://www.youtube.com/watch?v=Gh1Sgknc6Fg&t=358s) của anh [**Việt Nguyễn AI**](https://www.youtube.com/@vietnh1009).
+:::
+
+::: {.column width="10%"}
+<!-- empty column to create gap -->
+:::
+
+::: {.column width="50%"}
+![VS Code-song 😪, ảnh nhặt từ J2Team community](vs_cot_song.png){width="100%"}
+:::
+
+::::
+
+# Introduction / Docker Desktop / Docker Image vs Docker Container
+
+- Cách cài đặt: trên trang get started, phiên bản Window (rất dễ để mình follow do mình cũng xài Win).
+- Nhắc lại về Docker Image và Docker Container: giống như Class và Object trong OOP, Image chỉ cho chúng ta biết một cách lý thuyết về thực thể đó, khi dựa vào lý thuyết đó tạo ra một Container thì chũng ta mới có một thực thể dự vào lý thuyết đó.
+- Trước Docker Image, còn có Dockerfile (giống như công thức nấu ăn) giúp định nghĩa một số phương thức tạo ra Image.
+
+::: {layout-ncol="1"}
+![Image vs Container ~ Class vs Object](class_vs_object.png){width="100%"}
+:::
+
+# Docker tutorial
+
+Thực hành theo tutorial trên Docker Desktop: "How do I run a container?"
+
+:::{.callout-tip}
+Xem nội dung của một file thông qua powershell:
+```bash
+cat file_name
+```
+Trong trường hợp thực hành của mình là
+
+```bash
+cd welcome-to-docker
+cat .\Dockerfile
+```
+:::
+
+Nội dung Dockerfile:
+
+```md
+# Start your image with a node base image
+FROM node:18-alpine 
+# Mỗi custome docker image đều dựa vào một base image, như một class con kế thừa một class cha. Nơi tìm Docker Image: Docker Hub.
+
+# The /app directory should act as the main application directory
+WORKDIR /app
+# Chúng ta làm việc ở bên trong thư mục nào (nếu không đề cập thì sẽ tạo trong một thư mục mặc định)
+
+# Copy the app package and package-lock.json file
+COPY package*.json ./
+# Copy các file trong máy vào bên trong Docker Image - file này chắc là file cấu hình
+
+# Copy local directories to the current local directory of our docker image (/app)
+COPY ./src ./src
+COPY ./public ./public
+# Copy các thư mục source
+
+# Install node packages, install serve, build the app, and remove dependencies at the end
+RUN npm install \
+    && npm install -g serve \
+    && npm run build \
+    && rm -fr node_modules
+# Run, cài đặt các thư viện, package
+
+EXPOSE 3000
+# Mở một cổng ở trong Docker container, sau này chúng ta sẽ kết nối cổng này với một cổng trong máy của chúng ta.
+
+# Start the app using serve command
+CMD [ "serve", "-s", "build" ]
+# Chúng ta muốn chạy lệnh gì trong CMD, chỉ một lệnh CMD (lệnh cuối cùng) sẽ được sử dụng trong một Dockerfile.
+```
+
+Build fist image:
+
+```bash
+docker build -t welcome-to-docker .
+```
+
+Breaking down this command:
+
+> The -t flag tags your image with a name. (welcome-to-docker in this case). And the . lets Docker know where it can find the Dockerfile.
+
+# Tự xây dựng Docker Image để huấn luyện mô hình AI
+
+## Giới thiệu về script Python
+
+Mình có một file python đơn giản, huấn luyện một mô hình `ml_project` Random forest để nhận diện hoa diễn vĩ từ bộ `iris` dataset với thư viện `sklearn` như sau:
+```{.python filename="iris_classification.py"}
+#| eval: false
+# importing required libraries
+# importing Scikit-learn library and datasets package
+from sklearn import datasets
+# Splitting arrays or matrices into random train and test subsets
+from sklearn.model_selection import train_test_split
+# importing random forest classifier from assemble module
+from sklearn.ensemble import RandomForestClassifier
+# importing scaler
+from sklearn.preprocessing import StandardScaler
+# metrics are used to find accuracy or error
+from sklearn.metrics import accuracy_score 
+
+# Loading the iris plants dataset (classification)
+iris = datasets.load_iris()
+# dividing the datasets into two parts i.e. training datasets and test datasets
+X = iris.data[:, [2, 3]]
+y = iris.target
+# i.e. 70 % training dataset and 30 % test datasets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.20, random_state=0)
+
+
+scaler = StandardScaler()
+x_train = scaler.fit_transform(X_train)
+x_test = scaler.transform(X_test)
+
+model = RandomForestClassifier()
+model.fit(x_train, y_train)
+y_pred = model.predict(x_test)
+
+for pred, label in zip(y_pred, y_test):
+    print("Prediction: {}. Label: {}".format(pred, label))
+
+print("Accuracy: %.2f" % accuracy_score(y_test, y_pred))
+```
+
+## Tìm Base Image trên Docker Hub
+
+Chúng ta có thể tìm các class cha ~ base image trên `hub.docker.com`, chúng ta muốn app ml này chạy trên `ubuntu`, do đó có thể start từ image `ubuntu`.
+
+Mình xây dựng `Dockerfile` một cách đơn giản như sau:
+
+```{.bash filename="Dockerfile"}
+FROM ubuntu
+```
+
+Từ Dockerfile này mình có thể build image thông qua command sau:
+
+```bash
+docker -t ml_project .
+```
+
+Run một docker container (container vừa run sẽ lập tức exit):
+
+```bash
+docker run image_name container_name
+```
+
+Nếu muốn "chui" vào bên trong container:
+
+```bash
+docker run -it image_name container_name bash
+```
+`-it` nghĩa là chúng ta chạy container dưới **interactive** mode, `bash` nghĩa là chạy trong **bash** mode, chúng ta có thể thực hiện các câu lệnh bash từ đây.
+
+## Cài đặt các thư viện trong Docker Image
+
+Bây giờ ta mới chỉ có duy nhất hệ điều hành ubuntu trong container, chưa có python để chạy ứng dụng. Trong ubuntu, ta dùng `apt-get` để cài đặt python. Chúng ta sẽ thực hiện các lệnh trên bash ở container hiện tại trước, sau đó mới đưa vào Dockerfile với lệnh `RUN`. Dưới đây là Dockerfile cập nhật:
+
+```{.bash filename="Dockerfile"}
+FROM ubuntu
+
+RUN apt-get update
+RUN apt-get -y install python3
+# -y tự động điền yes khi có các câu hỏi Y/N
+```
+
+:::{.callout-tip}
+Sử dụng exit() hoặc Ctrl-D để thoát Python mode hoặc Container trong Powershell.
+:::
+
+Chúng lại truy cập bash của container đang chạy từ Docker desktop hoặc Powershell:
+
+::: {layout-ncol="1"}
+![Bash inside container](bash_inside_container.png){width="100%"}
+:::
+
+## Copy dữ liệu từ host vào Docker Image
+
+Bây giờ chúng ta muốn rằng sau khi vào container, chúng ta không ở thư mục `root` nữa mà ở `src` ~ ứng chúng của chúng ta, với mục đích dễ làm việc hơn. Chúng ta thêm cú pháp `WORKDIR /src`. Đồng thời cũng cần cài đặt `sklearn` để ứng dụng có thể chạy. Đồng thời, sau khi tất cả được cài đặt, mình cũng muốn chạy luôn ứng dụng, sử dụng `CMD`.
+
+Cập nhật Dockerfile như sau:
+
+```{.bash filename="Dockerfile"}
+FROM ubuntu
+
+WORKDIR /src
+# Khi ở trong docker container, mặc định chúng ta sẽ ở root, giờ ta muốn khi vào container, chúng ta sẽ vào /src
+
+RUN apt-get update
+RUN apt-get -y install python3
+RUN apt-get -y install python3-sklearn
+# -y tự động điền yes khi có các câu hỏi Y/N
+
+COPY iris_classification.py ./iris_classification.py 
+
+CMD [ "python3", "iris_classification.py" ]
+```
+
+# End
+
+Sau khi hoàn thiện, mình không cần chạy containter ở interactive mode và tương tác bằng bash nữa. Lệnh run có thể viết gọn như sau:
+
+```bash
+docker run ml_project
+```
+
+Bài thực hành đến đây kết thúc 🎉.
