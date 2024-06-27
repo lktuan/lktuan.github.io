@@ -10,7 +10,266 @@
 <atom:link href="https://lktuan.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>I am a Risk Modeler 🚀</description>
 <generator>quarto-1.4.554</generator>
-<lastBuildDate>Sun, 23 Jun 2024 17:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 25 Jun 2024 17:00:00 GMT</lastBuildDate>
+<item>
+  <title>Random youtube video: How are memories stored in neural networks?</title>
+  <dc:creator>Tuan Le Khac</dc:creator>
+  <link>https://lktuan.github.io/blog/2024-06-26-hopfield-network/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>This video came across in my youtube recommendation, the title is <a href="https://www.youtube.com/watch?v=piF6D6CQxUw">“How are memories stored in neural networks? | The Hopfield Network #SoME2”</a> by <a href="https://www.youtube.com/@layerwiselectures"><strong>Layerwise Lectures</strong></a>.</p>
+<p>This channel is interestingly has only 1 video, bio:</p>
+<blockquote class="blockquote">
+<p>Reality comes in layers - layers of abstraction. This channels tries to uncover them to gain insights on neuroscience and machine learning.</p>
+</blockquote>
+<p>You’ll find how it interesting, below is my notes.</p>
+<section id="where-is-your-memory" class="level1">
+<h1>Where is your memory?</h1>
+<ul>
+<li>The Random Access Memory (RAM) of a nowaday typical computer is 8-32GB. That’s the part directly interact with CPU.</li>
+<li>Aside from that, you may have hard disk with terabyte or so memory.</li>
+<li>How about you ~ or your brain? Can we mearsure in bytes?</li>
+<li>But the question should be asked in the first place is: Where is it?</li>
+<li>Because memory in computer have <strong>physical</strong> location, to access a piece of data in RAM you have to know the the binary address associated with that location.</li>
+<li>For the CPU, the matter comes down to just turning on the right wires to retreive the bits in desired location.</li>
+</ul>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-06-26-hopfield-network/Where_is_your_memory.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Where is our memory?</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<ul>
+<li>Imagine another kind of memory. Instead of specifying <strong>where</strong> of a memory, it’s a <em>binary address</em>, how about we could specify <strong>what</strong>, it’s <em>content</em>.</li>
+<li>Our memory, if we provide a incomplete version of memory, it’s just sort of autocompletes. With the right software, computer can also do this, but it’s not how computer memory work on the basic level.</li>
+<li>The point of this video is to convince you that autocompleting memories, also know as <strong>associative memory</strong>, is kind of natural behaviour of networks of neurons.</li>
+<li>It’ll become clear that it doesn’t really make sense to measure memory capacity in networks of neurons in the same way we measure computer memory.</li>
+</ul>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-06-26-hopfield-network/Associative_networks.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Associative Networks</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>The biggest difference might be: computer memory have fixed location, but as we’ll see, the memories in an associative networks rather have - <strong>a time</strong>.</p>
+</section>
+<section id="computer-memory-in-a-nutshell" class="level1">
+<h1>Computer memory in a nutshell</h1>
+<ul>
+<li>Computer memory is measured in bits, binary switches of ones and zeros. A string of eight such bits can represent anything from letters to integers.</li>
+<li>How do I get to a memory once it’s saved, say in RAM? Because on its own it doesn’t do much.</li>
+<li>Broadly speaking, and glossing over tons of technical detail here, every piece of data in RAM is matched to a binary address.</li>
+</ul>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-06-26-hopfield-network/computer_memory.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Memories are matched to addresses and that’s ultimately the only way to retrieve them</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<ul>
+<li>Each piece of data is in a different physical location and can only be retrieved by knowing its address. How the reading and writing of memories is accomplished, is really the meat of programming and is another story.</li>
+</ul>
+</section>
+<section id="modeling-neural-networks" class="level1">
+<h1>Modeling neural networks</h1>
+<ul>
+<li>The aim of the video is to introduce how humain brain memory work, by introducing Hopefield Network.</li>
+<li>More generally this lecture aim to be a modelling itself, a kind of the art of essential.</li>
+</ul>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-06-26-hopfield-network/hopfield_networks.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Hopfield Network</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<ul>
+<li>This is a picture depicted neuron,</li>
+<li>it integrates electrical signals from other neurons to determine its own activity and then,</li>
+<li>it broadcasts that activity back to the network.</li>
+</ul>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-06-26-hopfield-network/a_neuron.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>A Neuron</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<ul>
+<li>Mathematically the story goes something like this:</li>
+<li>there’s electrical signals coming in from other neurons, which we will say are just some numbers.</li>
+<li>then the synapses act as multipliers on these signals - another set of numbers,</li>
+<li>and then the activity of the neuron is based on the sum of the weighted inputs, and by “based on” I mean that it’s fine to apply some function after computing the sum.</li>
+</ul>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-06-26-hopfield-network/mathematical_expression_of_neuron.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Mathematical expression of Neuron</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<ul>
+<li>It gets interesting once we turn this into a network, connecting the outputs of neurons to the inputs of other neurons.</li>
+<li>This is a special type of neural network. It’s a <strong>recurrent network</strong>, meaning that there are <em>back and forth</em> connections between the neurons.</li>
+</ul>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-06-26-hopfield-network/recurrent_network.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Recurrent Network</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="memories-in-dynamical-systems" class="level1">
+<h1>Memories in dynamical systems</h1>
+<ul>
+<li>What does this have to do with memory? Well it needs to be somewhere in here doesn’t it? Where?</li>
+<li>Remember the idea of an associative memory, which is the ability of a system to sort of “pattern-autocomplete”.</li>
+<li>Let’s try a definition of memory that’s slightly wider than maybe what we’re used to.</li>
+</ul>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-06-26-hopfield-network/a_state_of_memory.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>A State in memory</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<ul>
+<li>Let a memory system be a system that, after having been in a certain state, a configuration, it has the ability to return to that state later on.</li>
+<li>The responsibility for this return in our computer is CPU.</li>
+<li>Our network seems different though. So let’s get creative. There’s other things in our everyday lives that fall under our definition of memory.</li>
+<li>For example, if below bottle’s crushed, in other words its configuration changed, it can sometimes return to its earlier state, which in that sense could be said to have been memorized.</li>
+</ul>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-06-26-hopfield-network/a_plastic_bottle_in_our_memory.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>A plastic bottle in our memory</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<ul>
+<li>A neural network is a system with a pattern of activity that dynamically evolves. If, somehow, we could construct our network such that it would have some preferred state and would return to that state over time if it was <strong>perturbed</strong>, then that could reasonably be qualified as a memory.</li>
+</ul>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-06-26-hopfield-network/perturbed_states.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Perturbed states</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="learning" class="level1">
+<h1>Learning</h1>
+</section>
+<section id="memory-capacity-and-conclusion" class="level1">
+<h1>Memory capacity and conclusion</h1>
+</section>
+<section id="resources" class="level1">
+<h1>Resources</h1>
+<p>This was the submission to the Summer of Math Exposition 2022 (#SoME2). All credit to <a href="https://www.youtube.com/@layerwiselectures">Layerwise Lectures</a>.</p>
+<ol type="1">
+<li>Orginal paper: Hopfield, J. J. (1982). Neural networks and physical systems with emergent collective computational abilities. Proceedings of the national academy of sciences, 79(8), 2554-2558.</li>
+<li>Image: Neuron image by Santiago Ramón y Cajal, The pyramidal neuron of the cerebral cortex, 1904 Ink and pencil on paper, 8 5/8 x 6 7/8 in.</li>
+</ol>
+
+
+<!-- -->
+
+</section>
+
+ ]]></description>
+  <category>neural networks</category>
+  <guid>https://lktuan.github.io/blog/2024-06-26-hopfield-network/</guid>
+  <pubDate>Tue, 25 Jun 2024 17:00:00 GMT</pubDate>
+  <media:content url="https://lktuan.github.io/blog/2024-06-26-hopfield-network/neuron.png" medium="image" type="image/png" height="81" width="144"/>
+</item>
 <item>
   <title>Hi Docker 🐳</title>
   <dc:creator>Tuan Le Khac</dc:creator>
