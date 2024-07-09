@@ -1,0 +1,587 @@
+---
+title: "A lesson of advanced python from Juan Rodríguez"
+description: "The lecture by Juan Luis Cano Rodríguez in Master in Business Analytics and Big Data, 2021-2022, which focused on modern SWE practices using Python and the insight we can gain on how Data Science projects are put into production."
+author:
+  - name: "Tuan Le Khac"
+    url: https://lktuan.github.io/
+categories: [python, pydata] 
+date: 07-08-2024
+date-modified: 07-09-2024
+image: juan_r.png
+code-tools: true
+code-fold: show
+code-annotations: hover
+draft: false
+css: html/styles.scss
+fig-cap-location: bottom
+editor: visual
+format:
+  html:
+    code-overflow: wrap
+---
+
+This [lesson](https://github.com/astrojuanlu/ie-mbd-advanced-python/tree/main) was found on [Juan Luis Cano Rodríguez's](https://github.com/astrojuanlu) github profile when I came across his talk ["Building the composable Python data stack with Kedro & Ibis"](https://www.youtube.com/watch?v=ffDHdtz_vKc) (bookmarked for learning later) in [Pydata London 2024](https://www.youtube.com/playlist?list=PLGVZCDnMOq0rrhYTNedKKuJ9716fEaAdK).
+
+This is my notes:
+
+# 00 [intro](https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/00_intro.ipynb)
+
+## learning objectives
+
+- Learn modern software engineering practices using Python
+- Understand the value of automation in the software engineering process
+- Gain insight into how Data Science projects are put in production
+- Learn better techniques to collaborate in software projects
+
+The instructor used Linux / Conda, err I just have Window here so there is no other way but right I will try to make stuffs work in Window. Let's get started!
+
+:::{layout-ncol="1"}
+![stolen from the lecture](https://raw.githubusercontent.com/astrojuanlu/ie-mbd-advanced-python/e2224276f91529280ebfcd42ddc7dc22cf0d2010/img/quote-talk-is-cheap-show-me-the-code-linus-torvalds-273528.jpg)
+:::
+
+# 01 [git](https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/01_git.ipynb)
+
+## glossary
+
+- **Repository**: Directory tracked by git, contains a `.git` folder and it's created by `$ git init`;
+- **Commit**: State or snapshot of the repository, they are created by `$ git commit`;
+- **Branch**: A parallel or separate line of development, the default one is master and they are created by `$ git branch` or `$ git checkout -b`.
+
+## git uses a Linux-like cli so now Linux cli 101 (and how to do the same on Window pwsh)
+
+- `whoami`: who am i
+- `pwd`: print working directory
+- `ls`: list all file in the dir, `.` for current folder, `..` for parent one (seems there is no `--color` or `-a` in pwsh)
+- `cd`: change dir 
+- `touch`: create empty file (in pwsh we use `echo "" >> file_name`)
+- `cat`: concatenate, print file contents
+- `nano`: edit a file from the command line (there is a [way](https://www.hanselman.com/blog/developers-can-run-bash-shell-and-usermode-ubuntu-linux-binaries-on-windows-10) that allows us to do the same in win10, but ya, nope)
+
+## workflow
+
+I did these in pwsh:
+
+1. Create a directory `mkdir test_project` and navigate there `cd test_project`;
+2. Init a git repository `git init`;
+3. Check status `git status` ("on branch master, no commits yet, nothing to commit");
+4. Create some files `echo "#Hello, world!" >> readme.md`;
+5. Stage the files `git add readme.md`;
+6. Commit the changes `git commit -m "initial commit"`;
+
+:::{.callout-warning}
+Do not run `git init` on your home directory, as it can lead to confusion and potential data loss. If `git status` gives a lot of untracked files unrelated to your project, you might want to `rm -rf .git` and start in another directory. Notice that this command removes all git history.
+:::
+
+## branching
+
+1. Create and checkout to new branch `git switch -c branch1` (`-c` stands for create); 
+2. Commit there (see above);
+3. Go back to main branch `git switch master`;
+6. Merge changes `git merge branch1`;
+5. Delete branch `git branch -d branch1` (`-d` stands for delete, don't forget this step!).
+
+:::{.callout-tip}
+- Normally, the `git merge` step happens online using *pull requests* or *merge requests*, which are **not** git concepts, but GitHub/GitLab concepts.
+- If `git switch` does not work for you, you might have an older version of Git. Consider upgrading, or alternatively replace all `git switch -c` with `git checkout -b`.
+:::
+
+> Pull requests (PR) let you tell others about changes you've pushed to a branch in a repository on GitHub. Once a pull request is opened, you can discuss and review the potential changes with collaborators and add follow-up commits before your changes are merged into the base branch. -- GitHub
+
+> A merge request (MR) is a proposal to incorporate changes from a source branch to a target branch. -- GitLab
+
+> Remember to **never commit to master**. -- Git Workflow
+
+## merging
+
+2 types of merging:
+
+- **Fast-forward merge**: There is no diverging history, and git just "advances the pointer" of the current branch. `git merge new-branch --ff-only` will fail if a fast-forward merge is not possible;
+- **Non fast-forward merge**: The history diverged, and git will create a merge commit (hence ask for a commit message) with two parents that combines the two branches. `git merge new-branch --no-ff` always creates a merge commit even if a fast-forward merge is possible.
+
+GitHub use `--no--ff` option for pull requests, see [here](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/merging-a-pull-request), and this old-but-gold [discussion](https://stackoverflow.com/questions/9069061/what-effect-does-the-no-ff-flag-have-for-git-merge).
+
+- Non fast-forward merges can end up in conflicts. In that case, git will halt the merge operation and leave traces in the affected files;
+- To abort a merge `git merge --abort` (useful if we are scared and don't know what to do);
+- To merge overriding everything with the upcoming branch `git merge new-branch --strategy-option theirs`;
+- To merge overriding everything with the current branch `git merge new-branch --strategy-option ours`.
+
+**Be careful** while editing files that are in conflict.
+
+## other
+
+- Ignoring files `.gitignore`;
+- Amend the last commit: `git commit --amend`;
+- Show pretty history: `git log --graph --oneline --decorate --all`;
+- Configuring git aliases: `git config --global alias.lg "log --graph --oneline --decorate"` (and now you have `git lg`!).
+
+This excellent chart will help you in git workflow decision making.
+
+:::{layout-ncol="1"}
+![git flowchart, photo credit to this SO [thread](https://stackoverflow.com/questions/14096721/how-to-add-file-to-a-previous-commit)](git_pretty.png)
+:::
+
+## triangular workflows in git
+
+When collaborating with a project hosted online on GitHub or GitLab, the most common setup is having a central repository, one remote fork per user, and local clones/checkouts:
+
+:::{layout-ncol="1"}
+![triangular workflows in git, [source](https://github.blog/2015-07-29-git-2-5-including-multiple-worktrees-and-triangular-workflows/)](https://github.blog/wp-content/uploads/2015/07/5dcdcae4-354a-11e5-9f82-915914fad4f7.png?resize=2000%2C951)
+:::
+
+Notice the different naming conventions between this website and the first image:
+
+- Convention 1: upstream/origin/local
+- Convention 2: origin/<username>/local
+
+We will be consistent with the Aaron Meurer guide and therefore use Convention 2 all the time.
+
+## after creating a PR
+
+After your pull request has been merged to `master`, your local `master` and `<username>/master` will be outdated with respect to `origin/master`. On the other hand, you should **avoid working on this branch anymore in the future**: remember branches should be ephemeral and short-lived.
+
+To put yourself in a clean state again, you have to:
+
+1. Click "remove branch" in the pull request (don't click "remove fork"!);
+2. `git checkout master` (go back to master);
+3. `git fetch origin` (**never, ever** use `git pull` unless you know exactly what you're doing)
+4. `git merge --ff-only origin master` (update your local master with origin/master, and fail if you accidentally made any commit in master)
+5. `git fetch -p <username>` (✨ acknowledge the removal of the remote branch ✨)
+6. `git branch -d old-branch` (remove the old branch)
+7. `git push <username> master` (update your fork with respect to origin)
+8. `git checkout -b new-branch` (start working in the new feature!)
+
+This process has to be repeated **after every pull request**.
+
+Some organizations where all the members are trusted do not use forks, and everybody pushes their branches to the same repository instead. While this simplifies some parts of the workflow, it also requires proper checks in place to prevent bad code to be merged - for example, by [requiring a minimum number of reviews](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule) or some [automated status checks](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches).
+
+# 02 [pythonpath](https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/02_pythonpath.ipynb)
+
+## how does `import` work?
+
+How do `import os, pandas` work? If `pandas` was not installed, what happen?
+
+## how can I `import` my code?
+
+There are three ways to import our own code:
+
+- **Being on the same directory**: This is the quickest, however it scales quite poorly (imagine having all of pandas and scikit-learn in a single directory to do any data analysis project!)
+- **Appending our code location to PYTHONPATH**: This is effective, but we will try to avoid it because it can bring problems in the future.
+- **Making our code installable**: Since any code that's installed can be imported, this shifts the question to "how to make our code installable".
+
+## my first python lib
+
+We will create a new Python library, "IE Titanic utils", to analyze the [Titanic dataset](https://www.kaggle.com/c/titanic/data). I will create a project `ie-titanic-utils`, add `readme.md` and `.gitignore` files.
+
+```bash
+mkdir it-titanic-utils
+git init
+
+echo "# This is utility to help analyze Titanic dataset" >> readme.md
+Invoke-WebRequest -Uri "https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks" | Select-Object -ExpandProperty Content | Out-File -FilePath .gitignore -Encoding utf8
+
+git add readme.md .gitignore
+git commit -m "initial commit"
+```
+
+Now I will create `str_utils.py` file (using VS code for convenience), with a function called `tokenize` that takes a str sentence and splits it into a list of words.
+
+```{.python filename="str_utils.py"}
+def tokenize(sentence: str) -> list[str]:
+    return sentence.split()
+
+```
+
+In pwsh, I can import and use this function
+
+```bash
+python
+Python 3.11.4 (tags/v3.11.4:d2340ef, Jun  7 2023, 05:45:37) [MSC v.1934 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from str_utils import tokenize
+>>> tokenize("Toi la Le Khac Tuan")
+['Toi', 'la', 'Le', 'Khac', 'Tuan']
+>>>
+```
+
+## the `PYTHONPATH`
+
+We saw above that we could easily import our `tokenize` function. However, this only works if we are in the same directory. Why? Python looks in some predefined locations to know where to find what we want to import, called the "PATH".
+
+```{python}
+#| eval: false
+import sys
+sys.path # i will not execute this code
+```
+
+Therefore, there are two ways of making our code **globally importable**:
+
+1. Modify the "PATH"
+2. Put our code inside a location predefined in the "PATH"
+
+The first option can be achieved like this:
+
+```{python}
+#| eval: false
+>>> sys.path.insert(0, "/home/username/ie-titanic-utils")
+>>> import str_utils  # Works!
+```
+
+Or, alternatively, from outside of the interpreter: `export PYTHONPATH=/home/username/ie-titanic-utils`.
+
+However, both are **bad practices and should be avoided**.
+
+## what does `import` do?
+
+Python code is normally written in `.py` scripts. These scripts can be imported in the same way that any model or package from the standard library can:
+
+```bash
+$ python3
+>>> import math  # Works, because it's in stdlib
+>>> import numpy as np  # Works if you ran `pip install numpy` in advance
+>>> import str_utils  # Works if you are in the same directory
+['Hello,', 'world!']
+>>> 
+```
+
+When the user imports a script, **Python runs the script**. That's the way all the possible functions and classes inside it are available.
+
+## how to separate "running code" from reusable pieces
+
+A Python module (any `.py` script) might contain code that we want to run, as well as code that we only want to import. To separate these, we use this trick:
+
+```bash
+ ie-titanic-utils  get-content -Tail 2 .\str_utils.py
+if __name__ == "__main__":
+    print(tokenize("hello, world!"))
+
+ ie-titanic-utils  python .\str_utils.py # The `print` runs
+['hello,', 'world!']
+
+ ie-titanic-utils  python
+>>> from str_utils import tokenize
+>>> tokenize("Hi, world!")
+['Hi,', 'world!'] # The `print` doesn't run!
+>>>
+```
+
+:::{.callout-tip}
+Here is what Claude sonnet 3.5 gave me:
+
+To separate code that we want to run directly from code that we only want to import, we should use the if \_\_name\_\_ == "\_\_main\_\_": idiom in Python. This is a common pattern that allows a Python script to be both importable and executable. Here's an explanation:
+
+1. When a Python file is run directly, Python sets the special \_\_name\_\_ variable to "\_\_main\_\_".
+2. When a Python file is imported as a module, \_\_name\_\_ is set to the name of the module.
+
+By using this idiom, we can control which code runs when the script is executed directly versus when it's imported as a module.
+:::
+
+# 03&04 [pip vs. conda](https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/03-04_pip-vs-conda.ipynb)
+
+## managing python environments
+
+:::{layout-ncol="1"}
+![stolen from the lecture](https://raw.githubusercontent.com/astrojuanlu/ie-mbd-advanced-python/e2224276f91529280ebfcd42ddc7dc22cf0d2010/img/python_comrades.png)
+:::
+> Simple is better than complex.
+> 
+> Complex is better than complicated.
+
+How do people install and upgrade Python? -> Most of people choose Python.org, the same for me!
+:::{.callout-caution}
+This way ships a tool to create development environments (`venv`). However, `venv` cannot create environments with different Python versions (you're tied to the one you downloaded) and certain packages will require extra steps to be installed. Therefore, it **is not** for everyone.
+:::
+
+Juan chose to use `conda`. As I am learning Docker, I choose Docker for this tutorial.
+
+How do people create isolated development environments? -> The most popular is `Virtualenv`. But normally when doing an analysis task, I use `venv` which is built-in python lib. Recently I followed my dev team to use `pipenv`, I do also see `poetry` is worth-learning approach.
+
+> "More than a half of the users of Jupyter Notebook and JupyterLab choose Conda"
+
+As I think a model which is not deployed yet is useless model, I choose VS Code and Docker - more deployment-oriented. 
+
+## summary
+
+> For the user, the most salient distinction is probably this: pip installs python packages within any environment; conda installs any package within conda environments.
+> 
+> —Jake Vanderplas
+
+However, I will be using `pipenv` to achieve what Juan done in upcoming sections. I will specify version of each package I used.
+
+## `pip` and `PyPI`
+
+`pip` is the default Python installer. By default, it fetches packages from <https://pypi.org/>, which is the community repository for Python packages.
+
+# 05 layout
+
+here is my project's layout:
+
+```bash
+ie-titanic-utils
+├─ src
+│  └─ ie_titanic_utils
+│     ├─ __init__.py
+│     └─ ...
+├─ tests
+│  └─ ...
+├─ .gitignore
+├─ README.md
+└─ pyproject.toml
+```
+
+- The `src/package_name` contains the source code of the library. `package_name` must be Python identifier. It should contain a `__init__.py` that can be empty;
+- The `tests` directory contains the tests. It must not contain any `__init__.py` because it's not meant to be imported as a package. In very specific cases it's included inside `src/package_name`;
+- Every project contains a `README.md` that at least explains what the project is;
+- `pyproject.toml` contains the metadata of the project. The absolutely required fields are `module`, `author`, and some extra information that tells Python how to install the package.
+
+## creating a package
+
+1. run `flit init` to create the metadata
+
+```bash
+ ie-titanic-utils  flit init
+pyproject.toml exists - overwrite it? [y/N]: y
+Module name [ie_titanic_utils]: ie_utils
+Author: Tuan Le Khac
+Author email: tuan.lekhac0905@gmail.com
+Home page: 
+Choose a license (see http://choosealicense.com/ for more info)
+1. MIT - simple and permissive
+2. Apache - explicitly grants patent rights
+3. GPL - ensures that code based on this is shared with the same terms
+4. Skip - choose a license later
+Enter 1-4: 4
+
+Written pyproject.toml; edit that file to add optional extra info.
+```
+
+2. place some code under the source directory. In `__init__.py` there must be a docstring giving a description of the project and a `__version__` variable indicating the version:
+
+```{.python filename="__init__.py"}
+"""IE utils (test package)."""
+
+__version__ = "0.1.0"
+```
+
+3. Install the code using `pip install`! (this did not work for me currently. edit: the project name should match the `src/package_name` omg)
+
+```bash
+ ie-titanic-utils  pip install .
+Processing .\ie-titanic-utils
+...
+Successfully installed ie_titanic_utils-0.1.0
+ ie-titanic-utils  python
+Python 3.11.4 (tags/v3.11.4:d2340ef, Jun  7 2023, 05:45:37) [MSC v.1934 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import ie_titanic_utils
+>>> ie_titanic_utils.__version__
+'0.1.0'
+>>>    
+```
+
+4. `readme.md` and a `.gitignore` files were created.
+5. commit the change
+
+```bash
+git checkout -b first_module # i should be using switch (-c) haha, checkout is old syntax
+git status
+git add .
+git commit -m "initial very first module"
+git checkout master
+
+ ie-titanic-utils  git merge --no-ff first_module
+Merge made by the 'ort' strategy.
+ pyproject.toml                    | 30 ++++++++++++++++++++++++++++++
+ src/ie_titanic_utils/__init__.py  |  6 ++++++
+ src/ie_titanic_utils/str_utils.py |  6 ++++++
+ 3 files changed, 42 insertions(+)
+ create mode 100644 pyproject.toml
+ create mode 100644 src/ie_titanic_utils/__init__.py
+ create mode 100644 src/ie_titanic_utils/str_utils.py
+
+git branch -d first_module
+# git push origin master
+# as I will not upload this code to GitHub
+# https://stackoverflow.com/questions/32238616/git-push-fatal-origin-does-not-appear-to-be-a-git-repository-fatal-could-n
+```
+
+Now if I log the git, I will see this:
+
+```bash
+ ie-titanic-utils  git log --graph --oneline --decorate --all
+*   39105c7 (HEAD -> master) Merge branch 'first_module'
+|\
+| * 7a33844 initial very first module
+|/
+* 793bd67 initial commit
+```
+
+Yeah til now I can create a "package" in my computer and install so I can use it **globally**. But I have not use any env management yet.
+
+## intermezzo: version numbers
+
++ Version numbers for Python packages are explained in [PEP 440](https://www.python.org/dev/peps/pep-0440/)
++ For libraries, the most widely used convention is [semantic versioning](https://semver.org/): X.Y.Z
+  - Z **must** be incremented if only backwards compatible bug fixes are introduced (a bug fix is defined as an internal change that fixes incorrect behavior)
+  - Y **must** be incremented every time there is new, backwards-compatible functionality
+  - X **must** be incremented every time there are backwards-incompatible changes
++ Between releases, the version should have the `.dev0` suffix
++ Recommendation: start with 0.1.dev0 (development version), then make a `0.1.0` release, then progress to `0.1.1` for quick fixes and `0.2.0` for new functionality, and when you want to make a promise of relative stability jump to `1.0.0`.
++ For applications, other conventions are more appropriate, like [calendar versioning](https://calver.org/): `[YY]YY.MM.??`
+
+## project requirements
+
+Sometimes our project will depend on third-party libraries (pandas, scikit-learn). To make pip install those dependencies automatically, we can add them to our `pyproject.toml` under the `[tool.flit.metadata]` section, using the `requires` option:
+
+```md
+[build-system]
+requires = ["flit_core>=3.4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "ie_titanic_utils"
+authors = [{name = "Tuan Le Khac", email = "tuan.lekhac0905@gmail.com"}]
+readme = "readme.md"
+requires-python = ">=3.11"
+dynamic = ["version", "description"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires = [
+    "pandas",
+    "matplotlib>=2",
+]
+```
+
+We might want to specify *optional* dependencies that should only be installed upon request, or for some specific purposes. A typical example will be development dependencies: we will need things like `pytest` and `black`, but we don't want the user to install them as part as our library. To do that, we can specify *groups* of optional dependencies under the `tool.flit.metadata.requires-extra` section:
+
+```md
+# In my case, I use `project.optional-dependencies`: flit_core.config.ConfigError: Use [project] table for metadata or [tool.flit.metadata], not both.
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "black>=20.8b1",
+]
+```
+
+That way, they will only get installed when `[dev]` is added after the name of our library:
+
+```bash
+ ie-titanic-utils  pip install .[dev]
+# Successfully installed black-24.4.2 ie_titanic_utils-0.1.0 iniconfig-2.0.0 pytest-8.2.2
+```
+
+# 06 [unit test](https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/06_unit-tests.ipynb)
+
+> If you use software that lacks automated tests, you are the tests.
+> 
+> — Jenny Bryan (@JennyBryan) [September 22, 2018](https://x.com/JennyBryan/status/1043307291909316609?ref_src=twsrc%5Etfw)
+
+Testing is **essential**. Computers excel at doing repetitive tasks: they basically never make mistakes (the mistake might be in what we told the computer to do). Humans, on the other hand, fail more often, especially under pressure, or on Friday afternoons and Monday mornings. Therefore, instead of letting the humans be the tests, we will use the computer to **frequently verify that our software works as specified**.
+
+I will be using `pytest` to achieve this.
+
+## test-driven development
+
+The "test-driven development mantra" is <span style="color:red;font-weight:bold;">Red</span> - <span style="color:green;font-weight:bold;">Green</span> - <span style="color:grey;font-weight:bold;">Refactor</span>:
+
+:::{layout-ncol="1"}
+![Make it work. Make it right. Make it fast.](https://raw.githubusercontent.com/astrojuanlu/ie-mbd-advanced-python/e2224276f91529280ebfcd42ddc7dc22cf0d2010/img/red-green-refactor.png)
+:::
+
+1. Write a test. <span style="color:red;font-weight:bold;">Watch it fail</span>.
+2. Write just enough code to <span style="color:green;font-weight:bold;">pass the test</span>.
+3. Improve the code without breaking the test.
+
+Repeat.
+
+## testing in Python
+
+Summary: use `pytest`. Everybody does. It rocks.
+
+[pytest](https://docs.pytest.org/en/8.2.x/) is a testing framework for Python that makes writing tests extremely easy. It is much more powerful than the standard library equivalent, `unittest`. We can use by install it first `pip install pytest`.
+
+We can write a function that test the `tokenize` funtion:
+
+```{.python filename="tests/test_tokenize.py"}
+from ie_titanic_utils import tokenize  # This will fail right away!
+
+
+def test_tokenize_returns_expected_list():
+    sentence = "This is a sentence"
+    expected_tokens = ["This", "is", "a", "sentence"]
+
+    tokens = tokenize(sentence)
+
+    assert tokens == expected_tokens
+```
+
+and we run it from the command line:
+
+```bash
+ ie-titanic-utils  pytest
+============================================================================================ test session starts ============================================================================================
+platform win32 -- Python 3.11.4, pytest-8.2.2, pluggy-1.5.0
+rootdir: .\ie-titanic-utils
+configfile: pyproject.toml
+plugins: anyio-3.7.1, time-machine-2.14.0
+collected 1 item
+
+tests\test_tokenize.py .                                                                                                                                                                               [100%] 
+
+============================================================================================= 1 passed in 0.02s ============================================================================================= 
+```
+
+The test successed after I fixed the `__init__.py`:
+
+```{.python filename="src/./__init__.py"}
+from ie_titanic_utils.str_utils import tokenize
+__all__ = ["tokenize"]
+```
+
+# 07&08 [oop](https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/07-08_object-oriented-programming.ipynb)
+
+## what are "objects" anyway?
+## classes and instances
+## 
+# 09&10 [flask](https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/09-10_flask.ipynb)
+
+# [conclusion](https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/99_conclusion.ipynb)
+
+## where do we go from here
+
+- Keep improving the art of Python packaging
+- Explore other options for high performance Python
+- Help "bridging the gap"
+- Engage with the (open source) Python community
+
+## keep improving the art of python packaging
+
+- recommend: `pip-tools` + `requirements.in` = `requirements.txt`
+- Poetry, Pipenv... Yes, they work, but they are way more complex and have "lock-in"
+- All companies I worked for struggle sooner or later with their code deployment practices. Now, you know better
+
+## explore other options for high performance python
+
+- Juan mentioned: Numba, Modin, Vaex, Dask, Spark, Coiled, Prefect
+- Now we have more: polar, pandas 2.0, aiflow, dagster, dbt, etc  
+
+:::{layout-ncol="1"}
+![stolen from the lecture](setup_py_br.png)
+:::
+
+# other resources
+
+1. [NBViewer](https://nbviewer.org/github/astrojuanlu/ie-mbd-advanced-python/tree/main/) for this lecture;
+2. [PyData](https://pydata.org/), a community for developers and users of open source data tools;
+3. [Pro Git](https://git-scm.com/book/en/v2/), `--distributed-is-the-new-centralized`;
+4. [Pull Requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests);
+5. [Merge Requests](https://docs.gitlab.com/ee/user/project/merge_requests/index.html);
+6. [Git Workflow](https://www.asmeurer.com/git-workflow/), the git workflow for contributing to open source repositories;
+7. [Git Ignore](https://www.toptal.com/developers/gitignore) builder;
+8. [Git commit --amend](https://www.atlassian.com/git/tutorials/rewriting-history), rewriting history;
+9. [The right way to distribute Python code](https://packaging.python.org/en/latest/tutorials/packaging-projects/)
+10. [Python packaging](https://docs.python.org/3/tutorial/modules.html#packages)
+11. [Pytest](https://docs.pytest.org/en/8.2.x/);
+12. 

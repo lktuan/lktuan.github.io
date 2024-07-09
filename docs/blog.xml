@@ -10,7 +10,1253 @@
 <atom:link href="https://lktuan.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>I am a Risk Modeler 🚀</description>
 <generator>quarto-1.4.554</generator>
-<lastBuildDate>Tue, 25 Jun 2024 17:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 07 Jul 2024 17:00:00 GMT</lastBuildDate>
+<item>
+  <title>A lesson of advanced python from Juan Rodríguez</title>
+  <dc:creator>Tuan Le Khac</dc:creator>
+  <link>https://lktuan.github.io/blog/2024-07-08-advanced-python/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>This <a href="https://github.com/astrojuanlu/ie-mbd-advanced-python/tree/main">lesson</a> was found on <a href="https://github.com/astrojuanlu">Juan Luis Cano Rodríguez’s</a> github profile when I came across his talk <a href="https://www.youtube.com/watch?v=ffDHdtz_vKc">“Building the composable Python data stack with Kedro &amp; Ibis”</a> (bookmarked for learning later) in <a href="https://www.youtube.com/playlist?list=PLGVZCDnMOq0rrhYTNedKKuJ9716fEaAdK">Pydata London 2024</a>.</p>
+<p>This is my notes:</p>
+<section id="intro" class="level1">
+<h1>00 <a href="https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/00_intro.ipynb">intro</a></h1>
+<section id="learning-objectives" class="level2">
+<h2 class="anchored" data-anchor-id="learning-objectives">learning objectives</h2>
+<ul>
+<li>Learn modern software engineering practices using Python</li>
+<li>Understand the value of automation in the software engineering process</li>
+<li>Gain insight into how Data Science projects are put in production</li>
+<li>Learn better techniques to collaborate in software projects</li>
+</ul>
+<p>The instructor used Linux / Conda, err I just have Window here so there is no other way but right I will try to make stuffs work in Window. Let’s get started!</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://raw.githubusercontent.com/astrojuanlu/ie-mbd-advanced-python/e2224276f91529280ebfcd42ddc7dc22cf0d2010/img/quote-talk-is-cheap-show-me-the-code-linus-torvalds-273528.jpg" class="img-fluid figure-img"></p>
+<figcaption>stolen from the lecture</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="git" class="level1">
+<h1>01 <a href="https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/01_git.ipynb">git</a></h1>
+<section id="glossary" class="level2">
+<h2 class="anchored" data-anchor-id="glossary">glossary</h2>
+<ul>
+<li><strong>Repository</strong>: Directory tracked by git, contains a <code>.git</code> folder and it’s created by <code>$ git init</code>;</li>
+<li><strong>Commit</strong>: State or snapshot of the repository, they are created by <code>$ git commit</code>;</li>
+<li><strong>Branch</strong>: A parallel or separate line of development, the default one is master and they are created by <code>$ git branch</code> or <code>$ git checkout -b</code>.</li>
+</ul>
+</section>
+<section id="git-uses-a-linux-like-cli-so-now-linux-cli-101-and-how-to-do-the-same-on-window-pwsh" class="level2">
+<h2 class="anchored" data-anchor-id="git-uses-a-linux-like-cli-so-now-linux-cli-101-and-how-to-do-the-same-on-window-pwsh">git uses a Linux-like cli so now Linux cli 101 (and how to do the same on Window pwsh)</h2>
+<ul>
+<li><code>whoami</code>: who am i</li>
+<li><code>pwd</code>: print working directory</li>
+<li><code>ls</code>: list all file in the dir, <code>.</code> for current folder, <code>..</code> for parent one (seems there is no <code>--color</code> or <code>-a</code> in pwsh)</li>
+<li><code>cd</code>: change dir</li>
+<li><code>touch</code>: create empty file (in pwsh we use <code>echo "" &gt;&gt; file_name</code>)</li>
+<li><code>cat</code>: concatenate, print file contents</li>
+<li><code>nano</code>: edit a file from the command line (there is a <a href="https://www.hanselman.com/blog/developers-can-run-bash-shell-and-usermode-ubuntu-linux-binaries-on-windows-10">way</a> that allows us to do the same in win10, but ya, nope)</li>
+</ul>
+</section>
+<section id="workflow" class="level2">
+<h2 class="anchored" data-anchor-id="workflow">workflow</h2>
+<p>I did these in pwsh:</p>
+<ol type="1">
+<li>Create a directory <code>mkdir test_project</code> and navigate there <code>cd test_project</code>;</li>
+<li>Init a git repository <code>git init</code>;</li>
+<li>Check status <code>git status</code> (“on branch master, no commits yet, nothing to commit”);</li>
+<li>Create some files <code>echo "#Hello, world!" &gt;&gt; readme.md</code>;</li>
+<li>Stage the files <code>git add readme.md</code>;</li>
+<li>Commit the changes <code>git commit -m "initial commit"</code>;</li>
+</ol>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Do not run <code>git init</code> on your home directory, as it can lead to confusion and potential data loss. If <code>git status</code> gives a lot of untracked files unrelated to your project, you might want to <code>rm -rf .git</code> and start in another directory. Notice that this command removes all git history.</p>
+</div>
+</div>
+</section>
+<section id="branching" class="level2">
+<h2 class="anchored" data-anchor-id="branching">branching</h2>
+<ol type="1">
+<li>Create and checkout to new branch <code>git switch -c branch1</code> (<code>-c</code> stands for create);</li>
+<li>Commit there (see above);</li>
+<li>Go back to main branch <code>git switch master</code>;</li>
+<li>Merge changes <code>git merge branch1</code>;</li>
+<li>Delete branch <code>git branch -d branch1</code> (<code>-d</code> stands for delete, don’t forget this step!).</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Normally, the <code>git merge</code> step happens online using <em>pull requests</em> or <em>merge requests</em>, which are <strong>not</strong> git concepts, but GitHub/GitLab concepts.</li>
+<li>If <code>git switch</code> does not work for you, you might have an older version of Git. Consider upgrading, or alternatively replace all <code>git switch -c</code> with <code>git checkout -b</code>.</li>
+</ul>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Pull requests (PR) let you tell others about changes you’ve pushed to a branch in a repository on GitHub. Once a pull request is opened, you can discuss and review the potential changes with collaborators and add follow-up commits before your changes are merged into the base branch. – GitHub</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>A merge request (MR) is a proposal to incorporate changes from a source branch to a target branch. – GitLab</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Remember to <strong>never commit to master</strong>. – Git Workflow</p>
+</blockquote>
+</section>
+<section id="merging" class="level2">
+<h2 class="anchored" data-anchor-id="merging">merging</h2>
+<p>2 types of merging:</p>
+<ul>
+<li><strong>Fast-forward merge</strong>: There is no diverging history, and git just “advances the pointer” of the current branch. <code>git merge new-branch --ff-only</code> will fail if a fast-forward merge is not possible;</li>
+<li><strong>Non fast-forward merge</strong>: The history diverged, and git will create a merge commit (hence ask for a commit message) with two parents that combines the two branches. <code>git merge new-branch --no-ff</code> always creates a merge commit even if a fast-forward merge is possible.</li>
+</ul>
+<p>GitHub use <code>--no--ff</code> option for pull requests, see <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/merging-a-pull-request">here</a>, and this old-but-gold <a href="https://stackoverflow.com/questions/9069061/what-effect-does-the-no-ff-flag-have-for-git-merge">discussion</a>.</p>
+<ul>
+<li>Non fast-forward merges can end up in conflicts. In that case, git will halt the merge operation and leave traces in the affected files;</li>
+<li>To abort a merge <code>git merge --abort</code> (useful if we are scared and don’t know what to do);</li>
+<li>To merge overriding everything with the upcoming branch <code>git merge new-branch --strategy-option theirs</code>;</li>
+<li>To merge overriding everything with the current branch <code>git merge new-branch --strategy-option ours</code>.</li>
+</ul>
+<p><strong>Be careful</strong> while editing files that are in conflict.</p>
+</section>
+<section id="other" class="level2">
+<h2 class="anchored" data-anchor-id="other">other</h2>
+<ul>
+<li>Ignoring files <code>.gitignore</code>;</li>
+<li>Amend the last commit: <code>git commit --amend</code>;</li>
+<li>Show pretty history: <code>git log --graph --oneline --decorate --all</code>;</li>
+<li>Configuring git aliases: <code>git config --global alias.lg "log --graph --oneline --decorate"</code> (and now you have <code>git lg</code>!).</li>
+</ul>
+<p>This excellent chart will help you in git workflow decision making.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-07-08-advanced-python/git_pretty.png" class="img-fluid figure-img"></p>
+<figcaption>git flowchart, photo credit to this SO <a href="https://stackoverflow.com/questions/14096721/how-to-add-file-to-a-previous-commit">thread</a></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="triangular-workflows-in-git" class="level2">
+<h2 class="anchored" data-anchor-id="triangular-workflows-in-git">triangular workflows in git</h2>
+<p>When collaborating with a project hosted online on GitHub or GitLab, the most common setup is having a central repository, one remote fork per user, and local clones/checkouts:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://github.blog/wp-content/uploads/2015/07/5dcdcae4-354a-11e5-9f82-915914fad4f7.png?resize=2000%2C951" class="img-fluid figure-img"></p>
+<figcaption>triangular workflows in git, <a href="https://github.blog/2015-07-29-git-2-5-including-multiple-worktrees-and-triangular-workflows/">source</a></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Notice the different naming conventions between this website and the first image:</p>
+<ul>
+<li>Convention 1: upstream/origin/local</li>
+<li>Convention 2: origin/<username>/local</username></li>
+</ul>
+<p>We will be consistent with the Aaron Meurer guide and therefore use Convention 2 all the time.</p>
+</section>
+<section id="after-creating-a-pr" class="level2">
+<h2 class="anchored" data-anchor-id="after-creating-a-pr">after creating a PR</h2>
+<p>After your pull request has been merged to <code>master</code>, your local <code>master</code> and <code>&lt;username&gt;/master</code> will be outdated with respect to <code>origin/master</code>. On the other hand, you should <strong>avoid working on this branch anymore in the future</strong>: remember branches should be ephemeral and short-lived.</p>
+<p>To put yourself in a clean state again, you have to:</p>
+<ol type="1">
+<li>Click “remove branch” in the pull request (don’t click “remove fork”!);</li>
+<li><code>git checkout master</code> (go back to master);</li>
+<li><code>git fetch origin</code> (<strong>never, ever</strong> use <code>git pull</code> unless you know exactly what you’re doing)</li>
+<li><code>git merge --ff-only origin master</code> (update your local master with origin/master, and fail if you accidentally made any commit in master)</li>
+<li><code>git fetch -p &lt;username&gt;</code> (✨ acknowledge the removal of the remote branch ✨)</li>
+<li><code>git branch -d old-branch</code> (remove the old branch)</li>
+<li><code>git push &lt;username&gt; master</code> (update your fork with respect to origin)</li>
+<li><code>git checkout -b new-branch</code> (start working in the new feature!)</li>
+</ol>
+<p>This process has to be repeated <strong>after every pull request</strong>.</p>
+<p>Some organizations where all the members are trusted do not use forks, and everybody pushes their branches to the same repository instead. While this simplifies some parts of the workflow, it also requires proper checks in place to prevent bad code to be merged - for example, by <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule">requiring a minimum number of reviews</a> or some <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches">automated status checks</a>.</p>
+</section>
+</section>
+<section id="pythonpath" class="level1">
+<h1>02 <a href="https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/02_pythonpath.ipynb">pythonpath</a></h1>
+<section id="how-does-import-work" class="level2">
+<h2 class="anchored" data-anchor-id="how-does-import-work">how does <code>import</code> work?</h2>
+<p>How do <code>import os, pandas</code> work? If <code>pandas</code> was not installed, what happen?</p>
+</section>
+<section id="how-can-i-import-my-code" class="level2">
+<h2 class="anchored" data-anchor-id="how-can-i-import-my-code">how can I <code>import</code> my code?</h2>
+<p>There are three ways to import our own code:</p>
+<ul>
+<li><strong>Being on the same directory</strong>: This is the quickest, however it scales quite poorly (imagine having all of pandas and scikit-learn in a single directory to do any data analysis project!)</li>
+<li><strong>Appending our code location to PYTHONPATH</strong>: This is effective, but we will try to avoid it because it can bring problems in the future.</li>
+<li><strong>Making our code installable</strong>: Since any code that’s installed can be imported, this shifts the question to “how to make our code installable”.</li>
+</ul>
+</section>
+<section id="my-first-python-lib" class="level2">
+<h2 class="anchored" data-anchor-id="my-first-python-lib">my first python lib</h2>
+<p>We will create a new Python library, “IE Titanic utils”, to analyze the <a href="https://www.kaggle.com/c/titanic/data">Titanic dataset</a>. I will create a project <code>ie-titanic-utils</code>, add <code>readme.md</code> and <code>.gitignore</code> files.</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mkdir</span> it-titanic-utils</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> init</span>
+<span id="cb1-3"></span>
+<span id="cb1-4"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">echo</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"# This is utility to help analyze Titanic dataset"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;</span> readme.md</span>
+<span id="cb1-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Invoke-WebRequest</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-Uri</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks"</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Select-Object</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-ExpandProperty</span> Content <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Out-File</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-FilePath</span> .gitignore <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-Encoding</span> utf8</span>
+<span id="cb1-6"></span>
+<span id="cb1-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add readme.md .gitignore</span>
+<span id="cb1-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"initial commit"</span></span></code></pre></div>
+<p>Now I will create <code>str_utils.py</code> file (using VS code for convenience), with a function called <code>tokenize</code> that takes a str sentence and splits it into a list of words.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>str_utils.py</strong></pre>
+</div>
+<div class="sourceCode" id="cb2" data-filename="str_utils.py" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> tokenize(sentence: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">str</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">list</span>[<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">str</span>]:</span>
+<span id="cb2-2">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> sentence.split()</span></code></pre></div>
+</div>
+<p>In pwsh, I can import and use this function</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">python</span></span>
+<span id="cb3-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Python</span> 3.11.4 <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">tags/v3.11.4:d2340ef,</span> Jun  7 2023, 05:45:37<span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">)</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">[MSC</span> v.1934 64 bit <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">AMD64</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">)</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">]</span> on win32</span>
+<span id="cb3-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Type</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"help"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"copyright"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"credits"</span> or <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"license"</span> for more information.</span>
+<span id="cb3-4"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span> from <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">str_utils</span> import tokenize</span>
+<span id="cb3-5"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span> tokenize<span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">(</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Toi la Le Khac Tuan"</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb3-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">[</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Toi'</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">,</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'la'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Le'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Khac'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Tuan'</span>]</span>
+<span id="cb3-7"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span></span></code></pre></div>
+</section>
+<section id="the-pythonpath" class="level2">
+<h2 class="anchored" data-anchor-id="the-pythonpath">the <code>PYTHONPATH</code></h2>
+<p>We saw above that we could easily import our <code>tokenize</code> function. However, this only works if we are in the same directory. Why? Python looks in some predefined locations to know where to find what we want to import, called the “PATH”.</p>
+<div id="fadd9714" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> sys</span>
+<span id="cb4-2">sys.path <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># i will not execute this code</span></span></code></pre></div>
+</details>
+</div>
+<p>Therefore, there are two ways of making our code <strong>globally importable</strong>:</p>
+<ol type="1">
+<li>Modify the “PATH”</li>
+<li>Put our code inside a location predefined in the “PATH”</li>
+</ol>
+<p>The first option can be achieved like this:</p>
+<div id="879bab61" class="cell" data-execution_count="2">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span> sys.path.insert(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/home/username/ie-titanic-utils"</span>)</span>
+<span id="cb5-2"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span> <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> str_utils  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Works!</span></span></code></pre></div>
+</details>
+</div>
+<p>Or, alternatively, from outside of the interpreter: <code>export PYTHONPATH=/home/username/ie-titanic-utils</code>.</p>
+<p>However, both are <strong>bad practices and should be avoided</strong>.</p>
+</section>
+<section id="what-does-import-do" class="level2">
+<h2 class="anchored" data-anchor-id="what-does-import-do">what does <code>import</code> do?</h2>
+<p>Python code is normally written in <code>.py</code> scripts. These scripts can be imported in the same way that any model or package from the standard library can:</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">$</span> python3</span>
+<span id="cb6-2"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span> import <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">math</span>  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Works, because it's in stdlib</span></span>
+<span id="cb6-3"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span> import <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">numpy</span> as np  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Works if you ran `pip install numpy` in advance</span></span>
+<span id="cb6-4"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span> import <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">str_utils</span>  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Works if you are in the same directory</span></span>
+<span id="cb6-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">[</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Hello,'</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">,</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'world!'</span>]</span>
+<span id="cb6-6"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span> </span></code></pre></div>
+<p>When the user imports a script, <strong>Python runs the script</strong>. That’s the way all the possible functions and classes inside it are available.</p>
+</section>
+<section id="how-to-separate-running-code-from-reusable-pieces" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-separate-running-code-from-reusable-pieces">how to separate “running code” from reusable pieces</h2>
+<p>A Python module (any <code>.py</code> script) might contain code that we want to run, as well as code that we only want to import. To separate these, we use this trick:</p>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;"></span> ie-titanic-utils  get-content <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-Tail</span> 2 .<span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\s</span>tr_utils.py</span>
+<span id="cb7-2"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">__name__</span> == <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"__main__"</span>:</span>
+<span id="cb7-3">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">print</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">tokenize</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"hello, world!"</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">))</span></span>
+<span id="cb7-4"></span>
+<span id="cb7-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;"></span> ie-titanic-utils  python .<span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\s</span>tr_utils.py <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># The `print` runs</span></span>
+<span id="cb7-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">[</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'hello,'</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">,</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'world!'</span>]</span>
+<span id="cb7-7"></span>
+<span id="cb7-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;"></span> ie-titanic-utils  python</span>
+<span id="cb7-9"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span> from <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">str_utils</span> import tokenize</span>
+<span id="cb7-10"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span> tokenize<span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">(</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Hi, world!"</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb7-11"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">[</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Hi,'</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">,</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'world!'</span>] <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># The `print` doesn't run!</span></span>
+<span id="cb7-12"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span></span></code></pre></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Here is what Claude sonnet 3.5 gave me:</p>
+<p>To separate code that we want to run directly from code that we only want to import, we should use the if __name__ == “__main__”: idiom in Python. This is a common pattern that allows a Python script to be both importable and executable. Here’s an explanation:</p>
+<ol type="1">
+<li>When a Python file is run directly, Python sets the special __name__ variable to “__main__”.</li>
+<li>When a Python file is imported as a module, __name__ is set to the name of the module.</li>
+</ol>
+<p>By using this idiom, we can control which code runs when the script is executed directly versus when it’s imported as a module.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="pip-vs.-conda" class="level1">
+<h1>03&amp;04 <a href="https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/03-04_pip-vs-conda.ipynb">pip vs.&nbsp;conda</a></h1>
+<section id="managing-python-environments" class="level2">
+<h2 class="anchored" data-anchor-id="managing-python-environments">managing python environments</h2>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://raw.githubusercontent.com/astrojuanlu/ie-mbd-advanced-python/e2224276f91529280ebfcd42ddc7dc22cf0d2010/img/python_comrades.png" class="img-fluid figure-img"></p>
+<figcaption>stolen from the lecture</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Simple is better than complex.</p>
+<p>Complex is better than complicated.</p>
+</blockquote>
+<p>How do people install and upgrade Python? -&gt; Most of people choose Python.org, the same for me! :::{.callout-caution} This way ships a tool to create development environments (<code>venv</code>). However, <code>venv</code> cannot create environments with different Python versions (you’re tied to the one you downloaded) and certain packages will require extra steps to be installed. Therefore, it <strong>is not</strong> for everyone. :::</p>
+<p>Juan chose to use <code>conda</code>. As I am learning Docker, I choose Docker for this tutorial.</p>
+<p>How do people create isolated development environments? -&gt; The most popular is <code>Virtualenv</code>. But normally when doing an analysis task, I use <code>venv</code> which is built-in python lib. Recently I followed my dev team to use <code>pipenv</code>, I do also see <code>poetry</code> is worth-learning approach.</p>
+<blockquote class="blockquote">
+<p>“More than a half of the users of Jupyter Notebook and JupyterLab choose Conda”</p>
+</blockquote>
+<p>As I think a model which is not deployed yet is useless model, I choose VS Code and Docker - more deployment-oriented.</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">summary</h2>
+<blockquote class="blockquote">
+<p>For the user, the most salient distinction is probably this: pip installs python packages within any environment; conda installs any package within conda environments.</p>
+<p>—Jake Vanderplas</p>
+</blockquote>
+<p>However, I will be using <code>pipenv</code> to achieve what Juan done in upcoming sections. I will specify version of each package I used.</p>
+</section>
+<section id="pip-and-pypi" class="level2">
+<h2 class="anchored" data-anchor-id="pip-and-pypi"><code>pip</code> and <code>PyPI</code></h2>
+<p><code>pip</code> is the default Python installer. By default, it fetches packages from <a href="https://pypi.org/" class="uri">https://pypi.org/</a>, which is the community repository for Python packages.</p>
+</section>
+</section>
+<section id="layout" class="level1">
+<h1>05 layout</h1>
+<p>here is my project’s layout:</p>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">ie-titanic-utils</span></span>
+<span id="cb8-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">├─</span> src</span>
+<span id="cb8-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span>  └─ ie_titanic_utils</span>
+<span id="cb8-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span>     ├─ __init__.py</span>
+<span id="cb8-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span>     └─ ...</span>
+<span id="cb8-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">├─</span> tests</span>
+<span id="cb8-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">│</span>  └─ ...</span>
+<span id="cb8-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">├─</span> .gitignore</span>
+<span id="cb8-9"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">├─</span> README.md</span>
+<span id="cb8-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">└─</span> pyproject.toml</span></code></pre></div>
+<ul>
+<li>The <code>src/package_name</code> contains the source code of the library. <code>package_name</code> must be Python identifier. It should contain a <code>__init__.py</code> that can be empty;</li>
+<li>The <code>tests</code> directory contains the tests. It must not contain any <code>__init__.py</code> because it’s not meant to be imported as a package. In very specific cases it’s included inside <code>src/package_name</code>;</li>
+<li>Every project contains a <code>README.md</code> that at least explains what the project is;</li>
+<li><code>pyproject.toml</code> contains the metadata of the project. The absolutely required fields are <code>module</code>, <code>author</code>, and some extra information that tells Python how to install the package.</li>
+</ul>
+<section id="creating-a-package" class="level2">
+<h2 class="anchored" data-anchor-id="creating-a-package">creating a package</h2>
+<ol type="1">
+<li>run <code>flit init</code> to create the metadata</li>
+</ol>
+<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;"></span> ie-titanic-utils  flit init</span>
+<span id="cb9-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">pyproject.toml</span> exists <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span> overwrite it<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">?</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">y/N</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span>: y</span>
+<span id="cb9-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Module</span> name <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">ie_titanic_utils</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span>: ie_utils</span>
+<span id="cb9-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Author:</span> Tuan Le Khac</span>
+<span id="cb9-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Author</span> email: tuan.lekhac0905@gmail.com</span>
+<span id="cb9-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Home</span> page: </span>
+<span id="cb9-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Choose</span> a license <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">see</span> http://choosealicense.com/ for more info<span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb9-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">1.</span> MIT <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span> simple and permissive</span>
+<span id="cb9-9"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">2.</span> Apache <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span> explicitly grants patent rights</span>
+<span id="cb9-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">3.</span> GPL <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span> ensures that code based on this is shared with the same terms</span>
+<span id="cb9-11"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">4.</span> Skip <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span> choose a license later</span>
+<span id="cb9-12"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Enter</span> 1-4: 4</span>
+<span id="cb9-13"></span>
+<span id="cb9-14"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Written</span> pyproject.toml<span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">;</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">edit</span> that file to add optional extra info.</span></code></pre></div>
+<ol start="2" type="1">
+<li>place some code under the source directory. In <code>__init__.py</code> there must be a docstring giving a description of the project and a <code>__version__</code> variable indicating the version:</li>
+</ol>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>__init__.py</strong></pre>
+</div>
+<div class="sourceCode" id="cb10" data-filename="__init__.py" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"""IE utils (test package)."""</span></span>
+<span id="cb10-2"></span>
+<span id="cb10-3">__version__ <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"0.1.0"</span></span></code></pre></div>
+</div>
+<ol start="3" type="1">
+<li>Install the code using <code>pip install</code>! (this did not work for me currently. edit: the project name should match the <code>src/package_name</code> omg)</li>
+</ol>
+<div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;"></span> ie-titanic-utils  pip install .</span>
+<span id="cb11-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Processing</span> .<span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\i</span>e-titanic-utils</span>
+<span id="cb11-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">...</span></span>
+<span id="cb11-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Successfully</span> installed ie_titanic_utils-0.1.0</span>
+<span id="cb11-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;"></span> ie-titanic-utils  python</span>
+<span id="cb11-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Python</span> 3.11.4 <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">tags/v3.11.4:d2340ef,</span> Jun  7 2023, 05:45:37<span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">)</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">[MSC</span> v.1934 64 bit <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">AMD64</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">)</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">]</span> on win32</span>
+<span id="cb11-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Type</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"help"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"copyright"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"credits"</span> or <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"license"</span> for more information.</span>
+<span id="cb11-8"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span> import <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">ie_titanic_utils</span></span>
+<span id="cb11-9"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span> ie_titanic_utils.__version__</span>
+<span id="cb11-10"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'0.1.0'</span></span>
+<span id="cb11-11"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span>    </span></code></pre></div>
+<ol start="4" type="1">
+<li><code>readme.md</code> and a <code>.gitignore</code> files were created.</li>
+<li>commit the change</li>
+</ol>
+<div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> checkout <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-b</span> first_module <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># i should be using switch (-c) haha, checkout is old syntax</span></span>
+<span id="cb12-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> status</span>
+<span id="cb12-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add .</span>
+<span id="cb12-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"initial very first module"</span></span>
+<span id="cb12-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> checkout master</span>
+<span id="cb12-6"></span>
+<span id="cb12-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;"></span> ie-titanic-utils  git merge <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--no-ff</span> first_module</span>
+<span id="cb12-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Merge</span> made by the <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'ort'</span> strategy.</span>
+<span id="cb12-9"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">pyproject.toml</span>                    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">30</span> ++++++++++++++++++++++++++++++</span>
+<span id="cb12-10"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">src/ie_titanic_utils/__init__.py</span>  <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">|</span>  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">6</span> ++++++</span>
+<span id="cb12-11"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">src/ie_titanic_utils/str_utils.py</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">|</span>  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">6</span> ++++++</span>
+<span id="cb12-12"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">3</span> files changed, 42 insertions<span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">+</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb12-13"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">create</span> mode 100644 pyproject.toml</span>
+<span id="cb12-14"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">create</span> mode 100644 src/ie_titanic_utils/__init__.py</span>
+<span id="cb12-15"> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">create</span> mode 100644 src/ie_titanic_utils/str_utils.py</span>
+<span id="cb12-16"></span>
+<span id="cb12-17"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> branch <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-d</span> first_module</span>
+<span id="cb12-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># git push origin master</span></span>
+<span id="cb12-19"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># as I will not upload this code to GitHub</span></span>
+<span id="cb12-20"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># https://stackoverflow.com/questions/32238616/git-push-fatal-origin-does-not-appear-to-be-a-git-repository-fatal-could-n</span></span></code></pre></div>
+<p>Now if I log the git, I will see this:</p>
+<div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;"></span> ie-titanic-utils  git log <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--graph</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--oneline</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--decorate</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--all</span></span>
+<span id="cb13-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span>   39105c7 <span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">HEAD</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> master<span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">)</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Merge</span> branch <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'first_module'</span></span>
+<span id="cb13-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">|</span><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb13-4"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">|</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> 7a33844 initial very first module</span>
+<span id="cb13-5"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">|</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">/</span></span>
+<span id="cb13-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">*</span> 793bd67 initial commit</span></code></pre></div>
+<p>Yeah til now I can create a “package” in my computer and install so I can use it <strong>globally</strong>. But I have not use any env management yet.</p>
+</section>
+<section id="intermezzo-version-numbers" class="level2">
+<h2 class="anchored" data-anchor-id="intermezzo-version-numbers">intermezzo: version numbers</h2>
+<ul>
+<li>Version numbers for Python packages are explained in <a href="https://www.python.org/dev/peps/pep-0440/">PEP 440</a></li>
+<li>For libraries, the most widely used convention is <a href="https://semver.org/">semantic versioning</a>: X.Y.Z
+<ul>
+<li>Z <strong>must</strong> be incremented if only backwards compatible bug fixes are introduced (a bug fix is defined as an internal change that fixes incorrect behavior)</li>
+<li>Y <strong>must</strong> be incremented every time there is new, backwards-compatible functionality</li>
+<li>X <strong>must</strong> be incremented every time there are backwards-incompatible changes</li>
+</ul></li>
+<li>Between releases, the version should have the <code>.dev0</code> suffix</li>
+<li>Recommendation: start with 0.1.dev0 (development version), then make a <code>0.1.0</code> release, then progress to <code>0.1.1</code> for quick fixes and <code>0.2.0</code> for new functionality, and when you want to make a promise of relative stability jump to <code>1.0.0</code>.</li>
+<li>For applications, other conventions are more appropriate, like <a href="https://calver.org/">calendar versioning</a>: <code>[YY]YY.MM.??</code></li>
+</ul>
+</section>
+<section id="project-requirements" class="level2">
+<h2 class="anchored" data-anchor-id="project-requirements">project requirements</h2>
+<p>Sometimes our project will depend on third-party libraries (pandas, scikit-learn). To make pip install those dependencies automatically, we can add them to our <code>pyproject.toml</code> under the <code>[tool.flit.metadata]</code> section, using the <code>requires</code> option:</p>
+<div class="sourceCode" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode numberSource md number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb14-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">build-system</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb14-2">requires = <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">"flit_core&gt;=3.4"</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb14-3">build-backend = "flit_core.buildapi"</span>
+<span id="cb14-4"></span>
+<span id="cb14-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">project</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb14-6">name = "ie_titanic_utils"</span>
+<span id="cb14-7">authors = <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">{name = "Tuan Le Khac", email = "tuan.lekhac0905@gmail.com"}</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb14-8">readme = "readme.md"</span>
+<span id="cb14-9">requires-python = "&gt;=3.11"</span>
+<span id="cb14-10">dynamic = <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">"version", "description"</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb14-11">classifiers = [</span>
+<span id="cb14-12">    "Programming Language :: Python :: 3",</span>
+<span id="cb14-13">    "License :: OSI Approved :: MIT License",</span>
+<span id="cb14-14">    "Operating System :: OS Independent",</span>
+<span id="cb14-15">]</span>
+<span id="cb14-16">requires = [</span>
+<span id="cb14-17">    "pandas",</span>
+<span id="cb14-18">    "matplotlib&gt;=2",</span>
+<span id="cb14-19">]</span></code></pre></div>
+<p>We might want to specify <em>optional</em> dependencies that should only be installed upon request, or for some specific purposes. A typical example will be development dependencies: we will need things like <code>pytest</code> and <code>black</code>, but we don’t want the user to install them as part as our library. To do that, we can specify <em>groups</em> of optional dependencies under the <code>tool.flit.metadata.requires-extra</code> section:</p>
+<div class="sourceCode" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode numberSource md number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;"># In my case, I use `project.optional-dependencies`: flit_core.config.ConfigError: Use [project] table for metadata or [tool.flit.metadata], not both.</span></span>
+<span id="cb15-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">project.optional-dependencies</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb15-3">dev = [</span>
+<span id="cb15-4">    "pytest&gt;=6.0",</span>
+<span id="cb15-5">    "black&gt;=20.8b1",</span>
+<span id="cb15-6">]</span></code></pre></div>
+<p>That way, they will only get installed when <code>[dev]</code> is added after the name of our library:</p>
+<div class="sourceCode" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;"></span> ie-titanic-utils  pip install .<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">dev</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb16-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Successfully installed black-24.4.2 ie_titanic_utils-0.1.0 iniconfig-2.0.0 pytest-8.2.2</span></span></code></pre></div>
+</section>
+</section>
+<section id="unit-test" class="level1">
+<h1>06 <a href="https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/06_unit-tests.ipynb">unit test</a></h1>
+<blockquote class="blockquote">
+<p>If you use software that lacks automated tests, you are the tests.</p>
+<p>— Jenny Bryan (<span class="citation" data-cites="JennyBryan">@JennyBryan</span>) <a href="https://x.com/JennyBryan/status/1043307291909316609?ref_src=twsrc%5Etfw">September 22, 2018</a></p>
+</blockquote>
+<p>Testing is <strong>essential</strong>. Computers excel at doing repetitive tasks: they basically never make mistakes (the mistake might be in what we told the computer to do). Humans, on the other hand, fail more often, especially under pressure, or on Friday afternoons and Monday mornings. Therefore, instead of letting the humans be the tests, we will use the computer to <strong>frequently verify that our software works as specified</strong>.</p>
+<p>I will be using <code>pytest</code> to achieve this.</p>
+<section id="test-driven-development" class="level2">
+<h2 class="anchored" data-anchor-id="test-driven-development">test-driven development</h2>
+<p>The “test-driven development mantra” is <span style="color:red;font-weight:bold;">Red</span> - <span style="color:green;font-weight:bold;">Green</span> - <span style="color:grey;font-weight:bold;">Refactor</span>:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://raw.githubusercontent.com/astrojuanlu/ie-mbd-advanced-python/e2224276f91529280ebfcd42ddc7dc22cf0d2010/img/red-green-refactor.png" class="img-fluid figure-img"></p>
+<figcaption>Make it work. Make it right. Make it fast.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<ol type="1">
+<li>Write a test. <span style="color:red;font-weight:bold;">Watch it fail</span>.</li>
+<li>Write just enough code to <span style="color:green;font-weight:bold;">pass the test</span>.</li>
+<li>Improve the code without breaking the test.</li>
+</ol>
+<p>Repeat.</p>
+</section>
+<section id="testing-in-python" class="level2">
+<h2 class="anchored" data-anchor-id="testing-in-python">testing in Python</h2>
+<p>Summary: use <code>pytest</code>. Everybody does. It rocks.</p>
+<p><a href="https://docs.pytest.org/en/8.2.x/">pytest</a> is a testing framework for Python that makes writing tests extremely easy. It is much more powerful than the standard library equivalent, <code>unittest</code>. We can use by install it first <code>pip install pytest</code>.</p>
+<p>We can write a function that test the <code>tokenize</code> funtion:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>tests/test_tokenize.py</strong></pre>
+</div>
+<div class="sourceCode" id="cb17" data-filename="tests/test_tokenize.py" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> ie_titanic_utils <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> tokenize  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># This will fail right away!</span></span>
+<span id="cb17-2"></span>
+<span id="cb17-3"></span>
+<span id="cb17-4"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> test_tokenize_returns_expected_list():</span>
+<span id="cb17-5">    sentence <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This is a sentence"</span></span>
+<span id="cb17-6">    expected_tokens <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"is"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"a"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"sentence"</span>]</span>
+<span id="cb17-7"></span>
+<span id="cb17-8">    tokens <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> tokenize(sentence)</span>
+<span id="cb17-9"></span>
+<span id="cb17-10">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">assert</span> tokens <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> expected_tokens</span></code></pre></div>
+</div>
+<p>and we run it from the command line:</p>
+<div class="sourceCode" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;"></span> ie-titanic-utils  pytest</span>
+<span id="cb18-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">============================================================================================</span> test session starts ============================================================================================</span>
+<span id="cb18-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">platform</span> win32 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--</span> Python 3.11.4, pytest-8.2.2, pluggy-1.5.0</span>
+<span id="cb18-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">rootdir:</span> .<span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\i</span>e-titanic-utils</span>
+<span id="cb18-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">configfile:</span> pyproject.toml</span>
+<span id="cb18-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">plugins:</span> anyio-3.7.1, time-machine-2.14.0</span>
+<span id="cb18-7"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">collected</span> 1 item</span>
+<span id="cb18-8"></span>
+<span id="cb18-9"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">tests\test_tokenize.py</span> .                                                                                                                                                                               <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">[</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">100%</span><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">]</span> </span>
+<span id="cb18-10"></span>
+<span id="cb18-11"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">=============================================================================================</span> 1 passed in 0.02s ============================================================================================= </span></code></pre></div>
+<p>The test successed after I fixed the <code>__init__.py</code>:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>src/./__init__.py</strong></pre>
+</div>
+<div class="sourceCode" id="cb19" data-filename="src/./__init__.py" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> ie_titanic_utils.str_utils <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> tokenize</span>
+<span id="cb19-2">__all__ <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"tokenize"</span>]</span></code></pre></div>
+</div>
+</section>
+</section>
+<section id="oop" class="level1">
+<h1>07&amp;08 <a href="https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/07-08_object-oriented-programming.ipynb">oop</a></h1>
+<section id="what-are-objects-anyway" class="level2">
+<h2 class="anchored" data-anchor-id="what-are-objects-anyway">what are “objects” anyway?</h2>
+</section>
+<section id="classes-and-instances" class="level2">
+<h2 class="anchored" data-anchor-id="classes-and-instances">classes and instances</h2>
+</section>
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section"></h2>
+</section>
+</section>
+<section id="flask" class="level1">
+<h1>09&amp;10 <a href="https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/09-10_flask.ipynb">flask</a></h1>
+</section>
+<section id="conclusion" class="level1">
+<h1><a href="https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/99_conclusion.ipynb">conclusion</a></h1>
+<section id="where-do-we-go-from-here" class="level2">
+<h2 class="anchored" data-anchor-id="where-do-we-go-from-here">where do we go from here</h2>
+<ul>
+<li>Keep improving the art of Python packaging</li>
+<li>Explore other options for high performance Python</li>
+<li>Help “bridging the gap”</li>
+<li>Engage with the (open source) Python community</li>
+</ul>
+</section>
+<section id="keep-improving-the-art-of-python-packaging" class="level2">
+<h2 class="anchored" data-anchor-id="keep-improving-the-art-of-python-packaging">keep improving the art of python packaging</h2>
+<ul>
+<li>recommend: <code>pip-tools</code> + <code>requirements.in</code> = <code>requirements.txt</code></li>
+<li>Poetry, Pipenv… Yes, they work, but they are way more complex and have “lock-in”</li>
+<li>All companies I worked for struggle sooner or later with their code deployment practices. Now, you know better</li>
+</ul>
+</section>
+<section id="explore-other-options-for-high-performance-python" class="level2">
+<h2 class="anchored" data-anchor-id="explore-other-options-for-high-performance-python">explore other options for high performance python</h2>
+<ul>
+<li>Juan mentioned: Numba, Modin, Vaex, Dask, Spark, Coiled, Prefect</li>
+<li>Now we have more: polar, pandas 2.0, aiflow, dagster, dbt, etc</li>
+</ul>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-07-08-advanced-python/setup_py_br.png" class="img-fluid figure-img"></p>
+<figcaption>stolen from the lecture</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="other-resources" class="level1">
+<h1>other resources</h1>
+<ol type="1">
+<li><a href="https://nbviewer.org/github/astrojuanlu/ie-mbd-advanced-python/tree/main/">NBViewer</a> for this lecture;</li>
+<li><a href="https://pydata.org/">PyData</a>, a community for developers and users of open source data tools;</li>
+<li><a href="https://git-scm.com/book/en/v2/">Pro Git</a>, <code>--distributed-is-the-new-centralized</code>;</li>
+<li><a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests">Pull Requests</a>;</li>
+<li><a href="https://docs.gitlab.com/ee/user/project/merge_requests/index.html">Merge Requests</a>;</li>
+<li><a href="https://www.asmeurer.com/git-workflow/">Git Workflow</a>, the git workflow for contributing to open source repositories;</li>
+<li><a href="https://www.toptal.com/developers/gitignore">Git Ignore</a> builder;</li>
+<li><a href="https://www.atlassian.com/git/tutorials/rewriting-history">Git commit –amend</a>, rewriting history;</li>
+<li><a href="https://packaging.python.org/en/latest/tutorials/packaging-projects/">The right way to distribute Python code</a></li>
+<li><a href="https://docs.python.org/3/tutorial/modules.html#packages">Python packaging</a></li>
+<li><a href="https://docs.pytest.org/en/8.2.x/">Pytest</a>;</li>
+<li></li>
+</ol>
+
+
+<!-- -->
+
+</section>
+
+ ]]></description>
+  <category>python</category>
+  <category>pydata</category>
+  <guid>https://lktuan.github.io/blog/2024-07-08-advanced-python/</guid>
+  <pubDate>Sun, 07 Jul 2024 17:00:00 GMT</pubDate>
+  <media:content url="https://lktuan.github.io/blog/2024-07-08-advanced-python/juan_r.png" medium="image" type="image/png" height="193" width="144"/>
+</item>
 <item>
   <title>Random youtube video: How are memories stored in neural networks?</title>
   <dc:creator>Tuan Le Khac</dc:creator>
