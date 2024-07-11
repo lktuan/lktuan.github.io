@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Tuan Le Khac">
+<meta name="dcterms.date" content="2024-07-10">
+<meta name="description" content="I am a Risk Modeler 🚀">
+
+<title>Le Khac Tuan - Recap: So you want to be a Python expert?</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../img/rocket_1613268.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="html/styles.scss">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Le Khac Tuan</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../curriculum/index.html"> 
+<span class="menu-text">Curriculum</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../学汉语的日记.html"> 
+<span class="menu-text">学汉语的日记</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/lktuan"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/tuanlekhac/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.facebook.com/toilatuan.lk/"> <i class="bi bi-facebook" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:tuan.lekhac0905@gmail.com"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <div class="quarto-title-block"><div><h1 class="title">Recap: So you want to be a Python expert?</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+                  <div>
+        <div class="description">
+          by James Powell, PyData Seattle 2017
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">python</div>
+                <div class="quarto-category">pydata</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p><a href="https://lktuan.github.io/">Tuan Le Khac</a> </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">July 10, 2024</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">July 10, 2024</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#what-is-he-gonna-present" id="toc-what-is-he-gonna-present" class="nav-link active" data-scroll-target="#what-is-he-gonna-present">what is he gonna present?</a></li>
+  <li><a href="#data-model-protocol-or-dunder-method" id="toc-data-model-protocol-or-dunder-method" class="nav-link" data-scroll-target="#data-model-protocol-or-dunder-method">data model protocol (or dunder method)</a></li>
+  <li><a href="#meta-class" id="toc-meta-class" class="nav-link" data-scroll-target="#meta-class">meta class</a>
+  <ul class="collapse">
+  <li><a href="#there-are-2-fundamental-ways-that-people-ussually-use-to-solve-this" id="toc-there-are-2-fundamental-ways-that-people-ussually-use-to-solve-this" class="nav-link" data-scroll-target="#there-are-2-fundamental-ways-that-people-ussually-use-to-solve-this">There are 2 fundamental ways that people ussually use to solve this</a>
+  <ul class="collapse">
+  <li><a href="#meta-class-1" id="toc-meta-class-1" class="nav-link" data-scroll-target="#meta-class-1">1. meta class</a></li>
+  <li><a href="#init_subclass__" id="toc-init_subclass__" class="nav-link" data-scroll-target="#init_subclass__">2. <code>__init_subclass__</code></a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#decorator" id="toc-decorator" class="nav-link" data-scroll-target="#decorator">decorator</a></li>
+  <li><a href="#generator" id="toc-generator" class="nav-link" data-scroll-target="#generator">generator</a></li>
+  <li><a href="#context-manager" id="toc-context-manager" class="nav-link" data-scroll-target="#context-manager">context manager</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">summary</a></li>
+  <li><a href="#futher-reading" id="toc-futher-reading" class="nav-link" data-scroll-target="#futher-reading">futher reading</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content">
+
+
+
+
+
+<p>🔥 source: <a href="https://www.youtube.com/watch?v=cKPlPJyQrt4"><strong>James Powell: So you want to be a Python expert? | PyData Seattle 2017</strong></a></p>
+<section id="what-is-he-gonna-present" class="level1">
+<h1>what is he gonna present?</h1>
+<ul>
+<li>something deeply behind the Zen of Python;</li>
+<li>metaphors and programming in Python;</li>
+<li>python is scripting language;</li>
+<li>4 features of Python and the way experts would think about these features;</li>
+<li>a lot of fundamental details of how these feature work but very little talk about we can conceptualize these features in the broader sense of what they mean for modeling core problem;</li>
+<li>so 4 features you might have heared before and couple of the core mental models how you can think about, an how you can think about python as a whole, wrapping everything together;</li>
+<li>you will see me stumble to understand that in case you dont utd or dont have docs memorized, it’s alright, the target is to know what they are and what they mean;</li>
+<li>the talk presumes you to have a baseline of Python, but in case you a new to Python he believes there are cores you can take away.</li>
+</ul>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="James Powell_ So you want to be a Python expert_ _ PyData Seattle 2017 5-37 screenshot.png" class="img-fluid figure-img"></p>
+<figcaption>James Powell on PyData Seattle 2017</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="data-model-protocol-or-dunder-method" class="level1">
+<h1>data model protocol (or dunder method)</h1>
+<p>assume we have a data model with Polinomial object intitially do nothing, why I need 4 lines (instead of 2 lines) to create 2 Polynominals. How can I create and assign coefficients together.</p>
+<div id="a63404a1" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">class</span> Polynomial:</span>
+<span id="cb1-2"><a href="#cb1-2"></a>    <span class="cf">pass</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a>p1<span class="op">=</span> Polynomial()</span>
+<span id="cb1-4"><a href="#cb1-4"></a>p2<span class="op">=</span> Polynomial()</span>
+<span id="cb1-5"><a href="#cb1-5"></a>p1.coeffs <span class="op">=</span> <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span> <span class="co">#  x^2 + 2x + 3</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>p2.coeffs <span class="op">=</span> <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span> <span class="co"># 3x^2 + 4x + 3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>the answer is using a constructor <code>__init__</code>, then we can compact our code like this:</p>
+<div id="eacd30f8" class="cell" data-execution_count="2">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">class</span> Polynomial:</span>
+<span id="cb2-2"><a href="#cb2-2"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">*</span>coeffs):</span>
+<span id="cb2-3"><a href="#cb2-3"></a>        <span class="va">self</span>.coeffs <span class="op">=</span> coeffs</span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a>p1 <span class="op">=</span> Polynomial(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span> ) <span class="co">#  x^2 + 2x + 3</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>p2 <span class="op">=</span> Polynomial(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span> ) <span class="co"># 3x^2 + 4x + 3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>but if we print our objects in the terminal, they look so ugly. We miss the method that actually call <code>repr(obj)</code> when we run <code>obj</code>:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="1_repr.png" class="img-fluid figure-img"></p>
+<figcaption>The need of <code>__repr__</code></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>that’s what <code>__repr__</code> for, a printable representation of the class:</p>
+<div id="559810b2" class="cell" data-execution_count="3">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">class</span> Polynomial:</span>
+<span id="cb3-2"><a href="#cb3-2"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">*</span>coeffs):</span>
+<span id="cb3-3"><a href="#cb3-3"></a>        <span class="va">self</span>.coeffs <span class="op">=</span> coeffs</span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a>    <span class="kw">def</span> <span class="fu">__repr__</span>(<span class="va">self</span>):</span>
+<span id="cb3-6"><a href="#cb3-6"></a>        <span class="cf">return</span> <span class="st">'Polynomial(*</span><span class="sc">{!r}</span><span class="st">)'</span>.<span class="bu">format</span>(<span class="va">self</span>.coeffs)</span>
+<span id="cb3-7"><a href="#cb3-7"></a></span>
+<span id="cb3-8"><a href="#cb3-8"></a></span>
+<span id="cb3-9"><a href="#cb3-9"></a>p1 <span class="op">=</span> Polynomial(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)  <span class="co">#  x^2 + 2x + 3</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a>p2 <span class="op">=</span> Polynomial(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span>)  <span class="co"># 3x^2 + 4x + 3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>the next thing we wanna do is to add Polinimials together <code>p1 + p2</code>.</p>
+<div id="f578a0fa" class="cell" data-execution_count="4">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>    <span class="kw">def</span> <span class="fu">__add__</span>(<span class="va">self</span>, other):</span>
+<span id="cb4-2"><a href="#cb4-2"></a>        <span class="cf">return</span> Polynomial(<span class="op">*</span>(x <span class="op">+</span> y <span class="cf">for</span> x, y <span class="kw">in</span> <span class="bu">zip</span>(<span class="va">self</span>.coeffs, other.coeffs)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What is pattern here? I have some behaviours that I want to implement, and I write some <strong>underscore</strong> (<code>__x__</code>) funtions. We call them dunder or underscore methods.</p>
+<p>Try google “data model” and we’ll a bunch of documents that list all method to implement the principle behaviours of our objects. There are top-level functions of top-level syntaxes that corresponding to <code>__</code>.</p>
+<p>But there are smthg more fundamental here, when I want to:</p>
+<ul>
+<li>x + y -&gt; <code>__add__</code>;</li>
+<li>initialize x -&gt; <code>__init__</code>;</li>
+<li>repr(x) -&gt; <code>__repr__</code>.</li>
+</ul>
+<p>Then what if we want to implement the <code>len()</code> (return the length, which is popular know Python function) -&gt; naturally we’ll be thinking of <code>__len__</code>.</p>
+<div id="9f25c761" class="cell" data-execution_count="5">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>    <span class="kw">def</span> <span class="fu">__len__</span>(<span class="va">self</span>):</span>
+<span id="cb5-2"><a href="#cb5-2"></a>        <span class="cf">return</span> <span class="bu">len</span>(<span class="va">self</span>.coeffs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</div>
+</div>
+<p>The Python data model is a means by which you can protocols. Thos protocols have abstract meaning depending on the object itself. We tight the behaviours to top-level <strong>syntaxes</strong> and <strong>functions</strong>.</p>
+<p>Similarly, if we do see the object Polynomial a executable, callable thing, we can implement a <code>__call__</code> which will turn our class to function, in this case we cant imagine such thing, so pass.</p>
+<p>✍ There are 3 core patterns we want to understand and remember in Python to really understand object orientation in Python:</p>
+<ol type="1">
+<li>The protocol view of Python;</li>
+<li>The buil-in inheritance protocol;</li>
+<li>Some caveats around how OOP in Python works.</li>
+</ol>
+<p>Which will be continue to present in this video is jumping into a very tricky metaphor a feature we may have heard of.</p>
+</section>
+<section id="meta-class" class="level1 page-columns page-full">
+<h1>meta class</h1>
+<p>imagine there are 2 groups working on some piece of software. one is core infrastructure of the group and they write <code>library</code> code, the other group is devloper group, they write <code>user</code> code. the developer use <code>library</code> code to accomplish actual business objectives. the core team less cares about business problem, they focus on technical stuffs.</p>
+<p>you are in the dev team and there is no way to change to code of <code>library.py</code>. in what circumstance the code of <code>user</code> can break -&gt; there is no <code>foo</code> method! To avoid that, we could simply write a test that call <code>bar()</code>, then we could know if it fails before production environment’s runtime.</p>
+<p>is there anything simpler to know the ability to fail before hit run time in production env? -&gt; use <code>assert</code> to check existence of the attribute. we will have an early warning right before the class was initiated.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="2_assert.png" class="img-fluid figure-img"></p>
+<figcaption>we can know if the core team change the function name to “food”</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>by this way we are enforcing constraints on the base class from the derived class.</p>
+<p>now we move to a reverse situation, you are the core structure writer and have to deal with the meathead in the business unit that actually using/abusing/missusing your code ~ you have no idea what are they doing. you write the <code>Base</code> class with the assumption and some responsible developer in the BU will go and implement the <code>bar</code> method.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="3_reverse_sit.png" class="img-fluid figure-img"></p>
+<figcaption>what if you stand on the left side pane</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>you have no ability to change and even have no idea where the code on the right pane sit. we can not use <code>hasattr()</code> for this particular situation. the first method is to use <code>try ... catch ...</code>, but it only catches in runtime and we will miss catching it before it goes to production env.</p>
+<div class="{callout-note}">
+<p>The reason that we could call Python a <strong>protocol orientated language</strong> is not just because the Python data model the object model is protocol orientated but that the entire Python language itself has a notion of hooks and protocols and safety valves within it.</p>
+<p>Python is much much simpler language, the code run linearly from top to bottom. And the class statement in Python is actually an executable code. We can write this:</p>
+<div id="97fa423d" class="cell" data-execution_count="6">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb6-2"><a href="#cb6-2"></a>  <span class="kw">class</span> Base: <span class="cf">pass</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="co"># or the same thing in other way</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="kw">class</span> Base:</span>
+<span id="cb6-7"><a href="#cb6-7"></a>  <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb6-8"><a href="#cb6-8"></a>    <span class="kw">def</span> bar(<span class="va">self</span>):</span>
+<span id="cb6-9"><a href="#cb6-9"></a>      <span class="cf">return</span> <span class="st">'bar'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Only the last one will survive. Python accepts this syntax because it’s class is <strong>fundamentally executable</strong>.</p>
+</div>
+<p>Let’s get into something more interesting! create a class inside a function and use a function in a module in standard libbrary in Python called <code>dis</code>.</p>
+<div id="d2a57c11" class="cell" data-execution_count="7">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># create a class inside a function</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="kw">def</span> _():</span>
+<span id="cb7-3"><a href="#cb7-3"></a>  <span class="kw">class</span> Base:</span>
+<span id="cb7-4"><a href="#cb7-4"></a>    <span class="cf">pass</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="co"># dis stands for disassemble</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="im">from</span> dis <span class="im">import</span> dis</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>let’s ‘dis’ - stands for disassemble - to see what happen in the bytecode. there are actually things in Python bytecode call <code>LOAD_BUILD_CLASS</code>, it’s actual executable runtime instruction in the Python interpreter for create a class.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="4_dis.png" class="img-fluid figure-img"></p>
+<figcaption>disassemble</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>at the first section of this lecture, we saw some <strong>correspondence</strong> between top-level syntac or function AND some underscore method that implements that syntax or function. there should be also top-level mechanism, not explicitly syntax or function, with the process of building a class. there is a build-ins function called <code>__build_class__</code>.</p>
+<div id="595604df" class="cell" data-execution_count="8">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>old_bc <span class="op">=</span> __build_class__</span>
+<span id="cb8-2"><a href="#cb8-2"></a></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="kw">def</span> my_bc(func, name, base<span class="op">=</span><span class="va">None</span>, <span class="op">**</span>kw):</span>
+<span id="cb8-4"><a href="#cb8-4"></a>  <span class="cf">if</span> base <span class="kw">is</span> Base:</span>
+<span id="cb8-5"><a href="#cb8-5"></a>    <span class="bu">print</span>(<span class="st">'check if the bar method is defined'</span>)</span>
+<span id="cb8-6"><a href="#cb8-6"></a>  <span class="cf">if</span> base <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb8-7"><a href="#cb8-7"></a>    <span class="cf">return</span> old_bc(func, name, base, <span class="op">**</span>kw)</span>
+<span id="cb8-8"><a href="#cb8-8"></a>  <span class="cf">return</span> old_bc(func, name, <span class="op">**</span>kw)</span>
+<span id="cb8-9"><a href="#cb8-9"></a></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="im">import</span> builtins</span>
+<span id="cb8-11"><a href="#cb8-11"></a>builtins.__build_class__ <span class="op">=</span> my_bc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="5_build_class.png" class="img-fluid figure-img"></p>
+<figcaption><code>__build_class__</code>, we can check if the <code>bar</code> method is implemented, Python is <strong>protocal oriented language</strong>!</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>It’s actually quite a common pattern and quite a fundamental piece of Python almost everything that a Python language does in an execution context like building classes, creating functions, importing modules you can find a way to <strong>hook</strong> into that. once you can find a way to hook into that you can start doing things that you want to do like check is my user code going to break from the perspective the library author.</p>
+<p>The most important thing here is <strong>understanding existence of this pattern</strong>, knowing that there are options solving such problem, and there are even better approachs.</p>
+<section id="there-are-2-fundamental-ways-that-people-ussually-use-to-solve-this" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="there-are-2-fundamental-ways-that-people-ussually-use-to-solve-this">There are 2 fundamental ways that people ussually use to solve this</h2>
+<section id="meta-class-1" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="meta-class-1">1. meta class</h3>
+<div class="page-columns page-full"><p></p><div class="no-row-height column-margin column-container"><span class="margin-aside"><a href="https://stackoverflow.com/questions/395982/metaclass-new-cls-and-super-what-is-the-mechanism-exactly">futher discussion</a></span></div></div>
+<div id="ccdb9cd9" class="cell" data-execution_count="9">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># meta classes are merely derived from `type`</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="kw">class</span> BaseMeta(<span class="bu">type</span>):</span>
+<span id="cb9-3"><a href="#cb9-3"></a>    <span class="kw">def</span> <span class="fu">__new__</span>(cls, name, bases, namespace):</span>
+<span id="cb9-4"><a href="#cb9-4"></a>        <span class="bu">print</span>(<span class="st">'BaseMeta.__new__'</span>, cls, name, bases, namespace)</span>
+<span id="cb9-5"><a href="#cb9-5"></a>        <span class="cf">if</span> name <span class="op">!=</span> <span class="st">'Base'</span> <span class="kw">and</span> <span class="st">'bar'</span> <span class="kw">not</span> <span class="kw">in</span> namespace:</span>
+<span id="cb9-6"><a href="#cb9-6"></a>            <span class="cf">raise</span> <span class="pp">TypeError</span>(<span class="st">"Bad User class, 'bar' is not defined"</span>)</span>
+<span id="cb9-7"><a href="#cb9-7"></a>        <span class="cf">return</span> <span class="bu">super</span>().<span class="fu">__new__</span>(cls, name, bases, namespace)</span>
+<span id="cb9-8"><a href="#cb9-8"></a></span>
+<span id="cb9-9"><a href="#cb9-9"></a></span>
+<span id="cb9-10"><a href="#cb9-10"></a><span class="co"># then our Base should be derived from BaseMeta</span></span>
+<span id="cb9-11"><a href="#cb9-11"></a><span class="kw">class</span> Base(metaclass<span class="op">=</span>BaseMeta):</span>
+<span id="cb9-12"><a href="#cb9-12"></a>    <span class="kw">def</span> foo(<span class="va">self</span>):</span>
+<span id="cb9-13"><a href="#cb9-13"></a>        <span class="cf">return</span> <span class="va">self</span>.bar()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="6_meta_class.png" class="img-fluid figure-img"></p>
+<figcaption>metaclass</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>That’s it! you can control, constraint the derived class from the base class in class hierachy.</p>
+</section>
+<section id="init_subclass__" class="level3">
+<h3 class="anchored" data-anchor-id="init_subclass__">2. <code>__init_subclass__</code></h3>
+<p>We can implement <code>Base</code> like this:</p>
+<div id="8fdcd750" class="cell" data-execution_count="10">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">class</span> Base():</span>
+<span id="cb10-2"><a href="#cb10-2"></a>    <span class="kw">def</span> foo(<span class="va">self</span>):</span>
+<span id="cb10-3"><a href="#cb10-3"></a>        <span class="cf">return</span> <span class="va">self</span>.bar()</span>
+<span id="cb10-4"><a href="#cb10-4"></a></span>
+<span id="cb10-5"><a href="#cb10-5"></a>    <span class="kw">def</span> <span class="fu">__init_subclass__</span>(cls, <span class="op">**</span>kwargs):</span>
+<span id="cb10-6"><a href="#cb10-6"></a>        <span class="bu">print</span>(<span class="st">"init subclass"</span>, cls.__dict__, kwargs)</span>
+<span id="cb10-7"><a href="#cb10-7"></a>        <span class="cf">if</span> <span class="st">'bar'</span> <span class="kw">not</span> <span class="kw">in</span> cls.__dict__:</span>
+<span id="cb10-8"><a href="#cb10-8"></a>            <span class="cf">raise</span> <span class="pp">TypeError</span>(<span class="st">"Bad sub class"</span>)</span>
+<span id="cb10-9"><a href="#cb10-9"></a>        <span class="bu">super</span>().<span class="fu">__init_subclass__</span>(<span class="op">**</span>kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+</section>
+<section id="decorator" class="level1">
+<h1>decorator</h1>
+<p>We would have met pattern like this, that’s is decorator:</p>
+<div id="edfb0090" class="cell" data-execution_count="11">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="at">@dec</span> </span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="kw">def</span> f():</span>
+<span id="cb11-3"><a href="#cb11-3"></a>  <span class="cf">pass</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Python is a live language, there is no separate step that turns function definitions into bags of a set bits tagged and some elf binary or some <a href="https://en.wikipedia.org/wiki/Portable_Executable">PE</a> binary somewhere. That a function definition is actually a live thing, it actually runs at runtime, there’s actually executable code associated with this def <code>f()</code>.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="7_interact_with_object.png" class="img-fluid figure-img"></p>
+<figcaption>we can interact with our object as Python is a live language, the function itself is a runtime object</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>That every Python structure that you interact with whether it’s an object or a function or a generator has some <strong>runtime life</strong>, has some <strong>runtime existence</strong> you can see it in memory, you can ask it questions like what module UI were you defined in. you can even ask it very useful questions like if you use the inspect module you can say what’s your source code.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1"></a><span class="ex"></span> decorators  python <span class="at">-i</span> .<span class="dt">\d</span>eco.py</span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="op">&gt;&gt;&gt;</span> from <span class="ex">inspect</span> import getsource</span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="op">&gt;&gt;&gt;</span> getsource<span class="kw">(</span><span class="ex">add</span><span class="kw">)</span></span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="st">'def add(a, b=10):\n    return a + b\n'</span></span>
+<span id="cb12-5"><a href="#cb12-5"></a><span class="op">&gt;&gt;&gt;</span> print<span class="kw">(</span><span class="ex">getsource</span><span class="er">(</span><span class="ex">add</span><span class="kw">))</span></span>
+<span id="cb12-6"><a href="#cb12-6"></a><span class="ex">def</span> add<span class="er">(</span><span class="ex">a,</span> b=10<span class="kw">)</span><span class="bu">:</span></span>
+<span id="cb12-7"><a href="#cb12-7"></a>    <span class="cf">return</span> <span class="ex">a</span> + b </span>
+<span id="cb12-8"><a href="#cb12-8"></a></span>
+<span id="cb12-9"><a href="#cb12-9"></a><span class="op">&gt;&gt;&gt;</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>now let’s say I want to calculate how much time does it take to perform the <code>add</code>. simply we would thinking about <code>time</code>, like this:</p>
+<div id="3bc36d3c" class="cell" data-execution_count="12">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="im">from</span> time <span class="im">import</span> time</span>
+<span id="cb13-2"><a href="#cb13-2"></a></span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb13-4"><a href="#cb13-4"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
+<span id="cb13-5"><a href="#cb13-5"></a> </span>
+<span id="cb13-6"><a href="#cb13-6"></a>before <span class="op">=</span> time()</span>
+<span id="cb13-7"><a href="#cb13-7"></a><span class="bu">print</span>(<span class="st">'add(10)'</span>, add(<span class="dv">10</span>))</span>
+<span id="cb13-8"><a href="#cb13-8"></a>after <span class="op">=</span> time()</span>
+<span id="cb13-9"><a href="#cb13-9"></a><span class="bu">print</span>(<span class="st">'time_taken'</span>, after <span class="op">-</span> before)</span>
+<span id="cb13-10"><a href="#cb13-10"></a><span class="bu">print</span>(<span class="st">'add(20, 30)'</span>, add(<span class="dv">20</span>, <span class="dv">30</span>))</span>
+<span id="cb13-11"><a href="#cb13-11"></a>after <span class="op">=</span> time()</span>
+<span id="cb13-12"><a href="#cb13-12"></a><span class="bu">print</span>(<span class="st">'time_taken'</span>, after <span class="op">-</span> before)</span>
+<span id="cb13-13"><a href="#cb13-13"></a><span class="bu">print</span>(<span class="st">'add("a", "b")'</span>, add(<span class="st">"a"</span>, <span class="st">"b"</span>))</span>
+<span id="cb13-14"><a href="#cb13-14"></a>after <span class="op">=</span> time()</span>
+<span id="cb13-15"><a href="#cb13-15"></a><span class="bu">print</span>(<span class="st">'time_taken'</span>, after <span class="op">-</span> before)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>add(10) 20
+time_taken 0.0
+add(20, 30) 50
+time_taken 0.0
+add("a", "b") ab
+time_taken 0.0</code></pre>
+</div>
+</div>
+<p>there is something wrong here because we need to add code to everywhere we want to calculate. we see another important pattern in Python, decorator, the Python developers want you to write the simplest, stupidest, quickest thing to get the job done and get the rest of your day with your family.</p>
+<p>we will see alot of scenarios where of cases where you can write the simple and stupidest thing to get the job done and when the task at hand becomes harder or more complex or the requirements change you can change your code in a very simple fashion to linearly extend its functionality without have to re-write it from scratch.</p>
+<p>in Python we’ll see a number of different features are orientated around how do we write the simplest thing today and then when the problem gets a little bit harder we have an avenue for making our code a little bit more complex.</p>
+<p>we can modified a <code>add</code> alittle bit</p>
+<div id="2f6e6ca5" class="cell" data-execution_count="13">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="im">from</span> time <span class="im">import</span> time</span>
+<span id="cb15-2"><a href="#cb15-2"></a></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb15-4"><a href="#cb15-4"></a>    before <span class="op">=</span> time()</span>
+<span id="cb15-5"><a href="#cb15-5"></a>    rv <span class="op">=</span> a <span class="op">+</span> b</span>
+<span id="cb15-6"><a href="#cb15-6"></a>    after <span class="op">=</span> time()</span>
+<span id="cb15-7"><a href="#cb15-7"></a>    <span class="bu">print</span>(<span class="st">'elapsed:'</span>, after <span class="op">-</span> before)</span>
+<span id="cb15-8"><a href="#cb15-8"></a>    <span class="cf">return</span> rv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>But if we have more functions, let say <code>sub</code>? We need to modify and make our code complicated. <strong>Python is live language</strong> that everything has some runtime representaion. We can create <code>timer()</code> which take <code>func</code>, <code>x</code>, and <code>y</code> as arguments (<code>x</code> and <code>y</code> will be forwarded to calculation function)</p>
+<div id="d3e6dcb7" class="cell" data-execution_count="14">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="im">from</span> time <span class="im">import</span> time</span>
+<span id="cb16-2"><a href="#cb16-2"></a></span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="kw">def</span> timer(func, x, y):</span>
+<span id="cb16-4"><a href="#cb16-4"></a>    before <span class="op">=</span> time()</span>
+<span id="cb16-5"><a href="#cb16-5"></a>    rv <span class="op">=</span> func(x,y)</span>
+<span id="cb16-6"><a href="#cb16-6"></a>    after <span class="op">=</span> time()</span>
+<span id="cb16-7"><a href="#cb16-7"></a>    <span class="bu">print</span>(<span class="st">'elapsed:'</span>, after <span class="op">-</span> before)</span>
+<span id="cb16-8"><a href="#cb16-8"></a>    <span class="cf">return</span> rv</span>
+<span id="cb16-9"><a href="#cb16-9"></a></span>
+<span id="cb16-10"><a href="#cb16-10"></a><span class="co"># and </span></span>
+<span id="cb16-11"><a href="#cb16-11"></a><span class="bu">print</span>(<span class="st">'add(20, 30)'</span>, timer(add, <span class="dv">20</span>, <span class="dv">30</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>we can also wrapping like this, <code>timer()</code> will return a function <code>f</code>:</p>
+<div id="2ff12e9a" class="cell" data-execution_count="15">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="im">from</span> time <span class="im">import</span> time</span>
+<span id="cb17-2"><a href="#cb17-2"></a></span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="kw">def</span> timer(func):</span>
+<span id="cb17-4"><a href="#cb17-4"></a>    <span class="kw">def</span> f(x, y<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb17-5"><a href="#cb17-5"></a>      before <span class="op">=</span> time()</span>
+<span id="cb17-6"><a href="#cb17-6"></a>      rv <span class="op">=</span> func(x,y)</span>
+<span id="cb17-7"><a href="#cb17-7"></a>      after <span class="op">=</span> time()</span>
+<span id="cb17-8"><a href="#cb17-8"></a>      <span class="bu">print</span>(<span class="st">'elapsed:'</span>, after <span class="op">-</span> before)</span>
+<span id="cb17-9"><a href="#cb17-9"></a>      <span class="cf">return</span> rv</span>
+<span id="cb17-10"><a href="#cb17-10"></a>    <span class="cf">return</span> f</span>
+<span id="cb17-11"><a href="#cb17-11"></a></span>
+<span id="cb17-12"><a href="#cb17-12"></a><span class="co"># and </span></span>
+<span id="cb17-13"><a href="#cb17-13"></a>add <span class="op">=</span> timer(add)</span>
+<span id="cb17-14"><a href="#cb17-14"></a><span class="bu">print</span>(<span class="st">'add(20, 30)'</span>, add(<span class="dv">20</span>, <span class="dv">30</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Python provides a syntax for easily implement every behaviours of <code>timer()</code> to every function:</p>
+<div id="cbed9524" class="cell" data-execution_count="16">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="at">@timer</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb18-3"><a href="#cb18-3"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
+<span id="cb18-4"><a href="#cb18-4"></a></span>
+<span id="cb18-5"><a href="#cb18-5"></a><span class="bu">print</span>(<span class="st">'add(20, 30)'</span>, add(<span class="dv">20</span>, <span class="dv">30</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Fundamentally it’s about allowing you to take this wrapping behavior for functions and to wrap wide swathes of functions in one fashion without having to rewrite a lot of user code or having to even perform a lot of turn on your library code.</p>
+</div>
+</div>
+<p>another example when we want a function to run n-times:</p>
+<div id="25fcf462" class="cell" data-execution_count="17">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>n <span class="op">=</span> <span class="dv">2</span> <span class="co"># let's say 2 times</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a></span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="kw">def</span> ntimes(f):</span>
+<span id="cb19-4"><a href="#cb19-4"></a>  <span class="kw">def</span> wrapper(<span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
+<span id="cb19-5"><a href="#cb19-5"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n):</span>
+<span id="cb19-6"><a href="#cb19-6"></a>      <span class="bu">print</span>(<span class="st">'running {.__name__}'</span>.<span class="bu">format</span>(f))</span>
+<span id="cb19-7"><a href="#cb19-7"></a>      rv <span class="op">=</span> f(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span>
+<span id="cb19-8"><a href="#cb19-8"></a>    <span class="cf">return</span> rv</span>
+<span id="cb19-9"><a href="#cb19-9"></a>  <span class="cf">return</span> wrapper</span>
+<span id="cb19-10"><a href="#cb19-10"></a>    </span>
+<span id="cb19-11"><a href="#cb19-11"></a><span class="at">@ntimes</span></span>
+<span id="cb19-12"><a href="#cb19-12"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb19-13"><a href="#cb19-13"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
+<span id="cb19-14"><a href="#cb19-14"></a></span>
+<span id="cb19-15"><a href="#cb19-15"></a>add(<span class="dv">10</span>, <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>running add
+running add</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>30</code></pre>
+</div>
+</div>
+<p>wrapp <code>n</code> in to the function so <code>ntimes()</code> takes <code>n</code> instead of <code>f</code> as arg:</p>
+<div id="e09e7e75" class="cell" data-execution_count="18">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># high order decorators</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="kw">def</span> ntimes(n):</span>
+<span id="cb22-3"><a href="#cb22-3"></a>  <span class="kw">def</span> inner(f):</span>
+<span id="cb22-4"><a href="#cb22-4"></a>    <span class="kw">def</span> wrapper(<span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
+<span id="cb22-5"><a href="#cb22-5"></a>      <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n):</span>
+<span id="cb22-6"><a href="#cb22-6"></a>        <span class="bu">print</span>(<span class="st">'running {.__name__}'</span>.<span class="bu">format</span>(f))</span>
+<span id="cb22-7"><a href="#cb22-7"></a>        rv <span class="op">=</span> f(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span>
+<span id="cb22-8"><a href="#cb22-8"></a>      <span class="cf">return</span> rv</span>
+<span id="cb22-9"><a href="#cb22-9"></a>    <span class="cf">return</span> wrapper</span>
+<span id="cb22-10"><a href="#cb22-10"></a>  <span class="cf">return</span> inner</span>
+<span id="cb22-11"><a href="#cb22-11"></a>    </span>
+<span id="cb22-12"><a href="#cb22-12"></a><span class="at">@ntimes</span>(<span class="dv">3</span>)</span>
+<span id="cb22-13"><a href="#cb22-13"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb22-14"><a href="#cb22-14"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
+<span id="cb22-15"><a href="#cb22-15"></a></span>
+<span id="cb22-16"><a href="#cb22-16"></a>add(<span class="dv">10</span>, <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>running add
+running add
+running add</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>30</code></pre>
+</div>
+</div>
+<p>There is a very important core concept that is hidden in here which is what you might call the <strong>closure object duality</strong>. it’s not something that we have time to look at in this session.</p>
+</section>
+<section id="generator" class="level1">
+<h1>generator</h1>
+</section>
+<section id="context-manager" class="level1">
+<h1>context manager</h1>
+</section>
+<section id="summary" class="level1">
+<h1>summary</h1>
+</section>
+<section id="futher-reading" class="level1">
+<h1>futher reading</h1>
+<ol type="1">
+<li><a href="https://docs.python.org/3/reference/datamodel.html">Python data model</a></li>
+<li><a href="https://www.geeksforgeeks.org/python-metaclass-__new__-method/">Python metaclass <code>__new__</code></a></li>
+</ol>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/lktuan\.github\.io\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'left'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb25" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb25-1"><a href="#cb25-1"></a><span class="co">---</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a><span class="an">title:</span><span class="co"> "Recap: So you want to be a Python expert?"</span></span>
+<span id="cb25-3"><a href="#cb25-3"></a><span class="an">description:</span><span class="co"> "by James Powell, PyData Seattle 2017"</span></span>
+<span id="cb25-4"><a href="#cb25-4"></a><span class="an">author:</span></span>
+<span id="cb25-5"><a href="#cb25-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
+<span id="cb25-6"><a href="#cb25-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
+<span id="cb25-7"><a href="#cb25-7"></a><span class="an">categories:</span><span class="co"> [python, pydata] </span></span>
+<span id="cb25-8"><a href="#cb25-8"></a><span class="an">date:</span><span class="co"> 07-10-2024</span></span>
+<span id="cb25-9"><a href="#cb25-9"></a><span class="an">date-modified:</span><span class="co"> 07-10-2024</span></span>
+<span id="cb25-10"><a href="#cb25-10"></a><span class="an">image:</span><span class="co"> pydata-logo-final.png</span></span>
+<span id="cb25-11"><a href="#cb25-11"></a><span class="an">code-tools:</span><span class="co"> true</span></span>
+<span id="cb25-12"><a href="#cb25-12"></a><span class="an">code-fold:</span><span class="co"> show</span></span>
+<span id="cb25-13"><a href="#cb25-13"></a><span class="an">code-annotations:</span><span class="co"> hover</span></span>
+<span id="cb25-14"><a href="#cb25-14"></a><span class="an">draft:</span><span class="co"> false</span></span>
+<span id="cb25-15"><a href="#cb25-15"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
+<span id="cb25-16"><a href="#cb25-16"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
+<span id="cb25-17"><a href="#cb25-17"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb25-18"><a href="#cb25-18"></a><span class="an">format:</span></span>
+<span id="cb25-19"><a href="#cb25-19"></a><span class="co">  html:</span></span>
+<span id="cb25-20"><a href="#cb25-20"></a><span class="co">    code-overflow: wrap</span></span>
+<span id="cb25-21"><a href="#cb25-21"></a><span class="co">---</span></span>
+<span id="cb25-22"><a href="#cb25-22"></a></span>
+<span id="cb25-23"><a href="#cb25-23"></a>🔥 source: <span class="co">[</span><span class="ot">**James Powell: So you want to be a Python expert? | PyData Seattle 2017**</span><span class="co">](https://www.youtube.com/watch?v=cKPlPJyQrt4)</span></span>
+<span id="cb25-24"><a href="#cb25-24"></a></span>
+<span id="cb25-25"><a href="#cb25-25"></a><span class="fu"># what is he gonna present?</span></span>
+<span id="cb25-26"><a href="#cb25-26"></a></span>
+<span id="cb25-27"><a href="#cb25-27"></a><span class="ss">- </span>something deeply behind the Zen of Python;</span>
+<span id="cb25-28"><a href="#cb25-28"></a><span class="ss">- </span>metaphors and programming in Python;</span>
+<span id="cb25-29"><a href="#cb25-29"></a><span class="ss">- </span>python is scripting language;</span>
+<span id="cb25-30"><a href="#cb25-30"></a><span class="ss">- </span>4 features of Python and the way experts would think about these features;</span>
+<span id="cb25-31"><a href="#cb25-31"></a><span class="ss">- </span>a lot of fundamental details of how these feature work but very little talk about we can conceptualize these features in the broader sense of what they mean for modeling core problem;</span>
+<span id="cb25-32"><a href="#cb25-32"></a><span class="ss">- </span>so 4 features you might have heared before and couple of the core mental models how you can think about, an how you can think about python as a whole, wrapping everything together;</span>
+<span id="cb25-33"><a href="#cb25-33"></a><span class="ss">- </span>you will see me stumble to understand that in case you dont utd or dont have docs memorized, it's alright, the target is to know what they are and what they mean;</span>
+<span id="cb25-34"><a href="#cb25-34"></a><span class="ss">- </span>the talk presumes you to have a baseline of Python, but in case you a new to Python he believes there are cores you can take away.</span>
+<span id="cb25-35"><a href="#cb25-35"></a></span>
+<span id="cb25-36"><a href="#cb25-36"></a></span>
+<span id="cb25-37"><a href="#cb25-37"></a>:::{layout-ncol="1"}</span>
+<span id="cb25-38"><a href="#cb25-38"></a><span class="al">![James Powell on PyData Seattle 2017](James%20Powell_%20So%20you%20want%20to%20be%20a%20Python%20expert_%20_%20PyData%20Seattle%202017%205-37%20screenshot.png)</span></span>
+<span id="cb25-39"><a href="#cb25-39"></a>:::</span>
+<span id="cb25-40"><a href="#cb25-40"></a></span>
+<span id="cb25-41"><a href="#cb25-41"></a><span class="fu"># data model protocol (or dunder method)</span></span>
+<span id="cb25-42"><a href="#cb25-42"></a></span>
+<span id="cb25-43"><a href="#cb25-43"></a>assume we have a data model with Polinomial object intitially do nothing, why I need 4 lines (instead of 2 lines) to create 2 Polynominals. How can I create and assign coefficients together.</span>
+<span id="cb25-44"><a href="#cb25-44"></a></span>
+<span id="cb25-47"><a href="#cb25-47"></a><span class="in">```{python}</span></span>
+<span id="cb25-48"><a href="#cb25-48"></a><span class="co">#| eval: false</span></span>
+<span id="cb25-49"><a href="#cb25-49"></a><span class="kw">class</span> Polynomial:</span>
+<span id="cb25-50"><a href="#cb25-50"></a>    <span class="cf">pass</span></span>
+<span id="cb25-51"><a href="#cb25-51"></a>p1<span class="op">=</span> Polynomial()</span>
+<span id="cb25-52"><a href="#cb25-52"></a>p2<span class="op">=</span> Polynomial()</span>
+<span id="cb25-53"><a href="#cb25-53"></a>p1.coeffs <span class="op">=</span> <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span> <span class="co">#  x^2 + 2x + 3</span></span>
+<span id="cb25-54"><a href="#cb25-54"></a>p2.coeffs <span class="op">=</span> <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span> <span class="co"># 3x^2 + 4x + 3</span></span>
+<span id="cb25-55"><a href="#cb25-55"></a><span class="in">```</span></span>
+<span id="cb25-56"><a href="#cb25-56"></a></span>
+<span id="cb25-57"><a href="#cb25-57"></a>the answer is using a constructor <span class="in">`__init__`</span>, then we can compact our code like this:</span>
+<span id="cb25-58"><a href="#cb25-58"></a></span>
+<span id="cb25-61"><a href="#cb25-61"></a><span class="in">```{python}</span></span>
+<span id="cb25-62"><a href="#cb25-62"></a><span class="co">#| eval: false</span></span>
+<span id="cb25-63"><a href="#cb25-63"></a><span class="kw">class</span> Polynomial:</span>
+<span id="cb25-64"><a href="#cb25-64"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">*</span>coeffs):</span>
+<span id="cb25-65"><a href="#cb25-65"></a>        <span class="va">self</span>.coeffs <span class="op">=</span> coeffs</span>
+<span id="cb25-66"><a href="#cb25-66"></a></span>
+<span id="cb25-67"><a href="#cb25-67"></a>p1 <span class="op">=</span> Polynomial(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span> ) <span class="co">#  x^2 + 2x + 3</span></span>
+<span id="cb25-68"><a href="#cb25-68"></a>p2 <span class="op">=</span> Polynomial(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span> ) <span class="co"># 3x^2 + 4x + 3</span></span>
+<span id="cb25-69"><a href="#cb25-69"></a><span class="in">```</span></span>
+<span id="cb25-70"><a href="#cb25-70"></a></span>
+<span id="cb25-71"><a href="#cb25-71"></a>but if we print our objects in the terminal, they look so ugly. We miss the method that actually call <span class="in">`repr(obj)`</span> when we run <span class="in">`obj`</span>:</span>
+<span id="cb25-72"><a href="#cb25-72"></a></span>
+<span id="cb25-73"><a href="#cb25-73"></a>:::{layout-ncol="1"}</span>
+<span id="cb25-74"><a href="#cb25-74"></a><span class="al">![The need of `__repr__`](1_repr.png)</span></span>
+<span id="cb25-75"><a href="#cb25-75"></a>:::</span>
+<span id="cb25-76"><a href="#cb25-76"></a></span>
+<span id="cb25-77"><a href="#cb25-77"></a>that's what <span class="in">`__repr__`</span> for, a printable representation of the class:</span>
+<span id="cb25-78"><a href="#cb25-78"></a></span>
+<span id="cb25-81"><a href="#cb25-81"></a><span class="in">```{python}</span></span>
+<span id="cb25-82"><a href="#cb25-82"></a><span class="co">#| eval: false</span></span>
+<span id="cb25-83"><a href="#cb25-83"></a><span class="kw">class</span> Polynomial:</span>
+<span id="cb25-84"><a href="#cb25-84"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">*</span>coeffs):</span>
+<span id="cb25-85"><a href="#cb25-85"></a>        <span class="va">self</span>.coeffs <span class="op">=</span> coeffs</span>
+<span id="cb25-86"><a href="#cb25-86"></a></span>
+<span id="cb25-87"><a href="#cb25-87"></a>    <span class="kw">def</span> <span class="fu">__repr__</span>(<span class="va">self</span>):</span>
+<span id="cb25-88"><a href="#cb25-88"></a>        <span class="cf">return</span> <span class="st">'Polynomial(*</span><span class="sc">{!r}</span><span class="st">)'</span>.<span class="bu">format</span>(<span class="va">self</span>.coeffs)</span>
+<span id="cb25-89"><a href="#cb25-89"></a></span>
+<span id="cb25-90"><a href="#cb25-90"></a></span>
+<span id="cb25-91"><a href="#cb25-91"></a>p1 <span class="op">=</span> Polynomial(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)  <span class="co">#  x^2 + 2x + 3</span></span>
+<span id="cb25-92"><a href="#cb25-92"></a>p2 <span class="op">=</span> Polynomial(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span>)  <span class="co"># 3x^2 + 4x + 3</span></span>
+<span id="cb25-93"><a href="#cb25-93"></a><span class="in">```</span></span>
+<span id="cb25-94"><a href="#cb25-94"></a></span>
+<span id="cb25-95"><a href="#cb25-95"></a>the next thing we wanna do is to add Polinimials together <span class="in">`p1 + p2`</span>.  </span>
+<span id="cb25-96"><a href="#cb25-96"></a></span>
+<span id="cb25-99"><a href="#cb25-99"></a><span class="in">```{python}</span></span>
+<span id="cb25-100"><a href="#cb25-100"></a><span class="co">#| eval: false</span></span>
+<span id="cb25-101"><a href="#cb25-101"></a>    <span class="kw">def</span> <span class="fu">__add__</span>(<span class="va">self</span>, other):</span>
+<span id="cb25-102"><a href="#cb25-102"></a>        <span class="cf">return</span> Polynomial(<span class="op">*</span>(x <span class="op">+</span> y <span class="cf">for</span> x, y <span class="kw">in</span> <span class="bu">zip</span>(<span class="va">self</span>.coeffs, other.coeffs)))</span>
+<span id="cb25-103"><a href="#cb25-103"></a><span class="in">```</span></span>
+<span id="cb25-104"><a href="#cb25-104"></a></span>
+<span id="cb25-105"><a href="#cb25-105"></a>:::{.callout-note}</span>
+<span id="cb25-106"><a href="#cb25-106"></a>What is pattern here? I have some behaviours that I want to implement, and I write some **underscore** (<span class="in">`__x__`</span>) funtions. We call them dunder or underscore methods.</span>
+<span id="cb25-107"><a href="#cb25-107"></a></span>
+<span id="cb25-108"><a href="#cb25-108"></a>Try google "data model" and we'll a bunch of documents that list all method to implement the principle behaviours of our objects. There are top-level functions of top-level syntaxes that corresponding to <span class="in">`__`</span>.</span>
+<span id="cb25-109"><a href="#cb25-109"></a></span>
+<span id="cb25-110"><a href="#cb25-110"></a>But there are smthg more fundamental here, when I want to:</span>
+<span id="cb25-111"><a href="#cb25-111"></a></span>
+<span id="cb25-112"><a href="#cb25-112"></a><span class="ss">- </span>x + y -&gt; <span class="in">`__add__`</span>;</span>
+<span id="cb25-113"><a href="#cb25-113"></a><span class="ss">- </span>initialize x -&gt; <span class="in">`__init__`</span>;</span>
+<span id="cb25-114"><a href="#cb25-114"></a><span class="ss">- </span>repr(x) -&gt; <span class="in">`__repr__`</span>.</span>
+<span id="cb25-115"><a href="#cb25-115"></a></span>
+<span id="cb25-116"><a href="#cb25-116"></a>Then what if we want to implement the <span class="in">`len()`</span> (return the length, which is popular know Python function) -&gt; naturally we'll be thinking of <span class="in">`__len__`</span>.</span>
+<span id="cb25-117"><a href="#cb25-117"></a></span>
+<span id="cb25-118"><a href="#cb25-118"></a></span>
+<span id="cb25-121"><a href="#cb25-121"></a><span class="in">```{python}</span></span>
+<span id="cb25-122"><a href="#cb25-122"></a><span class="co">#| eval: false</span></span>
+<span id="cb25-123"><a href="#cb25-123"></a>    <span class="kw">def</span> <span class="fu">__len__</span>(<span class="va">self</span>):</span>
+<span id="cb25-124"><a href="#cb25-124"></a>        <span class="cf">return</span> <span class="bu">len</span>(<span class="va">self</span>.coeffs)</span>
+<span id="cb25-125"><a href="#cb25-125"></a><span class="in">```</span></span>
+<span id="cb25-126"><a href="#cb25-126"></a>:::</span>
+<span id="cb25-127"><a href="#cb25-127"></a></span>
+<span id="cb25-128"><a href="#cb25-128"></a></span>
+<span id="cb25-129"><a href="#cb25-129"></a>The Python data model is a means by which you can protocols. Thos protocols have abstract meaning depending on the object itself. We tight the behaviours to top-level **syntaxes** and **functions**.</span>
+<span id="cb25-130"><a href="#cb25-130"></a></span>
+<span id="cb25-131"><a href="#cb25-131"></a>Similarly, if we do see the object Polynomial a executable, callable thing, we can implement a <span class="in">`__call__`</span> which will turn our class to function, in this case we cant imagine such thing, so pass.</span>
+<span id="cb25-132"><a href="#cb25-132"></a></span>
+<span id="cb25-133"><a href="#cb25-133"></a>✍ There are 3 core patterns we want to understand and remember in Python to really understand object orientation in Python:</span>
+<span id="cb25-134"><a href="#cb25-134"></a></span>
+<span id="cb25-135"><a href="#cb25-135"></a><span class="ss">1. </span>The protocol view of Python;</span>
+<span id="cb25-136"><a href="#cb25-136"></a><span class="ss">2. </span>The buil-in inheritance protocol;</span>
+<span id="cb25-137"><a href="#cb25-137"></a><span class="ss">3. </span>Some caveats around how OOP in Python works.</span>
+<span id="cb25-138"><a href="#cb25-138"></a></span>
+<span id="cb25-139"><a href="#cb25-139"></a>Which will be continue to present in this video is jumping into a very tricky metaphor a feature we may have heard of.</span>
+<span id="cb25-140"><a href="#cb25-140"></a></span>
+<span id="cb25-141"><a href="#cb25-141"></a><span class="fu"># meta class</span></span>
+<span id="cb25-142"><a href="#cb25-142"></a></span>
+<span id="cb25-143"><a href="#cb25-143"></a>imagine there are 2 groups working on some piece of software. one is core infrastructure of the group and they write <span class="in">`library`</span> code, the other group is devloper group, they write <span class="in">`user`</span> code. the developer use <span class="in">`library`</span> code to accomplish actual business objectives. the core team less cares about business problem, they focus on technical stuffs.</span>
+<span id="cb25-144"><a href="#cb25-144"></a></span>
+<span id="cb25-145"><a href="#cb25-145"></a>you are in the dev team and there is no way to change to code of <span class="in">`library.py`</span>. in what circumstance the code of <span class="in">`user`</span> can break -&gt; there is no <span class="in">`foo`</span> method! To avoid that, we could simply write a test that call <span class="in">`bar()`</span>, then we could know if it fails before production environment's runtime.</span>
+<span id="cb25-146"><a href="#cb25-146"></a></span>
+<span id="cb25-147"><a href="#cb25-147"></a>is there anything simpler to know the ability to fail before hit run time in production env? -&gt; use <span class="in">`assert`</span> to check existence of the attribute. we will have an early warning right before the class was initiated.</span>
+<span id="cb25-148"><a href="#cb25-148"></a></span>
+<span id="cb25-149"><a href="#cb25-149"></a>:::{layout-ncol="1"}</span>
+<span id="cb25-150"><a href="#cb25-150"></a><span class="al">![we can know if the core team change the function name to "food"](2_assert.png)</span></span>
+<span id="cb25-151"><a href="#cb25-151"></a>:::</span>
+<span id="cb25-152"><a href="#cb25-152"></a></span>
+<span id="cb25-153"><a href="#cb25-153"></a>by this way we are enforcing constraints on the base class from the derived class.</span>
+<span id="cb25-154"><a href="#cb25-154"></a></span>
+<span id="cb25-155"><a href="#cb25-155"></a>now we move to a reverse situation, you are the core structure writer and have to deal with the meathead in the business unit that actually using/abusing/missusing your code ~ you have no idea what are they doing. you write the <span class="in">`Base`</span> class with the assumption and some responsible developer in the BU will go and implement the <span class="in">`bar`</span> method.</span>
+<span id="cb25-156"><a href="#cb25-156"></a></span>
+<span id="cb25-157"><a href="#cb25-157"></a>:::{layout-ncol="1"}</span>
+<span id="cb25-158"><a href="#cb25-158"></a><span class="al">![what if you stand on the left side pane](3_reverse_sit.png)</span></span>
+<span id="cb25-159"><a href="#cb25-159"></a>:::</span>
+<span id="cb25-160"><a href="#cb25-160"></a></span>
+<span id="cb25-161"><a href="#cb25-161"></a>you have no ability to change and even have no idea where the code on the right pane sit. we can not use <span class="in">`hasattr()`</span> for this particular situation. the first method is to use <span class="in">`try ... catch ...`</span>, but it only catches in runtime and we will miss catching it before it goes to production env.</span>
+<span id="cb25-162"><a href="#cb25-162"></a></span>
+<span id="cb25-163"><a href="#cb25-163"></a>:::{callout-note}</span>
+<span id="cb25-164"><a href="#cb25-164"></a>The reason that we could call Python a **protocol orientated language** is not just because the Python data model the object model is protocol orientated but that the entire Python language itself has a notion of hooks and protocols and safety valves within it.</span>
+<span id="cb25-165"><a href="#cb25-165"></a></span>
+<span id="cb25-166"><a href="#cb25-166"></a>Python is much much simpler language, the code run linearly from top to bottom. And the class statement in Python is actually an executable code. We can write this:</span>
+<span id="cb25-167"><a href="#cb25-167"></a></span>
+<span id="cb25-170"><a href="#cb25-170"></a><span class="in">```{python}</span></span>
+<span id="cb25-171"><a href="#cb25-171"></a><span class="co">#| eval: false</span></span>
+<span id="cb25-172"><a href="#cb25-172"></a></span>
+<span id="cb25-173"><a href="#cb25-173"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb25-174"><a href="#cb25-174"></a>  <span class="kw">class</span> Base: <span class="cf">pass</span></span>
+<span id="cb25-175"><a href="#cb25-175"></a></span>
+<span id="cb25-176"><a href="#cb25-176"></a><span class="co"># or the same thing in other way</span></span>
+<span id="cb25-177"><a href="#cb25-177"></a></span>
+<span id="cb25-178"><a href="#cb25-178"></a><span class="kw">class</span> Base:</span>
+<span id="cb25-179"><a href="#cb25-179"></a>  <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb25-180"><a href="#cb25-180"></a>    <span class="kw">def</span> bar(<span class="va">self</span>):</span>
+<span id="cb25-181"><a href="#cb25-181"></a>      <span class="cf">return</span> <span class="st">'bar'</span></span>
+<span id="cb25-182"><a href="#cb25-182"></a><span class="in">```</span></span>
+<span id="cb25-183"><a href="#cb25-183"></a></span>
+<span id="cb25-184"><a href="#cb25-184"></a>Only the last one will survive. Python accepts this syntax because it's class is **fundamentally executable**.</span>
+<span id="cb25-185"><a href="#cb25-185"></a>:::</span>
+<span id="cb25-186"><a href="#cb25-186"></a></span>
+<span id="cb25-187"><a href="#cb25-187"></a>Let's get into something more interesting! create a class inside a function and use a function in a module in standard libbrary in Python called <span class="in">`dis`</span>.</span>
+<span id="cb25-188"><a href="#cb25-188"></a></span>
+<span id="cb25-191"><a href="#cb25-191"></a><span class="in">```{python}</span></span>
+<span id="cb25-192"><a href="#cb25-192"></a><span class="co">#| eval: false</span></span>
+<span id="cb25-193"><a href="#cb25-193"></a></span>
+<span id="cb25-194"><a href="#cb25-194"></a><span class="co"># create a class inside a function</span></span>
+<span id="cb25-195"><a href="#cb25-195"></a><span class="kw">def</span> _():</span>
+<span id="cb25-196"><a href="#cb25-196"></a>  <span class="kw">class</span> Base:</span>
+<span id="cb25-197"><a href="#cb25-197"></a>    <span class="cf">pass</span></span>
+<span id="cb25-198"><a href="#cb25-198"></a></span>
+<span id="cb25-199"><a href="#cb25-199"></a><span class="co"># dis stands for disassemble</span></span>
+<span id="cb25-200"><a href="#cb25-200"></a><span class="im">from</span> dis <span class="im">import</span> dis</span>
+<span id="cb25-201"><a href="#cb25-201"></a><span class="in">```</span></span>
+<span id="cb25-202"><a href="#cb25-202"></a></span>
+<span id="cb25-203"><a href="#cb25-203"></a>let's 'dis' - stands for disassemble - to see what happen in the bytecode. there are actually things in Python bytecode call <span class="in">`LOAD_BUILD_CLASS`</span>, it's actual executable runtime instruction in the Python interpreter for create a class.</span>
+<span id="cb25-204"><a href="#cb25-204"></a></span>
+<span id="cb25-205"><a href="#cb25-205"></a>:::{layout-ncol="1"}</span>
+<span id="cb25-206"><a href="#cb25-206"></a><span class="al">![disassemble](4_dis.png)</span></span>
+<span id="cb25-207"><a href="#cb25-207"></a>:::</span>
+<span id="cb25-208"><a href="#cb25-208"></a></span>
+<span id="cb25-209"><a href="#cb25-209"></a>at the first section of this lecture, we saw some **correspondence** between top-level syntac or function AND some underscore method that implements that syntax or function. there should be also top-level mechanism, not explicitly syntax or function, with the process of building a class. there is a build-ins function called <span class="in">`__build_class__`</span>.</span>
+<span id="cb25-210"><a href="#cb25-210"></a></span>
+<span id="cb25-213"><a href="#cb25-213"></a><span class="in">```{python}</span></span>
+<span id="cb25-214"><a href="#cb25-214"></a>old_bc <span class="op">=</span> __build_class__</span>
+<span id="cb25-215"><a href="#cb25-215"></a></span>
+<span id="cb25-216"><a href="#cb25-216"></a><span class="kw">def</span> my_bc(func, name, base<span class="op">=</span><span class="va">None</span>, <span class="op">**</span>kw):</span>
+<span id="cb25-217"><a href="#cb25-217"></a>  <span class="cf">if</span> base <span class="kw">is</span> Base:</span>
+<span id="cb25-218"><a href="#cb25-218"></a>    <span class="bu">print</span>(<span class="st">'check if the bar method is defined'</span>)</span>
+<span id="cb25-219"><a href="#cb25-219"></a>  <span class="cf">if</span> base <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb25-220"><a href="#cb25-220"></a>    <span class="cf">return</span> old_bc(func, name, base, <span class="op">**</span>kw)</span>
+<span id="cb25-221"><a href="#cb25-221"></a>  <span class="cf">return</span> old_bc(func, name, <span class="op">**</span>kw)</span>
+<span id="cb25-222"><a href="#cb25-222"></a></span>
+<span id="cb25-223"><a href="#cb25-223"></a><span class="im">import</span> builtins</span>
+<span id="cb25-224"><a href="#cb25-224"></a>builtins.__build_class__ <span class="op">=</span> my_bc</span>
+<span id="cb25-225"><a href="#cb25-225"></a><span class="in">```</span> </span>
+<span id="cb25-226"><a href="#cb25-226"></a></span>
+<span id="cb25-227"><a href="#cb25-227"></a>:::{layout-ncol="1"}</span>
+<span id="cb25-228"><a href="#cb25-228"></a><span class="al">![`__build_class__`, we can check if the `bar` method is implemented, Python is **protocal oriented language**!](5_build_class.png)</span></span>
+<span id="cb25-229"><a href="#cb25-229"></a>:::</span>
+<span id="cb25-230"><a href="#cb25-230"></a></span>
+<span id="cb25-231"><a href="#cb25-231"></a>It's actually quite a common pattern and quite a fundamental piece of Python almost everything that a Python language does in an execution context like building classes, creating functions, importing modules you can find a way to **hook** into that. once you can find a way to hook into that you can start doing things that you want to do like check is my user code going to break from the perspective the library author. </span>
+<span id="cb25-232"><a href="#cb25-232"></a></span>
+<span id="cb25-233"><a href="#cb25-233"></a>The most important thing here is **understanding existence of this pattern**, knowing that there are options solving such problem, and there are even better approachs.</span>
+<span id="cb25-234"><a href="#cb25-234"></a></span>
+<span id="cb25-235"><a href="#cb25-235"></a><span class="fu">## There are 2 fundamental ways that people ussually use to solve this</span></span>
+<span id="cb25-236"><a href="#cb25-236"></a></span>
+<span id="cb25-237"><a href="#cb25-237"></a><span class="fu">### 1. meta class</span></span>
+<span id="cb25-238"><a href="#cb25-238"></a></span>
+<span id="cb25-239"><a href="#cb25-239"></a>[<span class="co">[</span><span class="ot">futher discussion</span><span class="co">](https://stackoverflow.com/questions/395982/metaclass-new-cls-and-super-what-is-the-mechanism-exactly)</span>]{.aside}</span>
+<span id="cb25-240"><a href="#cb25-240"></a></span>
+<span id="cb25-243"><a href="#cb25-243"></a><span class="in">```{python}</span></span>
+<span id="cb25-244"><a href="#cb25-244"></a><span class="co">#| eval: false</span></span>
+<span id="cb25-245"><a href="#cb25-245"></a><span class="co"># meta classes are merely derived from `type`</span></span>
+<span id="cb25-246"><a href="#cb25-246"></a><span class="kw">class</span> BaseMeta(<span class="bu">type</span>):</span>
+<span id="cb25-247"><a href="#cb25-247"></a>    <span class="kw">def</span> <span class="fu">__new__</span>(cls, name, bases, namespace):</span>
+<span id="cb25-248"><a href="#cb25-248"></a>        <span class="bu">print</span>(<span class="st">'BaseMeta.__new__'</span>, cls, name, bases, namespace)</span>
+<span id="cb25-249"><a href="#cb25-249"></a>        <span class="cf">if</span> name <span class="op">!=</span> <span class="st">'Base'</span> <span class="kw">and</span> <span class="st">'bar'</span> <span class="kw">not</span> <span class="kw">in</span> namespace:</span>
+<span id="cb25-250"><a href="#cb25-250"></a>            <span class="cf">raise</span> <span class="pp">TypeError</span>(<span class="st">"Bad User class, 'bar' is not defined"</span>)</span>
+<span id="cb25-251"><a href="#cb25-251"></a>        <span class="cf">return</span> <span class="bu">super</span>().<span class="fu">__new__</span>(cls, name, bases, namespace)</span>
+<span id="cb25-252"><a href="#cb25-252"></a></span>
+<span id="cb25-253"><a href="#cb25-253"></a></span>
+<span id="cb25-254"><a href="#cb25-254"></a><span class="co"># then our Base should be derived from BaseMeta</span></span>
+<span id="cb25-255"><a href="#cb25-255"></a><span class="kw">class</span> Base(metaclass<span class="op">=</span>BaseMeta):</span>
+<span id="cb25-256"><a href="#cb25-256"></a>    <span class="kw">def</span> foo(<span class="va">self</span>):</span>
+<span id="cb25-257"><a href="#cb25-257"></a>        <span class="cf">return</span> <span class="va">self</span>.bar()</span>
+<span id="cb25-258"><a href="#cb25-258"></a><span class="in">```</span></span>
+<span id="cb25-259"><a href="#cb25-259"></a></span>
+<span id="cb25-260"><a href="#cb25-260"></a>:::{layout-ncol="1"}</span>
+<span id="cb25-261"><a href="#cb25-261"></a><span class="al">![metaclass](6_meta_class.png)</span></span>
+<span id="cb25-262"><a href="#cb25-262"></a>:::</span>
+<span id="cb25-263"><a href="#cb25-263"></a></span>
+<span id="cb25-264"><a href="#cb25-264"></a>That's it! you can control, constraint the derived class from the base class in class hierachy.</span>
+<span id="cb25-265"><a href="#cb25-265"></a></span>
+<span id="cb25-266"><a href="#cb25-266"></a><span class="fu">### 2. `__init_subclass__`</span></span>
+<span id="cb25-267"><a href="#cb25-267"></a></span>
+<span id="cb25-268"><a href="#cb25-268"></a>We can implement <span class="in">`Base`</span> like this:</span>
+<span id="cb25-269"><a href="#cb25-269"></a></span>
+<span id="cb25-272"><a href="#cb25-272"></a><span class="in">```{python}</span></span>
+<span id="cb25-273"><a href="#cb25-273"></a><span class="co">#| eval: false</span></span>
+<span id="cb25-274"><a href="#cb25-274"></a><span class="kw">class</span> Base():</span>
+<span id="cb25-275"><a href="#cb25-275"></a>    <span class="kw">def</span> foo(<span class="va">self</span>):</span>
+<span id="cb25-276"><a href="#cb25-276"></a>        <span class="cf">return</span> <span class="va">self</span>.bar()</span>
+<span id="cb25-277"><a href="#cb25-277"></a></span>
+<span id="cb25-278"><a href="#cb25-278"></a>    <span class="kw">def</span> <span class="fu">__init_subclass__</span>(cls, <span class="op">**</span>kwargs):</span>
+<span id="cb25-279"><a href="#cb25-279"></a>        <span class="bu">print</span>(<span class="st">"init subclass"</span>, cls.__dict__, kwargs)</span>
+<span id="cb25-280"><a href="#cb25-280"></a>        <span class="cf">if</span> <span class="st">'bar'</span> <span class="kw">not</span> <span class="kw">in</span> cls.__dict__:</span>
+<span id="cb25-281"><a href="#cb25-281"></a>            <span class="cf">raise</span> <span class="pp">TypeError</span>(<span class="st">"Bad sub class"</span>)</span>
+<span id="cb25-282"><a href="#cb25-282"></a>        <span class="bu">super</span>().<span class="fu">__init_subclass__</span>(<span class="op">**</span>kwargs)</span>
+<span id="cb25-283"><a href="#cb25-283"></a><span class="in">```</span></span>
+<span id="cb25-284"><a href="#cb25-284"></a></span>
+<span id="cb25-285"><a href="#cb25-285"></a><span class="fu"># decorator</span></span>
+<span id="cb25-286"><a href="#cb25-286"></a></span>
+<span id="cb25-287"><a href="#cb25-287"></a>We would have met pattern like this, that's is decorator:</span>
+<span id="cb25-288"><a href="#cb25-288"></a></span>
+<span id="cb25-291"><a href="#cb25-291"></a><span class="in">```{python}</span></span>
+<span id="cb25-292"><a href="#cb25-292"></a><span class="co">#| eval: false</span></span>
+<span id="cb25-293"><a href="#cb25-293"></a></span>
+<span id="cb25-294"><a href="#cb25-294"></a><span class="at">@dec</span> </span>
+<span id="cb25-295"><a href="#cb25-295"></a><span class="kw">def</span> f():</span>
+<span id="cb25-296"><a href="#cb25-296"></a>  <span class="cf">pass</span></span>
+<span id="cb25-297"><a href="#cb25-297"></a><span class="in">```</span></span>
+<span id="cb25-298"><a href="#cb25-298"></a></span>
+<span id="cb25-299"><a href="#cb25-299"></a>Python is a live language, there is no separate step that turns function definitions into bags of a set bits tagged and some elf binary or some <span class="co">[</span><span class="ot">PE</span><span class="co">](https://en.wikipedia.org/wiki/Portable_Executable)</span> binary somewhere. That a function definition is actually a live thing, it actually runs at runtime, there's actually executable code associated with this def <span class="in">`f()`</span>.</span>
+<span id="cb25-300"><a href="#cb25-300"></a></span>
+<span id="cb25-301"><a href="#cb25-301"></a>:::{layout-ncol="1"}</span>
+<span id="cb25-302"><a href="#cb25-302"></a><span class="al">![we can interact with our object as Python is a live language, the function itself is a runtime object](7_interact_with_object.png)</span></span>
+<span id="cb25-303"><a href="#cb25-303"></a>:::</span>
+<span id="cb25-304"><a href="#cb25-304"></a></span>
+<span id="cb25-305"><a href="#cb25-305"></a>That every Python structure that you interact with whether it's an object or a function or a generator has some **runtime life**, has some **runtime existence** you can see it in memory, you can ask it questions like what module UI were you defined in. you can even ask it very useful questions like if you use the inspect module you can say what's your source code.</span>
+<span id="cb25-306"><a href="#cb25-306"></a></span>
+<span id="cb25-307"><a href="#cb25-307"></a><span class="in">```bash</span></span>
+<span id="cb25-308"><a href="#cb25-308"></a><span class="ex"></span> decorators  python <span class="at">-i</span> .<span class="dt">\d</span>eco.py</span>
+<span id="cb25-309"><a href="#cb25-309"></a><span class="op">&gt;&gt;&gt;</span> from <span class="ex">inspect</span> import getsource</span>
+<span id="cb25-310"><a href="#cb25-310"></a><span class="op">&gt;&gt;&gt;</span> getsource<span class="kw">(</span><span class="ex">add</span><span class="kw">)</span></span>
+<span id="cb25-311"><a href="#cb25-311"></a><span class="st">'def add(a, b=10):\n    return a + b\n'</span></span>
+<span id="cb25-312"><a href="#cb25-312"></a><span class="op">&gt;&gt;&gt;</span> print<span class="kw">(</span><span class="ex">getsource</span><span class="er">(</span><span class="ex">add</span><span class="kw">))</span></span>
+<span id="cb25-313"><a href="#cb25-313"></a><span class="ex">def</span> add<span class="er">(</span><span class="ex">a,</span> b=10<span class="kw">)</span><span class="bu">:</span></span>
+<span id="cb25-314"><a href="#cb25-314"></a>    <span class="cf">return</span> <span class="ex">a</span> + b </span>
+<span id="cb25-315"><a href="#cb25-315"></a></span>
+<span id="cb25-316"><a href="#cb25-316"></a><span class="op">&gt;&gt;&gt;</span> </span>
+<span id="cb25-317"><a href="#cb25-317"></a><span class="in">```</span></span>
+<span id="cb25-318"><a href="#cb25-318"></a></span>
+<span id="cb25-319"><a href="#cb25-319"></a>now let's say I want to calculate how much time does it take to perform the <span class="in">`add`</span>. simply we would thinking about <span class="in">`time`</span>, like this:</span>
+<span id="cb25-320"><a href="#cb25-320"></a></span>
+<span id="cb25-323"><a href="#cb25-323"></a><span class="in">```{python}</span></span>
+<span id="cb25-324"><a href="#cb25-324"></a><span class="im">from</span> time <span class="im">import</span> time</span>
+<span id="cb25-325"><a href="#cb25-325"></a></span>
+<span id="cb25-326"><a href="#cb25-326"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb25-327"><a href="#cb25-327"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
+<span id="cb25-328"><a href="#cb25-328"></a> </span>
+<span id="cb25-329"><a href="#cb25-329"></a>before <span class="op">=</span> time()</span>
+<span id="cb25-330"><a href="#cb25-330"></a><span class="bu">print</span>(<span class="st">'add(10)'</span>, add(<span class="dv">10</span>))</span>
+<span id="cb25-331"><a href="#cb25-331"></a>after <span class="op">=</span> time()</span>
+<span id="cb25-332"><a href="#cb25-332"></a><span class="bu">print</span>(<span class="st">'time_taken'</span>, after <span class="op">-</span> before)</span>
+<span id="cb25-333"><a href="#cb25-333"></a><span class="bu">print</span>(<span class="st">'add(20, 30)'</span>, add(<span class="dv">20</span>, <span class="dv">30</span>))</span>
+<span id="cb25-334"><a href="#cb25-334"></a>after <span class="op">=</span> time()</span>
+<span id="cb25-335"><a href="#cb25-335"></a><span class="bu">print</span>(<span class="st">'time_taken'</span>, after <span class="op">-</span> before)</span>
+<span id="cb25-336"><a href="#cb25-336"></a><span class="bu">print</span>(<span class="st">'add("a", "b")'</span>, add(<span class="st">"a"</span>, <span class="st">"b"</span>))</span>
+<span id="cb25-337"><a href="#cb25-337"></a>after <span class="op">=</span> time()</span>
+<span id="cb25-338"><a href="#cb25-338"></a><span class="bu">print</span>(<span class="st">'time_taken'</span>, after <span class="op">-</span> before)</span>
+<span id="cb25-339"><a href="#cb25-339"></a><span class="in">```</span></span>
+<span id="cb25-340"><a href="#cb25-340"></a></span>
+<span id="cb25-341"><a href="#cb25-341"></a>there is something wrong here because we need to add code to everywhere we want to calculate. we see another important pattern in Python, decorator, the Python developers want you to write the simplest, stupidest, quickest thing to get the job done and get the rest of your day with your family.</span>
+<span id="cb25-342"><a href="#cb25-342"></a></span>
+<span id="cb25-343"><a href="#cb25-343"></a>we will see alot of scenarios where of cases where you can write the simple and stupidest thing to get the job done and when the task at hand becomes harder or more complex or the requirements change you can change your code in a very simple fashion to linearly extend its functionality without have to re-write it from scratch.</span>
+<span id="cb25-344"><a href="#cb25-344"></a></span>
+<span id="cb25-345"><a href="#cb25-345"></a>in Python we'll see a number of different features are orientated around how do we write the simplest thing today and then when the problem gets a little bit harder we have an avenue for making our code a little bit more complex.</span>
+<span id="cb25-346"><a href="#cb25-346"></a></span>
+<span id="cb25-347"><a href="#cb25-347"></a>we can modified a <span class="in">`add`</span> alittle bit</span>
+<span id="cb25-348"><a href="#cb25-348"></a></span>
+<span id="cb25-351"><a href="#cb25-351"></a><span class="in">```{python}</span></span>
+<span id="cb25-352"><a href="#cb25-352"></a><span class="co">#| eval: false</span></span>
+<span id="cb25-353"><a href="#cb25-353"></a><span class="im">from</span> time <span class="im">import</span> time</span>
+<span id="cb25-354"><a href="#cb25-354"></a></span>
+<span id="cb25-355"><a href="#cb25-355"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb25-356"><a href="#cb25-356"></a>    before <span class="op">=</span> time()</span>
+<span id="cb25-357"><a href="#cb25-357"></a>    rv <span class="op">=</span> a <span class="op">+</span> b</span>
+<span id="cb25-358"><a href="#cb25-358"></a>    after <span class="op">=</span> time()</span>
+<span id="cb25-359"><a href="#cb25-359"></a>    <span class="bu">print</span>(<span class="st">'elapsed:'</span>, after <span class="op">-</span> before)</span>
+<span id="cb25-360"><a href="#cb25-360"></a>    <span class="cf">return</span> rv</span>
+<span id="cb25-361"><a href="#cb25-361"></a><span class="in">```</span></span>
+<span id="cb25-362"><a href="#cb25-362"></a></span>
+<span id="cb25-363"><a href="#cb25-363"></a>But if we have more functions, let say <span class="in">`sub`</span>? We need to modify and make our code complicated. **Python is live language** that everything has some runtime representaion. We can create <span class="in">`timer()`</span> which take <span class="in">`func`</span>, <span class="in">`x`</span>, and <span class="in">`y`</span> as arguments (<span class="in">`x`</span> and <span class="in">`y`</span> will be forwarded to calculation function)</span>
+<span id="cb25-364"><a href="#cb25-364"></a></span>
+<span id="cb25-367"><a href="#cb25-367"></a><span class="in">```{python}</span></span>
+<span id="cb25-368"><a href="#cb25-368"></a><span class="co">#| eval: false</span></span>
+<span id="cb25-369"><a href="#cb25-369"></a><span class="im">from</span> time <span class="im">import</span> time</span>
+<span id="cb25-370"><a href="#cb25-370"></a></span>
+<span id="cb25-371"><a href="#cb25-371"></a><span class="kw">def</span> timer(func, x, y):</span>
+<span id="cb25-372"><a href="#cb25-372"></a>    before <span class="op">=</span> time()</span>
+<span id="cb25-373"><a href="#cb25-373"></a>    rv <span class="op">=</span> func(x,y)</span>
+<span id="cb25-374"><a href="#cb25-374"></a>    after <span class="op">=</span> time()</span>
+<span id="cb25-375"><a href="#cb25-375"></a>    <span class="bu">print</span>(<span class="st">'elapsed:'</span>, after <span class="op">-</span> before)</span>
+<span id="cb25-376"><a href="#cb25-376"></a>    <span class="cf">return</span> rv</span>
+<span id="cb25-377"><a href="#cb25-377"></a></span>
+<span id="cb25-378"><a href="#cb25-378"></a><span class="co"># and </span></span>
+<span id="cb25-379"><a href="#cb25-379"></a><span class="bu">print</span>(<span class="st">'add(20, 30)'</span>, timer(add, <span class="dv">20</span>, <span class="dv">30</span>))</span>
+<span id="cb25-380"><a href="#cb25-380"></a><span class="in">```</span></span>
+<span id="cb25-381"><a href="#cb25-381"></a></span>
+<span id="cb25-382"><a href="#cb25-382"></a>we can also wrapping like this, <span class="in">`timer()`</span> will return a function <span class="in">`f`</span>:</span>
+<span id="cb25-383"><a href="#cb25-383"></a></span>
+<span id="cb25-386"><a href="#cb25-386"></a><span class="in">```{python}</span></span>
+<span id="cb25-387"><a href="#cb25-387"></a><span class="co">#| eval: false</span></span>
+<span id="cb25-388"><a href="#cb25-388"></a><span class="im">from</span> time <span class="im">import</span> time</span>
+<span id="cb25-389"><a href="#cb25-389"></a></span>
+<span id="cb25-390"><a href="#cb25-390"></a><span class="kw">def</span> timer(func):</span>
+<span id="cb25-391"><a href="#cb25-391"></a>    <span class="kw">def</span> f(x, y<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb25-392"><a href="#cb25-392"></a>      before <span class="op">=</span> time()</span>
+<span id="cb25-393"><a href="#cb25-393"></a>      rv <span class="op">=</span> func(x,y)</span>
+<span id="cb25-394"><a href="#cb25-394"></a>      after <span class="op">=</span> time()</span>
+<span id="cb25-395"><a href="#cb25-395"></a>      <span class="bu">print</span>(<span class="st">'elapsed:'</span>, after <span class="op">-</span> before)</span>
+<span id="cb25-396"><a href="#cb25-396"></a>      <span class="cf">return</span> rv</span>
+<span id="cb25-397"><a href="#cb25-397"></a>    <span class="cf">return</span> f</span>
+<span id="cb25-398"><a href="#cb25-398"></a></span>
+<span id="cb25-399"><a href="#cb25-399"></a><span class="co"># and </span></span>
+<span id="cb25-400"><a href="#cb25-400"></a>add <span class="op">=</span> timer(add)</span>
+<span id="cb25-401"><a href="#cb25-401"></a><span class="bu">print</span>(<span class="st">'add(20, 30)'</span>, add(<span class="dv">20</span>, <span class="dv">30</span>))</span>
+<span id="cb25-402"><a href="#cb25-402"></a><span class="in">```</span></span>
+<span id="cb25-403"><a href="#cb25-403"></a></span>
+<span id="cb25-404"><a href="#cb25-404"></a>Python provides a syntax for easily implement every behaviours of <span class="in">`timer()`</span> to every function:</span>
+<span id="cb25-405"><a href="#cb25-405"></a></span>
+<span id="cb25-408"><a href="#cb25-408"></a><span class="in">```{python}</span></span>
+<span id="cb25-409"><a href="#cb25-409"></a><span class="co">#| eval: false</span></span>
+<span id="cb25-410"><a href="#cb25-410"></a><span class="at">@timer</span></span>
+<span id="cb25-411"><a href="#cb25-411"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb25-412"><a href="#cb25-412"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
+<span id="cb25-413"><a href="#cb25-413"></a></span>
+<span id="cb25-414"><a href="#cb25-414"></a><span class="bu">print</span>(<span class="st">'add(20, 30)'</span>, add(<span class="dv">20</span>, <span class="dv">30</span>))</span>
+<span id="cb25-415"><a href="#cb25-415"></a><span class="in">```</span></span>
+<span id="cb25-416"><a href="#cb25-416"></a></span>
+<span id="cb25-417"><a href="#cb25-417"></a>:::{.callout-note}</span>
+<span id="cb25-418"><a href="#cb25-418"></a>Fundamentally it's about allowing you to take this wrapping behavior for functions and to wrap wide swathes of functions in one fashion without having to rewrite a lot of user code or having to even perform a lot of turn on your library code.</span>
+<span id="cb25-419"><a href="#cb25-419"></a>:::</span>
+<span id="cb25-420"><a href="#cb25-420"></a></span>
+<span id="cb25-421"><a href="#cb25-421"></a>another example when we want a function to run n-times:</span>
+<span id="cb25-422"><a href="#cb25-422"></a></span>
+<span id="cb25-425"><a href="#cb25-425"></a><span class="in">```{python}</span></span>
+<span id="cb25-426"><a href="#cb25-426"></a>n <span class="op">=</span> <span class="dv">2</span> <span class="co"># let's say 2 times</span></span>
+<span id="cb25-427"><a href="#cb25-427"></a></span>
+<span id="cb25-428"><a href="#cb25-428"></a><span class="kw">def</span> ntimes(f):</span>
+<span id="cb25-429"><a href="#cb25-429"></a>  <span class="kw">def</span> wrapper(<span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
+<span id="cb25-430"><a href="#cb25-430"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n):</span>
+<span id="cb25-431"><a href="#cb25-431"></a>      <span class="bu">print</span>(<span class="st">'running {.__name__}'</span>.<span class="bu">format</span>(f))</span>
+<span id="cb25-432"><a href="#cb25-432"></a>      rv <span class="op">=</span> f(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span>
+<span id="cb25-433"><a href="#cb25-433"></a>    <span class="cf">return</span> rv</span>
+<span id="cb25-434"><a href="#cb25-434"></a>  <span class="cf">return</span> wrapper</span>
+<span id="cb25-435"><a href="#cb25-435"></a>    </span>
+<span id="cb25-436"><a href="#cb25-436"></a><span class="at">@ntimes</span></span>
+<span id="cb25-437"><a href="#cb25-437"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb25-438"><a href="#cb25-438"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
+<span id="cb25-439"><a href="#cb25-439"></a></span>
+<span id="cb25-440"><a href="#cb25-440"></a>add(<span class="dv">10</span>, <span class="dv">20</span>)</span>
+<span id="cb25-441"><a href="#cb25-441"></a><span class="in">```</span></span>
+<span id="cb25-442"><a href="#cb25-442"></a></span>
+<span id="cb25-443"><a href="#cb25-443"></a>wrapp <span class="in">`n`</span> in to the function so <span class="in">`ntimes()`</span> takes <span class="in">`n`</span> instead of <span class="in">`f`</span> as arg:</span>
+<span id="cb25-444"><a href="#cb25-444"></a></span>
+<span id="cb25-447"><a href="#cb25-447"></a><span class="in">```{python}</span></span>
+<span id="cb25-448"><a href="#cb25-448"></a><span class="co"># high order decorators</span></span>
+<span id="cb25-449"><a href="#cb25-449"></a><span class="kw">def</span> ntimes(n):</span>
+<span id="cb25-450"><a href="#cb25-450"></a>  <span class="kw">def</span> inner(f):</span>
+<span id="cb25-451"><a href="#cb25-451"></a>    <span class="kw">def</span> wrapper(<span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
+<span id="cb25-452"><a href="#cb25-452"></a>      <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n):</span>
+<span id="cb25-453"><a href="#cb25-453"></a>        <span class="bu">print</span>(<span class="st">'running {.__name__}'</span>.<span class="bu">format</span>(f))</span>
+<span id="cb25-454"><a href="#cb25-454"></a>        rv <span class="op">=</span> f(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span>
+<span id="cb25-455"><a href="#cb25-455"></a>      <span class="cf">return</span> rv</span>
+<span id="cb25-456"><a href="#cb25-456"></a>    <span class="cf">return</span> wrapper</span>
+<span id="cb25-457"><a href="#cb25-457"></a>  <span class="cf">return</span> inner</span>
+<span id="cb25-458"><a href="#cb25-458"></a>    </span>
+<span id="cb25-459"><a href="#cb25-459"></a><span class="at">@ntimes</span>(<span class="dv">3</span>)</span>
+<span id="cb25-460"><a href="#cb25-460"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb25-461"><a href="#cb25-461"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
+<span id="cb25-462"><a href="#cb25-462"></a></span>
+<span id="cb25-463"><a href="#cb25-463"></a>add(<span class="dv">10</span>, <span class="dv">20</span>)</span>
+<span id="cb25-464"><a href="#cb25-464"></a><span class="in">```</span></span>
+<span id="cb25-465"><a href="#cb25-465"></a></span>
+<span id="cb25-466"><a href="#cb25-466"></a>There is a very important core concept that is hidden in here which is what you might call the **closure object duality**. it's not something that we have time to look at in this session.</span>
+<span id="cb25-467"><a href="#cb25-467"></a></span>
+<span id="cb25-468"><a href="#cb25-468"></a></span>
+<span id="cb25-469"><a href="#cb25-469"></a></span>
+<span id="cb25-470"><a href="#cb25-470"></a><span class="fu"># generator</span></span>
+<span id="cb25-471"><a href="#cb25-471"></a></span>
+<span id="cb25-472"><a href="#cb25-472"></a><span class="fu"># context manager</span></span>
+<span id="cb25-473"><a href="#cb25-473"></a></span>
+<span id="cb25-474"><a href="#cb25-474"></a><span class="fu"># summary</span></span>
+<span id="cb25-475"><a href="#cb25-475"></a></span>
+<span id="cb25-476"><a href="#cb25-476"></a><span class="fu"># futher reading</span></span>
+<span id="cb25-477"><a href="#cb25-477"></a></span>
+<span id="cb25-478"><a href="#cb25-478"></a><span class="ss">1. </span><span class="co">[</span><span class="ot">Python data model</span><span class="co">](https://docs.python.org/3/reference/datamodel.html)</span></span>
+<span id="cb25-479"><a href="#cb25-479"></a><span class="ss">2. </span><span class="co">[</span><span class="ot">Python metaclass `__new__`</span><span class="co">](https://www.geeksforgeeks.org/python-metaclass-__new__-method/)</span></span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2024 Le Khac Tuan</span></p>
+</div>   
+    <div class="nav-footer-center">
+<p><span class="faux-block">Designed with <i class="fa-solid fa-heart" aria-label="heart"></i></span></p>
+</div>
+    <div class="nav-footer-right">
+<p><span class="faux-block">Made with <a href="https://quarto.org/">Quarto</a></span> <span class="faux-block"><a href="https://github.com/lktuan/lktuan.github.io">View the source at <i class="fa-brands fa-github" aria-label="github"></i> GitHub</a></span></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

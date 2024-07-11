@@ -250,11 +250,11 @@ When the user imports a script, **Python runs the script**. That's the way all t
 A Python module (any `.py` script) might contain code that we want to run, as well as code that we only want to import. To separate these, we use this trick:
 
 ```bash
- ie-titanic-utils  get-content -Tail 2 .\str_utils.py
+ ie-titanic-utils  get-content -Tail 2 .str_utils.py
 if __name__ == "__main__":
     print(tokenize("hello, world!"))
 
- ie-titanic-utils  python .\str_utils.py # The `print` runs
+ ie-titanic-utils  python .str_utils.py # The `print` runs
 ['hello,', 'world!']
 
  ie-titanic-utils  python
@@ -267,10 +267,10 @@ if __name__ == "__main__":
 :::{.callout-tip}
 Here is what Claude sonnet 3.5 gave me:
 
-To separate code that we want to run directly from code that we only want to import, we should use the if \_\_name\_\_ == "\_\_main\_\_": idiom in Python. This is a common pattern that allows a Python script to be both importable and executable. Here's an explanation:
+To separate code that we want to run directly from code that we only want to import, we should use the if `__name__ == "__main__"`: idiom in Python. This is a common pattern that allows a Python script to be both importable and executable. Here's an explanation:
 
-1. When a Python file is run directly, Python sets the special \_\_name\_\_ variable to "\_\_main\_\_".
-2. When a Python file is imported as a module, \_\_name\_\_ is set to the name of the module.
+1. When a Python file is run directly, Python sets the special `__name__` variable to "`__main__`".
+2. When a Python file is imported as a module,` __name__ `is set to the name of the module.
 
 By using this idiom, we can control which code runs when the script is executed directly versus when it's imported as a module.
 :::
@@ -282,11 +282,13 @@ By using this idiom, we can control which code runs when the script is executed 
 :::{layout-ncol="1"}
 ![stolen from the lecture](https://raw.githubusercontent.com/astrojuanlu/ie-mbd-advanced-python/e2224276f91529280ebfcd42ddc7dc22cf0d2010/img/python_comrades.png)
 :::
+
 > Simple is better than complex.
 > 
 > Complex is better than complicated.
 
 How do people install and upgrade Python? -> Most of people choose Python.org, the same for me!
+
 :::{.callout-caution}
 This way ships a tool to create development environments (`venv`). However, `venv` cannot create environments with different Python versions (you're tied to the one you downloaded) and certain packages will require extra steps to be installed. Therefore, it **is not** for everyone.
 :::
@@ -366,7 +368,7 @@ __version__ = "0.1.0"
 
 ```bash
  ie-titanic-utils  pip install .
-Processing .\ie-titanic-utils
+Processing .ie-titanic-utils
 ...
 Successfully installed ie_titanic_utils-0.1.0
  ie-titanic-utils  python
@@ -409,7 +411,7 @@ Now if I log the git, I will see this:
 ```bash
  ie-titanic-utils  git log --graph --oneline --decorate --all
 *   39105c7 (HEAD -> master) Merge branch 'first_module'
-|\
+|
 | * 7a33844 initial very first module
 |/
 * 793bd67 initial commit
@@ -457,7 +459,7 @@ requires = [
 We might want to specify *optional* dependencies that should only be installed upon request, or for some specific purposes. A typical example will be development dependencies: we will need things like `pytest` and `black`, but we don't want the user to install them as part as our library. To do that, we can specify *groups* of optional dependencies under the `tool.flit.metadata.requires-extra` section:
 
 ```md
-# In my case, I use `project.optional-dependencies`: flit_core.config.ConfigError: Use [project] table for metadata or [tool.flit.metadata], not both.
+In my case, I use `project.optional-dependencies`: flit_core.config.ConfigError: Use [project] table for metadata or [tool.flit.metadata], not both.
 [project.optional-dependencies]
 dev = [
     "pytest>=6.0",
@@ -523,12 +525,12 @@ and we run it from the command line:
  ie-titanic-utils  pytest
 ============================================================================================ test session starts ============================================================================================
 platform win32 -- Python 3.11.4, pytest-8.2.2, pluggy-1.5.0
-rootdir: .\ie-titanic-utils
+rootdir: .ie-titanic-utils
 configfile: pyproject.toml
 plugins: anyio-3.7.1, time-machine-2.14.0
 collected 1 item
 
-tests\test_tokenize.py .                                                                                                                                                                               [100%] 
+teststest_tokenize.py .                                                                                                                                                                               [100%] 
 
 ============================================================================================= 1 passed in 0.02s ============================================================================================= 
 ```
