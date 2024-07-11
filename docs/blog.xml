@@ -10,7 +10,1224 @@
 <atom:link href="https://lktuan.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>I am a Risk Modeler 🚀</description>
 <generator>quarto-1.4.554</generator>
-<lastBuildDate>Sun, 07 Jul 2024 17:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 09 Jul 2024 17:00:00 GMT</lastBuildDate>
+<item>
+  <title>Recap: So you want to be a Python expert?</title>
+  <dc:creator>Tuan Le Khac</dc:creator>
+  <link>https://lktuan.github.io/blog/2024-07-10-expert-in-python/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>🔥 source: <a href="https://www.youtube.com/watch?v=cKPlPJyQrt4"><strong>James Powell: So you want to be a Python expert? | PyData Seattle 2017</strong></a></p>
+<section id="what-is-he-gonna-present" class="level1">
+<h1>what is he gonna present?</h1>
+<ul>
+<li>something deeply behind the Zen of Python;</li>
+<li>metaphors and programming in Python;</li>
+<li>python is scripting language;</li>
+<li>4 features of Python and the way experts would think about these features;</li>
+<li>a lot of fundamental details of how these feature work but very little talk about we can conceptualize these features in the broader sense of what they mean for modeling core problem;</li>
+<li>so 4 features you might have heared before and couple of the core mental models how you can think about, an how you can think about python as a whole, wrapping everything together;</li>
+<li>you will see me stumble to understand that in case you dont utd or dont have docs memorized, it’s alright, the target is to know what they are and what they mean;</li>
+<li>the talk presumes you to have a baseline of Python, but in case you a new to Python he believes there are cores you can take away.</li>
+</ul>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-07-10-expert-in-python/James Powell_ So you want to be a Python expert_ _ PyData Seattle 2017 5-37 screenshot.png" class="img-fluid figure-img"></p>
+<figcaption>James Powell on PyData Seattle 2017</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="data-model-protocol-or-dunder-method" class="level1">
+<h1>data model protocol (or dunder method)</h1>
+<p>assume we have a data model with Polinomial object intitially do nothing, why I need 4 lines (instead of 2 lines) to create 2 Polynominals. How can I create and assign coefficients together.</p>
+<div id="a63404a1" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> Polynomial:</span>
+<span id="cb1-2">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">pass</span></span>
+<span id="cb1-3">p1<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Polynomial()</span>
+<span id="cb1-4">p2<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Polynomial()</span>
+<span id="cb1-5">p1.coeffs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#  x^2 + 2x + 3</span></span>
+<span id="cb1-6">p2.coeffs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 3x^2 + 4x + 3</span></span></code></pre></div>
+</details>
+</div>
+<p>the answer is using a constructor <code>__init__</code>, then we can compact our code like this:</p>
+<div id="eacd30f8" class="cell" data-execution_count="2">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> Polynomial:</span>
+<span id="cb2-2">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>coeffs):</span>
+<span id="cb2-3">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.coeffs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> coeffs</span>
+<span id="cb2-4"></span>
+<span id="cb2-5">p1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Polynomial(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span> ) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#  x^2 + 2x + 3</span></span>
+<span id="cb2-6">p2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Polynomial(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span> ) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 3x^2 + 4x + 3</span></span></code></pre></div>
+</details>
+</div>
+<p>but if we print our objects in the terminal, they look so ugly. We miss the method that actually call <code>repr(obj)</code> when we run <code>obj</code>:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-07-10-expert-in-python/1_repr.png" class="img-fluid figure-img"></p>
+<figcaption>The need of <code>__repr__</code></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>that’s what <code>__repr__</code> for, a printable representation of the class:</p>
+<div id="559810b2" class="cell" data-execution_count="3">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> Polynomial:</span>
+<span id="cb3-2">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>coeffs):</span>
+<span id="cb3-3">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.coeffs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> coeffs</span>
+<span id="cb3-4"></span>
+<span id="cb3-5">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__repr__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb3-6">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Polynomial(*</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{!r}</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">)'</span>.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">format</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.coeffs)</span>
+<span id="cb3-7"></span>
+<span id="cb3-8"></span>
+<span id="cb3-9">p1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Polynomial(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#  x^2 + 2x + 3</span></span>
+<span id="cb3-10">p2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Polynomial(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 3x^2 + 4x + 3</span></span></code></pre></div>
+</details>
+</div>
+<p>the next thing we wanna do is to add Polinimials together <code>p1 + p2</code>.</p>
+<div id="f578a0fa" class="cell" data-execution_count="4">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__add__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, other):</span>
+<span id="cb4-2">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> Polynomial(<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>(x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> y <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> x, y <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">zip</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.coeffs, other.coeffs)))</span></code></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What is pattern here? I have some behaviours that I want to implement, and I write some <strong>underscore</strong> (<code>__x__</code>) funtions. We call them dunder or underscore methods.</p>
+<p>Try google “data model” and we’ll a bunch of documents that list all method to implement the principle behaviours of our objects. There are top-level functions of top-level syntaxes that corresponding to <code>__</code>.</p>
+<p>But there are smthg more fundamental here, when I want to:</p>
+<ul>
+<li>x + y -&gt; <code>__add__</code>;</li>
+<li>initialize x -&gt; <code>__init__</code>;</li>
+<li>repr(x) -&gt; <code>__repr__</code>.</li>
+</ul>
+<p>Then what if we want to implement the <code>len()</code> (return the length, which is popular know Python function) -&gt; naturally we’ll be thinking of <code>__len__</code>.</p>
+<div id="9f25c761" class="cell" data-execution_count="5">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__len__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb5-2">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.coeffs)</span></code></pre></div>
+</details>
+</div>
+</div>
+</div>
+<p>The Python data model is a means by which you can protocols. Thos protocols have abstract meaning depending on the object itself. We tight the behaviours to top-level <strong>syntaxes</strong> and <strong>functions</strong>.</p>
+<p>Similarly, if we do see the object Polynomial a executable, callable thing, we can implement a <code>__call__</code> which will turn our class to function, in this case we cant imagine such thing, so pass.</p>
+<p>✍ There are 3 core patterns we want to understand and remember in Python to really understand object orientation in Python:</p>
+<ol type="1">
+<li>The protocol view of Python;</li>
+<li>The buil-in inheritance protocol;</li>
+<li>Some caveats around how OOP in Python works.</li>
+</ol>
+<p>Which will be continue to present in this video is jumping into a very tricky metaphor a feature we may have heard of.</p>
+</section>
+<section id="meta-class" class="level1 page-columns page-full">
+<h1>meta class</h1>
+<p>imagine there are 2 groups working on some piece of software. one is core infrastructure of the group and they write <code>library</code> code, the other group is devloper group, they write <code>user</code> code. the developer use <code>library</code> code to accomplish actual business objectives. the core team less cares about business problem, they focus on technical stuffs.</p>
+<p>you are in the dev team and there is no way to change to code of <code>library.py</code>. in what circumstance the code of <code>user</code> can break -&gt; there is no <code>foo</code> method! To avoid that, we could simply write a test that call <code>bar()</code>, then we could know if it fails before production environment’s runtime.</p>
+<p>is there anything simpler to know the ability to fail before hit run time in production env? -&gt; use <code>assert</code> to check existence of the attribute. we will have an early warning right before the class was initiated.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-07-10-expert-in-python/2_assert.png" class="img-fluid figure-img"></p>
+<figcaption>we can know if the core team change the function name to “food”</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>by this way we are enforcing constraints on the base class from the derived class.</p>
+<p>now we move to a reverse situation, you are the core structure writer and have to deal with the meathead in the business unit that actually using/abusing/missusing your code ~ you have no idea what are they doing. you write the <code>Base</code> class with the assumption and some responsible developer in the BU will go and implement the <code>bar</code> method.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-07-10-expert-in-python/3_reverse_sit.png" class="img-fluid figure-img"></p>
+<figcaption>what if you stand on the left side pane</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>you have no ability to change and even have no idea where the code on the right pane sit. we can not use <code>hasattr()</code> for this particular situation. the first method is to use <code>try ... catch ...</code>, but it only catches in runtime and we will miss catching it before it goes to production env.</p>
+<div class="{callout-note}">
+<p>The reason that we could call Python a <strong>protocol orientated language</strong> is not just because the Python data model the object model is protocol orientated but that the entire Python language itself has a notion of hooks and protocols and safety valves within it.</p>
+<p>Python is much much simpler language, the code run linearly from top to bottom. And the class statement in Python is actually an executable code. We can write this:</p>
+<div id="97fa423d" class="cell" data-execution_count="6">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> _ <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>):</span>
+<span id="cb6-2">  <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> Base: <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">pass</span></span>
+<span id="cb6-3"></span>
+<span id="cb6-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># or the same thing in other way</span></span>
+<span id="cb6-5"></span>
+<span id="cb6-6"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> Base:</span>
+<span id="cb6-7">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> _ <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>):</span>
+<span id="cb6-8">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> bar(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb6-9">      <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bar'</span></span></code></pre></div>
+</details>
+</div>
+<p>Only the last one will survive. Python accepts this syntax because it’s class is <strong>fundamentally executable</strong>.</p>
+</div>
+<p>Let’s get into something more interesting! create a class inside a function and use a function in a module in standard libbrary in Python called <code>dis</code>.</p>
+<div id="d2a57c11" class="cell" data-execution_count="7">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># create a class inside a function</span></span>
+<span id="cb7-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> _():</span>
+<span id="cb7-3">  <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> Base:</span>
+<span id="cb7-4">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">pass</span></span>
+<span id="cb7-5"></span>
+<span id="cb7-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># dis stands for disassemble</span></span>
+<span id="cb7-7"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> dis <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> dis</span></code></pre></div>
+</details>
+</div>
+<p>let’s ‘dis’ - stands for disassemble - to see what happen in the bytecode. there are actually things in Python bytecode call <code>LOAD_BUILD_CLASS</code>, it’s actual executable runtime instruction in the Python interpreter for create a class.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-07-10-expert-in-python/4_dis.png" class="img-fluid figure-img"></p>
+<figcaption>disassemble</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>at the first section of this lecture, we saw some <strong>correspondence</strong> between top-level syntac or function AND some underscore method that implements that syntax or function. there should be also top-level mechanism, not explicitly syntax or function, with the process of building a class. there is a build-ins function called <code>__build_class__</code>.</p>
+<div id="595604df" class="cell" data-execution_count="8">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1">old_bc <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> __build_class__</span>
+<span id="cb8-2"></span>
+<span id="cb8-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> my_bc(func, name, base<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span>kw):</span>
+<span id="cb8-4">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> base <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">is</span> Base:</span>
+<span id="cb8-5">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'check if the bar method is defined'</span>)</span>
+<span id="cb8-6">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> base <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">is</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>:</span>
+<span id="cb8-7">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> old_bc(func, name, base, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span>kw)</span>
+<span id="cb8-8">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> old_bc(func, name, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span>kw)</span>
+<span id="cb8-9"></span>
+<span id="cb8-10"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> builtins</span>
+<span id="cb8-11">builtins.__build_class__ <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> my_bc</span></code></pre></div>
+</details>
+</div>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-07-10-expert-in-python/5_build_class.png" class="img-fluid figure-img"></p>
+<figcaption><code>__build_class__</code>, we can check if the <code>bar</code> method is implemented, Python is <strong>protocal oriented language</strong>!</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>It’s actually quite a common pattern and quite a fundamental piece of Python almost everything that a Python language does in an execution context like building classes, creating functions, importing modules you can find a way to <strong>hook</strong> into that. once you can find a way to hook into that you can start doing things that you want to do like check is my user code going to break from the perspective the library author.</p>
+<p>The most important thing here is <strong>understanding existence of this pattern</strong>, knowing that there are options solving such problem, and there are even better approachs.</p>
+<section id="there-are-2-fundamental-ways-that-people-ussually-use-to-solve-this" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="there-are-2-fundamental-ways-that-people-ussually-use-to-solve-this">There are 2 fundamental ways that people ussually use to solve this</h2>
+<section id="meta-class-1" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="meta-class-1">1. meta class</h3>
+<div class="page-columns page-full"><p></p><div class="no-row-height column-margin column-container"><span class="margin-aside"><a href="https://stackoverflow.com/questions/395982/metaclass-new-cls-and-super-what-is-the-mechanism-exactly">futher discussion</a></span></div></div>
+<div id="ccdb9cd9" class="cell" data-execution_count="9">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># meta classes are merely derived from `type`</span></span>
+<span id="cb9-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> BaseMeta(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">type</span>):</span>
+<span id="cb9-3">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__new__</span>(cls, name, bases, namespace):</span>
+<span id="cb9-4">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'BaseMeta.__new__'</span>, cls, name, bases, namespace)</span>
+<span id="cb9-5">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Base'</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">and</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bar'</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> namespace:</span>
+<span id="cb9-6">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">raise</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">TypeError</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Bad User class, 'bar' is not defined"</span>)</span>
+<span id="cb9-7">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">super</span>().<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__new__</span>(cls, name, bases, namespace)</span>
+<span id="cb9-8"></span>
+<span id="cb9-9"></span>
+<span id="cb9-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># then our Base should be derived from BaseMeta</span></span>
+<span id="cb9-11"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> Base(metaclass<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>BaseMeta):</span>
+<span id="cb9-12">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> foo(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb9-13">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.bar()</span></code></pre></div>
+</details>
+</div>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-07-10-expert-in-python/6_meta_class.png" class="img-fluid figure-img"></p>
+<figcaption>metaclass</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>That’s it! you can control, constraint the derived class from the base class in class hierachy.</p>
+</section>
+<section id="init_subclass__" class="level3">
+<h3 class="anchored" data-anchor-id="init_subclass__">2. <code>__init_subclass__</code></h3>
+<p>We can implement <code>Base</code> like this:</p>
+<div id="8fdcd750" class="cell" data-execution_count="10">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> Base():</span>
+<span id="cb10-2">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> foo(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb10-3">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.bar()</span>
+<span id="cb10-4"></span>
+<span id="cb10-5">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init_subclass__</span>(cls, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span>kwargs):</span>
+<span id="cb10-6">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"init subclass"</span>, cls.__dict__, kwargs)</span>
+<span id="cb10-7">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bar'</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> cls.__dict__:</span>
+<span id="cb10-8">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">raise</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">TypeError</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Bad sub class"</span>)</span>
+<span id="cb10-9">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">super</span>().<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init_subclass__</span>(<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span>kwargs)</span></code></pre></div>
+</details>
+</div>
+</section>
+</section>
+</section>
+<section id="decorator" class="level1">
+<h1>decorator</h1>
+<p>We would have met pattern like this, that’s is decorator:</p>
+<div id="edfb0090" class="cell" data-execution_count="11">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@dec</span> </span>
+<span id="cb11-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> f():</span>
+<span id="cb11-3">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">pass</span></span></code></pre></div>
+</details>
+</div>
+<p>Python is a live language, there is no separate step that turns function definitions into bags of a set bits tagged and some elf binary or some <a href="https://en.wikipedia.org/wiki/Portable_Executable">PE</a> binary somewhere. That a function definition is actually a live thing, it actually runs at runtime, there’s actually executable code associated with this def <code>f()</code>.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-07-10-expert-in-python/7_interact_with_object.png" class="img-fluid figure-img"></p>
+<figcaption>we can interact with our object as Python is a live language, the function itself is a runtime object</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>That every Python structure that you interact with whether it’s an object or a function or a generator has some <strong>runtime life</strong>, has some <strong>runtime existence</strong> you can see it in memory, you can ask it questions like what module UI were you defined in. you can even ask it very useful questions like if you use the inspect module you can say what’s your source code.</p>
+<div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;"></span> decorators  python <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-i</span> .<span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\d</span>eco.py</span>
+<span id="cb12-2"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span> from <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">inspect</span> import getsource</span>
+<span id="cb12-3"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span> getsource<span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">add</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb12-4"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'def add(a, b=10):\n    return a + b\n'</span></span>
+<span id="cb12-5"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span> print<span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">getsource</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">add</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">))</span></span>
+<span id="cb12-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">def</span> add<span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">(</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">a,</span> b=10<span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">)</span><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb12-7">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">a</span> + b </span>
+<span id="cb12-8"></span>
+<span id="cb12-9"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;&gt;</span> </span></code></pre></div>
+<p>now let’s say I want to calculate how much time does it take to perform the <code>add</code>. simply we would thinking about <code>time</code>, like this:</p>
+<div id="3bc36d3c" class="cell" data-execution_count="12">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> time <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> time</span>
+<span id="cb13-2"></span>
+<span id="cb13-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> add(a, b<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>):</span>
+<span id="cb13-4">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> a <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> b</span>
+<span id="cb13-5"> </span>
+<span id="cb13-6">before <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> time()</span>
+<span id="cb13-7"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'add(10)'</span>, add(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>))</span>
+<span id="cb13-8">after <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> time()</span>
+<span id="cb13-9"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'time_taken'</span>, after <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> before)</span>
+<span id="cb13-10"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'add(20, 30)'</span>, add(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">30</span>))</span>
+<span id="cb13-11">after <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> time()</span>
+<span id="cb13-12"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'time_taken'</span>, after <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> before)</span>
+<span id="cb13-13"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'add("a", "b")'</span>, add(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"a"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"b"</span>))</span>
+<span id="cb13-14">after <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> time()</span>
+<span id="cb13-15"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'time_taken'</span>, after <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> before)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>add(10) 20
+time_taken 0.0
+add(20, 30) 50
+time_taken 0.0
+add("a", "b") ab
+time_taken 0.0</code></pre>
+</div>
+</div>
+<p>there is something wrong here because we need to add code to everywhere we want to calculate. we see another important pattern in Python, decorator, the Python developers want you to write the simplest, stupidest, quickest thing to get the job done and get the rest of your day with your family.</p>
+<p>we will see alot of scenarios where of cases where you can write the simple and stupidest thing to get the job done and when the task at hand becomes harder or more complex or the requirements change you can change your code in a very simple fashion to linearly extend its functionality without have to re-write it from scratch.</p>
+<p>in Python we’ll see a number of different features are orientated around how do we write the simplest thing today and then when the problem gets a little bit harder we have an avenue for making our code a little bit more complex.</p>
+<p>we can modified a <code>add</code> alittle bit</p>
+<div id="2f6e6ca5" class="cell" data-execution_count="13">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> time <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> time</span>
+<span id="cb15-2"></span>
+<span id="cb15-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> add(a, b<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>):</span>
+<span id="cb15-4">    before <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> time()</span>
+<span id="cb15-5">    rv <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> a <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> b</span>
+<span id="cb15-6">    after <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> time()</span>
+<span id="cb15-7">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'elapsed:'</span>, after <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> before)</span>
+<span id="cb15-8">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> rv</span></code></pre></div>
+</details>
+</div>
+<p>But if we have more functions, let say <code>sub</code>? We need to modify and make our code complicated. <strong>Python is live language</strong> that everything has some runtime representaion. We can create <code>timer()</code> which take <code>func</code>, <code>x</code>, and <code>y</code> as arguments (<code>x</code> and <code>y</code> will be forwarded to calculation function)</p>
+<div id="d3e6dcb7" class="cell" data-execution_count="14">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> time <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> time</span>
+<span id="cb16-2"></span>
+<span id="cb16-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> timer(func, x, y):</span>
+<span id="cb16-4">    before <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> time()</span>
+<span id="cb16-5">    rv <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> func(x,y)</span>
+<span id="cb16-6">    after <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> time()</span>
+<span id="cb16-7">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'elapsed:'</span>, after <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> before)</span>
+<span id="cb16-8">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> rv</span>
+<span id="cb16-9"></span>
+<span id="cb16-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># and </span></span>
+<span id="cb16-11"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'add(20, 30)'</span>, timer(add, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">30</span>))</span></code></pre></div>
+</details>
+</div>
+<p>we can also wrapping like this, <code>timer()</code> will return a function <code>f</code>:</p>
+<div id="2ff12e9a" class="cell" data-execution_count="15">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> time <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> time</span>
+<span id="cb17-2"></span>
+<span id="cb17-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> timer(func):</span>
+<span id="cb17-4">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> f(x, y<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>):</span>
+<span id="cb17-5">      before <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> time()</span>
+<span id="cb17-6">      rv <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> func(x,y)</span>
+<span id="cb17-7">      after <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> time()</span>
+<span id="cb17-8">      <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'elapsed:'</span>, after <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> before)</span>
+<span id="cb17-9">      <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> rv</span>
+<span id="cb17-10">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> f</span>
+<span id="cb17-11"></span>
+<span id="cb17-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># and </span></span>
+<span id="cb17-13">add <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> timer(add)</span>
+<span id="cb17-14"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'add(20, 30)'</span>, add(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">30</span>))</span></code></pre></div>
+</details>
+</div>
+<p>Python provides a syntax for easily implement every behaviours of <code>timer()</code> to every function:</p>
+<div id="cbed9524" class="cell" data-execution_count="16">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@timer</span></span>
+<span id="cb18-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> add(a, b<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>):</span>
+<span id="cb18-3">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> a <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> b</span>
+<span id="cb18-4"></span>
+<span id="cb18-5"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'add(20, 30)'</span>, add(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">30</span>))</span></code></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Fundamentally it’s about allowing you to take this wrapping behavior for functions and to wrap wide swathes of functions in one fashion without having to rewrite a lot of user code or having to even perform a lot of turn on your library code.</p>
+</div>
+</div>
+<p>another example when we want a function to run n-times:</p>
+<div id="25fcf462" class="cell" data-execution_count="17">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1">n <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># let's say 2 times</span></span>
+<span id="cb19-2"></span>
+<span id="cb19-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> ntimes(f):</span>
+<span id="cb19-4">  <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> wrapper(<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>args, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span>kwargs):</span>
+<span id="cb19-5">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> _ <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(n):</span>
+<span id="cb19-6">      <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'running {.__name__}'</span>.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">format</span>(f))</span>
+<span id="cb19-7">      rv <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> f(<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>args, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span>kwargs)</span>
+<span id="cb19-8">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> rv</span>
+<span id="cb19-9">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> wrapper</span>
+<span id="cb19-10">    </span>
+<span id="cb19-11"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@ntimes</span></span>
+<span id="cb19-12"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> add(a, b<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>):</span>
+<span id="cb19-13">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> a <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> b</span>
+<span id="cb19-14"></span>
+<span id="cb19-15">add(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>running add
+running add</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>30</code></pre>
+</div>
+</div>
+<p>wrapp <code>n</code> in to the function so <code>ntimes()</code> takes <code>n</code> instead of <code>f</code> as arg:</p>
+<div id="e09e7e75" class="cell" data-execution_count="18">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># high order decorators</span></span>
+<span id="cb22-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> ntimes(n):</span>
+<span id="cb22-3">  <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> inner(f):</span>
+<span id="cb22-4">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> wrapper(<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>args, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span>kwargs):</span>
+<span id="cb22-5">      <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> _ <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(n):</span>
+<span id="cb22-6">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'running {.__name__}'</span>.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">format</span>(f))</span>
+<span id="cb22-7">        rv <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> f(<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>args, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span>kwargs)</span>
+<span id="cb22-8">      <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> rv</span>
+<span id="cb22-9">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> wrapper</span>
+<span id="cb22-10">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> inner</span>
+<span id="cb22-11">    </span>
+<span id="cb22-12"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@ntimes</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)</span>
+<span id="cb22-13"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> add(a, b<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>):</span>
+<span id="cb22-14">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> a <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> b</span>
+<span id="cb22-15"></span>
+<span id="cb22-16">add(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>running add
+running add
+running add</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>30</code></pre>
+</div>
+</div>
+<p>There is a very important core concept that is hidden in here which is what you might call the <strong>closure object duality</strong>. it’s not something that we have time to look at in this session.</p>
+</section>
+<section id="generator" class="level1">
+<h1>generator</h1>
+</section>
+<section id="context-manager" class="level1">
+<h1>context manager</h1>
+</section>
+<section id="summary" class="level1">
+<h1>summary</h1>
+</section>
+<section id="futher-reading" class="level1">
+<h1>futher reading</h1>
+<ol type="1">
+<li><a href="https://docs.python.org/3/reference/datamodel.html">Python data model</a></li>
+<li><a href="https://www.geeksforgeeks.org/python-metaclass-__new__-method/">Python metaclass <code>__new__</code></a></li>
+</ol>
+
+
+<!-- -->
+
+</section>
+
+ ]]></description>
+  <category>python</category>
+  <category>pydata</category>
+  <guid>https://lktuan.github.io/blog/2024-07-10-expert-in-python/</guid>
+  <pubDate>Tue, 09 Jul 2024 17:00:00 GMT</pubDate>
+  <media:content url="https://lktuan.github.io/blog/2024-07-10-expert-in-python/pydata-logo-final.png" medium="image" type="image/png" height="60" width="144"/>
+</item>
 <item>
   <title>A lesson of advanced python from Juan Rodríguez</title>
   <dc:creator>Tuan Le Khac</dc:creator>
@@ -371,7 +1588,7 @@ font-style: inherit;">&gt;&gt;&gt;</span></span></code></pre></div>
 <section id="the-pythonpath" class="level2">
 <h2 class="anchored" data-anchor-id="the-pythonpath">the <code>PYTHONPATH</code></h2>
 <p>We saw above that we could easily import our <code>tokenize</code> function. However, this only works if we are in the same directory. Why? Python looks in some predefined locations to know where to find what we want to import, called the “PATH”.</p>
-<div id="fadd9714" class="cell" data-execution_count="1">
+<div id="3a236e54" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="im" style="color: #00769E;
@@ -388,7 +1605,7 @@ font-style: inherit;"># i will not execute this code</span></span></code></pre><
 <li>Put our code inside a location predefined in the “PATH”</li>
 </ol>
 <p>The first option can be achieved like this:</p>
-<div id="879bab61" class="cell" data-execution_count="2">
+<div id="6c38e56d" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="op" style="color: #5E5E5E;
@@ -458,9 +1675,7 @@ font-style: inherit;">&gt;&gt;&gt;</span> </span></code></pre></div>
 background-color: null;
 font-style: inherit;"></span> ie-titanic-utils  get-content <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">-Tail</span> 2 .<span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\s</span>tr_utils.py</span>
+font-style: inherit;">-Tail</span> 2 .str_utils.py</span>
 <span id="cb7-2"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> <span class="ex" style="color: null;
@@ -484,9 +1699,7 @@ font-style: inherit;">))</span></span>
 <span id="cb7-4"></span>
 <span id="cb7-5"><span class="ex" style="color: null;
 background-color: null;
-font-style: inherit;"></span> ie-titanic-utils  python .<span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\s</span>tr_utils.py <span class="co" style="color: #5E5E5E;
+font-style: inherit;"></span> ie-titanic-utils  python .str_utils.py <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># The `print` runs</span></span>
 <span id="cb7-6"><span class="ex" style="color: null;
@@ -541,10 +1754,10 @@ Tip
 </div>
 <div class="callout-body-container callout-body">
 <p>Here is what Claude sonnet 3.5 gave me:</p>
-<p>To separate code that we want to run directly from code that we only want to import, we should use the if __name__ == “__main__”: idiom in Python. This is a common pattern that allows a Python script to be both importable and executable. Here’s an explanation:</p>
+<p>To separate code that we want to run directly from code that we only want to import, we should use the if <code>__name__ == "__main__"</code>: idiom in Python. This is a common pattern that allows a Python script to be both importable and executable. Here’s an explanation:</p>
 <ol type="1">
-<li>When a Python file is run directly, Python sets the special __name__ variable to “__main__”.</li>
-<li>When a Python file is imported as a module, __name__ is set to the name of the module.</li>
+<li>When a Python file is run directly, Python sets the special <code>__name__</code> variable to “<code>__main__</code>”.</li>
+<li>When a Python file is imported as a module,<code>__name__</code>is set to the name of the module.</li>
 </ol>
 <p>By using this idiom, we can control which code runs when the script is executed directly versus when it’s imported as a module.</p>
 </div>
@@ -574,7 +1787,20 @@ Tip
 <p>Simple is better than complex.</p>
 <p>Complex is better than complicated.</p>
 </blockquote>
-<p>How do people install and upgrade Python? -&gt; Most of people choose Python.org, the same for me! :::{.callout-caution} This way ships a tool to create development environments (<code>venv</code>). However, <code>venv</code> cannot create environments with different Python versions (you’re tied to the one you downloaded) and certain packages will require extra steps to be installed. Therefore, it <strong>is not</strong> for everyone. :::</p>
+<p>How do people install and upgrade Python? -&gt; Most of people choose Python.org, the same for me!</p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This way ships a tool to create development environments (<code>venv</code>). However, <code>venv</code> cannot create environments with different Python versions (you’re tied to the one you downloaded) and certain packages will require extra steps to be installed. Therefore, it <strong>is not</strong> for everyone.</p>
+</div>
+</div>
 <p>Juan chose to use <code>conda</code>. As I am learning Docker, I choose Docker for this tutorial.</p>
 <p>How do people create isolated development environments? -&gt; The most popular is <code>Virtualenv</code>. But normally when doing an analysis task, I use <code>venv</code> which is built-in python lib. Recently I followed my dev team to use <code>pipenv</code>, I do also see <code>poetry</code> is worth-learning approach.</p>
 <blockquote class="blockquote">
@@ -738,9 +1964,7 @@ background-color: null;
 font-style: inherit;"></span> ie-titanic-utils  pip install .</span>
 <span id="cb11-2"><span class="ex" style="color: null;
 background-color: null;
-font-style: inherit;">Processing</span> .<span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\i</span>e-titanic-utils</span>
+font-style: inherit;">Processing</span> .ie-titanic-utils</span>
 <span id="cb11-3"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">...</span></span>
@@ -917,9 +2141,7 @@ background-color: null;
 font-style: inherit;">'first_module'</span></span>
 <span id="cb13-3"><span class="kw" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">|</span><span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
+font-style: inherit;">|</span></span>
 <span id="cb13-4"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">|</span> <span class="ex" style="color: null;
@@ -1003,9 +2225,21 @@ font-style: inherit;">]</span></span>
 <span id="cb14-18">    "matplotlib&gt;=2",</span>
 <span id="cb14-19">]</span></code></pre></div>
 <p>We might want to specify <em>optional</em> dependencies that should only be installed upon request, or for some specific purposes. A typical example will be development dependencies: we will need things like <code>pytest</code> and <code>black</code>, but we don’t want the user to install them as part as our library. To do that, we can specify <em>groups</em> of optional dependencies under the <code>tool.flit.metadata.requires-extra</code> section:</p>
-<div class="sourceCode" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode numberSource md number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode numberSource md number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb15-1">In my case, I use <span class="in" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># In my case, I use `project.optional-dependencies`: flit_core.config.ConfigError: Use [project] table for metadata or [tool.flit.metadata], not both.</span></span>
+font-style: inherit;">`project.optional-dependencies`</span>: flit_core.config.ConfigError: Use <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">project</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span> table for metadata or <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">tool.flit.metadata</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span>, not both.</span>
 <span id="cb15-2"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">[</span><span class="ot" style="color: #003B4F;
@@ -1127,9 +2361,7 @@ background-color: null;
 font-style: inherit;">--</span> Python 3.11.4, pytest-8.2.2, pluggy-1.5.0</span>
 <span id="cb18-4"><span class="ex" style="color: null;
 background-color: null;
-font-style: inherit;">rootdir:</span> .<span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\i</span>e-titanic-utils</span>
+font-style: inherit;">rootdir:</span> .ie-titanic-utils</span>
 <span id="cb18-5"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">configfile:</span> pyproject.toml</span>
@@ -1142,7 +2374,7 @@ font-style: inherit;">collected</span> 1 item</span>
 <span id="cb18-8"></span>
 <span id="cb18-9"><span class="ex" style="color: null;
 background-color: null;
-font-style: inherit;">tests\test_tokenize.py</span> .                                                                                                                                                                               <span class="pp" style="color: #AD0000;
+font-style: inherit;">teststest_tokenize.py</span> .                                                                                                                                                                               <span class="pp" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">[</span><span class="ss" style="color: #20794D;
 background-color: null;
@@ -13226,7 +14458,7 @@ font-style: inherit;">'blue'</span>)</span>
 <hr>
 <p>Lambda cho phép người dùng định nghĩa in-line functions. Việc sử dụng <code>lambda()</code> rất thuận tiện khi gọi lại (callback ~ một function được thực thi sau khi một function khác được thực thi; một cách lưu trữ function) hoặc khi đầu ra của một function là đối số cho một function khác.</p>
 <p>Hai hàm <code>square_fn</code> và <code>square_ld</code> dưới đây là một:</p>
-<div id="c965b38d" class="cell" data-execution_count="1">
+<div id="9888a1b5" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">def</span> square_fn(x):</span>
@@ -13260,7 +14492,7 @@ background-color: null;
 font-style: inherit;">==</span> square_ld(i)</span></code></pre></div>
 </div>
 <p><code>lambda</code> rất hữu ích khi sử dụng cùng với các function khác như <code>map</code>, <code>filter</code>, và <code>reduce</code> (mình rất hay sử dụng pattern này trên Excel 😂). <code>map(fn, interable)</code> sẽ apply hàm <code>fn</code> cho tất cả các phần tử trong <code>iterable</code> (như list, set, dict, tuple, string), trả về map object.</p>
-<div id="7834c243" class="cell" data-execution_count="2">
+<div id="122f7ae6" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1">nums <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> [<span class="dv" style="color: #AD0000;
@@ -13305,7 +14537,7 @@ font-style: inherit;">print</span>(nums_squared)</span></code></pre></div>
 </div>
 </div>
 <p>Dùng <code>map</code> và một hàm callback, cho ra kết quả tương đương:</p>
-<div id="8614c499" class="cell" data-execution_count="3">
+<div id="f82670d0" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1">nums_squared_1 <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -13338,7 +14570,7 @@ font-style: inherit;">list</span>(nums_squared_2))</span></code></pre></div>
 </div>
 </div>
 <p>Có thể dùng <code>map</code> với nhiều hơn 1 iterable. Ví dụ muốn tính MSE cho một hồi quy tuyến tính đơn giản <code>f(x) = ax + b</code> với ground tru <code>labels</code>, hai phương pháp sau tương đương:</p>
-<div id="83c6867c" class="cell" data-execution_count="4">
+<div id="fd4ece20" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1">a, b <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
@@ -13455,7 +14687,7 @@ font-style: inherit;">print</span>(result_1, result_2)</span></code></pre></div>
 </div>
 </div>
 <p><code>filter(fn, iterable)</code> giống như <code>map</code>, tuy nhiên <code>fn</code> là một hàm trả về giá trị boolean true/false, và <code>filter</code> sẽ trả về các phần tử của <code>iterable</code> khi <code>fn</code> trả về true.</p>
-<div id="c3f91908" class="cell" data-execution_count="5">
+<div id="ac926059" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1">bad_preds <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -13478,7 +14710,7 @@ font-style: inherit;">list</span>(bad_preds))</span></code></pre></div>
 </div>
 </div>
 <p><code>reduce(fn, iterable, initializer)</code> được dùng khi ta muốn áp dụng một toán lên tất cả thành phần trong danh sách. Ví dụ muốn tính kết quả nhân của toàn bộ phần tử:</p>
-<div id="e7da065a" class="cell" data-execution_count="6">
+<div id="b5b421de" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1">product <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
@@ -13500,7 +14732,7 @@ font-style: inherit;">print</span>(product)</span></code></pre></div>
 </div>
 </div>
 <p>Sử dụng <code>reduce</code>:</p>
-<div id="965d7a02" class="cell" data-execution_count="7">
+<div id="6b0aef3b" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">from</span> functools <span class="im" style="color: #00769E;
@@ -13541,7 +14773,7 @@ font-style: inherit;">print</span>(product)</span></code></pre></div>
 <section id="unpacking" class="level2">
 <h2 class="anchored" data-anchor-id="unpacking">3.1. Unpacking</h2>
 <p>Chúng ta có thể “giải nén” một list như thế này:</p>
-<div id="9cd0545a" class="cell" data-execution_count="8">
+<div id="efdf8d40" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1">elems <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> [<span class="dv" style="color: #AD0000;
@@ -13565,7 +14797,7 @@ font-style: inherit;">print</span>(a,b,c,d)</span></code></pre></div>
 </div>
 </div>
 <p>Cũng có thể làm như thế này:</p>
-<div id="9bd48465" class="cell" data-execution_count="9">
+<div id="78c1eded" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1">a, <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">*</span>new_elems, d <span class="op" style="color: #5E5E5E;
@@ -13593,7 +14825,7 @@ font-style: inherit;">print</span>(b)</span></code></pre></div>
 <section id="slicing" class="level2">
 <h2 class="anchored" data-anchor-id="slicing">3.2. Slicing</h2>
 <p>Chúng ta có thể reverse/đảo ngược một list với <code>[::-1]</code></p>
-<div id="847cae59" class="cell" data-execution_count="10">
+<div id="e21f7cd2" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1">elem <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -13621,7 +14853,7 @@ font-style: inherit;">1</span>])</span></code></pre></div>
 </div>
 </div>
 <p>Cú pháp <code>[x:y:z]</code> có nghĩa là lấy <strong><em>mỗi</em></strong> phần tử thứ <code>z</code> từ index <code>x</code> tới index <code>y</code>. Khi <code>z</code> âm, tương đương với việc lấy theo thứ tự ngược lại. <code>x</code> để trống chỉ việc lấy từ phần tử đầu tiên, <code>y</code> để rỗng chỉ việc lấy tới phần tử cuối cùng.</p>
-<div id="492587cd" class="cell" data-execution_count="11">
+<div id="9468221c" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1">evens <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> elem[::<span class="dv" style="color: #AD0000;
@@ -13649,7 +14881,7 @@ font-style: inherit;">print</span>(reversed_evens)</span></code></pre></div>
 </div>
 </div>
 <p>Cũng có thể dùng slicing để xóa các phần tử như thế này:</p>
-<div id="858128d0" class="cell" data-execution_count="12">
+<div id="4267e8c1" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">del</span> elems[::<span class="dv" style="color: #AD0000;
@@ -13666,7 +14898,7 @@ font-style: inherit;">print</span>(elems)</span></code></pre></div>
 <section id="insertion" class="level2">
 <h2 class="anchored" data-anchor-id="insertion">3.3. Insertion</h2>
 <p>Chúng ta có thể thay đổi giá trị một phần tử trong một list như sau:</p>
-<div id="06d07a82" class="cell" data-execution_count="13">
+<div id="f1ce0405" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1">elems <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -13692,7 +14924,7 @@ font-style: inherit;">print</span>(elems)</span></code></pre></div>
 </div>
 </div>
 <p>Cũng có thể thay thế một giá trị bằng nhiều giá trị:</p>
-<div id="6fc8d29f" class="cell" data-execution_count="14">
+<div id="21c62118" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1">elems <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -13723,7 +14955,7 @@ font-style: inherit;">print</span>(elems)</span></code></pre></div>
 </div>
 </div>
 <p>Nếu chúng ta muốn thêm 3 giá trị <code>0.3, 0.4, 0.5</code> vào giữa phần tử thứ 0 và 1 của list này, thì:</p>
-<div id="cd128cb8" class="cell" data-execution_count="15">
+<div id="f3b4625b" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1">elems <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="bu" style="color: null;
@@ -13757,7 +14989,7 @@ font-style: inherit;">print</span>(elems)</span></code></pre></div>
 <section id="flattening" class="level2">
 <h2 class="anchored" data-anchor-id="flattening">3.4. Flattening</h2>
 <p>Chúng ta có thể flatten một list sử dung <code>sum(0)</code>:</p>
-<div id="123cbfdd" class="cell" data-execution_count="16">
+<div id="df700b8a" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1">list_of_lists <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> [[<span class="dv" style="color: #AD0000;
@@ -13781,7 +15013,7 @@ font-style: inherit;">sum</span>(list_of_lists, [])</span></code></pre></div>
 </div>
 </div>
 <p>Cũng có thể sử dụng recursive lambda (another beauty of lambda)</p>
-<div id="0a6fd793" class="cell" data-execution_count="17">
+<div id="9e23f219" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1">nested_lists <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> [[<span class="dv" style="color: #AD0000;
@@ -13856,7 +15088,7 @@ font-style: inherit;"># https://github.com/sahands/python-by-example/blob/master
 <blockquote class="blockquote">
 <p>Từ generator được sử dụng cho cả hàm (hàm generator là hàm đã nói ở trên) và kết quả mà hàm đó sinh ra (đối tượng được hàm generator sinh ra cũng được gọi là generator). Vì vậy đôi khi việc này gây khó hiểu một chút. Hãy xem ví dụ về việc tạo n-grams từ một danh sách tokens dưới đây để hiểu sự khác biệt giữa list và generator:</p>
 </blockquote>
-<div id="7bd8f313" class="cell" data-execution_count="18">
+<div id="4cd2d860" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1">tokens <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
@@ -13914,7 +15146,7 @@ font-style: inherit;">3</span>))</span></code></pre></div>
 </div>
 </div>
 <p>Trong ví dụ này, chúng ta phải lưu toàn bộ n-grams một lúc. Nếu có <code>m</code> tokens, memory requirement là <code>O(nm)</code> - sẽ là vấn đề nếu <code>m</code> lớn. Thay vào đó, chúng ta có thể sử dụng generator để tạo n-grams tiếp theo khi được yêu cầu. Đây gọi là lazy evaluation. Chúng ta có thể tạo một hàm <code>ngrams</code> trả về một generator sử dụng keyword <code>yield</code>, lúc này memory requirement là <code>O(n+m)</code>.</p>
-<div id="ba058c6e" class="cell" data-execution_count="19">
+<div id="deca1bee" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">def</span> ngrams(tokens, n):</span>
@@ -13960,7 +15192,7 @@ font-style: inherit;">in</span> ngrams_generator:</span>
 background-color: null;
 font-style: inherit;">print</span>(ngram)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;generator object ngrams at 0x000002883137D210&gt;
+<pre><code>&lt;generator object ngrams at 0x000001FA3A270C70&gt;
 ['i', 'want', 'to']
 ['want', 'to', 'go']
 ['to', 'go', 'to']
@@ -13968,7 +15200,7 @@ font-style: inherit;">print</span>(ngram)</span></code></pre></div>
 </div>
 </div>
 <p>Một cách khác để tạo n-grams là slice để lấy các sub-list <code>[0, 1, 2, ...,-n]</code>, <code>[1, 2, 3, ...,-n+1]</code>, <code>[2, 3, 4, ...,-n+2]</code>,… <code>[n-1, n, ...,-1]</code>, sau đó <code>zip</code> chúng lại:</p>
-<div id="08c8368c" class="cell" data-execution_count="20">
+<div id="502fa5c2" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">def</span> ngrams(tokens, n):</span>
@@ -14021,7 +15253,7 @@ font-style: inherit;">in</span> ngrams_generator:</span>
 background-color: null;
 font-style: inherit;">print</span>(ngram)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;zip object at 0x00000288313A2FC0&gt;
+<pre><code>&lt;zip object at 0x000001FA3A2BBC40&gt;
 ('i', 'want', 'to')
 ('want', 'to', 'go')
 ('to', 'go', 'to')
@@ -14031,7 +15263,7 @@ font-style: inherit;">print</span>(ngram)</span></code></pre></div>
 <p>Lưu ý chúng ta sử dụng <code>(tokens[...] for i in range(n))</code>, chứ không phải <code>[tokens[...] for i in range(n)]</code>. <code>[]</code> trả về một list, <code>()</code> trả về generator. # 4. Classes &amp; magic methods</p>
 <hr>
 <p>Trong Python, magic methods được prefixed và suffixed bởi double underscore <code>__</code> (aka dunder). Magic method được biết đến rộng rãi nhất là <code>__init__</code>.</p>
-<div id="0397cad9" class="cell" data-execution_count="21">
+<div id="1485fbe8" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">class</span> Node:</span>
@@ -14076,7 +15308,7 @@ background-color: null;
 font-style: inherit;">=</span> right</span></code></pre></div>
 </div>
 <p>In ra object, tuy nhiên nhìn không tường minh lắm!</p>
-<div id="fcc6bb66" class="cell" data-execution_count="22">
+<div id="18de2076" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1">root <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> Node(<span class="dv" style="color: #AD0000;
@@ -14088,11 +15320,11 @@ font-style: inherit;">print</span>(root) <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># &lt;__main__.Node object at 0x1069c4518&gt;</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;__main__.Node object at 0x00000288313A26D0&gt;</code></pre>
+<pre><code>&lt;__main__.Node object at 0x000001FA3A2C4690&gt;</code></pre>
 </div>
 </div>
 <p>Chúng ta mong muốn khi in ra một Node, giá trị của nó cũng như giá trị của các Node con (nếu có) cũng sẽ được in ra. Chúng ta dùng <code>__repr__</code>:</p>
-<div id="adf9b244" class="cell" data-execution_count="23">
+<div id="09a226d8" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">class</span> Node:</span>
@@ -14230,7 +15462,7 @@ font-style: inherit;"># value: 5, left: 4, right: None</span></span></code></pre
 </div>
 </div>
 <p>Chúng ta cũng muốn hai Node có thể được so sánh được với nhau, vì thế tạo ra các magic method để implement các operator: <code>==</code> với <code>__eq__</code>, <code>&gt;</code> với <code>__lt__</code>, ‘&gt;=’ với <code>__ge__</code>:</p>
-<div id="8e45246c" class="cell" data-execution_count="24">
+<div id="8f2c4b23" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">class</span> Node:</span>
@@ -14365,7 +15597,7 @@ False</code></pre>
 <h1>5. Local namespace, object’s attributes</h1>
 <hr>
 <p>Hàm <code>locals()</code> trả về danh sách các biến nằm trong local namespace:</p>
-<div id="21a7bd3d" class="cell" data-execution_count="25">
+<div id="68d48fb4" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb47-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">class</span> Model1:</span>
@@ -14413,11 +15645,11 @@ font-style: inherit;">=</span> learning_rate</span>
 background-color: null;
 font-style: inherit;">=</span> Model1()</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>{'self': &lt;__main__.Model1 object at 0x00000288313D2850&gt;, 'hidden_size': 100, 'num_layers': 3, 'learning_rate': 0.0003}</code></pre>
+<pre><code>{'self': &lt;__main__.Model1 object at 0x000001FA3A2C6150&gt;, 'hidden_size': 100, 'num_layers': 3, 'learning_rate': 0.0003}</code></pre>
 </div>
 </div>
 <p>Các attributes của 1 object cũng được lưu hết trong <code>__dict__</code>:</p>
-<div id="9d1cb5c2" class="cell" data-execution_count="26">
+<div id="61f3a5e8" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb49-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(model1.__dict__)</span></code></pre></div>
@@ -14426,7 +15658,7 @@ font-style: inherit;">print</span>(model1.__dict__)</span></code></pre></div>
 </div>
 </div>
 <p>Khi có quá nhiều arguments, việc assign nó trong <code>__init__</code> trở nên phiền hà, chúng ta có thể làm như sau:</p>
-<div id="b69e9d7e" class="cell" data-execution_count="27">
+<div id="75043cdd" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb51" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb51-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">class</span> Model2:</span>
@@ -14476,7 +15708,7 @@ font-style: inherit;">print</span>(model2.__dict__)</span></code></pre></div>
 </div>
 </div>
 <p>Thậm chí rất tiện khi làm việc với <code>*kwargs</code>:</p>
-<div id="75d1c2c2" class="cell" data-execution_count="28">
+<div id="9ce39ec7" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb53" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb53-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">class</span> Model3:</span>
@@ -14616,7 +15848,7 @@ font-style: inherit;">class</span> Encoder: </span>
 <hr>
 <p>Chúng ta thường muốn đo lường thời gian chạy của 1 function. Các tự nhiên thường dùng là đặt <code>time.time()</code> ở hai điểm đầu và cuối giữa các lệnh.</p>
 <p>Ví dụ, với hàm tìm số Fibbonacci thứ n, với hai cách (1 cách sử dụng memoization).</p>
-<div id="b77ce218" class="cell" data-execution_count="29">
+<div id="5d61710a" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb58" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb58-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">def</span> fib_helper(n):</span>
@@ -14704,7 +15936,7 @@ background-color: null;
 font-style: inherit;">1</span>})</span></code></pre></div>
 </div>
 <p>Hãy chắc chắn <code>fib</code> và <code>fib_m</code> tương đương nhau:</p>
-<div id="97d831d4" class="cell" data-execution_count="30">
+<div id="27d4f072" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb59" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb59-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> n <span class="kw" style="color: #003B4F;
@@ -14721,7 +15953,7 @@ background-color: null;
 font-style: inherit;">==</span> fib_m(n)</span></code></pre></div>
 </div>
 <p>Đo lường thời gian chạy:</p>
-<div id="f49ca409" class="cell" data-execution_count="31">
+<div id="3f91e92f" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb60" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb60-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> time</span>
@@ -14770,12 +16002,12 @@ font-style: inherit;">:.7f}</span><span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;"> seconds.'</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Without memoization, it takes 0.151788 seconds.
+<pre><code>Without memoization, it takes 0.160464 seconds.
 With memoization, it takes 0.0000000 seconds.</code></pre>
 </div>
 </div>
 <p>Using decorator, define <code>timeit</code>:</p>
-<div id="b6b6b461" class="cell" data-execution_count="32">
+<div id="298854f3" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb62" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb62-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">def</span> timeit(fn): </span>
@@ -14834,7 +16066,7 @@ background-color: null;
 font-style: inherit;">return</span> get_time </span></code></pre></div>
 </div>
 <p>Sau đó thêm <code>@timeit</code> tới function:</p>
-<div id="6559974a" class="cell" data-execution_count="33">
+<div id="409cf0d5" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb63" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb63-1"><span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">@timeit</span></span>
@@ -14870,7 +16102,7 @@ font-style: inherit;">30</span>)</span>
 background-color: null;
 font-style: inherit;">30</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time taken in fib: 0.1794465
+<pre><code>Time taken in fib: 0.1869819
 Time taken in fib_m: 0.0000000</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="33">
@@ -14881,8 +16113,11 @@ Time taken in fib_m: 0.0000000</code></pre>
 <section id="caching-with-functools.lru_cache" class="level1">
 <h1>8. Caching with <code>@functools.lru_cache</code></h1>
 <hr>
-<p>🚀Nguyên văn chị Huyền: &gt; Memoization is a form of cache: we cache the previously calculated Fibonacci numbers so that we don’t have to calculate them again.</p>
-<div id="f5c6b850" class="cell" data-execution_count="34">
+<p>🚀Nguyên văn chị Huyền:</p>
+<blockquote class="blockquote">
+<p>Memoization is a form of cache: we cache the previously calculated Fibonacci numbers so that we don’t have to calculate them again.</p>
+</blockquote>
+<div id="3f0078d5" class="cell" data-execution_count="34">
 <div class="sourceCode cell-code" id="cb66" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb66-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> functools</span>
