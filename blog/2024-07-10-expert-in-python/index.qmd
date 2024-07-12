@@ -429,9 +429,48 @@ add(10, 20)
 
 There is a very important core concept that is hidden in here which is what you might call the **closure object duality**. it's not something that we have time to look at in this session.
 
-
-
 # generator
+
+recall what we've learned in previous section:
+
+- there are top-level syntax or function <--> and some underscore methods that implemented it.
+- if you have parentheses after something x() <--> implies `__call__` protocol implemented.
+
+what is different between these 2:
+
+```{python}
+#| eval: true
+
+def add1(x, y):
+  return x + y
+
+
+class Adder:
+  def __call__(self, x, y):
+    return x + y 
+add2 = Adder()
+
+print(add1(10, 20)) # 30
+print(add2(10, 20)) # 20
+type(add1) # <class 'function'>
+type(add2) # <class '__main__.Adder'>
+```
+
+functionally there is not distinguish between `add1` and `add2`. `add1` is syntaxtically whole hell more easy to write. another diffence is if you want to add some *statefull behaviors*, we can easily modified the class:
+
+```{python}
+class Adder:
+  def __init__(self):
+    self.z = 0
+
+  def __call__(self, x, y):
+    self.z += 1
+    return x + y + self.z
+```
+
+[Đọc thêm về [chuỗi bài này](https://magz.techover.io/2021/12/04/python-deep-dive-hieu-closures-decorators-va-cac-ung-dung-cua-chung-phan-1/) nếu thấy confuse]{.aside}
+
+there is one what to do with the Adder, another way to do with the function. what he hinted at this object **closure duality**.
 
 # context manager
 
