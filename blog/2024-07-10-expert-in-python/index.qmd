@@ -6,7 +6,7 @@ author:
     url: https://lktuan.github.io/
 categories: [python, pydata] 
 date: 07-10-2024
-date-modified: 07-10-2024
+date-modified: 07-16-2024
 image: pydata-logo-final.png
 code-tools: true
 code-fold: show
@@ -195,6 +195,8 @@ let's 'dis' - stands for disassemble - to see what happen in the bytecode. there
 at the first section of this lecture, we saw some **correspondence** between top-level syntac or function AND some underscore method that implements that syntax or function. there should be also top-level mechanism, not explicitly syntax or function, with the process of building a class. there is a build-ins function called `__build_class__`.
 
 ```{python}
+#| eval: false
+ 
 old_bc = __build_class__
 
 def my_bc(func, name, base=None, **kw):
@@ -439,7 +441,7 @@ recall what we've learned in previous section:
 what is different between these 2:
 
 ```{python}
-#| eval: true
+#| eval: false
 
 def add1(x, y):
   return x + y
@@ -459,6 +461,7 @@ type(add2) # <class '__main__.Adder'>
 functionally there is not distinguish between `add1` and `add2`. `add1` is syntaxtically whole hell more easy to write. another diffence is if you want to add some *statefull behaviors*, we can easily modified the class:
 
 ```{python}
+#| eval: false
 class Adder:
   def __init__(self):
     self.z = 0
@@ -470,11 +473,327 @@ class Adder:
 
 [Đọc thêm về [chuỗi bài này](https://magz.techover.io/2021/12/04/python-deep-dive-hieu-closures-decorators-va-cac-ung-dung-cua-chung-phan-1/) nếu thấy confuse]{.aside}
 
-there is one what to do with the Adder, another way to do with the function. what he hinted at this object **closure duality**.
+there is one what to do with the Adder, another way to do with the function, what he hinted at this object **closure duality**.
+
+let's think about a function that take a lot of time to do something, like loading the data from the database. we demo by a simple function `compute()`, which sleep 0.5 sec for each loop. the function only gives us the result once it completelt complete the loop, it will give us the entire result all at once. what if we care about the first? the first 3 values?
+
+this is undesirable. this is wasteful both from the perspective of time & memory. let's think about it with the object model and rewrite under `Compute` class:
+
+
+```{python}
+#| eval: false
+from time import sleep
+
+def compute()
+  rv = []
+  for i in range(100):
+    sleep(.5)
+    rv.append(i)
+  return rv
+
+class Compute:
+  def __init__(self):
+    pass
+
+  def __call__(self):
+    rv = []
+    for i in range(100):
+      sleep(.5)
+      rv.append(i)
+    return rv
+compute2 = Compute()
+```
+
+the 2nd method: [[read more](https://realpython.com/python-callable-instances)]{.aside}
+
+- Retain state between calls (**stateful callables**)
+- Cache values that result from previous computations
+- Implement straightforward and convenient APIs
+
+if you want to access data during computaion, think of:
+
+```
+for x in xs:
+  pass
+
+x1 = iter(xs)   ---> __iter__
+while True:
+  x = next(x1)  ---> __next__
+```
+
+and re-write the `Compute` like this:
+
+```{python}
+#| eval: false
+class Compute:
+  def __iter__(self):
+    self.last = 0
+    return self 
+  
+  def __next__(self):
+    rv = self.last
+    self.last += 1
+    if self.last > 10:
+      raise StopIteration()
+    sleep(.5)
+    return rv
+
+for val in Compute():
+  print(val)
+```
+
+now, it:
+
+- takes 1 iteration to let you start using it;
+- takes no storage;
+- but looks ugly.
+
+and there is much simpler way to write a function that operate in such fashion, the **generator** syntax, it merely:
+
+```{python}
+#| eval: false
+
+def compute()
+  for i in range(10):
+    sleep(.5)
+    yield i
+```
+
+its state is maintained internally. instead of eagerly computing the values, you give them to the user as the ask. let's look in the last example:
+
+```{python}
+#| eval: false
+
+class Api:
+  def run_this_first():
+    first()
+  def run_this_second():
+    second()
+  def run_this_last():
+    lass()
+# in documentation you ask user to use those functions in order but no physically constraint you to not run like this:
+Api.run_this_last()
+Api.run_this_second()
+Api.run_this_first()
+```
+
+the generator not only yield the result back, but also the control back to the caller. we can interleave our code with library code, controling them to run in order, that is conceptualization of how generators are built upon - co-routines.
+
+we can either define execution function inside the class or use generator to control the sequence:
+
+```{python}
+#| eval: false
+...
+  def doit():
+    first()
+    second()
+    last()
+... 
+
+# or
+
+def api()
+  first()
+  yield
+  second()
+  yield
+  last()
+```
 
 # context manager
 
+setup & teardown ~ initial action and final action. we would often see pattern like:
+
+```{python}
+#| eval: false
+with open('ctx.py') as f:
+  pass
+```
+
+beyond the file, it can be also sqllite
+
+```{python}
+from sqlite3 import connect
+
+# control the execution is executed when connection is open
+with connect('test.db') as conn:
+  cur = conn.cursor()
+  cur.execute('create table points(x int, y int)')
+  cur.execute('insert into points(x, y) values (1, 1)')
+  cur.execute('insert into points(x, y) values (2, 1)')
+  cur.execute('insert into points(x, y) values (1, 2)')
+  for row in cur.execute('select sum(x * y) from points'):
+    print(row)
+  for row in cur.execute('select x, y from points'):
+    print(row)
+  cur.execute('drop table points')
+```
+
+now we already control if connection is live to do something, we've not yet controlled inside the connection, the entry point and the exit point. now behind the scence
+
+```
+with ctx() as x:
+  pass
+```
+
+will look like the following:
+
+```
+x = ctx().__enter__
+try
+  pass
+finally:
+  x.__exit__
+```
+
+we'll try to emplement this to our connection, we'll wrap it to a **temporary table behaviour**:
+
+```{python}
+from sqlite3 import connect
+
+class Temporarytable:
+  def __init__(self, cur):
+    self.cur = cur
+  def __enter__(self):
+    print('__enter__')
+    self.cur.execute('create table points(x int, y int)')
+  def __exit__(self, *arg): # why need *arg
+    print('__exit__')
+    self.cur.execute('drop table points')
+
+with connect('test.db') as conn:
+  cur = conn.cursor()
+  with Temporarytable(cur=cur):
+    cur.execute('insert into points(x, y) values (1, 1)')
+    cur.execute('insert into points(x, y) values (2, 1)')
+    cur.execute('insert into points(x, y) values (1, 2)')
+    for row in cur.execute('select sum(x * y) from points'):
+      print(row)
+    for row in cur.execute('select x, y from points'):
+      print(row)
+```
+
+now can the exit run before the enter, no! they need to be run sequencely. it remind us about the **generator** to improve this:
+
+```{python}
+from sqlite3 import connect
+def temporarytable(cur):
+  print('created table')
+  cur.execute('create table points(x int, y int)')
+  yield
+  cur.execute('drop table points')
+  print('dropped table')
+
+class Temporarytable:
+  def __init__(self, cur):
+    self.cur = cur
+  def __enter__(self):
+    self.gen = temporarytable(self.cur)
+    next(self.gen)
+  def __exit__(self, *arg):
+    next(self.gen, None)
+
+with connect('test.db') as conn:
+  cur = conn.cursor()
+  with Temporarytable(cur=cur):
+    cur.execute('insert into points(x, y) values (1, 1)')
+    cur.execute('insert into points(x, y) values (2, 1)')
+    cur.execute('insert into points(x, y) values (1, 2)')
+    for row in cur.execute('select sum(x * y) from points'):
+      print(row)
+    for row in cur.execute('select x, y from points'):
+      print(row)
+```
+
+
+enter and exit are already implemented in function `temporarytable` and cursor is implemented in the `connect()` call. now i would rewrite like this
+
+```{python}
+from sqlite3 import connect
+
+class Temporarytable:
+  def __init__(self, gen):
+    self.gen = gen
+  def __call__(self, *args, **kwargs):
+    self.args, self.kwargs = args, kwargs
+    return self
+  def __enter__(self):
+    self.gen_instance = self.gen(*self.args, **self.kwargs)
+    next(self.gen_instance)
+  def __exit__(self, *arg):
+    next(self.gen_instance, None)
+
+@Temporarytable
+def temporarytable(cur):
+  cur.execute('create table points(x int, y int)')
+  yield
+  cur.execute('drop table points')
+
+# temporarytable = Temporarytable(temporarytable)
+
+with connect('test.db') as conn:
+  cur = conn.cursor()
+  with temporarytable(cur):
+    cur.execute('insert into points(x, y) values (1, 1)')
+    cur.execute('insert into points(x, y) values (2, 1)')
+    cur.execute('insert into points(x, y) values (1, 2)')
+    for row in cur.execute('select sum(x * y) from points'):
+      print(row)
+    for row in cur.execute('select x, y from points'):
+      print(row)
+```
+
+all the stuff context manager above we do not need to write:
+
+```{python}
+from sqlite3 import connect
+from contextlib import contextmanager
+
+@contextmanager
+def temporarytable(cur):
+  cur.execute('create table points(x int, y int)')
+  try:
+    yield
+  finally:
+    cur.execute('drop table points')
+
+# temporarytable = Temporarytable(temporarytable)
+
+with connect('test.db') as conn:
+  cur = conn.cursor()
+  with temporarytable(cur):
+    cur.execute('insert into points(x, y) values (1, 1)')
+    cur.execute('insert into points(x, y) values (2, 1)')
+    cur.execute('insert into points(x, y) values (1, 2)')
+    for row in cur.execute('select sum(x * y) from points'):
+      print(row)
+    for row in cur.execute('select x, y from points'):
+      print(row)
+```
+
 # summary
+
+all combination of what we've learned in the last example:
+
+- a **context manager** is merely some piece of code that pairs set up actions and teardown actions. teardown occurs only if set up occurs
+- a **generator** is merely some form of syntax that allows us to do things like enforce sequencing and interleaving notice the
+
+finally we need something to adapt the generator to this data model that we looked at at the very beginning. we have these underscore methods and we have to find some way to take how the generator works and fit it into those underscore methods. one of the things we need to do in order to do that is we need to take this generator object to wrap it in some fashion that wrapping is part of the core of how Python works it's easy to dynamics and construct functions
+
+- there does happen to be a feature called **decorators** that allows us a nice convenient syntax for doing that exactly.
+
+:::{.callout-tip}
+criteria of Python expert code:
+
+- expert level code is not code that uses every single feature;
+- it's in fact not code that even uses that many features of Python;
+- it's code that has a certain clarity to where and when a feature should be used; 
+- it's code that doesn't waste the time of the person who's writing it because they say to themselves I have this pattern Python has this mechanism I fit them together
+and everything just seamlessly and and very smoothly works;
+- it's code that doesn't have a lot of additional mechanisms associated with it it doesn't have people creating their own protocols it doesn't have people creating their
+own frameworks where the language itself provides the core pieces that you need and you merely have to understand what those core pieces are what they need and
+how to assemble them.
+:::
 
 # futher reading
 
