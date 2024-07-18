@@ -1,0 +1,172 @@
+---
+title: "A Prefect Workshop"
+description: "by Dr. Adam Hill in PyData London 2024"
+author:
+  - name: "Tuan Le Khac"
+    url: https://lktuan.github.io/
+categories: [python, pydata, prefect] 
+date: 07-17-2024
+date-modified: 07-17-2024
+image: adam_hill.png
+code-tools: true
+code-fold: show
+code-annotations: hover
+draft: false
+css: html/styles.scss
+fig-cap-location: bottom
+editor: visual
+format:
+  html:
+    code-overflow: wrap
+---
+
+🎞 Video source: [Dr. Adam Hill - Empower Your Projects with Prefect's Pipeline Magic | PyData London 2024](https://www.youtube.com/watch?v=yIDBsHwTaa8&list=PLGVZCDnMOq0rrhYTNedKKuJ9716fEaAdK&index=4)
+
+⛏ Github repo: <https://github.com/Cadarn/PyData-Prefect-Workshop>
+
+# goals
+
+by end of this session you will:
+
+- understand what Prefect is;
+- build and execute tasks and flows;
+- have schedules flow using deployment;
+- have a grasp what else can be done;
+- have some fun.
+
+# prefect overview
+
+just simple as using jupyter notebook, you only need to use decorators (`@task` and `@flow`) to designate functions as **task** for **flow**. you need to breakdown your "notebook" into "code chunks" and organize to get them done.
+
+```{python}
+#| eval: false 
+
+from prefect import task, flow
+
+@task
+def my_task():
+  print("hello, i am a task!")
+
+@flow
+def my_flow():
+  my_task()
+```
+
+# jump to the workshop
+
+clone the repo, have docker compose up and running. then explore `http://localhost:8000/get_tweet`, this is shown which i have yet no idea:
+
+```json
+{
+  "tweet_id": 570306133677760500,
+  "airline_sentiment": "neutral",
+  "airline_sentiment_confidence": 1,
+  "airline": "Virgin America",
+  "name": "cairdin",
+  "text": "@VirginAmerica What @dhepburn said.",
+  "retweet_count": 0,
+  "tweet_timestamp": "2015-02-24T11:35:52-08:00",
+  "tweet_coord": -1,
+  "loop": 1
+}
+```
+
+the first thing you need to do is telling where the Prefect API is gonna live. currently it runs on free tier of the their cloud server (?) and now we config it to run in the localhost (?):
+
+```bash
+prefect config set PREFECT_API_URL="http://127.0.0.1:4200/api"
+```
+
+then we gonna reset the database, do some config then can start the server. please note that if you are using window, you need to add `Scripts` variable to environment variables also, the value of the path can be found when you install Prefect by `pip`:
+
+```bash
+prefect server database reset -y
+prefect config set PREFECT_API_DATABASE_CONNECTION_URL="postgresql+asyncpg://postgres:password@localhost:5432/prefect_server"
+prefect config view --show-sources
+prefect server start
+```
+
+below is my initial dashboard, there is nothing!
+
+:::{layout-ncol="1"}
+![Prefect Dashboard](initial_prefect_server.png)
+:::
+
+## e01 my first flow
+
+the basic component of prefect is `task` and `flow`. these are decorators to funtions we want to run. we can name and log easily:
+
+```{.python filename="e01.py"}
+# Example of processing some data
+from prefect import task, flow
+
+
+@task(name="Addition operator")  # this task will successfully run
+def add(a, b):
+    return a + b
+
+
+@task(name="Squaring operator")  # this task will fail
+def square_num(num):
+    if True:
+        raise ValueError
+    return num ** 2
+
+
+@flow(log_prints=True, name="My first simple flow")
+def add_and_square(a: int = 2, b: int = 3):
+    add_result = add(a, b)
+    square_result = square_num(add_result)
+    print(f"({a} + {b}) squared = {square_result}")
+
+
+if __name__ == "__main__":
+    add_and_square(4, 8)
+
+```
+
+## e02a sentiment pipeline v1
+
+## e02b sentiment pipeline v2
+
+## e03a kafka tweet publisher
+
+## e03b kafka tweet deployment
+
+## e04 sentiment pipeline v3
+
+# further reading
+
+1. [Prefect vs Airflow on Reddit](https://www.reddit.com/r/dataengineering/comments/oqbiiu/airflow_vs_prefect/)
+
+Bình luận bởi **u/alexisprince**:
+
+> Tôi đang sử dụng song song Airflow và Prefect (A cho scheduling, P cho execution), P được sử dụng khi yêu cầu về hiệu năng tính toán và phần scheduler của A vẫn chưa thể bị thay thế.
+> 
+> Lợi thế của A là đã quá phổ biến, dễ tìm hướng dẫn, dễ tuyển người cho chuyên môn. Yếu điểm là A đã quá cũ, không còn phù hợp cho dynamic workflow và modern data env. Hơn nữa A luôn best fit khi sử dụng chung với Astronomer, ngoài ra khá khó dùng.
+> 
+> P hiện đại hơn, cung cấp nhiều modern execution models, DAG được xác định tại runtime do đó dynamic hơn.
+> 
+> Prefer P hơn, better modularization of code.
+
+Bình luận bởi **u/ChrisHC05**:
+
+> Tao đã đánh giá Airflow, Dagster, Argo và Prefect mấy tháng nay.
+> 
+> Airflow thì đã già, tuy nhiên tài liệu, hướng dẫn rất phong phú.
+> 
+> Dagster có vẻ gặp nhiều vấn đề với Production.
+> 
+> Prefect có cộng đồng phát triển, support, sửa lỗi active.
+> 
+> Vậy nên tôi chỉ đánh giá cao hai thằng Argo và Prefect. Argo khác biệt một cách mạnh mẽ, config được viết dưới dạng YAML, chạy trên cụm Kubernetes, và việc viết DAG không phụ thuộc vào một ngôn ngữ lập trình nào. Argo (tại thời điểm đó) cũng đang phát triển một module kiểu event listening, from outside, như Sensor của Airflow, thứ mà Prefect thiếu (workaround là call Prefect GraphQL-API).
+> 
+> Nếu đã có sẵn infra là K8S, khuyến nghị Argo, không chỉ là orchestration mà còn là một hệ sinh thái support từ event responding tới CI/CD. Nhưng learning curve thì steep nhé. Nó có nhiều tiềm năng vì giờ thì phần mềm nào cũng cần dockerized cả, tính trừu tượng cao hơn. "And IT in general is all about abstraction to make complicated things easier."
+> 
+> Vậy nên:
+> 
+> - Nếu có sẵn cụm K8S: dùng Argo
+> - Nếu không: dùng Prefect
+
+2. [Airflow Vs. Prefect: Full Breakdown! by The Data Guy](https://www.youtube.com/watch?v=XrZegcm1ftw)
+3. [Adam Hill's blog](https://www.horsewithapointyhat.com/posts/being-a-data-scientist-in-a-post-truth-world/)
