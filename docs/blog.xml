@@ -1047,10 +1047,8 @@ Note
 <ul>
 <li>something deeply behind the Zen of Python;</li>
 <li>metaphors and programming in Python;</li>
-<li>python is scripting language;</li>
-<li>4 features of Python and the way experts would think about these features;</li>
-<li>a lot of fundamental details of how these feature work but very little talk about we can conceptualize these features in the broader sense of what they mean for modeling core problem;</li>
-<li>so 4 features you might have heared before and couple of the core mental models how you can think about, an how you can think about python as a whole, wrapping everything together;</li>
+<li>python is not only scripting language, he will be introducing 4 features of Python and the way experts would think about these features;</li>
+<li>a lot of fundamental details of how these feature work but very little talk about we can conceptualize these features in the broader sense of what they mean for modeling core problem. so 4 features you might have heared before and couple of the core mental models how you can think about, an how you can think about python as a whole, wrapping everything together;</li>
 <li>you will see me stumble to understand that in case you dont utd or dont have docs memorized, it’s alright, the target is to know what they are and what they mean;</li>
 <li>the talk presumes you to have a baseline of Python, but in case you a new to Python he believes there are cores you can take away.</li>
 </ul>
@@ -1072,8 +1070,8 @@ Note
 </section>
 <section id="data-model-protocol-or-dunder-method" class="level1">
 <h1>data model protocol (or dunder method)</h1>
-<p>assume we have a data model with Polinomial object intitially do nothing, why I need 4 lines (instead of 2 lines) to create 2 Polynominals. How can I create and assign coefficients together.</p>
-<div id="751b8f7e" class="cell" data-execution_count="1">
+<p>assume we have a data model with Polynomial object intitially do nothing, why I need 4 lines (instead of 2 lines) to create 2 Polynominals. How can I create and assign coefficients together.</p>
+<div id="935bce05" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="kw" style="color: #003B4F;
@@ -1113,7 +1111,7 @@ font-style: inherit;"># 3x^2 + 4x + 3</span></span></code></pre></div>
 </details>
 </div>
 <p>the answer is using a constructor <code>__init__</code>, then we can compact our code like this:</p>
-<div id="1e1424e3" class="cell" data-execution_count="2">
+<div id="c80a8e25" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="kw" style="color: #003B4F;
@@ -1175,7 +1173,7 @@ font-style: inherit;"># 3x^2 + 4x + 3</span></span></code></pre></div>
 </div>
 </div>
 <p>that’s what <code>__repr__</code> for, a printable representation of the class:</p>
-<div id="45993669" class="cell" data-execution_count="3">
+<div id="2f115390" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="kw" style="color: #003B4F;
@@ -1243,7 +1241,7 @@ font-style: inherit;"># 3x^2 + 4x + 3</span></span></code></pre></div>
 </details>
 </div>
 <p>the next thing we wanna do is to add Polinimials together <code>p1 + p2</code>.</p>
-<div id="2e330685" class="cell" data-execution_count="4">
+<div id="ee94fb92" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1">    <span class="kw" style="color: #003B4F;
@@ -1289,7 +1287,7 @@ Note
 <li>repr(x) -&gt; <code>__repr__</code>.</li>
 </ul>
 <p>Then what if we want to implement the <code>len()</code> (return the length, which is popular know Python function) -&gt; naturally we’ll be thinking of <code>__len__</code>.</p>
-<div id="4887323c" class="cell" data-execution_count="5">
+<div id="705b098f" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1">    <span class="kw" style="color: #003B4F;
@@ -1361,7 +1359,7 @@ font-style: inherit;">self</span>.coeffs)</span></code></pre></div>
 <div class="{callout-note}">
 <p>The reason that we could call Python a <strong>protocol orientated language</strong> is not just because the Python data model the object model is protocol orientated but that the entire Python language itself has a notion of hooks and protocols and safety valves within it.</p>
 <p>Python is much much simpler language, the code run linearly from top to bottom. And the class statement in Python is actually an executable code. We can write this:</p>
-<div id="f620770d" class="cell" data-execution_count="6">
+<div id="459c7412" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="cf" style="color: #003B4F;
@@ -1410,7 +1408,7 @@ font-style: inherit;">'bar'</span></span></code></pre></div>
 <p>Only the last one will survive. Python accepts this syntax because it’s class is <strong>fundamentally executable</strong>.</p>
 </div>
 <p>Let’s get into something more interesting! create a class inside a function and use a function in a module in standard libbrary in Python called <code>dis</code>.</p>
-<div id="8c2b6673" class="cell" data-execution_count="7">
+<div id="e9bb28e0" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
@@ -1453,7 +1451,7 @@ font-style: inherit;">import</span> dis</span></code></pre></div>
 </div>
 </div>
 <p>at the first section of this lecture, we saw some <strong>correspondence</strong> between top-level syntac or function AND some underscore method that implements that syntax or function. there should be also top-level mechanism, not explicitly syntax or function, with the process of building a class. there is a build-ins function called <code>__build_class__</code>.</p>
-<div id="626844ab" class="cell" data-execution_count="8">
+<div id="0f955f2e" class="cell" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1">old_bc <span class="op" style="color: #5E5E5E;
@@ -1529,7 +1527,7 @@ font-style: inherit;">=</span> my_bc</span></code></pre></div>
 <section id="meta-class-1" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="meta-class-1">1. meta class</h3>
 <div class="page-columns page-full"><p></p><div class="no-row-height column-margin column-container"><span class="margin-aside"><a href="https://stackoverflow.com/questions/395982/metaclass-new-cls-and-super-what-is-the-mechanism-exactly">futher discussion</a></span></div></div>
-<div id="dcab0abc" class="cell" data-execution_count="9">
+<div id="38e91bf5" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><span class="co" style="color: #5E5E5E;
@@ -1621,7 +1619,7 @@ font-style: inherit;">self</span>.bar()</span></code></pre></div>
 <section id="init_subclass__" class="level3">
 <h3 class="anchored" data-anchor-id="init_subclass__">2. <code>__init_subclass__</code></h3>
 <p>We can implement <code>Base</code> like this:</p>
-<div id="2ed46435" class="cell" data-execution_count="10">
+<div id="090bfa24" class="cell" data-execution_count="10">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="kw" style="color: #003B4F;
@@ -1681,7 +1679,7 @@ font-style: inherit;">**</span>kwargs)</span></code></pre></div>
 <section id="decorator" class="level1">
 <h1>decorator</h1>
 <p>We would have met pattern like this, that’s is decorator:</p>
-<div id="f28ad3f4" class="cell" data-execution_count="11">
+<div id="1b733668" class="cell" data-execution_count="11">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="at" style="color: #657422;
@@ -1770,7 +1768,7 @@ font-style: inherit;">a</span> + b </span>
 background-color: null;
 font-style: inherit;">&gt;&gt;&gt;</span> </span></code></pre></div>
 <p>now let’s say I want to calculate how much time does it take to perform the <code>add</code>. simply we would thinking about <code>time</code>, like this:</p>
-<div id="adf9b3e0" class="cell" data-execution_count="12">
+<div id="17be65b1" class="cell" data-execution_count="12">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="im" style="color: #00769E;
@@ -1855,16 +1853,16 @@ font-style: inherit;">-</span> before)</span></code></pre></div>
 <pre><code>add(10) 20
 time_taken 0.0
 add(20, 30) 50
-time_taken 0.0009694099426269531
+time_taken 0.0
 add("a", "b") ab
-time_taken 0.0009694099426269531</code></pre>
+time_taken 0.0</code></pre>
 </div>
 </div>
 <p>there is something wrong here because we need to add code to everywhere we want to calculate. we see another important pattern in Python, decorator, the Python developers want you to write the simplest, stupidest, quickest thing to get the job done and get the rest of your day with your family.</p>
 <p>we will see alot of scenarios where of cases where you can write the simple and stupidest thing to get the job done and when the task at hand becomes harder or more complex or the requirements change you can change your code in a very simple fashion to linearly extend its functionality without have to re-write it from scratch.</p>
 <p>in Python we’ll see a number of different features are orientated around how do we write the simplest thing today and then when the problem gets a little bit harder we have an avenue for making our code a little bit more complex.</p>
 <p>we can modified a <code>add</code> alittle bit</p>
-<div id="05a7b76c" class="cell" data-execution_count="13">
+<div id="9ee3649c" class="cell" data-execution_count="13">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><span class="im" style="color: #00769E;
@@ -1904,7 +1902,7 @@ font-style: inherit;">return</span> rv</span></code></pre></div>
 </details>
 </div>
 <p>But if we have more functions, let say <code>sub</code>? We need to modify and make our code complicated. <strong>Python is live language</strong> that everything has some runtime representaion. We can create <code>timer()</code> which take <code>func</code>, <code>x</code>, and <code>y</code> as arguments (<code>x</code> and <code>y</code> will be forwarded to calculation function)</p>
-<div id="04a52a75" class="cell" data-execution_count="14">
+<div id="3aca1fe5" class="cell" data-execution_count="14">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><span class="im" style="color: #00769E;
@@ -1951,7 +1949,7 @@ font-style: inherit;">30</span>))</span></code></pre></div>
 </details>
 </div>
 <p>we can also wrapping like this, <code>timer()</code> will return a function <code>f</code>:</p>
-<div id="7ffc6d4f" class="cell" data-execution_count="15">
+<div id="19af8894" class="cell" data-execution_count="15">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><span class="im" style="color: #00769E;
@@ -2011,7 +2009,7 @@ font-style: inherit;">30</span>))</span></code></pre></div>
 </details>
 </div>
 <p>Python provides a syntax for easily implement every behaviours of <code>timer()</code> to every function:</p>
-<div id="97e1743b" class="cell" data-execution_count="16">
+<div id="7447cf77" class="cell" data-execution_count="16">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><span class="at" style="color: #657422;
@@ -2055,7 +2053,7 @@ Note
 </div>
 </div>
 <p>another example when we want a function to run n-times:</p>
-<div id="7487f2fd" class="cell" data-execution_count="17">
+<div id="827cb88c" class="cell" data-execution_count="17">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1">n <span class="op" style="color: #5E5E5E;
@@ -2135,7 +2133,7 @@ running add</code></pre>
 </div>
 </div>
 <p>wrapp <code>n</code> in to the function so <code>ntimes()</code> takes <code>n</code> instead of <code>f</code> as arg:</p>
-<div id="1aa3a4a1" class="cell" data-execution_count="18">
+<div id="5f7c8852" class="cell" data-execution_count="18">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><span class="co" style="color: #5E5E5E;
@@ -2228,7 +2226,7 @@ running add</code></pre>
 <li>if you have parentheses after something x() &lt;–&gt; implies <code>__call__</code> protocol implemented.</li>
 </ul>
 <p>what is different between these 2:</p>
-<div id="c41bf0b3" class="cell" data-execution_count="19">
+<div id="0698ed3a" class="cell" data-execution_count="19">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><span class="kw" style="color: #003B4F;
@@ -2291,7 +2289,7 @@ font-style: inherit;"># &lt;class '__main__.Adder'&gt;</span></span></code></pre
 </details>
 </div>
 <p>functionally there is not distinguish between <code>add1</code> and <code>add2</code>. <code>add1</code> is syntaxtically whole hell more easy to write. another diffence is if you want to add some <em>statefull behaviors</em>, we can easily modified the class:</p>
-<div id="dca4698f" class="cell" data-execution_count="20">
+<div id="a5a98768" class="cell" data-execution_count="20">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><span class="kw" style="color: #003B4F;
@@ -2341,7 +2339,7 @@ font-style: inherit;">self</span>.z</span></code></pre></div>
 <p>there is one what to do with the Adder, another way to do with the function, what he hinted at this object <strong>closure duality</strong>.</p>
 <p>let’s think about a function that take a lot of time to do something, like loading the data from the database. we demo by a simple function <code>compute()</code>, which sleep 0.5 sec for each loop. the function only gives us the result once it completelt complete the loop, it will give us the entire result all at once. what if we care about the first? the first 3 values?</p>
 <p>this is undesirable. this is wasteful both from the perspective of time &amp; memory. let’s think about it with the object model and rewrite under <code>Compute</code> class:</p>
-<div id="1ca0b56d" class="cell" data-execution_count="21">
+<div id="583238e2" class="cell" data-execution_count="21">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><span class="im" style="color: #00769E;
@@ -2432,7 +2430,7 @@ x1 = iter(xs)   ---&gt; __iter__
 while True:
   x = next(x1)  ---&gt; __next__</code></pre>
 <p>and re-write the <code>Compute</code> like this:</p>
-<div id="a96da6f5" class="cell" data-execution_count="22">
+<div id="630e83a0" class="cell" data-execution_count="22">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><span class="kw" style="color: #003B4F;
@@ -2515,7 +2513,7 @@ font-style: inherit;">print</span>(val)</span></code></pre></div>
 <li>but looks ugly.</li>
 </ul>
 <p>and there is much simpler way to write a function that operate in such fashion, the <strong>generator</strong> syntax, it merely:</p>
-<div id="a9f5f361" class="cell" data-execution_count="23">
+<div id="8ff097c6" class="cell" data-execution_count="23">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><span class="kw" style="color: #003B4F;
@@ -2539,7 +2537,7 @@ font-style: inherit;">yield</span> i</span></code></pre></div>
 </details>
 </div>
 <p>its state is maintained internally. instead of eagerly computing the values, you give them to the user as the ask. let’s look in the last example:</p>
-<div id="2f26e8bd" class="cell" data-execution_count="24">
+<div id="cf92bb02" class="cell" data-execution_count="24">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><span class="kw" style="color: #003B4F;
@@ -2567,7 +2565,7 @@ font-style: inherit;"># in documentation you ask user to use those functions in 
 </div>
 <p>the generator not only yield the result back, but also the control back to the caller. we can interleave our code with library code, controling them to run in order, that is conceptualization of how generators are built upon - co-routines.</p>
 <p>we can either define execution function inside the class or use generator to control the sequence:</p>
-<div id="cb22d2ef" class="cell" data-execution_count="25">
+<div id="2a98e5f2" class="cell" data-execution_count="25">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1">...</span>
@@ -2601,7 +2599,7 @@ font-style: inherit;">yield</span></span>
 <section id="context-manager" class="level1">
 <h1>context manager</h1>
 <p>setup &amp; teardown ~ initial action and final action. we would often see pattern like:</p>
-<div id="09c88d5c" class="cell" data-execution_count="26">
+<div id="38b78af3" class="cell" data-execution_count="26">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><span class="cf" style="color: #003B4F;
@@ -2619,7 +2617,7 @@ font-style: inherit;">pass</span></span></code></pre></div>
 </details>
 </div>
 <p>beyond the file, it can be also sqllite</p>
-<div id="9897f67c" class="cell" data-execution_count="27">
+<div id="3576f9c0" class="cell" data-execution_count="27">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><span class="im" style="color: #00769E;
@@ -2698,7 +2696,7 @@ try
 finally:
   x.__exit__</code></pre>
 <p>we’ll try to emplement this to our connection, we’ll wrap it to a <strong>temporary table behaviour</strong>:</p>
-<div id="16c65c54" class="cell" data-execution_count="28">
+<div id="2b7f6312" class="cell" data-execution_count="28">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><span class="im" style="color: #00769E;
@@ -2820,7 +2818,7 @@ __exit__</code></pre>
 </div>
 </div>
 <p>now can the exit run before the enter, no! they need to be run sequencely. it remind us about the <strong>generator</strong> to improve this:</p>
-<div id="abfc6d1c" class="cell" data-execution_count="29">
+<div id="749b00d4" class="cell" data-execution_count="29">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><span class="im" style="color: #00769E;
@@ -2961,7 +2959,7 @@ dropped table</code></pre>
 </div>
 </div>
 <p>enter and exit are already implemented in function <code>temporarytable</code> and cursor is implemented in the <code>connect()</code> call. now i would rewrite like this</p>
-<div id="3843c776" class="cell" data-execution_count="30">
+<div id="3007e670" class="cell" data-execution_count="30">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1"><span class="im" style="color: #00769E;
@@ -3127,7 +3125,7 @@ font-style: inherit;">print</span>(row)</span></code></pre></div>
 </div>
 </div>
 <p>all the stuff context manager above we do not need to write:</p>
-<div id="a6c74201" class="cell" data-execution_count="31">
+<div id="f0ded331" class="cell" data-execution_count="31">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb44" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb44-1"><span class="im" style="color: #00769E;

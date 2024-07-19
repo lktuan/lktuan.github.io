@@ -97,7 +97,6 @@ below is my initial dashboard, there is nothing!
 the basic component of prefect is `task` and `flow`. these are decorators to funtions we want to run. we can name and log easily:
 
 ```{.python filename="e01.py"}
-# Example of processing some data
 from prefect import task, flow
 
 
@@ -113,7 +112,9 @@ def square_num(num):
     return num ** 2
 
 
-@flow(log_prints=True, name="My first simple flow")
+@flow(log_prints=True,
+      name="Add and Square",
+      description="My first simple flow")
 def add_and_square(a: int = 2, b: int = 3):
     add_result = add(a, b)
     square_result = square_num(add_result)
@@ -122,7 +123,7 @@ def add_and_square(a: int = 2, b: int = 3):
 
 if __name__ == "__main__":
     add_and_square(4, 8)
-
+    
 ```
 
 ## e02a sentiment pipeline v1

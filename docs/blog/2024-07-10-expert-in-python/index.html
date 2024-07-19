@@ -254,10 +254,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>something deeply behind the Zen of Python;</li>
 <li>metaphors and programming in Python;</li>
-<li>python is scripting language;</li>
-<li>4 features of Python and the way experts would think about these features;</li>
-<li>a lot of fundamental details of how these feature work but very little talk about we can conceptualize these features in the broader sense of what they mean for modeling core problem;</li>
-<li>so 4 features you might have heared before and couple of the core mental models how you can think about, an how you can think about python as a whole, wrapping everything together;</li>
+<li>python is not only scripting language, he will be introducing 4 features of Python and the way experts would think about these features;</li>
+<li>a lot of fundamental details of how these feature work but very little talk about we can conceptualize these features in the broader sense of what they mean for modeling core problem. so 4 features you might have heared before and couple of the core mental models how you can think about, an how you can think about python as a whole, wrapping everything together;</li>
 <li>you will see me stumble to understand that in case you dont utd or dont have docs memorized, it’s alright, the target is to know what they are and what they mean;</li>
 <li>the talk presumes you to have a baseline of Python, but in case you a new to Python he believes there are cores you can take away.</li>
 </ul>
@@ -279,8 +277,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="data-model-protocol-or-dunder-method" class="level1">
 <h1>data model protocol (or dunder method)</h1>
-<p>assume we have a data model with Polinomial object intitially do nothing, why I need 4 lines (instead of 2 lines) to create 2 Polynominals. How can I create and assign coefficients together.</p>
-<div id="751b8f7e" class="cell" data-execution_count="1">
+<p>assume we have a data model with Polynomial object intitially do nothing, why I need 4 lines (instead of 2 lines) to create 2 Polynominals. How can I create and assign coefficients together.</p>
+<div id="935bce05" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">class</span> Polynomial:</span>
@@ -292,7 +290,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 </div>
 <p>the answer is using a constructor <code>__init__</code>, then we can compact our code like this:</p>
-<div id="1e1424e3" class="cell" data-execution_count="2">
+<div id="c80a8e25" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">class</span> Polynomial:</span>
@@ -320,7 +318,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>that’s what <code>__repr__</code> for, a printable representation of the class:</p>
-<div id="45993669" class="cell" data-execution_count="3">
+<div id="2f115390" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">class</span> Polynomial:</span>
@@ -336,7 +334,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 </div>
 <p>the next thing we wanna do is to add Polinimials together <code>p1 + p2</code>.</p>
-<div id="2e330685" class="cell" data-execution_count="4">
+<div id="ee94fb92" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>    <span class="kw">def</span> <span class="fu">__add__</span>(<span class="va">self</span>, other):</span>
@@ -362,7 +360,7 @@ Note
 <li>repr(x) -&gt; <code>__repr__</code>.</li>
 </ul>
 <p>Then what if we want to implement the <code>len()</code> (return the length, which is popular know Python function) -&gt; naturally we’ll be thinking of <code>__len__</code>.</p>
-<div id="4887323c" class="cell" data-execution_count="5">
+<div id="705b098f" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>    <span class="kw">def</span> <span class="fu">__len__</span>(<span class="va">self</span>):</span>
@@ -422,7 +420,7 @@ Note
 <div class="{callout-note}">
 <p>The reason that we could call Python a <strong>protocol orientated language</strong> is not just because the Python data model the object model is protocol orientated but that the entire Python language itself has a notion of hooks and protocols and safety valves within it.</p>
 <p>Python is much much simpler language, the code run linearly from top to bottom. And the class statement in Python is actually an executable code. We can write this:</p>
-<div id="f620770d" class="cell" data-execution_count="6">
+<div id="459c7412" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
@@ -439,7 +437,7 @@ Note
 <p>Only the last one will survive. Python accepts this syntax because it’s class is <strong>fundamentally executable</strong>.</p>
 </div>
 <p>Let’s get into something more interesting! create a class inside a function and use a function in a module in standard libbrary in Python called <code>dis</code>.</p>
-<div id="8c2b6673" class="cell" data-execution_count="7">
+<div id="e9bb28e0" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># create a class inside a function</span></span>
@@ -468,7 +466,7 @@ Note
 </div>
 </div>
 <p>at the first section of this lecture, we saw some <strong>correspondence</strong> between top-level syntac or function AND some underscore method that implements that syntax or function. there should be also top-level mechanism, not explicitly syntax or function, with the process of building a class. there is a build-ins function called <code>__build_class__</code>.</p>
-<div id="626844ab" class="cell" data-execution_count="8">
+<div id="0f955f2e" class="cell" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>old_bc <span class="op">=</span> __build_class__</span>
@@ -506,7 +504,7 @@ Note
 <section id="meta-class-1" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="meta-class-1">1. meta class</h3>
 <div class="page-columns page-full"><p></p><div class="no-row-height column-margin column-container"><span class="margin-aside"><a href="https://stackoverflow.com/questions/395982/metaclass-new-cls-and-super-what-is-the-mechanism-exactly">futher discussion</a></span></div></div>
-<div id="dcab0abc" class="cell" data-execution_count="9">
+<div id="38e91bf5" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># meta classes are merely derived from `type`</span></span>
@@ -544,7 +542,7 @@ Note
 <section id="init_subclass__" class="level3">
 <h3 class="anchored" data-anchor-id="init_subclass__">2. <code>__init_subclass__</code></h3>
 <p>We can implement <code>Base</code> like this:</p>
-<div id="2ed46435" class="cell" data-execution_count="10">
+<div id="090bfa24" class="cell" data-execution_count="10">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">class</span> Base():</span>
@@ -564,7 +562,7 @@ Note
 <section id="decorator" class="level1">
 <h1>decorator</h1>
 <p>We would have met pattern like this, that’s is decorator:</p>
-<div id="f28ad3f4" class="cell" data-execution_count="11">
+<div id="1b733668" class="cell" data-execution_count="11">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="at">@dec</span> </span>
@@ -599,7 +597,7 @@ Note
 <span id="cb12-8"><a href="#cb12-8"></a></span>
 <span id="cb12-9"><a href="#cb12-9"></a><span class="op">&gt;&gt;&gt;</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>now let’s say I want to calculate how much time does it take to perform the <code>add</code>. simply we would thinking about <code>time</code>, like this:</p>
-<div id="adf9b3e0" class="cell" data-execution_count="12">
+<div id="17be65b1" class="cell" data-execution_count="12">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="im">from</span> time <span class="im">import</span> time</span>
@@ -622,16 +620,16 @@ Note
 <pre><code>add(10) 20
 time_taken 0.0
 add(20, 30) 50
-time_taken 0.0009694099426269531
+time_taken 0.0
 add("a", "b") ab
-time_taken 0.0009694099426269531</code></pre>
+time_taken 0.0</code></pre>
 </div>
 </div>
 <p>there is something wrong here because we need to add code to everywhere we want to calculate. we see another important pattern in Python, decorator, the Python developers want you to write the simplest, stupidest, quickest thing to get the job done and get the rest of your day with your family.</p>
 <p>we will see alot of scenarios where of cases where you can write the simple and stupidest thing to get the job done and when the task at hand becomes harder or more complex or the requirements change you can change your code in a very simple fashion to linearly extend its functionality without have to re-write it from scratch.</p>
 <p>in Python we’ll see a number of different features are orientated around how do we write the simplest thing today and then when the problem gets a little bit harder we have an avenue for making our code a little bit more complex.</p>
 <p>we can modified a <code>add</code> alittle bit</p>
-<div id="05a7b76c" class="cell" data-execution_count="13">
+<div id="9ee3649c" class="cell" data-execution_count="13">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="im">from</span> time <span class="im">import</span> time</span>
@@ -645,7 +643,7 @@ time_taken 0.0009694099426269531</code></pre>
 </details>
 </div>
 <p>But if we have more functions, let say <code>sub</code>? We need to modify and make our code complicated. <strong>Python is live language</strong> that everything has some runtime representaion. We can create <code>timer()</code> which take <code>func</code>, <code>x</code>, and <code>y</code> as arguments (<code>x</code> and <code>y</code> will be forwarded to calculation function)</p>
-<div id="04a52a75" class="cell" data-execution_count="14">
+<div id="3aca1fe5" class="cell" data-execution_count="14">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="im">from</span> time <span class="im">import</span> time</span>
@@ -662,7 +660,7 @@ time_taken 0.0009694099426269531</code></pre>
 </details>
 </div>
 <p>we can also wrapping like this, <code>timer()</code> will return a function <code>f</code>:</p>
-<div id="7ffc6d4f" class="cell" data-execution_count="15">
+<div id="19af8894" class="cell" data-execution_count="15">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="im">from</span> time <span class="im">import</span> time</span>
@@ -682,7 +680,7 @@ time_taken 0.0009694099426269531</code></pre>
 </details>
 </div>
 <p>Python provides a syntax for easily implement every behaviours of <code>timer()</code> to every function:</p>
-<div id="97e1743b" class="cell" data-execution_count="16">
+<div id="7447cf77" class="cell" data-execution_count="16">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="at">@timer</span></span>
@@ -706,7 +704,7 @@ Note
 </div>
 </div>
 <p>another example when we want a function to run n-times:</p>
-<div id="7487f2fd" class="cell" data-execution_count="17">
+<div id="827cb88c" class="cell" data-execution_count="17">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>n <span class="op">=</span> <span class="dv">2</span> <span class="co"># let's say 2 times</span></span>
@@ -734,7 +732,7 @@ running add</code></pre>
 </div>
 </div>
 <p>wrapp <code>n</code> in to the function so <code>ntimes()</code> takes <code>n</code> instead of <code>f</code> as arg:</p>
-<div id="1aa3a4a1" class="cell" data-execution_count="18">
+<div id="5f7c8852" class="cell" data-execution_count="18">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># high order decorators</span></span>
@@ -773,7 +771,7 @@ running add</code></pre>
 <li>if you have parentheses after something x() &lt;–&gt; implies <code>__call__</code> protocol implemented.</li>
 </ul>
 <p>what is different between these 2:</p>
-<div id="c41bf0b3" class="cell" data-execution_count="19">
+<div id="0698ed3a" class="cell" data-execution_count="19">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">def</span> add1(x, y):</span>
@@ -792,7 +790,7 @@ running add</code></pre>
 </details>
 </div>
 <p>functionally there is not distinguish between <code>add1</code> and <code>add2</code>. <code>add1</code> is syntaxtically whole hell more easy to write. another diffence is if you want to add some <em>statefull behaviors</em>, we can easily modified the class:</p>
-<div id="dca4698f" class="cell" data-execution_count="20">
+<div id="a5a98768" class="cell" data-execution_count="20">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">class</span> Adder:</span>
@@ -808,7 +806,7 @@ running add</code></pre>
 <p>there is one what to do with the Adder, another way to do with the function, what he hinted at this object <strong>closure duality</strong>.</p>
 <p>let’s think about a function that take a lot of time to do something, like loading the data from the database. we demo by a simple function <code>compute()</code>, which sleep 0.5 sec for each loop. the function only gives us the result once it completelt complete the loop, it will give us the entire result all at once. what if we care about the first? the first 3 values?</p>
 <p>this is undesirable. this is wasteful both from the perspective of time &amp; memory. let’s think about it with the object model and rewrite under <code>Compute</code> class:</p>
-<div id="1ca0b56d" class="cell" data-execution_count="21">
+<div id="583238e2" class="cell" data-execution_count="21">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a><span class="im">from</span> time <span class="im">import</span> sleep</span>
@@ -847,7 +845,7 @@ x1 = iter(xs)   ---&gt; __iter__
 while True:
   x = next(x1)  ---&gt; __next__</code></pre>
 <p>and re-write the <code>Compute</code> like this:</p>
-<div id="a96da6f5" class="cell" data-execution_count="22">
+<div id="630e83a0" class="cell" data-execution_count="22">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1"></a><span class="kw">class</span> Compute:</span>
@@ -874,7 +872,7 @@ while True:
 <li>but looks ugly.</li>
 </ul>
 <p>and there is much simpler way to write a function that operate in such fashion, the <strong>generator</strong> syntax, it merely:</p>
-<div id="a9f5f361" class="cell" data-execution_count="23">
+<div id="8ff097c6" class="cell" data-execution_count="23">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a><span class="kw">def</span> compute()</span>
@@ -884,7 +882,7 @@ while True:
 </details>
 </div>
 <p>its state is maintained internally. instead of eagerly computing the values, you give them to the user as the ask. let’s look in the last example:</p>
-<div id="2f26e8bd" class="cell" data-execution_count="24">
+<div id="cf92bb02" class="cell" data-execution_count="24">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1"></a><span class="kw">class</span> Api:</span>
@@ -902,7 +900,7 @@ while True:
 </div>
 <p>the generator not only yield the result back, but also the control back to the caller. we can interleave our code with library code, controling them to run in order, that is conceptualization of how generators are built upon - co-routines.</p>
 <p>we can either define execution function inside the class or use generator to control the sequence:</p>
-<div id="cb22d2ef" class="cell" data-execution_count="25">
+<div id="2a98e5f2" class="cell" data-execution_count="25">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a>...</span>
@@ -926,7 +924,7 @@ while True:
 <section id="context-manager" class="level1">
 <h1>context manager</h1>
 <p>setup &amp; teardown ~ initial action and final action. we would often see pattern like:</p>
-<div id="09c88d5c" class="cell" data-execution_count="26">
+<div id="38b78af3" class="cell" data-execution_count="26">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'ctx.py'</span>) <span class="im">as</span> f:</span>
@@ -934,7 +932,7 @@ while True:
 </details>
 </div>
 <p>beyond the file, it can be also sqllite</p>
-<div id="9897f67c" class="cell" data-execution_count="27">
+<div id="3576f9c0" class="cell" data-execution_count="27">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1"></a><span class="im">from</span> sqlite3 <span class="im">import</span> <span class="ex">connect</span></span>
@@ -969,7 +967,7 @@ try
 finally:
   x.__exit__</code></pre>
 <p>we’ll try to emplement this to our connection, we’ll wrap it to a <strong>temporary table behaviour</strong>:</p>
-<div id="16c65c54" class="cell" data-execution_count="28">
+<div id="2b7f6312" class="cell" data-execution_count="28">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1"></a><span class="im">from</span> sqlite3 <span class="im">import</span> <span class="ex">connect</span></span>
@@ -1005,7 +1003,7 @@ __exit__</code></pre>
 </div>
 </div>
 <p>now can the exit run before the enter, no! they need to be run sequencely. it remind us about the <strong>generator</strong> to improve this:</p>
-<div id="abfc6d1c" class="cell" data-execution_count="29">
+<div id="749b00d4" class="cell" data-execution_count="29">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1"></a><span class="im">from</span> sqlite3 <span class="im">import</span> <span class="ex">connect</span></span>
@@ -1046,7 +1044,7 @@ dropped table</code></pre>
 </div>
 </div>
 <p>enter and exit are already implemented in function <code>temporarytable</code> and cursor is implemented in the <code>connect()</code> call. now i would rewrite like this</p>
-<div id="3843c776" class="cell" data-execution_count="30">
+<div id="3007e670" class="cell" data-execution_count="30">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1"></a><span class="im">from</span> sqlite3 <span class="im">import</span> <span class="ex">connect</span></span>
@@ -1090,7 +1088,7 @@ dropped table</code></pre>
 </div>
 </div>
 <p>all the stuff context manager above we do not need to write:</p>
-<div id="a6c74201" class="cell" data-execution_count="31">
+<div id="f0ded331" class="cell" data-execution_count="31">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1"></a><span class="im">from</span> sqlite3 <span class="im">import</span> <span class="ex">connect</span></span>
@@ -1697,779 +1695,777 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb46-26"><a href="#cb46-26"></a></span>
 <span id="cb46-27"><a href="#cb46-27"></a><span class="ss">- </span>something deeply behind the Zen of Python;</span>
 <span id="cb46-28"><a href="#cb46-28"></a><span class="ss">- </span>metaphors and programming in Python;</span>
-<span id="cb46-29"><a href="#cb46-29"></a><span class="ss">- </span>python is scripting language;</span>
-<span id="cb46-30"><a href="#cb46-30"></a><span class="ss">- </span>4 features of Python and the way experts would think about these features;</span>
-<span id="cb46-31"><a href="#cb46-31"></a><span class="ss">- </span>a lot of fundamental details of how these feature work but very little talk about we can conceptualize these features in the broader sense of what they mean for modeling core problem;</span>
-<span id="cb46-32"><a href="#cb46-32"></a><span class="ss">- </span>so 4 features you might have heared before and couple of the core mental models how you can think about, an how you can think about python as a whole, wrapping everything together;</span>
-<span id="cb46-33"><a href="#cb46-33"></a><span class="ss">- </span>you will see me stumble to understand that in case you dont utd or dont have docs memorized, it's alright, the target is to know what they are and what they mean;</span>
-<span id="cb46-34"><a href="#cb46-34"></a><span class="ss">- </span>the talk presumes you to have a baseline of Python, but in case you a new to Python he believes there are cores you can take away.</span>
-<span id="cb46-35"><a href="#cb46-35"></a></span>
-<span id="cb46-36"><a href="#cb46-36"></a></span>
-<span id="cb46-37"><a href="#cb46-37"></a>:::{layout-ncol="1"}</span>
-<span id="cb46-38"><a href="#cb46-38"></a><span class="al">![James Powell on PyData Seattle 2017](James%20Powell_%20So%20you%20want%20to%20be%20a%20Python%20expert_%20_%20PyData%20Seattle%202017%205-37%20screenshot.png)</span></span>
-<span id="cb46-39"><a href="#cb46-39"></a>:::</span>
+<span id="cb46-29"><a href="#cb46-29"></a><span class="ss">- </span>python is not only scripting language, he will be introducing 4 features of Python and the way experts would think about these features;</span>
+<span id="cb46-30"><a href="#cb46-30"></a><span class="ss">- </span>a lot of fundamental details of how these feature work but very little talk about we can conceptualize these features in the broader sense of what they mean for modeling core problem. so 4 features you might have heared before and couple of the core mental models how you can think about, an how you can think about python as a whole, wrapping everything together;</span>
+<span id="cb46-31"><a href="#cb46-31"></a><span class="ss">- </span>you will see me stumble to understand that in case you dont utd or dont have docs memorized, it's alright, the target is to know what they are and what they mean;</span>
+<span id="cb46-32"><a href="#cb46-32"></a><span class="ss">- </span>the talk presumes you to have a baseline of Python, but in case you a new to Python he believes there are cores you can take away.</span>
+<span id="cb46-33"><a href="#cb46-33"></a></span>
+<span id="cb46-34"><a href="#cb46-34"></a></span>
+<span id="cb46-35"><a href="#cb46-35"></a>:::{layout-ncol="1"}</span>
+<span id="cb46-36"><a href="#cb46-36"></a><span class="al">![James Powell on PyData Seattle 2017](James%20Powell_%20So%20you%20want%20to%20be%20a%20Python%20expert_%20_%20PyData%20Seattle%202017%205-37%20screenshot.png)</span></span>
+<span id="cb46-37"><a href="#cb46-37"></a>:::</span>
+<span id="cb46-38"><a href="#cb46-38"></a></span>
+<span id="cb46-39"><a href="#cb46-39"></a><span class="fu"># data model protocol (or dunder method)</span></span>
 <span id="cb46-40"><a href="#cb46-40"></a></span>
-<span id="cb46-41"><a href="#cb46-41"></a><span class="fu"># data model protocol (or dunder method)</span></span>
+<span id="cb46-41"><a href="#cb46-41"></a>assume we have a data model with Polynomial object intitially do nothing, why I need 4 lines (instead of 2 lines) to create 2 Polynominals. How can I create and assign coefficients together.</span>
 <span id="cb46-42"><a href="#cb46-42"></a></span>
-<span id="cb46-43"><a href="#cb46-43"></a>assume we have a data model with Polinomial object intitially do nothing, why I need 4 lines (instead of 2 lines) to create 2 Polynominals. How can I create and assign coefficients together.</span>
-<span id="cb46-44"><a href="#cb46-44"></a></span>
-<span id="cb46-47"><a href="#cb46-47"></a><span class="in">```{python}</span></span>
-<span id="cb46-48"><a href="#cb46-48"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-49"><a href="#cb46-49"></a><span class="kw">class</span> Polynomial:</span>
-<span id="cb46-50"><a href="#cb46-50"></a>    <span class="cf">pass</span></span>
-<span id="cb46-51"><a href="#cb46-51"></a>p1<span class="op">=</span> Polynomial()</span>
-<span id="cb46-52"><a href="#cb46-52"></a>p2<span class="op">=</span> Polynomial()</span>
-<span id="cb46-53"><a href="#cb46-53"></a>p1.coeffs <span class="op">=</span> <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span> <span class="co">#  x^2 + 2x + 3</span></span>
-<span id="cb46-54"><a href="#cb46-54"></a>p2.coeffs <span class="op">=</span> <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span> <span class="co"># 3x^2 + 4x + 3</span></span>
-<span id="cb46-55"><a href="#cb46-55"></a><span class="in">```</span></span>
+<span id="cb46-45"><a href="#cb46-45"></a><span class="in">```{python}</span></span>
+<span id="cb46-46"><a href="#cb46-46"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-47"><a href="#cb46-47"></a><span class="kw">class</span> Polynomial:</span>
+<span id="cb46-48"><a href="#cb46-48"></a>    <span class="cf">pass</span></span>
+<span id="cb46-49"><a href="#cb46-49"></a>p1<span class="op">=</span> Polynomial()</span>
+<span id="cb46-50"><a href="#cb46-50"></a>p2<span class="op">=</span> Polynomial()</span>
+<span id="cb46-51"><a href="#cb46-51"></a>p1.coeffs <span class="op">=</span> <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span> <span class="co">#  x^2 + 2x + 3</span></span>
+<span id="cb46-52"><a href="#cb46-52"></a>p2.coeffs <span class="op">=</span> <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span> <span class="co"># 3x^2 + 4x + 3</span></span>
+<span id="cb46-53"><a href="#cb46-53"></a><span class="in">```</span></span>
+<span id="cb46-54"><a href="#cb46-54"></a></span>
+<span id="cb46-55"><a href="#cb46-55"></a>the answer is using a constructor <span class="in">`__init__`</span>, then we can compact our code like this:</span>
 <span id="cb46-56"><a href="#cb46-56"></a></span>
-<span id="cb46-57"><a href="#cb46-57"></a>the answer is using a constructor <span class="in">`__init__`</span>, then we can compact our code like this:</span>
-<span id="cb46-58"><a href="#cb46-58"></a></span>
-<span id="cb46-61"><a href="#cb46-61"></a><span class="in">```{python}</span></span>
-<span id="cb46-62"><a href="#cb46-62"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-63"><a href="#cb46-63"></a><span class="kw">class</span> Polynomial:</span>
-<span id="cb46-64"><a href="#cb46-64"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">*</span>coeffs):</span>
-<span id="cb46-65"><a href="#cb46-65"></a>        <span class="va">self</span>.coeffs <span class="op">=</span> coeffs</span>
-<span id="cb46-66"><a href="#cb46-66"></a></span>
-<span id="cb46-67"><a href="#cb46-67"></a>p1 <span class="op">=</span> Polynomial(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span> ) <span class="co">#  x^2 + 2x + 3</span></span>
-<span id="cb46-68"><a href="#cb46-68"></a>p2 <span class="op">=</span> Polynomial(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span> ) <span class="co"># 3x^2 + 4x + 3</span></span>
-<span id="cb46-69"><a href="#cb46-69"></a><span class="in">```</span></span>
+<span id="cb46-59"><a href="#cb46-59"></a><span class="in">```{python}</span></span>
+<span id="cb46-60"><a href="#cb46-60"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-61"><a href="#cb46-61"></a><span class="kw">class</span> Polynomial:</span>
+<span id="cb46-62"><a href="#cb46-62"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">*</span>coeffs):</span>
+<span id="cb46-63"><a href="#cb46-63"></a>        <span class="va">self</span>.coeffs <span class="op">=</span> coeffs</span>
+<span id="cb46-64"><a href="#cb46-64"></a></span>
+<span id="cb46-65"><a href="#cb46-65"></a>p1 <span class="op">=</span> Polynomial(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span> ) <span class="co">#  x^2 + 2x + 3</span></span>
+<span id="cb46-66"><a href="#cb46-66"></a>p2 <span class="op">=</span> Polynomial(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span> ) <span class="co"># 3x^2 + 4x + 3</span></span>
+<span id="cb46-67"><a href="#cb46-67"></a><span class="in">```</span></span>
+<span id="cb46-68"><a href="#cb46-68"></a></span>
+<span id="cb46-69"><a href="#cb46-69"></a>but if we print our objects in the terminal, they look so ugly. We miss the method that actually call <span class="in">`repr(obj)`</span> when we run <span class="in">`obj`</span>:</span>
 <span id="cb46-70"><a href="#cb46-70"></a></span>
-<span id="cb46-71"><a href="#cb46-71"></a>but if we print our objects in the terminal, they look so ugly. We miss the method that actually call <span class="in">`repr(obj)`</span> when we run <span class="in">`obj`</span>:</span>
-<span id="cb46-72"><a href="#cb46-72"></a></span>
-<span id="cb46-73"><a href="#cb46-73"></a>:::{layout-ncol="1"}</span>
-<span id="cb46-74"><a href="#cb46-74"></a><span class="al">![The need of `__repr__`](1_repr.png)</span></span>
-<span id="cb46-75"><a href="#cb46-75"></a>:::</span>
+<span id="cb46-71"><a href="#cb46-71"></a>:::{layout-ncol="1"}</span>
+<span id="cb46-72"><a href="#cb46-72"></a><span class="al">![The need of `__repr__`](1_repr.png)</span></span>
+<span id="cb46-73"><a href="#cb46-73"></a>:::</span>
+<span id="cb46-74"><a href="#cb46-74"></a></span>
+<span id="cb46-75"><a href="#cb46-75"></a>that's what <span class="in">`__repr__`</span> for, a printable representation of the class:</span>
 <span id="cb46-76"><a href="#cb46-76"></a></span>
-<span id="cb46-77"><a href="#cb46-77"></a>that's what <span class="in">`__repr__`</span> for, a printable representation of the class:</span>
-<span id="cb46-78"><a href="#cb46-78"></a></span>
-<span id="cb46-81"><a href="#cb46-81"></a><span class="in">```{python}</span></span>
-<span id="cb46-82"><a href="#cb46-82"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-83"><a href="#cb46-83"></a><span class="kw">class</span> Polynomial:</span>
-<span id="cb46-84"><a href="#cb46-84"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">*</span>coeffs):</span>
-<span id="cb46-85"><a href="#cb46-85"></a>        <span class="va">self</span>.coeffs <span class="op">=</span> coeffs</span>
-<span id="cb46-86"><a href="#cb46-86"></a></span>
-<span id="cb46-87"><a href="#cb46-87"></a>    <span class="kw">def</span> <span class="fu">__repr__</span>(<span class="va">self</span>):</span>
-<span id="cb46-88"><a href="#cb46-88"></a>        <span class="cf">return</span> <span class="st">'Polynomial(*</span><span class="sc">{!r}</span><span class="st">)'</span>.<span class="bu">format</span>(<span class="va">self</span>.coeffs)</span>
-<span id="cb46-89"><a href="#cb46-89"></a></span>
-<span id="cb46-90"><a href="#cb46-90"></a></span>
-<span id="cb46-91"><a href="#cb46-91"></a>p1 <span class="op">=</span> Polynomial(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)  <span class="co">#  x^2 + 2x + 3</span></span>
-<span id="cb46-92"><a href="#cb46-92"></a>p2 <span class="op">=</span> Polynomial(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span>)  <span class="co"># 3x^2 + 4x + 3</span></span>
-<span id="cb46-93"><a href="#cb46-93"></a><span class="in">```</span></span>
+<span id="cb46-79"><a href="#cb46-79"></a><span class="in">```{python}</span></span>
+<span id="cb46-80"><a href="#cb46-80"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-81"><a href="#cb46-81"></a><span class="kw">class</span> Polynomial:</span>
+<span id="cb46-82"><a href="#cb46-82"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">*</span>coeffs):</span>
+<span id="cb46-83"><a href="#cb46-83"></a>        <span class="va">self</span>.coeffs <span class="op">=</span> coeffs</span>
+<span id="cb46-84"><a href="#cb46-84"></a></span>
+<span id="cb46-85"><a href="#cb46-85"></a>    <span class="kw">def</span> <span class="fu">__repr__</span>(<span class="va">self</span>):</span>
+<span id="cb46-86"><a href="#cb46-86"></a>        <span class="cf">return</span> <span class="st">'Polynomial(*</span><span class="sc">{!r}</span><span class="st">)'</span>.<span class="bu">format</span>(<span class="va">self</span>.coeffs)</span>
+<span id="cb46-87"><a href="#cb46-87"></a></span>
+<span id="cb46-88"><a href="#cb46-88"></a></span>
+<span id="cb46-89"><a href="#cb46-89"></a>p1 <span class="op">=</span> Polynomial(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)  <span class="co">#  x^2 + 2x + 3</span></span>
+<span id="cb46-90"><a href="#cb46-90"></a>p2 <span class="op">=</span> Polynomial(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span>)  <span class="co"># 3x^2 + 4x + 3</span></span>
+<span id="cb46-91"><a href="#cb46-91"></a><span class="in">```</span></span>
+<span id="cb46-92"><a href="#cb46-92"></a></span>
+<span id="cb46-93"><a href="#cb46-93"></a>the next thing we wanna do is to add Polinimials together <span class="in">`p1 + p2`</span>.  </span>
 <span id="cb46-94"><a href="#cb46-94"></a></span>
-<span id="cb46-95"><a href="#cb46-95"></a>the next thing we wanna do is to add Polinimials together <span class="in">`p1 + p2`</span>.  </span>
-<span id="cb46-96"><a href="#cb46-96"></a></span>
-<span id="cb46-99"><a href="#cb46-99"></a><span class="in">```{python}</span></span>
-<span id="cb46-100"><a href="#cb46-100"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-101"><a href="#cb46-101"></a>    <span class="kw">def</span> <span class="fu">__add__</span>(<span class="va">self</span>, other):</span>
-<span id="cb46-102"><a href="#cb46-102"></a>        <span class="cf">return</span> Polynomial(<span class="op">*</span>(x <span class="op">+</span> y <span class="cf">for</span> x, y <span class="kw">in</span> <span class="bu">zip</span>(<span class="va">self</span>.coeffs, other.coeffs)))</span>
-<span id="cb46-103"><a href="#cb46-103"></a><span class="in">```</span></span>
-<span id="cb46-104"><a href="#cb46-104"></a></span>
-<span id="cb46-105"><a href="#cb46-105"></a>:::{.callout-note}</span>
-<span id="cb46-106"><a href="#cb46-106"></a>What is pattern here? I have some behaviours that I want to implement, and I write some **underscore** (<span class="in">`__x__`</span>) funtions. We call them dunder or underscore methods.</span>
+<span id="cb46-97"><a href="#cb46-97"></a><span class="in">```{python}</span></span>
+<span id="cb46-98"><a href="#cb46-98"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-99"><a href="#cb46-99"></a>    <span class="kw">def</span> <span class="fu">__add__</span>(<span class="va">self</span>, other):</span>
+<span id="cb46-100"><a href="#cb46-100"></a>        <span class="cf">return</span> Polynomial(<span class="op">*</span>(x <span class="op">+</span> y <span class="cf">for</span> x, y <span class="kw">in</span> <span class="bu">zip</span>(<span class="va">self</span>.coeffs, other.coeffs)))</span>
+<span id="cb46-101"><a href="#cb46-101"></a><span class="in">```</span></span>
+<span id="cb46-102"><a href="#cb46-102"></a></span>
+<span id="cb46-103"><a href="#cb46-103"></a>:::{.callout-note}</span>
+<span id="cb46-104"><a href="#cb46-104"></a>What is pattern here? I have some behaviours that I want to implement, and I write some **underscore** (<span class="in">`__x__`</span>) funtions. We call them dunder or underscore methods.</span>
+<span id="cb46-105"><a href="#cb46-105"></a></span>
+<span id="cb46-106"><a href="#cb46-106"></a>Try google "data model" and we'll a bunch of documents that list all method to implement the principle behaviours of our objects. There are top-level functions of top-level syntaxes that corresponding to <span class="in">`__`</span>.</span>
 <span id="cb46-107"><a href="#cb46-107"></a></span>
-<span id="cb46-108"><a href="#cb46-108"></a>Try google "data model" and we'll a bunch of documents that list all method to implement the principle behaviours of our objects. There are top-level functions of top-level syntaxes that corresponding to <span class="in">`__`</span>.</span>
+<span id="cb46-108"><a href="#cb46-108"></a>But there are smthg more fundamental here, when I want to:</span>
 <span id="cb46-109"><a href="#cb46-109"></a></span>
-<span id="cb46-110"><a href="#cb46-110"></a>But there are smthg more fundamental here, when I want to:</span>
-<span id="cb46-111"><a href="#cb46-111"></a></span>
-<span id="cb46-112"><a href="#cb46-112"></a><span class="ss">- </span>x + y -&gt; <span class="in">`__add__`</span>;</span>
-<span id="cb46-113"><a href="#cb46-113"></a><span class="ss">- </span>initialize x -&gt; <span class="in">`__init__`</span>;</span>
-<span id="cb46-114"><a href="#cb46-114"></a><span class="ss">- </span>repr(x) -&gt; <span class="in">`__repr__`</span>.</span>
+<span id="cb46-110"><a href="#cb46-110"></a><span class="ss">- </span>x + y -&gt; <span class="in">`__add__`</span>;</span>
+<span id="cb46-111"><a href="#cb46-111"></a><span class="ss">- </span>initialize x -&gt; <span class="in">`__init__`</span>;</span>
+<span id="cb46-112"><a href="#cb46-112"></a><span class="ss">- </span>repr(x) -&gt; <span class="in">`__repr__`</span>.</span>
+<span id="cb46-113"><a href="#cb46-113"></a></span>
+<span id="cb46-114"><a href="#cb46-114"></a>Then what if we want to implement the <span class="in">`len()`</span> (return the length, which is popular know Python function) -&gt; naturally we'll be thinking of <span class="in">`__len__`</span>.</span>
 <span id="cb46-115"><a href="#cb46-115"></a></span>
-<span id="cb46-116"><a href="#cb46-116"></a>Then what if we want to implement the <span class="in">`len()`</span> (return the length, which is popular know Python function) -&gt; naturally we'll be thinking of <span class="in">`__len__`</span>.</span>
-<span id="cb46-117"><a href="#cb46-117"></a></span>
-<span id="cb46-118"><a href="#cb46-118"></a></span>
-<span id="cb46-121"><a href="#cb46-121"></a><span class="in">```{python}</span></span>
-<span id="cb46-122"><a href="#cb46-122"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-123"><a href="#cb46-123"></a>    <span class="kw">def</span> <span class="fu">__len__</span>(<span class="va">self</span>):</span>
-<span id="cb46-124"><a href="#cb46-124"></a>        <span class="cf">return</span> <span class="bu">len</span>(<span class="va">self</span>.coeffs)</span>
-<span id="cb46-125"><a href="#cb46-125"></a><span class="in">```</span></span>
-<span id="cb46-126"><a href="#cb46-126"></a>:::</span>
-<span id="cb46-127"><a href="#cb46-127"></a></span>
+<span id="cb46-116"><a href="#cb46-116"></a></span>
+<span id="cb46-119"><a href="#cb46-119"></a><span class="in">```{python}</span></span>
+<span id="cb46-120"><a href="#cb46-120"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-121"><a href="#cb46-121"></a>    <span class="kw">def</span> <span class="fu">__len__</span>(<span class="va">self</span>):</span>
+<span id="cb46-122"><a href="#cb46-122"></a>        <span class="cf">return</span> <span class="bu">len</span>(<span class="va">self</span>.coeffs)</span>
+<span id="cb46-123"><a href="#cb46-123"></a><span class="in">```</span></span>
+<span id="cb46-124"><a href="#cb46-124"></a>:::</span>
+<span id="cb46-125"><a href="#cb46-125"></a></span>
+<span id="cb46-126"><a href="#cb46-126"></a></span>
+<span id="cb46-127"><a href="#cb46-127"></a>The Python data model is a means by which you can protocols. Thos protocols have abstract meaning depending on the object itself. We tight the behaviours to top-level **syntaxes** and **functions**.</span>
 <span id="cb46-128"><a href="#cb46-128"></a></span>
-<span id="cb46-129"><a href="#cb46-129"></a>The Python data model is a means by which you can protocols. Thos protocols have abstract meaning depending on the object itself. We tight the behaviours to top-level **syntaxes** and **functions**.</span>
+<span id="cb46-129"><a href="#cb46-129"></a>Similarly, if we do see the object Polynomial a executable, callable thing, we can implement a <span class="in">`__call__`</span> which will turn our class to function, in this case we cant imagine such thing, so pass.</span>
 <span id="cb46-130"><a href="#cb46-130"></a></span>
-<span id="cb46-131"><a href="#cb46-131"></a>Similarly, if we do see the object Polynomial a executable, callable thing, we can implement a <span class="in">`__call__`</span> which will turn our class to function, in this case we cant imagine such thing, so pass.</span>
+<span id="cb46-131"><a href="#cb46-131"></a>✍ There are 3 core patterns we want to understand and remember in Python to really understand object orientation in Python:</span>
 <span id="cb46-132"><a href="#cb46-132"></a></span>
-<span id="cb46-133"><a href="#cb46-133"></a>✍ There are 3 core patterns we want to understand and remember in Python to really understand object orientation in Python:</span>
-<span id="cb46-134"><a href="#cb46-134"></a></span>
-<span id="cb46-135"><a href="#cb46-135"></a><span class="ss">1. </span>The protocol view of Python;</span>
-<span id="cb46-136"><a href="#cb46-136"></a><span class="ss">2. </span>The buil-in inheritance protocol;</span>
-<span id="cb46-137"><a href="#cb46-137"></a><span class="ss">3. </span>Some caveats around how OOP in Python works.</span>
+<span id="cb46-133"><a href="#cb46-133"></a><span class="ss">1. </span>The protocol view of Python;</span>
+<span id="cb46-134"><a href="#cb46-134"></a><span class="ss">2. </span>The buil-in inheritance protocol;</span>
+<span id="cb46-135"><a href="#cb46-135"></a><span class="ss">3. </span>Some caveats around how OOP in Python works.</span>
+<span id="cb46-136"><a href="#cb46-136"></a></span>
+<span id="cb46-137"><a href="#cb46-137"></a>Which will be continue to present in this video is jumping into a very tricky metaphor a feature we may have heard of.</span>
 <span id="cb46-138"><a href="#cb46-138"></a></span>
-<span id="cb46-139"><a href="#cb46-139"></a>Which will be continue to present in this video is jumping into a very tricky metaphor a feature we may have heard of.</span>
+<span id="cb46-139"><a href="#cb46-139"></a><span class="fu"># meta class</span></span>
 <span id="cb46-140"><a href="#cb46-140"></a></span>
-<span id="cb46-141"><a href="#cb46-141"></a><span class="fu"># meta class</span></span>
+<span id="cb46-141"><a href="#cb46-141"></a>imagine there are 2 groups working on some piece of software. one is core infrastructure of the group and they write <span class="in">`library`</span> code, the other group is devloper group, they write <span class="in">`user`</span> code. the developer use <span class="in">`library`</span> code to accomplish actual business objectives. the core team less cares about business problem, they focus on technical stuffs.</span>
 <span id="cb46-142"><a href="#cb46-142"></a></span>
-<span id="cb46-143"><a href="#cb46-143"></a>imagine there are 2 groups working on some piece of software. one is core infrastructure of the group and they write <span class="in">`library`</span> code, the other group is devloper group, they write <span class="in">`user`</span> code. the developer use <span class="in">`library`</span> code to accomplish actual business objectives. the core team less cares about business problem, they focus on technical stuffs.</span>
+<span id="cb46-143"><a href="#cb46-143"></a>you are in the dev team and there is no way to change to code of <span class="in">`library.py`</span>. in what circumstance the code of <span class="in">`user`</span> can break -&gt; there is no <span class="in">`foo`</span> method! To avoid that, we could simply write a test that call <span class="in">`bar()`</span>, then we could know if it fails before production environment's runtime.</span>
 <span id="cb46-144"><a href="#cb46-144"></a></span>
-<span id="cb46-145"><a href="#cb46-145"></a>you are in the dev team and there is no way to change to code of <span class="in">`library.py`</span>. in what circumstance the code of <span class="in">`user`</span> can break -&gt; there is no <span class="in">`foo`</span> method! To avoid that, we could simply write a test that call <span class="in">`bar()`</span>, then we could know if it fails before production environment's runtime.</span>
+<span id="cb46-145"><a href="#cb46-145"></a>is there anything simpler to know the ability to fail before hit run time in production env? -&gt; use <span class="in">`assert`</span> to check existence of the attribute. we will have an early warning right before the class was initiated.</span>
 <span id="cb46-146"><a href="#cb46-146"></a></span>
-<span id="cb46-147"><a href="#cb46-147"></a>is there anything simpler to know the ability to fail before hit run time in production env? -&gt; use <span class="in">`assert`</span> to check existence of the attribute. we will have an early warning right before the class was initiated.</span>
-<span id="cb46-148"><a href="#cb46-148"></a></span>
-<span id="cb46-149"><a href="#cb46-149"></a>:::{layout-ncol="1"}</span>
-<span id="cb46-150"><a href="#cb46-150"></a><span class="al">![we can know if the core team change the function name to "food"](2_assert.png)</span></span>
-<span id="cb46-151"><a href="#cb46-151"></a>:::</span>
+<span id="cb46-147"><a href="#cb46-147"></a>:::{layout-ncol="1"}</span>
+<span id="cb46-148"><a href="#cb46-148"></a><span class="al">![we can know if the core team change the function name to "food"](2_assert.png)</span></span>
+<span id="cb46-149"><a href="#cb46-149"></a>:::</span>
+<span id="cb46-150"><a href="#cb46-150"></a></span>
+<span id="cb46-151"><a href="#cb46-151"></a>by this way we are enforcing constraints on the base class from the derived class.</span>
 <span id="cb46-152"><a href="#cb46-152"></a></span>
-<span id="cb46-153"><a href="#cb46-153"></a>by this way we are enforcing constraints on the base class from the derived class.</span>
+<span id="cb46-153"><a href="#cb46-153"></a>now we move to a reverse situation, you are the core structure writer and have to deal with the meathead in the business unit that actually using/abusing/missusing your code ~ you have no idea what are they doing. you write the <span class="in">`Base`</span> class with the assumption and some responsible developer in the BU will go and implement the <span class="in">`bar`</span> method.</span>
 <span id="cb46-154"><a href="#cb46-154"></a></span>
-<span id="cb46-155"><a href="#cb46-155"></a>now we move to a reverse situation, you are the core structure writer and have to deal with the meathead in the business unit that actually using/abusing/missusing your code ~ you have no idea what are they doing. you write the <span class="in">`Base`</span> class with the assumption and some responsible developer in the BU will go and implement the <span class="in">`bar`</span> method.</span>
-<span id="cb46-156"><a href="#cb46-156"></a></span>
-<span id="cb46-157"><a href="#cb46-157"></a>:::{layout-ncol="1"}</span>
-<span id="cb46-158"><a href="#cb46-158"></a><span class="al">![what if you stand on the left side pane](3_reverse_sit.png)</span></span>
-<span id="cb46-159"><a href="#cb46-159"></a>:::</span>
+<span id="cb46-155"><a href="#cb46-155"></a>:::{layout-ncol="1"}</span>
+<span id="cb46-156"><a href="#cb46-156"></a><span class="al">![what if you stand on the left side pane](3_reverse_sit.png)</span></span>
+<span id="cb46-157"><a href="#cb46-157"></a>:::</span>
+<span id="cb46-158"><a href="#cb46-158"></a></span>
+<span id="cb46-159"><a href="#cb46-159"></a>you have no ability to change and even have no idea where the code on the right pane sit. we can not use <span class="in">`hasattr()`</span> for this particular situation. the first method is to use <span class="in">`try ... catch ...`</span>, but it only catches in runtime and we will miss catching it before it goes to production env.</span>
 <span id="cb46-160"><a href="#cb46-160"></a></span>
-<span id="cb46-161"><a href="#cb46-161"></a>you have no ability to change and even have no idea where the code on the right pane sit. we can not use <span class="in">`hasattr()`</span> for this particular situation. the first method is to use <span class="in">`try ... catch ...`</span>, but it only catches in runtime and we will miss catching it before it goes to production env.</span>
-<span id="cb46-162"><a href="#cb46-162"></a></span>
-<span id="cb46-163"><a href="#cb46-163"></a>:::{callout-note}</span>
-<span id="cb46-164"><a href="#cb46-164"></a>The reason that we could call Python a **protocol orientated language** is not just because the Python data model the object model is protocol orientated but that the entire Python language itself has a notion of hooks and protocols and safety valves within it.</span>
+<span id="cb46-161"><a href="#cb46-161"></a>:::{callout-note}</span>
+<span id="cb46-162"><a href="#cb46-162"></a>The reason that we could call Python a **protocol orientated language** is not just because the Python data model the object model is protocol orientated but that the entire Python language itself has a notion of hooks and protocols and safety valves within it.</span>
+<span id="cb46-163"><a href="#cb46-163"></a></span>
+<span id="cb46-164"><a href="#cb46-164"></a>Python is much much simpler language, the code run linearly from top to bottom. And the class statement in Python is actually an executable code. We can write this:</span>
 <span id="cb46-165"><a href="#cb46-165"></a></span>
-<span id="cb46-166"><a href="#cb46-166"></a>Python is much much simpler language, the code run linearly from top to bottom. And the class statement in Python is actually an executable code. We can write this:</span>
-<span id="cb46-167"><a href="#cb46-167"></a></span>
-<span id="cb46-170"><a href="#cb46-170"></a><span class="in">```{python}</span></span>
-<span id="cb46-171"><a href="#cb46-171"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-172"><a href="#cb46-172"></a></span>
-<span id="cb46-173"><a href="#cb46-173"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
-<span id="cb46-174"><a href="#cb46-174"></a>  <span class="kw">class</span> Base: <span class="cf">pass</span></span>
+<span id="cb46-168"><a href="#cb46-168"></a><span class="in">```{python}</span></span>
+<span id="cb46-169"><a href="#cb46-169"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-170"><a href="#cb46-170"></a></span>
+<span id="cb46-171"><a href="#cb46-171"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb46-172"><a href="#cb46-172"></a>  <span class="kw">class</span> Base: <span class="cf">pass</span></span>
+<span id="cb46-173"><a href="#cb46-173"></a></span>
+<span id="cb46-174"><a href="#cb46-174"></a><span class="co"># or the same thing in other way</span></span>
 <span id="cb46-175"><a href="#cb46-175"></a></span>
-<span id="cb46-176"><a href="#cb46-176"></a><span class="co"># or the same thing in other way</span></span>
-<span id="cb46-177"><a href="#cb46-177"></a></span>
-<span id="cb46-178"><a href="#cb46-178"></a><span class="kw">class</span> Base:</span>
-<span id="cb46-179"><a href="#cb46-179"></a>  <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
-<span id="cb46-180"><a href="#cb46-180"></a>    <span class="kw">def</span> bar(<span class="va">self</span>):</span>
-<span id="cb46-181"><a href="#cb46-181"></a>      <span class="cf">return</span> <span class="st">'bar'</span></span>
-<span id="cb46-182"><a href="#cb46-182"></a><span class="in">```</span></span>
-<span id="cb46-183"><a href="#cb46-183"></a></span>
-<span id="cb46-184"><a href="#cb46-184"></a>Only the last one will survive. Python accepts this syntax because it's class is **fundamentally executable**.</span>
-<span id="cb46-185"><a href="#cb46-185"></a>:::</span>
+<span id="cb46-176"><a href="#cb46-176"></a><span class="kw">class</span> Base:</span>
+<span id="cb46-177"><a href="#cb46-177"></a>  <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb46-178"><a href="#cb46-178"></a>    <span class="kw">def</span> bar(<span class="va">self</span>):</span>
+<span id="cb46-179"><a href="#cb46-179"></a>      <span class="cf">return</span> <span class="st">'bar'</span></span>
+<span id="cb46-180"><a href="#cb46-180"></a><span class="in">```</span></span>
+<span id="cb46-181"><a href="#cb46-181"></a></span>
+<span id="cb46-182"><a href="#cb46-182"></a>Only the last one will survive. Python accepts this syntax because it's class is **fundamentally executable**.</span>
+<span id="cb46-183"><a href="#cb46-183"></a>:::</span>
+<span id="cb46-184"><a href="#cb46-184"></a></span>
+<span id="cb46-185"><a href="#cb46-185"></a>Let's get into something more interesting! create a class inside a function and use a function in a module in standard libbrary in Python called <span class="in">`dis`</span>.</span>
 <span id="cb46-186"><a href="#cb46-186"></a></span>
-<span id="cb46-187"><a href="#cb46-187"></a>Let's get into something more interesting! create a class inside a function and use a function in a module in standard libbrary in Python called <span class="in">`dis`</span>.</span>
-<span id="cb46-188"><a href="#cb46-188"></a></span>
-<span id="cb46-191"><a href="#cb46-191"></a><span class="in">```{python}</span></span>
-<span id="cb46-192"><a href="#cb46-192"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-193"><a href="#cb46-193"></a></span>
-<span id="cb46-194"><a href="#cb46-194"></a><span class="co"># create a class inside a function</span></span>
-<span id="cb46-195"><a href="#cb46-195"></a><span class="kw">def</span> _():</span>
-<span id="cb46-196"><a href="#cb46-196"></a>  <span class="kw">class</span> Base:</span>
-<span id="cb46-197"><a href="#cb46-197"></a>    <span class="cf">pass</span></span>
-<span id="cb46-198"><a href="#cb46-198"></a></span>
-<span id="cb46-199"><a href="#cb46-199"></a><span class="co"># dis stands for disassemble</span></span>
-<span id="cb46-200"><a href="#cb46-200"></a><span class="im">from</span> dis <span class="im">import</span> dis</span>
-<span id="cb46-201"><a href="#cb46-201"></a><span class="in">```</span></span>
+<span id="cb46-189"><a href="#cb46-189"></a><span class="in">```{python}</span></span>
+<span id="cb46-190"><a href="#cb46-190"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-191"><a href="#cb46-191"></a></span>
+<span id="cb46-192"><a href="#cb46-192"></a><span class="co"># create a class inside a function</span></span>
+<span id="cb46-193"><a href="#cb46-193"></a><span class="kw">def</span> _():</span>
+<span id="cb46-194"><a href="#cb46-194"></a>  <span class="kw">class</span> Base:</span>
+<span id="cb46-195"><a href="#cb46-195"></a>    <span class="cf">pass</span></span>
+<span id="cb46-196"><a href="#cb46-196"></a></span>
+<span id="cb46-197"><a href="#cb46-197"></a><span class="co"># dis stands for disassemble</span></span>
+<span id="cb46-198"><a href="#cb46-198"></a><span class="im">from</span> dis <span class="im">import</span> dis</span>
+<span id="cb46-199"><a href="#cb46-199"></a><span class="in">```</span></span>
+<span id="cb46-200"><a href="#cb46-200"></a></span>
+<span id="cb46-201"><a href="#cb46-201"></a>let's 'dis' - stands for disassemble - to see what happen in the bytecode. there are actually things in Python bytecode call <span class="in">`LOAD_BUILD_CLASS`</span>, it's actual executable runtime instruction in the Python interpreter for create a class.</span>
 <span id="cb46-202"><a href="#cb46-202"></a></span>
-<span id="cb46-203"><a href="#cb46-203"></a>let's 'dis' - stands for disassemble - to see what happen in the bytecode. there are actually things in Python bytecode call <span class="in">`LOAD_BUILD_CLASS`</span>, it's actual executable runtime instruction in the Python interpreter for create a class.</span>
-<span id="cb46-204"><a href="#cb46-204"></a></span>
-<span id="cb46-205"><a href="#cb46-205"></a>:::{layout-ncol="1"}</span>
-<span id="cb46-206"><a href="#cb46-206"></a><span class="al">![disassemble](4_dis.png)</span></span>
-<span id="cb46-207"><a href="#cb46-207"></a>:::</span>
+<span id="cb46-203"><a href="#cb46-203"></a>:::{layout-ncol="1"}</span>
+<span id="cb46-204"><a href="#cb46-204"></a><span class="al">![disassemble](4_dis.png)</span></span>
+<span id="cb46-205"><a href="#cb46-205"></a>:::</span>
+<span id="cb46-206"><a href="#cb46-206"></a></span>
+<span id="cb46-207"><a href="#cb46-207"></a>at the first section of this lecture, we saw some **correspondence** between top-level syntac or function AND some underscore method that implements that syntax or function. there should be also top-level mechanism, not explicitly syntax or function, with the process of building a class. there is a build-ins function called <span class="in">`__build_class__`</span>.</span>
 <span id="cb46-208"><a href="#cb46-208"></a></span>
-<span id="cb46-209"><a href="#cb46-209"></a>at the first section of this lecture, we saw some **correspondence** between top-level syntac or function AND some underscore method that implements that syntax or function. there should be also top-level mechanism, not explicitly syntax or function, with the process of building a class. there is a build-ins function called <span class="in">`__build_class__`</span>.</span>
-<span id="cb46-210"><a href="#cb46-210"></a></span>
-<span id="cb46-213"><a href="#cb46-213"></a><span class="in">```{python}</span></span>
-<span id="cb46-214"><a href="#cb46-214"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-215"><a href="#cb46-215"></a> </span>
-<span id="cb46-216"><a href="#cb46-216"></a>old_bc <span class="op">=</span> __build_class__</span>
-<span id="cb46-217"><a href="#cb46-217"></a></span>
-<span id="cb46-218"><a href="#cb46-218"></a><span class="kw">def</span> my_bc(func, name, base<span class="op">=</span><span class="va">None</span>, <span class="op">**</span>kw):</span>
-<span id="cb46-219"><a href="#cb46-219"></a>  <span class="cf">if</span> base <span class="kw">is</span> Base:</span>
-<span id="cb46-220"><a href="#cb46-220"></a>    <span class="bu">print</span>(<span class="st">'check if the bar method is defined'</span>)</span>
-<span id="cb46-221"><a href="#cb46-221"></a>  <span class="cf">if</span> base <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
-<span id="cb46-222"><a href="#cb46-222"></a>    <span class="cf">return</span> old_bc(func, name, base, <span class="op">**</span>kw)</span>
-<span id="cb46-223"><a href="#cb46-223"></a>  <span class="cf">return</span> old_bc(func, name, <span class="op">**</span>kw)</span>
-<span id="cb46-224"><a href="#cb46-224"></a></span>
-<span id="cb46-225"><a href="#cb46-225"></a><span class="im">import</span> builtins</span>
-<span id="cb46-226"><a href="#cb46-226"></a>builtins.__build_class__ <span class="op">=</span> my_bc</span>
-<span id="cb46-227"><a href="#cb46-227"></a><span class="in">```</span> </span>
-<span id="cb46-228"><a href="#cb46-228"></a></span>
-<span id="cb46-229"><a href="#cb46-229"></a>:::{layout-ncol="1"}</span>
-<span id="cb46-230"><a href="#cb46-230"></a><span class="al">![`__build_class__`, we can check if the `bar` method is implemented, Python is **protocal oriented language**!](5_build_class.png)</span></span>
-<span id="cb46-231"><a href="#cb46-231"></a>:::</span>
+<span id="cb46-211"><a href="#cb46-211"></a><span class="in">```{python}</span></span>
+<span id="cb46-212"><a href="#cb46-212"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-213"><a href="#cb46-213"></a> </span>
+<span id="cb46-214"><a href="#cb46-214"></a>old_bc <span class="op">=</span> __build_class__</span>
+<span id="cb46-215"><a href="#cb46-215"></a></span>
+<span id="cb46-216"><a href="#cb46-216"></a><span class="kw">def</span> my_bc(func, name, base<span class="op">=</span><span class="va">None</span>, <span class="op">**</span>kw):</span>
+<span id="cb46-217"><a href="#cb46-217"></a>  <span class="cf">if</span> base <span class="kw">is</span> Base:</span>
+<span id="cb46-218"><a href="#cb46-218"></a>    <span class="bu">print</span>(<span class="st">'check if the bar method is defined'</span>)</span>
+<span id="cb46-219"><a href="#cb46-219"></a>  <span class="cf">if</span> base <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb46-220"><a href="#cb46-220"></a>    <span class="cf">return</span> old_bc(func, name, base, <span class="op">**</span>kw)</span>
+<span id="cb46-221"><a href="#cb46-221"></a>  <span class="cf">return</span> old_bc(func, name, <span class="op">**</span>kw)</span>
+<span id="cb46-222"><a href="#cb46-222"></a></span>
+<span id="cb46-223"><a href="#cb46-223"></a><span class="im">import</span> builtins</span>
+<span id="cb46-224"><a href="#cb46-224"></a>builtins.__build_class__ <span class="op">=</span> my_bc</span>
+<span id="cb46-225"><a href="#cb46-225"></a><span class="in">```</span> </span>
+<span id="cb46-226"><a href="#cb46-226"></a></span>
+<span id="cb46-227"><a href="#cb46-227"></a>:::{layout-ncol="1"}</span>
+<span id="cb46-228"><a href="#cb46-228"></a><span class="al">![`__build_class__`, we can check if the `bar` method is implemented, Python is **protocal oriented language**!](5_build_class.png)</span></span>
+<span id="cb46-229"><a href="#cb46-229"></a>:::</span>
+<span id="cb46-230"><a href="#cb46-230"></a></span>
+<span id="cb46-231"><a href="#cb46-231"></a>It's actually quite a common pattern and quite a fundamental piece of Python almost everything that a Python language does in an execution context like building classes, creating functions, importing modules you can find a way to **hook** into that. once you can find a way to hook into that you can start doing things that you want to do like check is my user code going to break from the perspective the library author. </span>
 <span id="cb46-232"><a href="#cb46-232"></a></span>
-<span id="cb46-233"><a href="#cb46-233"></a>It's actually quite a common pattern and quite a fundamental piece of Python almost everything that a Python language does in an execution context like building classes, creating functions, importing modules you can find a way to **hook** into that. once you can find a way to hook into that you can start doing things that you want to do like check is my user code going to break from the perspective the library author. </span>
+<span id="cb46-233"><a href="#cb46-233"></a>The most important thing here is **understanding existence of this pattern**, knowing that there are options solving such problem, and there are even better approachs.</span>
 <span id="cb46-234"><a href="#cb46-234"></a></span>
-<span id="cb46-235"><a href="#cb46-235"></a>The most important thing here is **understanding existence of this pattern**, knowing that there are options solving such problem, and there are even better approachs.</span>
+<span id="cb46-235"><a href="#cb46-235"></a><span class="fu">## There are 2 fundamental ways that people ussually use to solve this</span></span>
 <span id="cb46-236"><a href="#cb46-236"></a></span>
-<span id="cb46-237"><a href="#cb46-237"></a><span class="fu">## There are 2 fundamental ways that people ussually use to solve this</span></span>
+<span id="cb46-237"><a href="#cb46-237"></a><span class="fu">### 1. meta class</span></span>
 <span id="cb46-238"><a href="#cb46-238"></a></span>
-<span id="cb46-239"><a href="#cb46-239"></a><span class="fu">### 1. meta class</span></span>
+<span id="cb46-239"><a href="#cb46-239"></a>[<span class="co">[</span><span class="ot">futher discussion</span><span class="co">](https://stackoverflow.com/questions/395982/metaclass-new-cls-and-super-what-is-the-mechanism-exactly)</span>]{.aside}</span>
 <span id="cb46-240"><a href="#cb46-240"></a></span>
-<span id="cb46-241"><a href="#cb46-241"></a>[<span class="co">[</span><span class="ot">futher discussion</span><span class="co">](https://stackoverflow.com/questions/395982/metaclass-new-cls-and-super-what-is-the-mechanism-exactly)</span>]{.aside}</span>
-<span id="cb46-242"><a href="#cb46-242"></a></span>
-<span id="cb46-245"><a href="#cb46-245"></a><span class="in">```{python}</span></span>
-<span id="cb46-246"><a href="#cb46-246"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-247"><a href="#cb46-247"></a><span class="co"># meta classes are merely derived from `type`</span></span>
-<span id="cb46-248"><a href="#cb46-248"></a><span class="kw">class</span> BaseMeta(<span class="bu">type</span>):</span>
-<span id="cb46-249"><a href="#cb46-249"></a>    <span class="kw">def</span> <span class="fu">__new__</span>(cls, name, bases, namespace):</span>
-<span id="cb46-250"><a href="#cb46-250"></a>        <span class="bu">print</span>(<span class="st">'BaseMeta.__new__'</span>, cls, name, bases, namespace)</span>
-<span id="cb46-251"><a href="#cb46-251"></a>        <span class="cf">if</span> name <span class="op">!=</span> <span class="st">'Base'</span> <span class="kw">and</span> <span class="st">'bar'</span> <span class="kw">not</span> <span class="kw">in</span> namespace:</span>
-<span id="cb46-252"><a href="#cb46-252"></a>            <span class="cf">raise</span> <span class="pp">TypeError</span>(<span class="st">"Bad User class, 'bar' is not defined"</span>)</span>
-<span id="cb46-253"><a href="#cb46-253"></a>        <span class="cf">return</span> <span class="bu">super</span>().<span class="fu">__new__</span>(cls, name, bases, namespace)</span>
-<span id="cb46-254"><a href="#cb46-254"></a></span>
-<span id="cb46-255"><a href="#cb46-255"></a></span>
-<span id="cb46-256"><a href="#cb46-256"></a><span class="co"># then our Base should be derived from BaseMeta</span></span>
-<span id="cb46-257"><a href="#cb46-257"></a><span class="kw">class</span> Base(metaclass<span class="op">=</span>BaseMeta):</span>
-<span id="cb46-258"><a href="#cb46-258"></a>    <span class="kw">def</span> foo(<span class="va">self</span>):</span>
-<span id="cb46-259"><a href="#cb46-259"></a>        <span class="cf">return</span> <span class="va">self</span>.bar()</span>
-<span id="cb46-260"><a href="#cb46-260"></a><span class="in">```</span></span>
-<span id="cb46-261"><a href="#cb46-261"></a></span>
-<span id="cb46-262"><a href="#cb46-262"></a>:::{layout-ncol="1"}</span>
-<span id="cb46-263"><a href="#cb46-263"></a><span class="al">![metaclass](6_meta_class.png)</span></span>
-<span id="cb46-264"><a href="#cb46-264"></a>:::</span>
+<span id="cb46-243"><a href="#cb46-243"></a><span class="in">```{python}</span></span>
+<span id="cb46-244"><a href="#cb46-244"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-245"><a href="#cb46-245"></a><span class="co"># meta classes are merely derived from `type`</span></span>
+<span id="cb46-246"><a href="#cb46-246"></a><span class="kw">class</span> BaseMeta(<span class="bu">type</span>):</span>
+<span id="cb46-247"><a href="#cb46-247"></a>    <span class="kw">def</span> <span class="fu">__new__</span>(cls, name, bases, namespace):</span>
+<span id="cb46-248"><a href="#cb46-248"></a>        <span class="bu">print</span>(<span class="st">'BaseMeta.__new__'</span>, cls, name, bases, namespace)</span>
+<span id="cb46-249"><a href="#cb46-249"></a>        <span class="cf">if</span> name <span class="op">!=</span> <span class="st">'Base'</span> <span class="kw">and</span> <span class="st">'bar'</span> <span class="kw">not</span> <span class="kw">in</span> namespace:</span>
+<span id="cb46-250"><a href="#cb46-250"></a>            <span class="cf">raise</span> <span class="pp">TypeError</span>(<span class="st">"Bad User class, 'bar' is not defined"</span>)</span>
+<span id="cb46-251"><a href="#cb46-251"></a>        <span class="cf">return</span> <span class="bu">super</span>().<span class="fu">__new__</span>(cls, name, bases, namespace)</span>
+<span id="cb46-252"><a href="#cb46-252"></a></span>
+<span id="cb46-253"><a href="#cb46-253"></a></span>
+<span id="cb46-254"><a href="#cb46-254"></a><span class="co"># then our Base should be derived from BaseMeta</span></span>
+<span id="cb46-255"><a href="#cb46-255"></a><span class="kw">class</span> Base(metaclass<span class="op">=</span>BaseMeta):</span>
+<span id="cb46-256"><a href="#cb46-256"></a>    <span class="kw">def</span> foo(<span class="va">self</span>):</span>
+<span id="cb46-257"><a href="#cb46-257"></a>        <span class="cf">return</span> <span class="va">self</span>.bar()</span>
+<span id="cb46-258"><a href="#cb46-258"></a><span class="in">```</span></span>
+<span id="cb46-259"><a href="#cb46-259"></a></span>
+<span id="cb46-260"><a href="#cb46-260"></a>:::{layout-ncol="1"}</span>
+<span id="cb46-261"><a href="#cb46-261"></a><span class="al">![metaclass](6_meta_class.png)</span></span>
+<span id="cb46-262"><a href="#cb46-262"></a>:::</span>
+<span id="cb46-263"><a href="#cb46-263"></a></span>
+<span id="cb46-264"><a href="#cb46-264"></a>That's it! you can control, constraint the derived class from the base class in class hierachy.</span>
 <span id="cb46-265"><a href="#cb46-265"></a></span>
-<span id="cb46-266"><a href="#cb46-266"></a>That's it! you can control, constraint the derived class from the base class in class hierachy.</span>
+<span id="cb46-266"><a href="#cb46-266"></a><span class="fu">### 2. `__init_subclass__`</span></span>
 <span id="cb46-267"><a href="#cb46-267"></a></span>
-<span id="cb46-268"><a href="#cb46-268"></a><span class="fu">### 2. `__init_subclass__`</span></span>
+<span id="cb46-268"><a href="#cb46-268"></a>We can implement <span class="in">`Base`</span> like this:</span>
 <span id="cb46-269"><a href="#cb46-269"></a></span>
-<span id="cb46-270"><a href="#cb46-270"></a>We can implement <span class="in">`Base`</span> like this:</span>
-<span id="cb46-271"><a href="#cb46-271"></a></span>
-<span id="cb46-274"><a href="#cb46-274"></a><span class="in">```{python}</span></span>
-<span id="cb46-275"><a href="#cb46-275"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-276"><a href="#cb46-276"></a><span class="kw">class</span> Base():</span>
-<span id="cb46-277"><a href="#cb46-277"></a>    <span class="kw">def</span> foo(<span class="va">self</span>):</span>
-<span id="cb46-278"><a href="#cb46-278"></a>        <span class="cf">return</span> <span class="va">self</span>.bar()</span>
-<span id="cb46-279"><a href="#cb46-279"></a></span>
-<span id="cb46-280"><a href="#cb46-280"></a>    <span class="kw">def</span> <span class="fu">__init_subclass__</span>(cls, <span class="op">**</span>kwargs):</span>
-<span id="cb46-281"><a href="#cb46-281"></a>        <span class="bu">print</span>(<span class="st">"init subclass"</span>, cls.__dict__, kwargs)</span>
-<span id="cb46-282"><a href="#cb46-282"></a>        <span class="cf">if</span> <span class="st">'bar'</span> <span class="kw">not</span> <span class="kw">in</span> cls.__dict__:</span>
-<span id="cb46-283"><a href="#cb46-283"></a>            <span class="cf">raise</span> <span class="pp">TypeError</span>(<span class="st">"Bad sub class"</span>)</span>
-<span id="cb46-284"><a href="#cb46-284"></a>        <span class="bu">super</span>().<span class="fu">__init_subclass__</span>(<span class="op">**</span>kwargs)</span>
-<span id="cb46-285"><a href="#cb46-285"></a><span class="in">```</span></span>
+<span id="cb46-272"><a href="#cb46-272"></a><span class="in">```{python}</span></span>
+<span id="cb46-273"><a href="#cb46-273"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-274"><a href="#cb46-274"></a><span class="kw">class</span> Base():</span>
+<span id="cb46-275"><a href="#cb46-275"></a>    <span class="kw">def</span> foo(<span class="va">self</span>):</span>
+<span id="cb46-276"><a href="#cb46-276"></a>        <span class="cf">return</span> <span class="va">self</span>.bar()</span>
+<span id="cb46-277"><a href="#cb46-277"></a></span>
+<span id="cb46-278"><a href="#cb46-278"></a>    <span class="kw">def</span> <span class="fu">__init_subclass__</span>(cls, <span class="op">**</span>kwargs):</span>
+<span id="cb46-279"><a href="#cb46-279"></a>        <span class="bu">print</span>(<span class="st">"init subclass"</span>, cls.__dict__, kwargs)</span>
+<span id="cb46-280"><a href="#cb46-280"></a>        <span class="cf">if</span> <span class="st">'bar'</span> <span class="kw">not</span> <span class="kw">in</span> cls.__dict__:</span>
+<span id="cb46-281"><a href="#cb46-281"></a>            <span class="cf">raise</span> <span class="pp">TypeError</span>(<span class="st">"Bad sub class"</span>)</span>
+<span id="cb46-282"><a href="#cb46-282"></a>        <span class="bu">super</span>().<span class="fu">__init_subclass__</span>(<span class="op">**</span>kwargs)</span>
+<span id="cb46-283"><a href="#cb46-283"></a><span class="in">```</span></span>
+<span id="cb46-284"><a href="#cb46-284"></a></span>
+<span id="cb46-285"><a href="#cb46-285"></a><span class="fu"># decorator</span></span>
 <span id="cb46-286"><a href="#cb46-286"></a></span>
-<span id="cb46-287"><a href="#cb46-287"></a><span class="fu"># decorator</span></span>
+<span id="cb46-287"><a href="#cb46-287"></a>We would have met pattern like this, that's is decorator:</span>
 <span id="cb46-288"><a href="#cb46-288"></a></span>
-<span id="cb46-289"><a href="#cb46-289"></a>We would have met pattern like this, that's is decorator:</span>
-<span id="cb46-290"><a href="#cb46-290"></a></span>
-<span id="cb46-293"><a href="#cb46-293"></a><span class="in">```{python}</span></span>
-<span id="cb46-294"><a href="#cb46-294"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-295"><a href="#cb46-295"></a></span>
-<span id="cb46-296"><a href="#cb46-296"></a><span class="at">@dec</span> </span>
-<span id="cb46-297"><a href="#cb46-297"></a><span class="kw">def</span> f():</span>
-<span id="cb46-298"><a href="#cb46-298"></a>  <span class="cf">pass</span></span>
-<span id="cb46-299"><a href="#cb46-299"></a><span class="in">```</span></span>
+<span id="cb46-291"><a href="#cb46-291"></a><span class="in">```{python}</span></span>
+<span id="cb46-292"><a href="#cb46-292"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-293"><a href="#cb46-293"></a></span>
+<span id="cb46-294"><a href="#cb46-294"></a><span class="at">@dec</span> </span>
+<span id="cb46-295"><a href="#cb46-295"></a><span class="kw">def</span> f():</span>
+<span id="cb46-296"><a href="#cb46-296"></a>  <span class="cf">pass</span></span>
+<span id="cb46-297"><a href="#cb46-297"></a><span class="in">```</span></span>
+<span id="cb46-298"><a href="#cb46-298"></a></span>
+<span id="cb46-299"><a href="#cb46-299"></a>Python is a live language, there is no separate step that turns function definitions into bags of a set bits tagged and some elf binary or some <span class="co">[</span><span class="ot">PE</span><span class="co">](https://en.wikipedia.org/wiki/Portable_Executable)</span> binary somewhere. That a function definition is actually a live thing, it actually runs at runtime, there's actually executable code associated with this def <span class="in">`f()`</span>.</span>
 <span id="cb46-300"><a href="#cb46-300"></a></span>
-<span id="cb46-301"><a href="#cb46-301"></a>Python is a live language, there is no separate step that turns function definitions into bags of a set bits tagged and some elf binary or some <span class="co">[</span><span class="ot">PE</span><span class="co">](https://en.wikipedia.org/wiki/Portable_Executable)</span> binary somewhere. That a function definition is actually a live thing, it actually runs at runtime, there's actually executable code associated with this def <span class="in">`f()`</span>.</span>
-<span id="cb46-302"><a href="#cb46-302"></a></span>
-<span id="cb46-303"><a href="#cb46-303"></a>:::{layout-ncol="1"}</span>
-<span id="cb46-304"><a href="#cb46-304"></a><span class="al">![we can interact with our object as Python is a live language, the function itself is a runtime object](7_interact_with_object.png)</span></span>
-<span id="cb46-305"><a href="#cb46-305"></a>:::</span>
+<span id="cb46-301"><a href="#cb46-301"></a>:::{layout-ncol="1"}</span>
+<span id="cb46-302"><a href="#cb46-302"></a><span class="al">![we can interact with our object as Python is a live language, the function itself is a runtime object](7_interact_with_object.png)</span></span>
+<span id="cb46-303"><a href="#cb46-303"></a>:::</span>
+<span id="cb46-304"><a href="#cb46-304"></a></span>
+<span id="cb46-305"><a href="#cb46-305"></a>That every Python structure that you interact with whether it's an object or a function or a generator has some **runtime life**, has some **runtime existence** you can see it in memory, you can ask it questions like what module UI were you defined in. you can even ask it very useful questions like if you use the inspect module you can say what's your source code.</span>
 <span id="cb46-306"><a href="#cb46-306"></a></span>
-<span id="cb46-307"><a href="#cb46-307"></a>That every Python structure that you interact with whether it's an object or a function or a generator has some **runtime life**, has some **runtime existence** you can see it in memory, you can ask it questions like what module UI were you defined in. you can even ask it very useful questions like if you use the inspect module you can say what's your source code.</span>
-<span id="cb46-308"><a href="#cb46-308"></a></span>
-<span id="cb46-309"><a href="#cb46-309"></a><span class="in">```bash</span></span>
-<span id="cb46-310"><a href="#cb46-310"></a><span class="ex"></span> decorators  python <span class="at">-i</span> .<span class="dt">\d</span>eco.py</span>
-<span id="cb46-311"><a href="#cb46-311"></a><span class="op">&gt;&gt;&gt;</span> from <span class="ex">inspect</span> import getsource</span>
-<span id="cb46-312"><a href="#cb46-312"></a><span class="op">&gt;&gt;&gt;</span> getsource<span class="kw">(</span><span class="ex">add</span><span class="kw">)</span></span>
-<span id="cb46-313"><a href="#cb46-313"></a><span class="st">'def add(a, b=10):\n    return a + b\n'</span></span>
-<span id="cb46-314"><a href="#cb46-314"></a><span class="op">&gt;&gt;&gt;</span> print<span class="kw">(</span><span class="ex">getsource</span><span class="er">(</span><span class="ex">add</span><span class="kw">))</span></span>
-<span id="cb46-315"><a href="#cb46-315"></a><span class="ex">def</span> add<span class="er">(</span><span class="ex">a,</span> b=10<span class="kw">)</span><span class="bu">:</span></span>
-<span id="cb46-316"><a href="#cb46-316"></a>    <span class="cf">return</span> <span class="ex">a</span> + b </span>
-<span id="cb46-317"><a href="#cb46-317"></a></span>
-<span id="cb46-318"><a href="#cb46-318"></a><span class="op">&gt;&gt;&gt;</span> </span>
-<span id="cb46-319"><a href="#cb46-319"></a><span class="in">```</span></span>
+<span id="cb46-307"><a href="#cb46-307"></a><span class="in">```bash</span></span>
+<span id="cb46-308"><a href="#cb46-308"></a><span class="ex"></span> decorators  python <span class="at">-i</span> .<span class="dt">\d</span>eco.py</span>
+<span id="cb46-309"><a href="#cb46-309"></a><span class="op">&gt;&gt;&gt;</span> from <span class="ex">inspect</span> import getsource</span>
+<span id="cb46-310"><a href="#cb46-310"></a><span class="op">&gt;&gt;&gt;</span> getsource<span class="kw">(</span><span class="ex">add</span><span class="kw">)</span></span>
+<span id="cb46-311"><a href="#cb46-311"></a><span class="st">'def add(a, b=10):\n    return a + b\n'</span></span>
+<span id="cb46-312"><a href="#cb46-312"></a><span class="op">&gt;&gt;&gt;</span> print<span class="kw">(</span><span class="ex">getsource</span><span class="er">(</span><span class="ex">add</span><span class="kw">))</span></span>
+<span id="cb46-313"><a href="#cb46-313"></a><span class="ex">def</span> add<span class="er">(</span><span class="ex">a,</span> b=10<span class="kw">)</span><span class="bu">:</span></span>
+<span id="cb46-314"><a href="#cb46-314"></a>    <span class="cf">return</span> <span class="ex">a</span> + b </span>
+<span id="cb46-315"><a href="#cb46-315"></a></span>
+<span id="cb46-316"><a href="#cb46-316"></a><span class="op">&gt;&gt;&gt;</span> </span>
+<span id="cb46-317"><a href="#cb46-317"></a><span class="in">```</span></span>
+<span id="cb46-318"><a href="#cb46-318"></a></span>
+<span id="cb46-319"><a href="#cb46-319"></a>now let's say I want to calculate how much time does it take to perform the <span class="in">`add`</span>. simply we would thinking about <span class="in">`time`</span>, like this:</span>
 <span id="cb46-320"><a href="#cb46-320"></a></span>
-<span id="cb46-321"><a href="#cb46-321"></a>now let's say I want to calculate how much time does it take to perform the <span class="in">`add`</span>. simply we would thinking about <span class="in">`time`</span>, like this:</span>
-<span id="cb46-322"><a href="#cb46-322"></a></span>
-<span id="cb46-325"><a href="#cb46-325"></a><span class="in">```{python}</span></span>
-<span id="cb46-326"><a href="#cb46-326"></a><span class="im">from</span> time <span class="im">import</span> time</span>
-<span id="cb46-327"><a href="#cb46-327"></a></span>
-<span id="cb46-328"><a href="#cb46-328"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
-<span id="cb46-329"><a href="#cb46-329"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
-<span id="cb46-330"><a href="#cb46-330"></a> </span>
-<span id="cb46-331"><a href="#cb46-331"></a>before <span class="op">=</span> time()</span>
-<span id="cb46-332"><a href="#cb46-332"></a><span class="bu">print</span>(<span class="st">'add(10)'</span>, add(<span class="dv">10</span>))</span>
-<span id="cb46-333"><a href="#cb46-333"></a>after <span class="op">=</span> time()</span>
-<span id="cb46-334"><a href="#cb46-334"></a><span class="bu">print</span>(<span class="st">'time_taken'</span>, after <span class="op">-</span> before)</span>
-<span id="cb46-335"><a href="#cb46-335"></a><span class="bu">print</span>(<span class="st">'add(20, 30)'</span>, add(<span class="dv">20</span>, <span class="dv">30</span>))</span>
-<span id="cb46-336"><a href="#cb46-336"></a>after <span class="op">=</span> time()</span>
-<span id="cb46-337"><a href="#cb46-337"></a><span class="bu">print</span>(<span class="st">'time_taken'</span>, after <span class="op">-</span> before)</span>
-<span id="cb46-338"><a href="#cb46-338"></a><span class="bu">print</span>(<span class="st">'add("a", "b")'</span>, add(<span class="st">"a"</span>, <span class="st">"b"</span>))</span>
-<span id="cb46-339"><a href="#cb46-339"></a>after <span class="op">=</span> time()</span>
-<span id="cb46-340"><a href="#cb46-340"></a><span class="bu">print</span>(<span class="st">'time_taken'</span>, after <span class="op">-</span> before)</span>
-<span id="cb46-341"><a href="#cb46-341"></a><span class="in">```</span></span>
+<span id="cb46-323"><a href="#cb46-323"></a><span class="in">```{python}</span></span>
+<span id="cb46-324"><a href="#cb46-324"></a><span class="im">from</span> time <span class="im">import</span> time</span>
+<span id="cb46-325"><a href="#cb46-325"></a></span>
+<span id="cb46-326"><a href="#cb46-326"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb46-327"><a href="#cb46-327"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
+<span id="cb46-328"><a href="#cb46-328"></a> </span>
+<span id="cb46-329"><a href="#cb46-329"></a>before <span class="op">=</span> time()</span>
+<span id="cb46-330"><a href="#cb46-330"></a><span class="bu">print</span>(<span class="st">'add(10)'</span>, add(<span class="dv">10</span>))</span>
+<span id="cb46-331"><a href="#cb46-331"></a>after <span class="op">=</span> time()</span>
+<span id="cb46-332"><a href="#cb46-332"></a><span class="bu">print</span>(<span class="st">'time_taken'</span>, after <span class="op">-</span> before)</span>
+<span id="cb46-333"><a href="#cb46-333"></a><span class="bu">print</span>(<span class="st">'add(20, 30)'</span>, add(<span class="dv">20</span>, <span class="dv">30</span>))</span>
+<span id="cb46-334"><a href="#cb46-334"></a>after <span class="op">=</span> time()</span>
+<span id="cb46-335"><a href="#cb46-335"></a><span class="bu">print</span>(<span class="st">'time_taken'</span>, after <span class="op">-</span> before)</span>
+<span id="cb46-336"><a href="#cb46-336"></a><span class="bu">print</span>(<span class="st">'add("a", "b")'</span>, add(<span class="st">"a"</span>, <span class="st">"b"</span>))</span>
+<span id="cb46-337"><a href="#cb46-337"></a>after <span class="op">=</span> time()</span>
+<span id="cb46-338"><a href="#cb46-338"></a><span class="bu">print</span>(<span class="st">'time_taken'</span>, after <span class="op">-</span> before)</span>
+<span id="cb46-339"><a href="#cb46-339"></a><span class="in">```</span></span>
+<span id="cb46-340"><a href="#cb46-340"></a></span>
+<span id="cb46-341"><a href="#cb46-341"></a>there is something wrong here because we need to add code to everywhere we want to calculate. we see another important pattern in Python, decorator, the Python developers want you to write the simplest, stupidest, quickest thing to get the job done and get the rest of your day with your family.</span>
 <span id="cb46-342"><a href="#cb46-342"></a></span>
-<span id="cb46-343"><a href="#cb46-343"></a>there is something wrong here because we need to add code to everywhere we want to calculate. we see another important pattern in Python, decorator, the Python developers want you to write the simplest, stupidest, quickest thing to get the job done and get the rest of your day with your family.</span>
+<span id="cb46-343"><a href="#cb46-343"></a>we will see alot of scenarios where of cases where you can write the simple and stupidest thing to get the job done and when the task at hand becomes harder or more complex or the requirements change you can change your code in a very simple fashion to linearly extend its functionality without have to re-write it from scratch.</span>
 <span id="cb46-344"><a href="#cb46-344"></a></span>
-<span id="cb46-345"><a href="#cb46-345"></a>we will see alot of scenarios where of cases where you can write the simple and stupidest thing to get the job done and when the task at hand becomes harder or more complex or the requirements change you can change your code in a very simple fashion to linearly extend its functionality without have to re-write it from scratch.</span>
+<span id="cb46-345"><a href="#cb46-345"></a>in Python we'll see a number of different features are orientated around how do we write the simplest thing today and then when the problem gets a little bit harder we have an avenue for making our code a little bit more complex.</span>
 <span id="cb46-346"><a href="#cb46-346"></a></span>
-<span id="cb46-347"><a href="#cb46-347"></a>in Python we'll see a number of different features are orientated around how do we write the simplest thing today and then when the problem gets a little bit harder we have an avenue for making our code a little bit more complex.</span>
+<span id="cb46-347"><a href="#cb46-347"></a>we can modified a <span class="in">`add`</span> alittle bit</span>
 <span id="cb46-348"><a href="#cb46-348"></a></span>
-<span id="cb46-349"><a href="#cb46-349"></a>we can modified a <span class="in">`add`</span> alittle bit</span>
-<span id="cb46-350"><a href="#cb46-350"></a></span>
-<span id="cb46-353"><a href="#cb46-353"></a><span class="in">```{python}</span></span>
-<span id="cb46-354"><a href="#cb46-354"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-355"><a href="#cb46-355"></a><span class="im">from</span> time <span class="im">import</span> time</span>
-<span id="cb46-356"><a href="#cb46-356"></a></span>
-<span id="cb46-357"><a href="#cb46-357"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
-<span id="cb46-358"><a href="#cb46-358"></a>    before <span class="op">=</span> time()</span>
-<span id="cb46-359"><a href="#cb46-359"></a>    rv <span class="op">=</span> a <span class="op">+</span> b</span>
-<span id="cb46-360"><a href="#cb46-360"></a>    after <span class="op">=</span> time()</span>
-<span id="cb46-361"><a href="#cb46-361"></a>    <span class="bu">print</span>(<span class="st">'elapsed:'</span>, after <span class="op">-</span> before)</span>
-<span id="cb46-362"><a href="#cb46-362"></a>    <span class="cf">return</span> rv</span>
-<span id="cb46-363"><a href="#cb46-363"></a><span class="in">```</span></span>
+<span id="cb46-351"><a href="#cb46-351"></a><span class="in">```{python}</span></span>
+<span id="cb46-352"><a href="#cb46-352"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-353"><a href="#cb46-353"></a><span class="im">from</span> time <span class="im">import</span> time</span>
+<span id="cb46-354"><a href="#cb46-354"></a></span>
+<span id="cb46-355"><a href="#cb46-355"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb46-356"><a href="#cb46-356"></a>    before <span class="op">=</span> time()</span>
+<span id="cb46-357"><a href="#cb46-357"></a>    rv <span class="op">=</span> a <span class="op">+</span> b</span>
+<span id="cb46-358"><a href="#cb46-358"></a>    after <span class="op">=</span> time()</span>
+<span id="cb46-359"><a href="#cb46-359"></a>    <span class="bu">print</span>(<span class="st">'elapsed:'</span>, after <span class="op">-</span> before)</span>
+<span id="cb46-360"><a href="#cb46-360"></a>    <span class="cf">return</span> rv</span>
+<span id="cb46-361"><a href="#cb46-361"></a><span class="in">```</span></span>
+<span id="cb46-362"><a href="#cb46-362"></a></span>
+<span id="cb46-363"><a href="#cb46-363"></a>But if we have more functions, let say <span class="in">`sub`</span>? We need to modify and make our code complicated. **Python is live language** that everything has some runtime representaion. We can create <span class="in">`timer()`</span> which take <span class="in">`func`</span>, <span class="in">`x`</span>, and <span class="in">`y`</span> as arguments (<span class="in">`x`</span> and <span class="in">`y`</span> will be forwarded to calculation function)</span>
 <span id="cb46-364"><a href="#cb46-364"></a></span>
-<span id="cb46-365"><a href="#cb46-365"></a>But if we have more functions, let say <span class="in">`sub`</span>? We need to modify and make our code complicated. **Python is live language** that everything has some runtime representaion. We can create <span class="in">`timer()`</span> which take <span class="in">`func`</span>, <span class="in">`x`</span>, and <span class="in">`y`</span> as arguments (<span class="in">`x`</span> and <span class="in">`y`</span> will be forwarded to calculation function)</span>
-<span id="cb46-366"><a href="#cb46-366"></a></span>
-<span id="cb46-369"><a href="#cb46-369"></a><span class="in">```{python}</span></span>
-<span id="cb46-370"><a href="#cb46-370"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-371"><a href="#cb46-371"></a><span class="im">from</span> time <span class="im">import</span> time</span>
-<span id="cb46-372"><a href="#cb46-372"></a></span>
-<span id="cb46-373"><a href="#cb46-373"></a><span class="kw">def</span> timer(func, x, y):</span>
-<span id="cb46-374"><a href="#cb46-374"></a>    before <span class="op">=</span> time()</span>
-<span id="cb46-375"><a href="#cb46-375"></a>    rv <span class="op">=</span> func(x,y)</span>
-<span id="cb46-376"><a href="#cb46-376"></a>    after <span class="op">=</span> time()</span>
-<span id="cb46-377"><a href="#cb46-377"></a>    <span class="bu">print</span>(<span class="st">'elapsed:'</span>, after <span class="op">-</span> before)</span>
-<span id="cb46-378"><a href="#cb46-378"></a>    <span class="cf">return</span> rv</span>
-<span id="cb46-379"><a href="#cb46-379"></a></span>
-<span id="cb46-380"><a href="#cb46-380"></a><span class="co"># and </span></span>
-<span id="cb46-381"><a href="#cb46-381"></a><span class="bu">print</span>(<span class="st">'add(20, 30)'</span>, timer(add, <span class="dv">20</span>, <span class="dv">30</span>))</span>
-<span id="cb46-382"><a href="#cb46-382"></a><span class="in">```</span></span>
+<span id="cb46-367"><a href="#cb46-367"></a><span class="in">```{python}</span></span>
+<span id="cb46-368"><a href="#cb46-368"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-369"><a href="#cb46-369"></a><span class="im">from</span> time <span class="im">import</span> time</span>
+<span id="cb46-370"><a href="#cb46-370"></a></span>
+<span id="cb46-371"><a href="#cb46-371"></a><span class="kw">def</span> timer(func, x, y):</span>
+<span id="cb46-372"><a href="#cb46-372"></a>    before <span class="op">=</span> time()</span>
+<span id="cb46-373"><a href="#cb46-373"></a>    rv <span class="op">=</span> func(x,y)</span>
+<span id="cb46-374"><a href="#cb46-374"></a>    after <span class="op">=</span> time()</span>
+<span id="cb46-375"><a href="#cb46-375"></a>    <span class="bu">print</span>(<span class="st">'elapsed:'</span>, after <span class="op">-</span> before)</span>
+<span id="cb46-376"><a href="#cb46-376"></a>    <span class="cf">return</span> rv</span>
+<span id="cb46-377"><a href="#cb46-377"></a></span>
+<span id="cb46-378"><a href="#cb46-378"></a><span class="co"># and </span></span>
+<span id="cb46-379"><a href="#cb46-379"></a><span class="bu">print</span>(<span class="st">'add(20, 30)'</span>, timer(add, <span class="dv">20</span>, <span class="dv">30</span>))</span>
+<span id="cb46-380"><a href="#cb46-380"></a><span class="in">```</span></span>
+<span id="cb46-381"><a href="#cb46-381"></a></span>
+<span id="cb46-382"><a href="#cb46-382"></a>we can also wrapping like this, <span class="in">`timer()`</span> will return a function <span class="in">`f`</span>:</span>
 <span id="cb46-383"><a href="#cb46-383"></a></span>
-<span id="cb46-384"><a href="#cb46-384"></a>we can also wrapping like this, <span class="in">`timer()`</span> will return a function <span class="in">`f`</span>:</span>
-<span id="cb46-385"><a href="#cb46-385"></a></span>
-<span id="cb46-388"><a href="#cb46-388"></a><span class="in">```{python}</span></span>
-<span id="cb46-389"><a href="#cb46-389"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-390"><a href="#cb46-390"></a><span class="im">from</span> time <span class="im">import</span> time</span>
-<span id="cb46-391"><a href="#cb46-391"></a></span>
-<span id="cb46-392"><a href="#cb46-392"></a><span class="kw">def</span> timer(func):</span>
-<span id="cb46-393"><a href="#cb46-393"></a>    <span class="kw">def</span> f(x, y<span class="op">=</span><span class="dv">10</span>):</span>
-<span id="cb46-394"><a href="#cb46-394"></a>      before <span class="op">=</span> time()</span>
-<span id="cb46-395"><a href="#cb46-395"></a>      rv <span class="op">=</span> func(x,y)</span>
-<span id="cb46-396"><a href="#cb46-396"></a>      after <span class="op">=</span> time()</span>
-<span id="cb46-397"><a href="#cb46-397"></a>      <span class="bu">print</span>(<span class="st">'elapsed:'</span>, after <span class="op">-</span> before)</span>
-<span id="cb46-398"><a href="#cb46-398"></a>      <span class="cf">return</span> rv</span>
-<span id="cb46-399"><a href="#cb46-399"></a>    <span class="cf">return</span> f</span>
-<span id="cb46-400"><a href="#cb46-400"></a></span>
-<span id="cb46-401"><a href="#cb46-401"></a><span class="co"># and </span></span>
-<span id="cb46-402"><a href="#cb46-402"></a>add <span class="op">=</span> timer(add)</span>
-<span id="cb46-403"><a href="#cb46-403"></a><span class="bu">print</span>(<span class="st">'add(20, 30)'</span>, add(<span class="dv">20</span>, <span class="dv">30</span>))</span>
-<span id="cb46-404"><a href="#cb46-404"></a><span class="in">```</span></span>
+<span id="cb46-386"><a href="#cb46-386"></a><span class="in">```{python}</span></span>
+<span id="cb46-387"><a href="#cb46-387"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-388"><a href="#cb46-388"></a><span class="im">from</span> time <span class="im">import</span> time</span>
+<span id="cb46-389"><a href="#cb46-389"></a></span>
+<span id="cb46-390"><a href="#cb46-390"></a><span class="kw">def</span> timer(func):</span>
+<span id="cb46-391"><a href="#cb46-391"></a>    <span class="kw">def</span> f(x, y<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb46-392"><a href="#cb46-392"></a>      before <span class="op">=</span> time()</span>
+<span id="cb46-393"><a href="#cb46-393"></a>      rv <span class="op">=</span> func(x,y)</span>
+<span id="cb46-394"><a href="#cb46-394"></a>      after <span class="op">=</span> time()</span>
+<span id="cb46-395"><a href="#cb46-395"></a>      <span class="bu">print</span>(<span class="st">'elapsed:'</span>, after <span class="op">-</span> before)</span>
+<span id="cb46-396"><a href="#cb46-396"></a>      <span class="cf">return</span> rv</span>
+<span id="cb46-397"><a href="#cb46-397"></a>    <span class="cf">return</span> f</span>
+<span id="cb46-398"><a href="#cb46-398"></a></span>
+<span id="cb46-399"><a href="#cb46-399"></a><span class="co"># and </span></span>
+<span id="cb46-400"><a href="#cb46-400"></a>add <span class="op">=</span> timer(add)</span>
+<span id="cb46-401"><a href="#cb46-401"></a><span class="bu">print</span>(<span class="st">'add(20, 30)'</span>, add(<span class="dv">20</span>, <span class="dv">30</span>))</span>
+<span id="cb46-402"><a href="#cb46-402"></a><span class="in">```</span></span>
+<span id="cb46-403"><a href="#cb46-403"></a></span>
+<span id="cb46-404"><a href="#cb46-404"></a>Python provides a syntax for easily implement every behaviours of <span class="in">`timer()`</span> to every function:</span>
 <span id="cb46-405"><a href="#cb46-405"></a></span>
-<span id="cb46-406"><a href="#cb46-406"></a>Python provides a syntax for easily implement every behaviours of <span class="in">`timer()`</span> to every function:</span>
-<span id="cb46-407"><a href="#cb46-407"></a></span>
-<span id="cb46-410"><a href="#cb46-410"></a><span class="in">```{python}</span></span>
-<span id="cb46-411"><a href="#cb46-411"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-412"><a href="#cb46-412"></a><span class="at">@timer</span></span>
-<span id="cb46-413"><a href="#cb46-413"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
-<span id="cb46-414"><a href="#cb46-414"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
-<span id="cb46-415"><a href="#cb46-415"></a></span>
-<span id="cb46-416"><a href="#cb46-416"></a><span class="bu">print</span>(<span class="st">'add(20, 30)'</span>, add(<span class="dv">20</span>, <span class="dv">30</span>))</span>
-<span id="cb46-417"><a href="#cb46-417"></a><span class="in">```</span></span>
-<span id="cb46-418"><a href="#cb46-418"></a></span>
-<span id="cb46-419"><a href="#cb46-419"></a>:::{.callout-note}</span>
-<span id="cb46-420"><a href="#cb46-420"></a>Fundamentally it's about allowing you to take this wrapping behavior for functions and to wrap wide swathes of functions in one fashion without having to rewrite a lot of user code or having to even perform a lot of turn on your library code.</span>
-<span id="cb46-421"><a href="#cb46-421"></a>:::</span>
+<span id="cb46-408"><a href="#cb46-408"></a><span class="in">```{python}</span></span>
+<span id="cb46-409"><a href="#cb46-409"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-410"><a href="#cb46-410"></a><span class="at">@timer</span></span>
+<span id="cb46-411"><a href="#cb46-411"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb46-412"><a href="#cb46-412"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
+<span id="cb46-413"><a href="#cb46-413"></a></span>
+<span id="cb46-414"><a href="#cb46-414"></a><span class="bu">print</span>(<span class="st">'add(20, 30)'</span>, add(<span class="dv">20</span>, <span class="dv">30</span>))</span>
+<span id="cb46-415"><a href="#cb46-415"></a><span class="in">```</span></span>
+<span id="cb46-416"><a href="#cb46-416"></a></span>
+<span id="cb46-417"><a href="#cb46-417"></a>:::{.callout-note}</span>
+<span id="cb46-418"><a href="#cb46-418"></a>Fundamentally it's about allowing you to take this wrapping behavior for functions and to wrap wide swathes of functions in one fashion without having to rewrite a lot of user code or having to even perform a lot of turn on your library code.</span>
+<span id="cb46-419"><a href="#cb46-419"></a>:::</span>
+<span id="cb46-420"><a href="#cb46-420"></a></span>
+<span id="cb46-421"><a href="#cb46-421"></a>another example when we want a function to run n-times:</span>
 <span id="cb46-422"><a href="#cb46-422"></a></span>
-<span id="cb46-423"><a href="#cb46-423"></a>another example when we want a function to run n-times:</span>
-<span id="cb46-424"><a href="#cb46-424"></a></span>
-<span id="cb46-427"><a href="#cb46-427"></a><span class="in">```{python}</span></span>
-<span id="cb46-428"><a href="#cb46-428"></a>n <span class="op">=</span> <span class="dv">2</span> <span class="co"># let's say 2 times</span></span>
-<span id="cb46-429"><a href="#cb46-429"></a></span>
-<span id="cb46-430"><a href="#cb46-430"></a><span class="kw">def</span> ntimes(f):</span>
-<span id="cb46-431"><a href="#cb46-431"></a>  <span class="kw">def</span> wrapper(<span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
-<span id="cb46-432"><a href="#cb46-432"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n):</span>
-<span id="cb46-433"><a href="#cb46-433"></a>      <span class="bu">print</span>(<span class="st">'running {.__name__}'</span>.<span class="bu">format</span>(f))</span>
-<span id="cb46-434"><a href="#cb46-434"></a>      rv <span class="op">=</span> f(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span>
-<span id="cb46-435"><a href="#cb46-435"></a>    <span class="cf">return</span> rv</span>
-<span id="cb46-436"><a href="#cb46-436"></a>  <span class="cf">return</span> wrapper</span>
-<span id="cb46-437"><a href="#cb46-437"></a>    </span>
-<span id="cb46-438"><a href="#cb46-438"></a><span class="at">@ntimes</span></span>
-<span id="cb46-439"><a href="#cb46-439"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
-<span id="cb46-440"><a href="#cb46-440"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
-<span id="cb46-441"><a href="#cb46-441"></a></span>
-<span id="cb46-442"><a href="#cb46-442"></a>add(<span class="dv">10</span>, <span class="dv">20</span>)</span>
-<span id="cb46-443"><a href="#cb46-443"></a><span class="in">```</span></span>
+<span id="cb46-425"><a href="#cb46-425"></a><span class="in">```{python}</span></span>
+<span id="cb46-426"><a href="#cb46-426"></a>n <span class="op">=</span> <span class="dv">2</span> <span class="co"># let's say 2 times</span></span>
+<span id="cb46-427"><a href="#cb46-427"></a></span>
+<span id="cb46-428"><a href="#cb46-428"></a><span class="kw">def</span> ntimes(f):</span>
+<span id="cb46-429"><a href="#cb46-429"></a>  <span class="kw">def</span> wrapper(<span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
+<span id="cb46-430"><a href="#cb46-430"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n):</span>
+<span id="cb46-431"><a href="#cb46-431"></a>      <span class="bu">print</span>(<span class="st">'running {.__name__}'</span>.<span class="bu">format</span>(f))</span>
+<span id="cb46-432"><a href="#cb46-432"></a>      rv <span class="op">=</span> f(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span>
+<span id="cb46-433"><a href="#cb46-433"></a>    <span class="cf">return</span> rv</span>
+<span id="cb46-434"><a href="#cb46-434"></a>  <span class="cf">return</span> wrapper</span>
+<span id="cb46-435"><a href="#cb46-435"></a>    </span>
+<span id="cb46-436"><a href="#cb46-436"></a><span class="at">@ntimes</span></span>
+<span id="cb46-437"><a href="#cb46-437"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb46-438"><a href="#cb46-438"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
+<span id="cb46-439"><a href="#cb46-439"></a></span>
+<span id="cb46-440"><a href="#cb46-440"></a>add(<span class="dv">10</span>, <span class="dv">20</span>)</span>
+<span id="cb46-441"><a href="#cb46-441"></a><span class="in">```</span></span>
+<span id="cb46-442"><a href="#cb46-442"></a></span>
+<span id="cb46-443"><a href="#cb46-443"></a>wrapp <span class="in">`n`</span> in to the function so <span class="in">`ntimes()`</span> takes <span class="in">`n`</span> instead of <span class="in">`f`</span> as arg:</span>
 <span id="cb46-444"><a href="#cb46-444"></a></span>
-<span id="cb46-445"><a href="#cb46-445"></a>wrapp <span class="in">`n`</span> in to the function so <span class="in">`ntimes()`</span> takes <span class="in">`n`</span> instead of <span class="in">`f`</span> as arg:</span>
-<span id="cb46-446"><a href="#cb46-446"></a></span>
-<span id="cb46-449"><a href="#cb46-449"></a><span class="in">```{python}</span></span>
-<span id="cb46-450"><a href="#cb46-450"></a><span class="co"># high order decorators</span></span>
-<span id="cb46-451"><a href="#cb46-451"></a><span class="kw">def</span> ntimes(n):</span>
-<span id="cb46-452"><a href="#cb46-452"></a>  <span class="kw">def</span> inner(f):</span>
-<span id="cb46-453"><a href="#cb46-453"></a>    <span class="kw">def</span> wrapper(<span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
-<span id="cb46-454"><a href="#cb46-454"></a>      <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n):</span>
-<span id="cb46-455"><a href="#cb46-455"></a>        <span class="bu">print</span>(<span class="st">'running {.__name__}'</span>.<span class="bu">format</span>(f))</span>
-<span id="cb46-456"><a href="#cb46-456"></a>        rv <span class="op">=</span> f(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span>
-<span id="cb46-457"><a href="#cb46-457"></a>      <span class="cf">return</span> rv</span>
-<span id="cb46-458"><a href="#cb46-458"></a>    <span class="cf">return</span> wrapper</span>
-<span id="cb46-459"><a href="#cb46-459"></a>  <span class="cf">return</span> inner</span>
-<span id="cb46-460"><a href="#cb46-460"></a>    </span>
-<span id="cb46-461"><a href="#cb46-461"></a><span class="at">@ntimes</span>(<span class="dv">3</span>)</span>
-<span id="cb46-462"><a href="#cb46-462"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
-<span id="cb46-463"><a href="#cb46-463"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
-<span id="cb46-464"><a href="#cb46-464"></a></span>
-<span id="cb46-465"><a href="#cb46-465"></a>add(<span class="dv">10</span>, <span class="dv">20</span>)</span>
-<span id="cb46-466"><a href="#cb46-466"></a><span class="in">```</span></span>
+<span id="cb46-447"><a href="#cb46-447"></a><span class="in">```{python}</span></span>
+<span id="cb46-448"><a href="#cb46-448"></a><span class="co"># high order decorators</span></span>
+<span id="cb46-449"><a href="#cb46-449"></a><span class="kw">def</span> ntimes(n):</span>
+<span id="cb46-450"><a href="#cb46-450"></a>  <span class="kw">def</span> inner(f):</span>
+<span id="cb46-451"><a href="#cb46-451"></a>    <span class="kw">def</span> wrapper(<span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
+<span id="cb46-452"><a href="#cb46-452"></a>      <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n):</span>
+<span id="cb46-453"><a href="#cb46-453"></a>        <span class="bu">print</span>(<span class="st">'running {.__name__}'</span>.<span class="bu">format</span>(f))</span>
+<span id="cb46-454"><a href="#cb46-454"></a>        rv <span class="op">=</span> f(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span>
+<span id="cb46-455"><a href="#cb46-455"></a>      <span class="cf">return</span> rv</span>
+<span id="cb46-456"><a href="#cb46-456"></a>    <span class="cf">return</span> wrapper</span>
+<span id="cb46-457"><a href="#cb46-457"></a>  <span class="cf">return</span> inner</span>
+<span id="cb46-458"><a href="#cb46-458"></a>    </span>
+<span id="cb46-459"><a href="#cb46-459"></a><span class="at">@ntimes</span>(<span class="dv">3</span>)</span>
+<span id="cb46-460"><a href="#cb46-460"></a><span class="kw">def</span> add(a, b<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb46-461"><a href="#cb46-461"></a>    <span class="cf">return</span> a <span class="op">+</span> b</span>
+<span id="cb46-462"><a href="#cb46-462"></a></span>
+<span id="cb46-463"><a href="#cb46-463"></a>add(<span class="dv">10</span>, <span class="dv">20</span>)</span>
+<span id="cb46-464"><a href="#cb46-464"></a><span class="in">```</span></span>
+<span id="cb46-465"><a href="#cb46-465"></a></span>
+<span id="cb46-466"><a href="#cb46-466"></a>There is a very important core concept that is hidden in here which is what you might call the **closure object duality**. it's not something that we have time to look at in this session.</span>
 <span id="cb46-467"><a href="#cb46-467"></a></span>
-<span id="cb46-468"><a href="#cb46-468"></a>There is a very important core concept that is hidden in here which is what you might call the **closure object duality**. it's not something that we have time to look at in this session.</span>
+<span id="cb46-468"><a href="#cb46-468"></a><span class="fu"># generator</span></span>
 <span id="cb46-469"><a href="#cb46-469"></a></span>
-<span id="cb46-470"><a href="#cb46-470"></a><span class="fu"># generator</span></span>
+<span id="cb46-470"><a href="#cb46-470"></a>recall what we've learned in previous section:</span>
 <span id="cb46-471"><a href="#cb46-471"></a></span>
-<span id="cb46-472"><a href="#cb46-472"></a>recall what we've learned in previous section:</span>
-<span id="cb46-473"><a href="#cb46-473"></a></span>
-<span id="cb46-474"><a href="#cb46-474"></a><span class="ss">- </span>there are top-level syntax or function &lt;--&gt; and some underscore methods that implemented it.</span>
-<span id="cb46-475"><a href="#cb46-475"></a><span class="ss">- </span>if you have parentheses after something x() &lt;--&gt; implies <span class="in">`__call__`</span> protocol implemented.</span>
+<span id="cb46-472"><a href="#cb46-472"></a><span class="ss">- </span>there are top-level syntax or function &lt;--&gt; and some underscore methods that implemented it.</span>
+<span id="cb46-473"><a href="#cb46-473"></a><span class="ss">- </span>if you have parentheses after something x() &lt;--&gt; implies <span class="in">`__call__`</span> protocol implemented.</span>
+<span id="cb46-474"><a href="#cb46-474"></a></span>
+<span id="cb46-475"><a href="#cb46-475"></a>what is different between these 2:</span>
 <span id="cb46-476"><a href="#cb46-476"></a></span>
-<span id="cb46-477"><a href="#cb46-477"></a>what is different between these 2:</span>
-<span id="cb46-478"><a href="#cb46-478"></a></span>
-<span id="cb46-481"><a href="#cb46-481"></a><span class="in">```{python}</span></span>
-<span id="cb46-482"><a href="#cb46-482"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-483"><a href="#cb46-483"></a></span>
-<span id="cb46-484"><a href="#cb46-484"></a><span class="kw">def</span> add1(x, y):</span>
-<span id="cb46-485"><a href="#cb46-485"></a>  <span class="cf">return</span> x <span class="op">+</span> y</span>
-<span id="cb46-486"><a href="#cb46-486"></a></span>
-<span id="cb46-487"><a href="#cb46-487"></a></span>
-<span id="cb46-488"><a href="#cb46-488"></a><span class="kw">class</span> Adder:</span>
-<span id="cb46-489"><a href="#cb46-489"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x, y):</span>
-<span id="cb46-490"><a href="#cb46-490"></a>    <span class="cf">return</span> x <span class="op">+</span> y </span>
-<span id="cb46-491"><a href="#cb46-491"></a>add2 <span class="op">=</span> Adder()</span>
-<span id="cb46-492"><a href="#cb46-492"></a></span>
-<span id="cb46-493"><a href="#cb46-493"></a><span class="bu">print</span>(add1(<span class="dv">10</span>, <span class="dv">20</span>)) <span class="co"># 30</span></span>
-<span id="cb46-494"><a href="#cb46-494"></a><span class="bu">print</span>(add2(<span class="dv">10</span>, <span class="dv">20</span>)) <span class="co"># 20</span></span>
-<span id="cb46-495"><a href="#cb46-495"></a><span class="bu">type</span>(add1) <span class="co"># &lt;class 'function'&gt;</span></span>
-<span id="cb46-496"><a href="#cb46-496"></a><span class="bu">type</span>(add2) <span class="co"># &lt;class '__main__.Adder'&gt;</span></span>
-<span id="cb46-497"><a href="#cb46-497"></a><span class="in">```</span></span>
+<span id="cb46-479"><a href="#cb46-479"></a><span class="in">```{python}</span></span>
+<span id="cb46-480"><a href="#cb46-480"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-481"><a href="#cb46-481"></a></span>
+<span id="cb46-482"><a href="#cb46-482"></a><span class="kw">def</span> add1(x, y):</span>
+<span id="cb46-483"><a href="#cb46-483"></a>  <span class="cf">return</span> x <span class="op">+</span> y</span>
+<span id="cb46-484"><a href="#cb46-484"></a></span>
+<span id="cb46-485"><a href="#cb46-485"></a></span>
+<span id="cb46-486"><a href="#cb46-486"></a><span class="kw">class</span> Adder:</span>
+<span id="cb46-487"><a href="#cb46-487"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x, y):</span>
+<span id="cb46-488"><a href="#cb46-488"></a>    <span class="cf">return</span> x <span class="op">+</span> y </span>
+<span id="cb46-489"><a href="#cb46-489"></a>add2 <span class="op">=</span> Adder()</span>
+<span id="cb46-490"><a href="#cb46-490"></a></span>
+<span id="cb46-491"><a href="#cb46-491"></a><span class="bu">print</span>(add1(<span class="dv">10</span>, <span class="dv">20</span>)) <span class="co"># 30</span></span>
+<span id="cb46-492"><a href="#cb46-492"></a><span class="bu">print</span>(add2(<span class="dv">10</span>, <span class="dv">20</span>)) <span class="co"># 20</span></span>
+<span id="cb46-493"><a href="#cb46-493"></a><span class="bu">type</span>(add1) <span class="co"># &lt;class 'function'&gt;</span></span>
+<span id="cb46-494"><a href="#cb46-494"></a><span class="bu">type</span>(add2) <span class="co"># &lt;class '__main__.Adder'&gt;</span></span>
+<span id="cb46-495"><a href="#cb46-495"></a><span class="in">```</span></span>
+<span id="cb46-496"><a href="#cb46-496"></a></span>
+<span id="cb46-497"><a href="#cb46-497"></a>functionally there is not distinguish between <span class="in">`add1`</span> and <span class="in">`add2`</span>. <span class="in">`add1`</span> is syntaxtically whole hell more easy to write. another diffence is if you want to add some *statefull behaviors*, we can easily modified the class:</span>
 <span id="cb46-498"><a href="#cb46-498"></a></span>
-<span id="cb46-499"><a href="#cb46-499"></a>functionally there is not distinguish between <span class="in">`add1`</span> and <span class="in">`add2`</span>. <span class="in">`add1`</span> is syntaxtically whole hell more easy to write. another diffence is if you want to add some *statefull behaviors*, we can easily modified the class:</span>
-<span id="cb46-500"><a href="#cb46-500"></a></span>
-<span id="cb46-503"><a href="#cb46-503"></a><span class="in">```{python}</span></span>
-<span id="cb46-504"><a href="#cb46-504"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-505"><a href="#cb46-505"></a><span class="kw">class</span> Adder:</span>
-<span id="cb46-506"><a href="#cb46-506"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
-<span id="cb46-507"><a href="#cb46-507"></a>    <span class="va">self</span>.z <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb46-508"><a href="#cb46-508"></a></span>
-<span id="cb46-509"><a href="#cb46-509"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x, y):</span>
-<span id="cb46-510"><a href="#cb46-510"></a>    <span class="va">self</span>.z <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb46-511"><a href="#cb46-511"></a>    <span class="cf">return</span> x <span class="op">+</span> y <span class="op">+</span> <span class="va">self</span>.z</span>
-<span id="cb46-512"><a href="#cb46-512"></a><span class="in">```</span></span>
+<span id="cb46-501"><a href="#cb46-501"></a><span class="in">```{python}</span></span>
+<span id="cb46-502"><a href="#cb46-502"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-503"><a href="#cb46-503"></a><span class="kw">class</span> Adder:</span>
+<span id="cb46-504"><a href="#cb46-504"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb46-505"><a href="#cb46-505"></a>    <span class="va">self</span>.z <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb46-506"><a href="#cb46-506"></a></span>
+<span id="cb46-507"><a href="#cb46-507"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x, y):</span>
+<span id="cb46-508"><a href="#cb46-508"></a>    <span class="va">self</span>.z <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb46-509"><a href="#cb46-509"></a>    <span class="cf">return</span> x <span class="op">+</span> y <span class="op">+</span> <span class="va">self</span>.z</span>
+<span id="cb46-510"><a href="#cb46-510"></a><span class="in">```</span></span>
+<span id="cb46-511"><a href="#cb46-511"></a></span>
+<span id="cb46-512"><a href="#cb46-512"></a><span class="co">[</span><span class="ot">Đọc thêm về [chuỗi bài này](https://magz.techover.io/2021/12/04/python-deep-dive-hieu-closures-decorators-va-cac-ung-dung-cua-chung-phan-1/) nếu thấy confuse</span><span class="co">]</span>{.aside}</span>
 <span id="cb46-513"><a href="#cb46-513"></a></span>
-<span id="cb46-514"><a href="#cb46-514"></a><span class="co">[</span><span class="ot">Đọc thêm về [chuỗi bài này](https://magz.techover.io/2021/12/04/python-deep-dive-hieu-closures-decorators-va-cac-ung-dung-cua-chung-phan-1/) nếu thấy confuse</span><span class="co">]</span>{.aside}</span>
+<span id="cb46-514"><a href="#cb46-514"></a>there is one what to do with the Adder, another way to do with the function, what he hinted at this object **closure duality**.</span>
 <span id="cb46-515"><a href="#cb46-515"></a></span>
-<span id="cb46-516"><a href="#cb46-516"></a>there is one what to do with the Adder, another way to do with the function, what he hinted at this object **closure duality**.</span>
+<span id="cb46-516"><a href="#cb46-516"></a>let's think about a function that take a lot of time to do something, like loading the data from the database. we demo by a simple function <span class="in">`compute()`</span>, which sleep 0.5 sec for each loop. the function only gives us the result once it completelt complete the loop, it will give us the entire result all at once. what if we care about the first? the first 3 values?</span>
 <span id="cb46-517"><a href="#cb46-517"></a></span>
-<span id="cb46-518"><a href="#cb46-518"></a>let's think about a function that take a lot of time to do something, like loading the data from the database. we demo by a simple function <span class="in">`compute()`</span>, which sleep 0.5 sec for each loop. the function only gives us the result once it completelt complete the loop, it will give us the entire result all at once. what if we care about the first? the first 3 values?</span>
+<span id="cb46-518"><a href="#cb46-518"></a>this is undesirable. this is wasteful both from the perspective of time &amp; memory. let's think about it with the object model and rewrite under <span class="in">`Compute`</span> class:</span>
 <span id="cb46-519"><a href="#cb46-519"></a></span>
-<span id="cb46-520"><a href="#cb46-520"></a>this is undesirable. this is wasteful both from the perspective of time &amp; memory. let's think about it with the object model and rewrite under <span class="in">`Compute`</span> class:</span>
-<span id="cb46-521"><a href="#cb46-521"></a></span>
-<span id="cb46-522"><a href="#cb46-522"></a></span>
-<span id="cb46-525"><a href="#cb46-525"></a><span class="in">```{python}</span></span>
-<span id="cb46-526"><a href="#cb46-526"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-527"><a href="#cb46-527"></a><span class="im">from</span> time <span class="im">import</span> sleep</span>
-<span id="cb46-528"><a href="#cb46-528"></a></span>
-<span id="cb46-529"><a href="#cb46-529"></a><span class="kw">def</span> compute()</span>
-<span id="cb46-530"><a href="#cb46-530"></a>  rv <span class="op">=</span> []</span>
-<span id="cb46-531"><a href="#cb46-531"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>):</span>
-<span id="cb46-532"><a href="#cb46-532"></a>    sleep(<span class="fl">.5</span>)</span>
-<span id="cb46-533"><a href="#cb46-533"></a>    rv.append(i)</span>
-<span id="cb46-534"><a href="#cb46-534"></a>  <span class="cf">return</span> rv</span>
-<span id="cb46-535"><a href="#cb46-535"></a></span>
-<span id="cb46-536"><a href="#cb46-536"></a><span class="kw">class</span> Compute:</span>
-<span id="cb46-537"><a href="#cb46-537"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
-<span id="cb46-538"><a href="#cb46-538"></a>    <span class="cf">pass</span></span>
-<span id="cb46-539"><a href="#cb46-539"></a></span>
-<span id="cb46-540"><a href="#cb46-540"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>):</span>
-<span id="cb46-541"><a href="#cb46-541"></a>    rv <span class="op">=</span> []</span>
-<span id="cb46-542"><a href="#cb46-542"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>):</span>
-<span id="cb46-543"><a href="#cb46-543"></a>      sleep(<span class="fl">.5</span>)</span>
-<span id="cb46-544"><a href="#cb46-544"></a>      rv.append(i)</span>
-<span id="cb46-545"><a href="#cb46-545"></a>    <span class="cf">return</span> rv</span>
-<span id="cb46-546"><a href="#cb46-546"></a>compute2 <span class="op">=</span> Compute()</span>
-<span id="cb46-547"><a href="#cb46-547"></a><span class="in">```</span></span>
+<span id="cb46-520"><a href="#cb46-520"></a></span>
+<span id="cb46-523"><a href="#cb46-523"></a><span class="in">```{python}</span></span>
+<span id="cb46-524"><a href="#cb46-524"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-525"><a href="#cb46-525"></a><span class="im">from</span> time <span class="im">import</span> sleep</span>
+<span id="cb46-526"><a href="#cb46-526"></a></span>
+<span id="cb46-527"><a href="#cb46-527"></a><span class="kw">def</span> compute()</span>
+<span id="cb46-528"><a href="#cb46-528"></a>  rv <span class="op">=</span> []</span>
+<span id="cb46-529"><a href="#cb46-529"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>):</span>
+<span id="cb46-530"><a href="#cb46-530"></a>    sleep(<span class="fl">.5</span>)</span>
+<span id="cb46-531"><a href="#cb46-531"></a>    rv.append(i)</span>
+<span id="cb46-532"><a href="#cb46-532"></a>  <span class="cf">return</span> rv</span>
+<span id="cb46-533"><a href="#cb46-533"></a></span>
+<span id="cb46-534"><a href="#cb46-534"></a><span class="kw">class</span> Compute:</span>
+<span id="cb46-535"><a href="#cb46-535"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb46-536"><a href="#cb46-536"></a>    <span class="cf">pass</span></span>
+<span id="cb46-537"><a href="#cb46-537"></a></span>
+<span id="cb46-538"><a href="#cb46-538"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>):</span>
+<span id="cb46-539"><a href="#cb46-539"></a>    rv <span class="op">=</span> []</span>
+<span id="cb46-540"><a href="#cb46-540"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>):</span>
+<span id="cb46-541"><a href="#cb46-541"></a>      sleep(<span class="fl">.5</span>)</span>
+<span id="cb46-542"><a href="#cb46-542"></a>      rv.append(i)</span>
+<span id="cb46-543"><a href="#cb46-543"></a>    <span class="cf">return</span> rv</span>
+<span id="cb46-544"><a href="#cb46-544"></a>compute2 <span class="op">=</span> Compute()</span>
+<span id="cb46-545"><a href="#cb46-545"></a><span class="in">```</span></span>
+<span id="cb46-546"><a href="#cb46-546"></a></span>
+<span id="cb46-547"><a href="#cb46-547"></a>the 2nd method: [<span class="co">[</span><span class="ot">read more</span><span class="co">](https://realpython.com/python-callable-instances)</span>]{.aside}</span>
 <span id="cb46-548"><a href="#cb46-548"></a></span>
-<span id="cb46-549"><a href="#cb46-549"></a>the 2nd method: [<span class="co">[</span><span class="ot">read more</span><span class="co">](https://realpython.com/python-callable-instances)</span>]{.aside}</span>
-<span id="cb46-550"><a href="#cb46-550"></a></span>
-<span id="cb46-551"><a href="#cb46-551"></a><span class="ss">- </span>Retain state between calls (**stateful callables**)</span>
-<span id="cb46-552"><a href="#cb46-552"></a><span class="ss">- </span>Cache values that result from previous computations</span>
-<span id="cb46-553"><a href="#cb46-553"></a><span class="ss">- </span>Implement straightforward and convenient APIs</span>
+<span id="cb46-549"><a href="#cb46-549"></a><span class="ss">- </span>Retain state between calls (**stateful callables**)</span>
+<span id="cb46-550"><a href="#cb46-550"></a><span class="ss">- </span>Cache values that result from previous computations</span>
+<span id="cb46-551"><a href="#cb46-551"></a><span class="ss">- </span>Implement straightforward and convenient APIs</span>
+<span id="cb46-552"><a href="#cb46-552"></a></span>
+<span id="cb46-553"><a href="#cb46-553"></a>if you want to access data during computaion, think of:</span>
 <span id="cb46-554"><a href="#cb46-554"></a></span>
-<span id="cb46-555"><a href="#cb46-555"></a>if you want to access data during computaion, think of:</span>
-<span id="cb46-556"><a href="#cb46-556"></a></span>
-<span id="cb46-557"><a href="#cb46-557"></a><span class="in">```</span></span>
-<span id="cb46-558"><a href="#cb46-558"></a><span class="in">for x in xs:</span></span>
-<span id="cb46-559"><a href="#cb46-559"></a><span class="in">  pass</span></span>
-<span id="cb46-560"><a href="#cb46-560"></a></span>
-<span id="cb46-561"><a href="#cb46-561"></a><span class="in">x1 = iter(xs)   ---&gt; __iter__</span></span>
-<span id="cb46-562"><a href="#cb46-562"></a><span class="in">while True:</span></span>
-<span id="cb46-563"><a href="#cb46-563"></a><span class="in">  x = next(x1)  ---&gt; __next__</span></span>
-<span id="cb46-564"><a href="#cb46-564"></a><span class="in">```</span></span>
+<span id="cb46-555"><a href="#cb46-555"></a><span class="in">```</span></span>
+<span id="cb46-556"><a href="#cb46-556"></a><span class="in">for x in xs:</span></span>
+<span id="cb46-557"><a href="#cb46-557"></a><span class="in">  pass</span></span>
+<span id="cb46-558"><a href="#cb46-558"></a></span>
+<span id="cb46-559"><a href="#cb46-559"></a><span class="in">x1 = iter(xs)   ---&gt; __iter__</span></span>
+<span id="cb46-560"><a href="#cb46-560"></a><span class="in">while True:</span></span>
+<span id="cb46-561"><a href="#cb46-561"></a><span class="in">  x = next(x1)  ---&gt; __next__</span></span>
+<span id="cb46-562"><a href="#cb46-562"></a><span class="in">```</span></span>
+<span id="cb46-563"><a href="#cb46-563"></a></span>
+<span id="cb46-564"><a href="#cb46-564"></a>and re-write the <span class="in">`Compute`</span> like this:</span>
 <span id="cb46-565"><a href="#cb46-565"></a></span>
-<span id="cb46-566"><a href="#cb46-566"></a>and re-write the <span class="in">`Compute`</span> like this:</span>
-<span id="cb46-567"><a href="#cb46-567"></a></span>
-<span id="cb46-570"><a href="#cb46-570"></a><span class="in">```{python}</span></span>
-<span id="cb46-571"><a href="#cb46-571"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-572"><a href="#cb46-572"></a><span class="kw">class</span> Compute:</span>
-<span id="cb46-573"><a href="#cb46-573"></a>  <span class="kw">def</span> <span class="fu">__iter__</span>(<span class="va">self</span>):</span>
-<span id="cb46-574"><a href="#cb46-574"></a>    <span class="va">self</span>.last <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb46-575"><a href="#cb46-575"></a>    <span class="cf">return</span> <span class="va">self</span> </span>
-<span id="cb46-576"><a href="#cb46-576"></a>  </span>
-<span id="cb46-577"><a href="#cb46-577"></a>  <span class="kw">def</span> <span class="fu">__next__</span>(<span class="va">self</span>):</span>
-<span id="cb46-578"><a href="#cb46-578"></a>    rv <span class="op">=</span> <span class="va">self</span>.last</span>
-<span id="cb46-579"><a href="#cb46-579"></a>    <span class="va">self</span>.last <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb46-580"><a href="#cb46-580"></a>    <span class="cf">if</span> <span class="va">self</span>.last <span class="op">&gt;</span> <span class="dv">10</span>:</span>
-<span id="cb46-581"><a href="#cb46-581"></a>      <span class="cf">raise</span> <span class="pp">StopIteration</span>()</span>
-<span id="cb46-582"><a href="#cb46-582"></a>    sleep(<span class="fl">.5</span>)</span>
-<span id="cb46-583"><a href="#cb46-583"></a>    <span class="cf">return</span> rv</span>
-<span id="cb46-584"><a href="#cb46-584"></a></span>
-<span id="cb46-585"><a href="#cb46-585"></a><span class="cf">for</span> val <span class="kw">in</span> Compute():</span>
-<span id="cb46-586"><a href="#cb46-586"></a>  <span class="bu">print</span>(val)</span>
-<span id="cb46-587"><a href="#cb46-587"></a><span class="in">```</span></span>
+<span id="cb46-568"><a href="#cb46-568"></a><span class="in">```{python}</span></span>
+<span id="cb46-569"><a href="#cb46-569"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-570"><a href="#cb46-570"></a><span class="kw">class</span> Compute:</span>
+<span id="cb46-571"><a href="#cb46-571"></a>  <span class="kw">def</span> <span class="fu">__iter__</span>(<span class="va">self</span>):</span>
+<span id="cb46-572"><a href="#cb46-572"></a>    <span class="va">self</span>.last <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb46-573"><a href="#cb46-573"></a>    <span class="cf">return</span> <span class="va">self</span> </span>
+<span id="cb46-574"><a href="#cb46-574"></a>  </span>
+<span id="cb46-575"><a href="#cb46-575"></a>  <span class="kw">def</span> <span class="fu">__next__</span>(<span class="va">self</span>):</span>
+<span id="cb46-576"><a href="#cb46-576"></a>    rv <span class="op">=</span> <span class="va">self</span>.last</span>
+<span id="cb46-577"><a href="#cb46-577"></a>    <span class="va">self</span>.last <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb46-578"><a href="#cb46-578"></a>    <span class="cf">if</span> <span class="va">self</span>.last <span class="op">&gt;</span> <span class="dv">10</span>:</span>
+<span id="cb46-579"><a href="#cb46-579"></a>      <span class="cf">raise</span> <span class="pp">StopIteration</span>()</span>
+<span id="cb46-580"><a href="#cb46-580"></a>    sleep(<span class="fl">.5</span>)</span>
+<span id="cb46-581"><a href="#cb46-581"></a>    <span class="cf">return</span> rv</span>
+<span id="cb46-582"><a href="#cb46-582"></a></span>
+<span id="cb46-583"><a href="#cb46-583"></a><span class="cf">for</span> val <span class="kw">in</span> Compute():</span>
+<span id="cb46-584"><a href="#cb46-584"></a>  <span class="bu">print</span>(val)</span>
+<span id="cb46-585"><a href="#cb46-585"></a><span class="in">```</span></span>
+<span id="cb46-586"><a href="#cb46-586"></a></span>
+<span id="cb46-587"><a href="#cb46-587"></a>now, it:</span>
 <span id="cb46-588"><a href="#cb46-588"></a></span>
-<span id="cb46-589"><a href="#cb46-589"></a>now, it:</span>
-<span id="cb46-590"><a href="#cb46-590"></a></span>
-<span id="cb46-591"><a href="#cb46-591"></a><span class="ss">- </span>takes 1 iteration to let you start using it;</span>
-<span id="cb46-592"><a href="#cb46-592"></a><span class="ss">- </span>takes no storage;</span>
-<span id="cb46-593"><a href="#cb46-593"></a><span class="ss">- </span>but looks ugly.</span>
+<span id="cb46-589"><a href="#cb46-589"></a><span class="ss">- </span>takes 1 iteration to let you start using it;</span>
+<span id="cb46-590"><a href="#cb46-590"></a><span class="ss">- </span>takes no storage;</span>
+<span id="cb46-591"><a href="#cb46-591"></a><span class="ss">- </span>but looks ugly.</span>
+<span id="cb46-592"><a href="#cb46-592"></a></span>
+<span id="cb46-593"><a href="#cb46-593"></a>and there is much simpler way to write a function that operate in such fashion, the **generator** syntax, it merely:</span>
 <span id="cb46-594"><a href="#cb46-594"></a></span>
-<span id="cb46-595"><a href="#cb46-595"></a>and there is much simpler way to write a function that operate in such fashion, the **generator** syntax, it merely:</span>
-<span id="cb46-596"><a href="#cb46-596"></a></span>
-<span id="cb46-599"><a href="#cb46-599"></a><span class="in">```{python}</span></span>
-<span id="cb46-600"><a href="#cb46-600"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-601"><a href="#cb46-601"></a></span>
-<span id="cb46-602"><a href="#cb46-602"></a><span class="kw">def</span> compute()</span>
-<span id="cb46-603"><a href="#cb46-603"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
-<span id="cb46-604"><a href="#cb46-604"></a>    sleep(<span class="fl">.5</span>)</span>
-<span id="cb46-605"><a href="#cb46-605"></a>    <span class="cf">yield</span> i</span>
-<span id="cb46-606"><a href="#cb46-606"></a><span class="in">```</span></span>
+<span id="cb46-597"><a href="#cb46-597"></a><span class="in">```{python}</span></span>
+<span id="cb46-598"><a href="#cb46-598"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-599"><a href="#cb46-599"></a></span>
+<span id="cb46-600"><a href="#cb46-600"></a><span class="kw">def</span> compute()</span>
+<span id="cb46-601"><a href="#cb46-601"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb46-602"><a href="#cb46-602"></a>    sleep(<span class="fl">.5</span>)</span>
+<span id="cb46-603"><a href="#cb46-603"></a>    <span class="cf">yield</span> i</span>
+<span id="cb46-604"><a href="#cb46-604"></a><span class="in">```</span></span>
+<span id="cb46-605"><a href="#cb46-605"></a></span>
+<span id="cb46-606"><a href="#cb46-606"></a>its state is maintained internally. instead of eagerly computing the values, you give them to the user as the ask. let's look in the last example:</span>
 <span id="cb46-607"><a href="#cb46-607"></a></span>
-<span id="cb46-608"><a href="#cb46-608"></a>its state is maintained internally. instead of eagerly computing the values, you give them to the user as the ask. let's look in the last example:</span>
-<span id="cb46-609"><a href="#cb46-609"></a></span>
-<span id="cb46-612"><a href="#cb46-612"></a><span class="in">```{python}</span></span>
-<span id="cb46-613"><a href="#cb46-613"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-614"><a href="#cb46-614"></a></span>
-<span id="cb46-615"><a href="#cb46-615"></a><span class="kw">class</span> Api:</span>
-<span id="cb46-616"><a href="#cb46-616"></a>  <span class="kw">def</span> run_this_first():</span>
-<span id="cb46-617"><a href="#cb46-617"></a>    first()</span>
-<span id="cb46-618"><a href="#cb46-618"></a>  <span class="kw">def</span> run_this_second():</span>
-<span id="cb46-619"><a href="#cb46-619"></a>    second()</span>
-<span id="cb46-620"><a href="#cb46-620"></a>  <span class="kw">def</span> run_this_last():</span>
-<span id="cb46-621"><a href="#cb46-621"></a>    lass()</span>
-<span id="cb46-622"><a href="#cb46-622"></a><span class="co"># in documentation you ask user to use those functions in order but no physically constraint you to not run like this:</span></span>
-<span id="cb46-623"><a href="#cb46-623"></a>Api.run_this_last()</span>
-<span id="cb46-624"><a href="#cb46-624"></a>Api.run_this_second()</span>
-<span id="cb46-625"><a href="#cb46-625"></a>Api.run_this_first()</span>
-<span id="cb46-626"><a href="#cb46-626"></a><span class="in">```</span></span>
+<span id="cb46-610"><a href="#cb46-610"></a><span class="in">```{python}</span></span>
+<span id="cb46-611"><a href="#cb46-611"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-612"><a href="#cb46-612"></a></span>
+<span id="cb46-613"><a href="#cb46-613"></a><span class="kw">class</span> Api:</span>
+<span id="cb46-614"><a href="#cb46-614"></a>  <span class="kw">def</span> run_this_first():</span>
+<span id="cb46-615"><a href="#cb46-615"></a>    first()</span>
+<span id="cb46-616"><a href="#cb46-616"></a>  <span class="kw">def</span> run_this_second():</span>
+<span id="cb46-617"><a href="#cb46-617"></a>    second()</span>
+<span id="cb46-618"><a href="#cb46-618"></a>  <span class="kw">def</span> run_this_last():</span>
+<span id="cb46-619"><a href="#cb46-619"></a>    lass()</span>
+<span id="cb46-620"><a href="#cb46-620"></a><span class="co"># in documentation you ask user to use those functions in order but no physically constraint you to not run like this:</span></span>
+<span id="cb46-621"><a href="#cb46-621"></a>Api.run_this_last()</span>
+<span id="cb46-622"><a href="#cb46-622"></a>Api.run_this_second()</span>
+<span id="cb46-623"><a href="#cb46-623"></a>Api.run_this_first()</span>
+<span id="cb46-624"><a href="#cb46-624"></a><span class="in">```</span></span>
+<span id="cb46-625"><a href="#cb46-625"></a></span>
+<span id="cb46-626"><a href="#cb46-626"></a>the generator not only yield the result back, but also the control back to the caller. we can interleave our code with library code, controling them to run in order, that is conceptualization of how generators are built upon - co-routines.</span>
 <span id="cb46-627"><a href="#cb46-627"></a></span>
-<span id="cb46-628"><a href="#cb46-628"></a>the generator not only yield the result back, but also the control back to the caller. we can interleave our code with library code, controling them to run in order, that is conceptualization of how generators are built upon - co-routines.</span>
+<span id="cb46-628"><a href="#cb46-628"></a>we can either define execution function inside the class or use generator to control the sequence:</span>
 <span id="cb46-629"><a href="#cb46-629"></a></span>
-<span id="cb46-630"><a href="#cb46-630"></a>we can either define execution function inside the class or use generator to control the sequence:</span>
-<span id="cb46-631"><a href="#cb46-631"></a></span>
-<span id="cb46-634"><a href="#cb46-634"></a><span class="in">```{python}</span></span>
-<span id="cb46-635"><a href="#cb46-635"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-636"><a href="#cb46-636"></a>...</span>
-<span id="cb46-637"><a href="#cb46-637"></a>  <span class="kw">def</span> doit():</span>
-<span id="cb46-638"><a href="#cb46-638"></a>    first()</span>
-<span id="cb46-639"><a href="#cb46-639"></a>    second()</span>
-<span id="cb46-640"><a href="#cb46-640"></a>    last()</span>
-<span id="cb46-641"><a href="#cb46-641"></a>... </span>
+<span id="cb46-632"><a href="#cb46-632"></a><span class="in">```{python}</span></span>
+<span id="cb46-633"><a href="#cb46-633"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-634"><a href="#cb46-634"></a>...</span>
+<span id="cb46-635"><a href="#cb46-635"></a>  <span class="kw">def</span> doit():</span>
+<span id="cb46-636"><a href="#cb46-636"></a>    first()</span>
+<span id="cb46-637"><a href="#cb46-637"></a>    second()</span>
+<span id="cb46-638"><a href="#cb46-638"></a>    last()</span>
+<span id="cb46-639"><a href="#cb46-639"></a>... </span>
+<span id="cb46-640"><a href="#cb46-640"></a></span>
+<span id="cb46-641"><a href="#cb46-641"></a><span class="co"># or</span></span>
 <span id="cb46-642"><a href="#cb46-642"></a></span>
-<span id="cb46-643"><a href="#cb46-643"></a><span class="co"># or</span></span>
-<span id="cb46-644"><a href="#cb46-644"></a></span>
-<span id="cb46-645"><a href="#cb46-645"></a><span class="kw">def</span> api()</span>
-<span id="cb46-646"><a href="#cb46-646"></a>  first()</span>
+<span id="cb46-643"><a href="#cb46-643"></a><span class="kw">def</span> api()</span>
+<span id="cb46-644"><a href="#cb46-644"></a>  first()</span>
+<span id="cb46-645"><a href="#cb46-645"></a>  <span class="cf">yield</span></span>
+<span id="cb46-646"><a href="#cb46-646"></a>  second()</span>
 <span id="cb46-647"><a href="#cb46-647"></a>  <span class="cf">yield</span></span>
-<span id="cb46-648"><a href="#cb46-648"></a>  second()</span>
-<span id="cb46-649"><a href="#cb46-649"></a>  <span class="cf">yield</span></span>
-<span id="cb46-650"><a href="#cb46-650"></a>  last()</span>
-<span id="cb46-651"><a href="#cb46-651"></a><span class="in">```</span></span>
+<span id="cb46-648"><a href="#cb46-648"></a>  last()</span>
+<span id="cb46-649"><a href="#cb46-649"></a><span class="in">```</span></span>
+<span id="cb46-650"><a href="#cb46-650"></a></span>
+<span id="cb46-651"><a href="#cb46-651"></a><span class="fu"># context manager</span></span>
 <span id="cb46-652"><a href="#cb46-652"></a></span>
-<span id="cb46-653"><a href="#cb46-653"></a><span class="fu"># context manager</span></span>
+<span id="cb46-653"><a href="#cb46-653"></a>setup &amp; teardown ~ initial action and final action. we would often see pattern like:</span>
 <span id="cb46-654"><a href="#cb46-654"></a></span>
-<span id="cb46-655"><a href="#cb46-655"></a>setup &amp; teardown ~ initial action and final action. we would often see pattern like:</span>
-<span id="cb46-656"><a href="#cb46-656"></a></span>
-<span id="cb46-659"><a href="#cb46-659"></a><span class="in">```{python}</span></span>
-<span id="cb46-660"><a href="#cb46-660"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-661"><a href="#cb46-661"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'ctx.py'</span>) <span class="im">as</span> f:</span>
-<span id="cb46-662"><a href="#cb46-662"></a>  <span class="cf">pass</span></span>
-<span id="cb46-663"><a href="#cb46-663"></a><span class="in">```</span></span>
+<span id="cb46-657"><a href="#cb46-657"></a><span class="in">```{python}</span></span>
+<span id="cb46-658"><a href="#cb46-658"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-659"><a href="#cb46-659"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'ctx.py'</span>) <span class="im">as</span> f:</span>
+<span id="cb46-660"><a href="#cb46-660"></a>  <span class="cf">pass</span></span>
+<span id="cb46-661"><a href="#cb46-661"></a><span class="in">```</span></span>
+<span id="cb46-662"><a href="#cb46-662"></a></span>
+<span id="cb46-663"><a href="#cb46-663"></a>beyond the file, it can be also sqllite</span>
 <span id="cb46-664"><a href="#cb46-664"></a></span>
-<span id="cb46-665"><a href="#cb46-665"></a>beyond the file, it can be also sqllite</span>
-<span id="cb46-666"><a href="#cb46-666"></a></span>
-<span id="cb46-669"><a href="#cb46-669"></a><span class="in">```{python}</span></span>
-<span id="cb46-670"><a href="#cb46-670"></a><span class="im">from</span> sqlite3 <span class="im">import</span> <span class="ex">connect</span></span>
-<span id="cb46-671"><a href="#cb46-671"></a></span>
-<span id="cb46-672"><a href="#cb46-672"></a><span class="co"># control the execution is executed when connection is open</span></span>
-<span id="cb46-673"><a href="#cb46-673"></a><span class="cf">with</span> <span class="ex">connect</span>(<span class="st">'test.db'</span>) <span class="im">as</span> conn:</span>
-<span id="cb46-674"><a href="#cb46-674"></a>  cur <span class="op">=</span> conn.cursor()</span>
-<span id="cb46-675"><a href="#cb46-675"></a>  cur.execute(<span class="st">'create table points(x int, y int)'</span>)</span>
-<span id="cb46-676"><a href="#cb46-676"></a>  cur.execute(<span class="st">'insert into points(x, y) values (1, 1)'</span>)</span>
-<span id="cb46-677"><a href="#cb46-677"></a>  cur.execute(<span class="st">'insert into points(x, y) values (2, 1)'</span>)</span>
-<span id="cb46-678"><a href="#cb46-678"></a>  cur.execute(<span class="st">'insert into points(x, y) values (1, 2)'</span>)</span>
-<span id="cb46-679"><a href="#cb46-679"></a>  <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select sum(x * y) from points'</span>):</span>
+<span id="cb46-667"><a href="#cb46-667"></a><span class="in">```{python}</span></span>
+<span id="cb46-668"><a href="#cb46-668"></a><span class="im">from</span> sqlite3 <span class="im">import</span> <span class="ex">connect</span></span>
+<span id="cb46-669"><a href="#cb46-669"></a></span>
+<span id="cb46-670"><a href="#cb46-670"></a><span class="co"># control the execution is executed when connection is open</span></span>
+<span id="cb46-671"><a href="#cb46-671"></a><span class="cf">with</span> <span class="ex">connect</span>(<span class="st">'test.db'</span>) <span class="im">as</span> conn:</span>
+<span id="cb46-672"><a href="#cb46-672"></a>  cur <span class="op">=</span> conn.cursor()</span>
+<span id="cb46-673"><a href="#cb46-673"></a>  cur.execute(<span class="st">'create table points(x int, y int)'</span>)</span>
+<span id="cb46-674"><a href="#cb46-674"></a>  cur.execute(<span class="st">'insert into points(x, y) values (1, 1)'</span>)</span>
+<span id="cb46-675"><a href="#cb46-675"></a>  cur.execute(<span class="st">'insert into points(x, y) values (2, 1)'</span>)</span>
+<span id="cb46-676"><a href="#cb46-676"></a>  cur.execute(<span class="st">'insert into points(x, y) values (1, 2)'</span>)</span>
+<span id="cb46-677"><a href="#cb46-677"></a>  <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select sum(x * y) from points'</span>):</span>
+<span id="cb46-678"><a href="#cb46-678"></a>    <span class="bu">print</span>(row)</span>
+<span id="cb46-679"><a href="#cb46-679"></a>  <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select x, y from points'</span>):</span>
 <span id="cb46-680"><a href="#cb46-680"></a>    <span class="bu">print</span>(row)</span>
-<span id="cb46-681"><a href="#cb46-681"></a>  <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select x, y from points'</span>):</span>
-<span id="cb46-682"><a href="#cb46-682"></a>    <span class="bu">print</span>(row)</span>
-<span id="cb46-683"><a href="#cb46-683"></a>  cur.execute(<span class="st">'drop table points'</span>)</span>
-<span id="cb46-684"><a href="#cb46-684"></a><span class="in">```</span></span>
+<span id="cb46-681"><a href="#cb46-681"></a>  cur.execute(<span class="st">'drop table points'</span>)</span>
+<span id="cb46-682"><a href="#cb46-682"></a><span class="in">```</span></span>
+<span id="cb46-683"><a href="#cb46-683"></a></span>
+<span id="cb46-684"><a href="#cb46-684"></a>now we already control if connection is live to do something, we've not yet controlled inside the connection, the entry point and the exit point. now behind the scence</span>
 <span id="cb46-685"><a href="#cb46-685"></a></span>
-<span id="cb46-686"><a href="#cb46-686"></a>now we already control if connection is live to do something, we've not yet controlled inside the connection, the entry point and the exit point. now behind the scence</span>
-<span id="cb46-687"><a href="#cb46-687"></a></span>
-<span id="cb46-688"><a href="#cb46-688"></a><span class="in">```</span></span>
-<span id="cb46-689"><a href="#cb46-689"></a><span class="in">with ctx() as x:</span></span>
-<span id="cb46-690"><a href="#cb46-690"></a><span class="in">  pass</span></span>
-<span id="cb46-691"><a href="#cb46-691"></a><span class="in">```</span></span>
+<span id="cb46-686"><a href="#cb46-686"></a><span class="in">```</span></span>
+<span id="cb46-687"><a href="#cb46-687"></a><span class="in">with ctx() as x:</span></span>
+<span id="cb46-688"><a href="#cb46-688"></a><span class="in">  pass</span></span>
+<span id="cb46-689"><a href="#cb46-689"></a><span class="in">```</span></span>
+<span id="cb46-690"><a href="#cb46-690"></a></span>
+<span id="cb46-691"><a href="#cb46-691"></a>will look like the following:</span>
 <span id="cb46-692"><a href="#cb46-692"></a></span>
-<span id="cb46-693"><a href="#cb46-693"></a>will look like the following:</span>
-<span id="cb46-694"><a href="#cb46-694"></a></span>
-<span id="cb46-695"><a href="#cb46-695"></a><span class="in">```</span></span>
-<span id="cb46-696"><a href="#cb46-696"></a><span class="in">x = ctx().__enter__</span></span>
-<span id="cb46-697"><a href="#cb46-697"></a><span class="in">try</span></span>
-<span id="cb46-698"><a href="#cb46-698"></a><span class="in">  pass</span></span>
-<span id="cb46-699"><a href="#cb46-699"></a><span class="in">finally:</span></span>
-<span id="cb46-700"><a href="#cb46-700"></a><span class="in">  x.__exit__</span></span>
-<span id="cb46-701"><a href="#cb46-701"></a><span class="in">```</span></span>
+<span id="cb46-693"><a href="#cb46-693"></a><span class="in">```</span></span>
+<span id="cb46-694"><a href="#cb46-694"></a><span class="in">x = ctx().__enter__</span></span>
+<span id="cb46-695"><a href="#cb46-695"></a><span class="in">try</span></span>
+<span id="cb46-696"><a href="#cb46-696"></a><span class="in">  pass</span></span>
+<span id="cb46-697"><a href="#cb46-697"></a><span class="in">finally:</span></span>
+<span id="cb46-698"><a href="#cb46-698"></a><span class="in">  x.__exit__</span></span>
+<span id="cb46-699"><a href="#cb46-699"></a><span class="in">```</span></span>
+<span id="cb46-700"><a href="#cb46-700"></a></span>
+<span id="cb46-701"><a href="#cb46-701"></a>we'll try to emplement this to our connection, we'll wrap it to a **temporary table behaviour**:</span>
 <span id="cb46-702"><a href="#cb46-702"></a></span>
-<span id="cb46-703"><a href="#cb46-703"></a>we'll try to emplement this to our connection, we'll wrap it to a **temporary table behaviour**:</span>
-<span id="cb46-704"><a href="#cb46-704"></a></span>
-<span id="cb46-707"><a href="#cb46-707"></a><span class="in">```{python}</span></span>
-<span id="cb46-708"><a href="#cb46-708"></a><span class="im">from</span> sqlite3 <span class="im">import</span> <span class="ex">connect</span></span>
-<span id="cb46-709"><a href="#cb46-709"></a></span>
-<span id="cb46-710"><a href="#cb46-710"></a><span class="kw">class</span> Temporarytable:</span>
-<span id="cb46-711"><a href="#cb46-711"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, cur):</span>
-<span id="cb46-712"><a href="#cb46-712"></a>    <span class="va">self</span>.cur <span class="op">=</span> cur</span>
-<span id="cb46-713"><a href="#cb46-713"></a>  <span class="kw">def</span> <span class="fu">__enter__</span>(<span class="va">self</span>):</span>
-<span id="cb46-714"><a href="#cb46-714"></a>    <span class="bu">print</span>(<span class="st">'__enter__'</span>)</span>
-<span id="cb46-715"><a href="#cb46-715"></a>    <span class="va">self</span>.cur.execute(<span class="st">'create table points(x int, y int)'</span>)</span>
-<span id="cb46-716"><a href="#cb46-716"></a>  <span class="kw">def</span> <span class="fu">__exit__</span>(<span class="va">self</span>, <span class="op">*</span>arg): <span class="co"># why need *arg</span></span>
-<span id="cb46-717"><a href="#cb46-717"></a>    <span class="bu">print</span>(<span class="st">'__exit__'</span>)</span>
-<span id="cb46-718"><a href="#cb46-718"></a>    <span class="va">self</span>.cur.execute(<span class="st">'drop table points'</span>)</span>
-<span id="cb46-719"><a href="#cb46-719"></a></span>
-<span id="cb46-720"><a href="#cb46-720"></a><span class="cf">with</span> <span class="ex">connect</span>(<span class="st">'test.db'</span>) <span class="im">as</span> conn:</span>
-<span id="cb46-721"><a href="#cb46-721"></a>  cur <span class="op">=</span> conn.cursor()</span>
-<span id="cb46-722"><a href="#cb46-722"></a>  <span class="cf">with</span> Temporarytable(cur<span class="op">=</span>cur):</span>
-<span id="cb46-723"><a href="#cb46-723"></a>    cur.execute(<span class="st">'insert into points(x, y) values (1, 1)'</span>)</span>
-<span id="cb46-724"><a href="#cb46-724"></a>    cur.execute(<span class="st">'insert into points(x, y) values (2, 1)'</span>)</span>
-<span id="cb46-725"><a href="#cb46-725"></a>    cur.execute(<span class="st">'insert into points(x, y) values (1, 2)'</span>)</span>
-<span id="cb46-726"><a href="#cb46-726"></a>    <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select sum(x * y) from points'</span>):</span>
+<span id="cb46-705"><a href="#cb46-705"></a><span class="in">```{python}</span></span>
+<span id="cb46-706"><a href="#cb46-706"></a><span class="im">from</span> sqlite3 <span class="im">import</span> <span class="ex">connect</span></span>
+<span id="cb46-707"><a href="#cb46-707"></a></span>
+<span id="cb46-708"><a href="#cb46-708"></a><span class="kw">class</span> Temporarytable:</span>
+<span id="cb46-709"><a href="#cb46-709"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, cur):</span>
+<span id="cb46-710"><a href="#cb46-710"></a>    <span class="va">self</span>.cur <span class="op">=</span> cur</span>
+<span id="cb46-711"><a href="#cb46-711"></a>  <span class="kw">def</span> <span class="fu">__enter__</span>(<span class="va">self</span>):</span>
+<span id="cb46-712"><a href="#cb46-712"></a>    <span class="bu">print</span>(<span class="st">'__enter__'</span>)</span>
+<span id="cb46-713"><a href="#cb46-713"></a>    <span class="va">self</span>.cur.execute(<span class="st">'create table points(x int, y int)'</span>)</span>
+<span id="cb46-714"><a href="#cb46-714"></a>  <span class="kw">def</span> <span class="fu">__exit__</span>(<span class="va">self</span>, <span class="op">*</span>arg): <span class="co"># why need *arg</span></span>
+<span id="cb46-715"><a href="#cb46-715"></a>    <span class="bu">print</span>(<span class="st">'__exit__'</span>)</span>
+<span id="cb46-716"><a href="#cb46-716"></a>    <span class="va">self</span>.cur.execute(<span class="st">'drop table points'</span>)</span>
+<span id="cb46-717"><a href="#cb46-717"></a></span>
+<span id="cb46-718"><a href="#cb46-718"></a><span class="cf">with</span> <span class="ex">connect</span>(<span class="st">'test.db'</span>) <span class="im">as</span> conn:</span>
+<span id="cb46-719"><a href="#cb46-719"></a>  cur <span class="op">=</span> conn.cursor()</span>
+<span id="cb46-720"><a href="#cb46-720"></a>  <span class="cf">with</span> Temporarytable(cur<span class="op">=</span>cur):</span>
+<span id="cb46-721"><a href="#cb46-721"></a>    cur.execute(<span class="st">'insert into points(x, y) values (1, 1)'</span>)</span>
+<span id="cb46-722"><a href="#cb46-722"></a>    cur.execute(<span class="st">'insert into points(x, y) values (2, 1)'</span>)</span>
+<span id="cb46-723"><a href="#cb46-723"></a>    cur.execute(<span class="st">'insert into points(x, y) values (1, 2)'</span>)</span>
+<span id="cb46-724"><a href="#cb46-724"></a>    <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select sum(x * y) from points'</span>):</span>
+<span id="cb46-725"><a href="#cb46-725"></a>      <span class="bu">print</span>(row)</span>
+<span id="cb46-726"><a href="#cb46-726"></a>    <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select x, y from points'</span>):</span>
 <span id="cb46-727"><a href="#cb46-727"></a>      <span class="bu">print</span>(row)</span>
-<span id="cb46-728"><a href="#cb46-728"></a>    <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select x, y from points'</span>):</span>
-<span id="cb46-729"><a href="#cb46-729"></a>      <span class="bu">print</span>(row)</span>
-<span id="cb46-730"><a href="#cb46-730"></a><span class="in">```</span></span>
+<span id="cb46-728"><a href="#cb46-728"></a><span class="in">```</span></span>
+<span id="cb46-729"><a href="#cb46-729"></a></span>
+<span id="cb46-730"><a href="#cb46-730"></a>now can the exit run before the enter, no! they need to be run sequencely. it remind us about the **generator** to improve this:</span>
 <span id="cb46-731"><a href="#cb46-731"></a></span>
-<span id="cb46-732"><a href="#cb46-732"></a>now can the exit run before the enter, no! they need to be run sequencely. it remind us about the **generator** to improve this:</span>
-<span id="cb46-733"><a href="#cb46-733"></a></span>
-<span id="cb46-736"><a href="#cb46-736"></a><span class="in">```{python}</span></span>
-<span id="cb46-737"><a href="#cb46-737"></a><span class="im">from</span> sqlite3 <span class="im">import</span> <span class="ex">connect</span></span>
-<span id="cb46-738"><a href="#cb46-738"></a><span class="kw">def</span> temporarytable(cur):</span>
-<span id="cb46-739"><a href="#cb46-739"></a>  <span class="bu">print</span>(<span class="st">'created table'</span>)</span>
-<span id="cb46-740"><a href="#cb46-740"></a>  cur.execute(<span class="st">'create table points(x int, y int)'</span>)</span>
-<span id="cb46-741"><a href="#cb46-741"></a>  <span class="cf">yield</span></span>
-<span id="cb46-742"><a href="#cb46-742"></a>  cur.execute(<span class="st">'drop table points'</span>)</span>
-<span id="cb46-743"><a href="#cb46-743"></a>  <span class="bu">print</span>(<span class="st">'dropped table'</span>)</span>
-<span id="cb46-744"><a href="#cb46-744"></a></span>
-<span id="cb46-745"><a href="#cb46-745"></a><span class="kw">class</span> Temporarytable:</span>
-<span id="cb46-746"><a href="#cb46-746"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, cur):</span>
-<span id="cb46-747"><a href="#cb46-747"></a>    <span class="va">self</span>.cur <span class="op">=</span> cur</span>
-<span id="cb46-748"><a href="#cb46-748"></a>  <span class="kw">def</span> <span class="fu">__enter__</span>(<span class="va">self</span>):</span>
-<span id="cb46-749"><a href="#cb46-749"></a>    <span class="va">self</span>.gen <span class="op">=</span> temporarytable(<span class="va">self</span>.cur)</span>
-<span id="cb46-750"><a href="#cb46-750"></a>    <span class="bu">next</span>(<span class="va">self</span>.gen)</span>
-<span id="cb46-751"><a href="#cb46-751"></a>  <span class="kw">def</span> <span class="fu">__exit__</span>(<span class="va">self</span>, <span class="op">*</span>arg):</span>
-<span id="cb46-752"><a href="#cb46-752"></a>    <span class="bu">next</span>(<span class="va">self</span>.gen, <span class="va">None</span>)</span>
-<span id="cb46-753"><a href="#cb46-753"></a></span>
-<span id="cb46-754"><a href="#cb46-754"></a><span class="cf">with</span> <span class="ex">connect</span>(<span class="st">'test.db'</span>) <span class="im">as</span> conn:</span>
-<span id="cb46-755"><a href="#cb46-755"></a>  cur <span class="op">=</span> conn.cursor()</span>
-<span id="cb46-756"><a href="#cb46-756"></a>  <span class="cf">with</span> Temporarytable(cur<span class="op">=</span>cur):</span>
-<span id="cb46-757"><a href="#cb46-757"></a>    cur.execute(<span class="st">'insert into points(x, y) values (1, 1)'</span>)</span>
-<span id="cb46-758"><a href="#cb46-758"></a>    cur.execute(<span class="st">'insert into points(x, y) values (2, 1)'</span>)</span>
-<span id="cb46-759"><a href="#cb46-759"></a>    cur.execute(<span class="st">'insert into points(x, y) values (1, 2)'</span>)</span>
-<span id="cb46-760"><a href="#cb46-760"></a>    <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select sum(x * y) from points'</span>):</span>
+<span id="cb46-734"><a href="#cb46-734"></a><span class="in">```{python}</span></span>
+<span id="cb46-735"><a href="#cb46-735"></a><span class="im">from</span> sqlite3 <span class="im">import</span> <span class="ex">connect</span></span>
+<span id="cb46-736"><a href="#cb46-736"></a><span class="kw">def</span> temporarytable(cur):</span>
+<span id="cb46-737"><a href="#cb46-737"></a>  <span class="bu">print</span>(<span class="st">'created table'</span>)</span>
+<span id="cb46-738"><a href="#cb46-738"></a>  cur.execute(<span class="st">'create table points(x int, y int)'</span>)</span>
+<span id="cb46-739"><a href="#cb46-739"></a>  <span class="cf">yield</span></span>
+<span id="cb46-740"><a href="#cb46-740"></a>  cur.execute(<span class="st">'drop table points'</span>)</span>
+<span id="cb46-741"><a href="#cb46-741"></a>  <span class="bu">print</span>(<span class="st">'dropped table'</span>)</span>
+<span id="cb46-742"><a href="#cb46-742"></a></span>
+<span id="cb46-743"><a href="#cb46-743"></a><span class="kw">class</span> Temporarytable:</span>
+<span id="cb46-744"><a href="#cb46-744"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, cur):</span>
+<span id="cb46-745"><a href="#cb46-745"></a>    <span class="va">self</span>.cur <span class="op">=</span> cur</span>
+<span id="cb46-746"><a href="#cb46-746"></a>  <span class="kw">def</span> <span class="fu">__enter__</span>(<span class="va">self</span>):</span>
+<span id="cb46-747"><a href="#cb46-747"></a>    <span class="va">self</span>.gen <span class="op">=</span> temporarytable(<span class="va">self</span>.cur)</span>
+<span id="cb46-748"><a href="#cb46-748"></a>    <span class="bu">next</span>(<span class="va">self</span>.gen)</span>
+<span id="cb46-749"><a href="#cb46-749"></a>  <span class="kw">def</span> <span class="fu">__exit__</span>(<span class="va">self</span>, <span class="op">*</span>arg):</span>
+<span id="cb46-750"><a href="#cb46-750"></a>    <span class="bu">next</span>(<span class="va">self</span>.gen, <span class="va">None</span>)</span>
+<span id="cb46-751"><a href="#cb46-751"></a></span>
+<span id="cb46-752"><a href="#cb46-752"></a><span class="cf">with</span> <span class="ex">connect</span>(<span class="st">'test.db'</span>) <span class="im">as</span> conn:</span>
+<span id="cb46-753"><a href="#cb46-753"></a>  cur <span class="op">=</span> conn.cursor()</span>
+<span id="cb46-754"><a href="#cb46-754"></a>  <span class="cf">with</span> Temporarytable(cur<span class="op">=</span>cur):</span>
+<span id="cb46-755"><a href="#cb46-755"></a>    cur.execute(<span class="st">'insert into points(x, y) values (1, 1)'</span>)</span>
+<span id="cb46-756"><a href="#cb46-756"></a>    cur.execute(<span class="st">'insert into points(x, y) values (2, 1)'</span>)</span>
+<span id="cb46-757"><a href="#cb46-757"></a>    cur.execute(<span class="st">'insert into points(x, y) values (1, 2)'</span>)</span>
+<span id="cb46-758"><a href="#cb46-758"></a>    <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select sum(x * y) from points'</span>):</span>
+<span id="cb46-759"><a href="#cb46-759"></a>      <span class="bu">print</span>(row)</span>
+<span id="cb46-760"><a href="#cb46-760"></a>    <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select x, y from points'</span>):</span>
 <span id="cb46-761"><a href="#cb46-761"></a>      <span class="bu">print</span>(row)</span>
-<span id="cb46-762"><a href="#cb46-762"></a>    <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select x, y from points'</span>):</span>
-<span id="cb46-763"><a href="#cb46-763"></a>      <span class="bu">print</span>(row)</span>
-<span id="cb46-764"><a href="#cb46-764"></a><span class="in">```</span></span>
-<span id="cb46-765"><a href="#cb46-765"></a></span>
+<span id="cb46-762"><a href="#cb46-762"></a><span class="in">```</span></span>
+<span id="cb46-763"><a href="#cb46-763"></a></span>
+<span id="cb46-764"><a href="#cb46-764"></a></span>
+<span id="cb46-765"><a href="#cb46-765"></a>enter and exit are already implemented in function <span class="in">`temporarytable`</span> and cursor is implemented in the <span class="in">`connect()`</span> call. now i would rewrite like this</span>
 <span id="cb46-766"><a href="#cb46-766"></a></span>
-<span id="cb46-767"><a href="#cb46-767"></a>enter and exit are already implemented in function <span class="in">`temporarytable`</span> and cursor is implemented in the <span class="in">`connect()`</span> call. now i would rewrite like this</span>
-<span id="cb46-768"><a href="#cb46-768"></a></span>
-<span id="cb46-771"><a href="#cb46-771"></a><span class="in">```{python}</span></span>
-<span id="cb46-772"><a href="#cb46-772"></a><span class="im">from</span> sqlite3 <span class="im">import</span> <span class="ex">connect</span></span>
-<span id="cb46-773"><a href="#cb46-773"></a></span>
-<span id="cb46-774"><a href="#cb46-774"></a><span class="kw">class</span> Temporarytable:</span>
-<span id="cb46-775"><a href="#cb46-775"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, gen):</span>
-<span id="cb46-776"><a href="#cb46-776"></a>    <span class="va">self</span>.gen <span class="op">=</span> gen</span>
-<span id="cb46-777"><a href="#cb46-777"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, <span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
-<span id="cb46-778"><a href="#cb46-778"></a>    <span class="va">self</span>.args, <span class="va">self</span>.kwargs <span class="op">=</span> args, kwargs</span>
-<span id="cb46-779"><a href="#cb46-779"></a>    <span class="cf">return</span> <span class="va">self</span></span>
-<span id="cb46-780"><a href="#cb46-780"></a>  <span class="kw">def</span> <span class="fu">__enter__</span>(<span class="va">self</span>):</span>
-<span id="cb46-781"><a href="#cb46-781"></a>    <span class="va">self</span>.gen_instance <span class="op">=</span> <span class="va">self</span>.gen(<span class="op">*</span><span class="va">self</span>.args, <span class="op">**</span><span class="va">self</span>.kwargs)</span>
-<span id="cb46-782"><a href="#cb46-782"></a>    <span class="bu">next</span>(<span class="va">self</span>.gen_instance)</span>
-<span id="cb46-783"><a href="#cb46-783"></a>  <span class="kw">def</span> <span class="fu">__exit__</span>(<span class="va">self</span>, <span class="op">*</span>arg):</span>
-<span id="cb46-784"><a href="#cb46-784"></a>    <span class="bu">next</span>(<span class="va">self</span>.gen_instance, <span class="va">None</span>)</span>
-<span id="cb46-785"><a href="#cb46-785"></a></span>
-<span id="cb46-786"><a href="#cb46-786"></a><span class="at">@Temporarytable</span></span>
-<span id="cb46-787"><a href="#cb46-787"></a><span class="kw">def</span> temporarytable(cur):</span>
-<span id="cb46-788"><a href="#cb46-788"></a>  cur.execute(<span class="st">'create table points(x int, y int)'</span>)</span>
-<span id="cb46-789"><a href="#cb46-789"></a>  <span class="cf">yield</span></span>
-<span id="cb46-790"><a href="#cb46-790"></a>  cur.execute(<span class="st">'drop table points'</span>)</span>
+<span id="cb46-769"><a href="#cb46-769"></a><span class="in">```{python}</span></span>
+<span id="cb46-770"><a href="#cb46-770"></a><span class="im">from</span> sqlite3 <span class="im">import</span> <span class="ex">connect</span></span>
+<span id="cb46-771"><a href="#cb46-771"></a></span>
+<span id="cb46-772"><a href="#cb46-772"></a><span class="kw">class</span> Temporarytable:</span>
+<span id="cb46-773"><a href="#cb46-773"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, gen):</span>
+<span id="cb46-774"><a href="#cb46-774"></a>    <span class="va">self</span>.gen <span class="op">=</span> gen</span>
+<span id="cb46-775"><a href="#cb46-775"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, <span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
+<span id="cb46-776"><a href="#cb46-776"></a>    <span class="va">self</span>.args, <span class="va">self</span>.kwargs <span class="op">=</span> args, kwargs</span>
+<span id="cb46-777"><a href="#cb46-777"></a>    <span class="cf">return</span> <span class="va">self</span></span>
+<span id="cb46-778"><a href="#cb46-778"></a>  <span class="kw">def</span> <span class="fu">__enter__</span>(<span class="va">self</span>):</span>
+<span id="cb46-779"><a href="#cb46-779"></a>    <span class="va">self</span>.gen_instance <span class="op">=</span> <span class="va">self</span>.gen(<span class="op">*</span><span class="va">self</span>.args, <span class="op">**</span><span class="va">self</span>.kwargs)</span>
+<span id="cb46-780"><a href="#cb46-780"></a>    <span class="bu">next</span>(<span class="va">self</span>.gen_instance)</span>
+<span id="cb46-781"><a href="#cb46-781"></a>  <span class="kw">def</span> <span class="fu">__exit__</span>(<span class="va">self</span>, <span class="op">*</span>arg):</span>
+<span id="cb46-782"><a href="#cb46-782"></a>    <span class="bu">next</span>(<span class="va">self</span>.gen_instance, <span class="va">None</span>)</span>
+<span id="cb46-783"><a href="#cb46-783"></a></span>
+<span id="cb46-784"><a href="#cb46-784"></a><span class="at">@Temporarytable</span></span>
+<span id="cb46-785"><a href="#cb46-785"></a><span class="kw">def</span> temporarytable(cur):</span>
+<span id="cb46-786"><a href="#cb46-786"></a>  cur.execute(<span class="st">'create table points(x int, y int)'</span>)</span>
+<span id="cb46-787"><a href="#cb46-787"></a>  <span class="cf">yield</span></span>
+<span id="cb46-788"><a href="#cb46-788"></a>  cur.execute(<span class="st">'drop table points'</span>)</span>
+<span id="cb46-789"><a href="#cb46-789"></a></span>
+<span id="cb46-790"><a href="#cb46-790"></a><span class="co"># temporarytable = Temporarytable(temporarytable)</span></span>
 <span id="cb46-791"><a href="#cb46-791"></a></span>
-<span id="cb46-792"><a href="#cb46-792"></a><span class="co"># temporarytable = Temporarytable(temporarytable)</span></span>
-<span id="cb46-793"><a href="#cb46-793"></a></span>
-<span id="cb46-794"><a href="#cb46-794"></a><span class="cf">with</span> <span class="ex">connect</span>(<span class="st">'test.db'</span>) <span class="im">as</span> conn:</span>
-<span id="cb46-795"><a href="#cb46-795"></a>  cur <span class="op">=</span> conn.cursor()</span>
-<span id="cb46-796"><a href="#cb46-796"></a>  <span class="cf">with</span> temporarytable(cur):</span>
-<span id="cb46-797"><a href="#cb46-797"></a>    cur.execute(<span class="st">'insert into points(x, y) values (1, 1)'</span>)</span>
-<span id="cb46-798"><a href="#cb46-798"></a>    cur.execute(<span class="st">'insert into points(x, y) values (2, 1)'</span>)</span>
-<span id="cb46-799"><a href="#cb46-799"></a>    cur.execute(<span class="st">'insert into points(x, y) values (1, 2)'</span>)</span>
-<span id="cb46-800"><a href="#cb46-800"></a>    <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select sum(x * y) from points'</span>):</span>
+<span id="cb46-792"><a href="#cb46-792"></a><span class="cf">with</span> <span class="ex">connect</span>(<span class="st">'test.db'</span>) <span class="im">as</span> conn:</span>
+<span id="cb46-793"><a href="#cb46-793"></a>  cur <span class="op">=</span> conn.cursor()</span>
+<span id="cb46-794"><a href="#cb46-794"></a>  <span class="cf">with</span> temporarytable(cur):</span>
+<span id="cb46-795"><a href="#cb46-795"></a>    cur.execute(<span class="st">'insert into points(x, y) values (1, 1)'</span>)</span>
+<span id="cb46-796"><a href="#cb46-796"></a>    cur.execute(<span class="st">'insert into points(x, y) values (2, 1)'</span>)</span>
+<span id="cb46-797"><a href="#cb46-797"></a>    cur.execute(<span class="st">'insert into points(x, y) values (1, 2)'</span>)</span>
+<span id="cb46-798"><a href="#cb46-798"></a>    <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select sum(x * y) from points'</span>):</span>
+<span id="cb46-799"><a href="#cb46-799"></a>      <span class="bu">print</span>(row)</span>
+<span id="cb46-800"><a href="#cb46-800"></a>    <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select x, y from points'</span>):</span>
 <span id="cb46-801"><a href="#cb46-801"></a>      <span class="bu">print</span>(row)</span>
-<span id="cb46-802"><a href="#cb46-802"></a>    <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select x, y from points'</span>):</span>
-<span id="cb46-803"><a href="#cb46-803"></a>      <span class="bu">print</span>(row)</span>
-<span id="cb46-804"><a href="#cb46-804"></a><span class="in">```</span></span>
+<span id="cb46-802"><a href="#cb46-802"></a><span class="in">```</span></span>
+<span id="cb46-803"><a href="#cb46-803"></a></span>
+<span id="cb46-804"><a href="#cb46-804"></a>all the stuff context manager above we do not need to write:</span>
 <span id="cb46-805"><a href="#cb46-805"></a></span>
-<span id="cb46-806"><a href="#cb46-806"></a>all the stuff context manager above we do not need to write:</span>
-<span id="cb46-807"><a href="#cb46-807"></a></span>
-<span id="cb46-810"><a href="#cb46-810"></a><span class="in">```{python}</span></span>
-<span id="cb46-811"><a href="#cb46-811"></a><span class="im">from</span> sqlite3 <span class="im">import</span> <span class="ex">connect</span></span>
-<span id="cb46-812"><a href="#cb46-812"></a><span class="im">from</span> contextlib <span class="im">import</span> contextmanager</span>
-<span id="cb46-813"><a href="#cb46-813"></a></span>
-<span id="cb46-814"><a href="#cb46-814"></a><span class="at">@contextmanager</span></span>
-<span id="cb46-815"><a href="#cb46-815"></a><span class="kw">def</span> temporarytable(cur):</span>
-<span id="cb46-816"><a href="#cb46-816"></a>  cur.execute(<span class="st">'create table points(x int, y int)'</span>)</span>
-<span id="cb46-817"><a href="#cb46-817"></a>  <span class="cf">try</span>:</span>
-<span id="cb46-818"><a href="#cb46-818"></a>    <span class="cf">yield</span></span>
-<span id="cb46-819"><a href="#cb46-819"></a>  <span class="cf">finally</span>:</span>
-<span id="cb46-820"><a href="#cb46-820"></a>    cur.execute(<span class="st">'drop table points'</span>)</span>
+<span id="cb46-808"><a href="#cb46-808"></a><span class="in">```{python}</span></span>
+<span id="cb46-809"><a href="#cb46-809"></a><span class="im">from</span> sqlite3 <span class="im">import</span> <span class="ex">connect</span></span>
+<span id="cb46-810"><a href="#cb46-810"></a><span class="im">from</span> contextlib <span class="im">import</span> contextmanager</span>
+<span id="cb46-811"><a href="#cb46-811"></a></span>
+<span id="cb46-812"><a href="#cb46-812"></a><span class="at">@contextmanager</span></span>
+<span id="cb46-813"><a href="#cb46-813"></a><span class="kw">def</span> temporarytable(cur):</span>
+<span id="cb46-814"><a href="#cb46-814"></a>  cur.execute(<span class="st">'create table points(x int, y int)'</span>)</span>
+<span id="cb46-815"><a href="#cb46-815"></a>  <span class="cf">try</span>:</span>
+<span id="cb46-816"><a href="#cb46-816"></a>    <span class="cf">yield</span></span>
+<span id="cb46-817"><a href="#cb46-817"></a>  <span class="cf">finally</span>:</span>
+<span id="cb46-818"><a href="#cb46-818"></a>    cur.execute(<span class="st">'drop table points'</span>)</span>
+<span id="cb46-819"><a href="#cb46-819"></a></span>
+<span id="cb46-820"><a href="#cb46-820"></a><span class="co"># temporarytable = Temporarytable(temporarytable)</span></span>
 <span id="cb46-821"><a href="#cb46-821"></a></span>
-<span id="cb46-822"><a href="#cb46-822"></a><span class="co"># temporarytable = Temporarytable(temporarytable)</span></span>
-<span id="cb46-823"><a href="#cb46-823"></a></span>
-<span id="cb46-824"><a href="#cb46-824"></a><span class="cf">with</span> <span class="ex">connect</span>(<span class="st">'test.db'</span>) <span class="im">as</span> conn:</span>
-<span id="cb46-825"><a href="#cb46-825"></a>  cur <span class="op">=</span> conn.cursor()</span>
-<span id="cb46-826"><a href="#cb46-826"></a>  <span class="cf">with</span> temporarytable(cur):</span>
-<span id="cb46-827"><a href="#cb46-827"></a>    cur.execute(<span class="st">'insert into points(x, y) values (1, 1)'</span>)</span>
-<span id="cb46-828"><a href="#cb46-828"></a>    cur.execute(<span class="st">'insert into points(x, y) values (2, 1)'</span>)</span>
-<span id="cb46-829"><a href="#cb46-829"></a>    cur.execute(<span class="st">'insert into points(x, y) values (1, 2)'</span>)</span>
-<span id="cb46-830"><a href="#cb46-830"></a>    <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select sum(x * y) from points'</span>):</span>
+<span id="cb46-822"><a href="#cb46-822"></a><span class="cf">with</span> <span class="ex">connect</span>(<span class="st">'test.db'</span>) <span class="im">as</span> conn:</span>
+<span id="cb46-823"><a href="#cb46-823"></a>  cur <span class="op">=</span> conn.cursor()</span>
+<span id="cb46-824"><a href="#cb46-824"></a>  <span class="cf">with</span> temporarytable(cur):</span>
+<span id="cb46-825"><a href="#cb46-825"></a>    cur.execute(<span class="st">'insert into points(x, y) values (1, 1)'</span>)</span>
+<span id="cb46-826"><a href="#cb46-826"></a>    cur.execute(<span class="st">'insert into points(x, y) values (2, 1)'</span>)</span>
+<span id="cb46-827"><a href="#cb46-827"></a>    cur.execute(<span class="st">'insert into points(x, y) values (1, 2)'</span>)</span>
+<span id="cb46-828"><a href="#cb46-828"></a>    <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select sum(x * y) from points'</span>):</span>
+<span id="cb46-829"><a href="#cb46-829"></a>      <span class="bu">print</span>(row)</span>
+<span id="cb46-830"><a href="#cb46-830"></a>    <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select x, y from points'</span>):</span>
 <span id="cb46-831"><a href="#cb46-831"></a>      <span class="bu">print</span>(row)</span>
-<span id="cb46-832"><a href="#cb46-832"></a>    <span class="cf">for</span> row <span class="kw">in</span> cur.execute(<span class="st">'select x, y from points'</span>):</span>
-<span id="cb46-833"><a href="#cb46-833"></a>      <span class="bu">print</span>(row)</span>
-<span id="cb46-834"><a href="#cb46-834"></a><span class="in">```</span></span>
+<span id="cb46-832"><a href="#cb46-832"></a><span class="in">```</span></span>
+<span id="cb46-833"><a href="#cb46-833"></a></span>
+<span id="cb46-834"><a href="#cb46-834"></a><span class="fu"># summary</span></span>
 <span id="cb46-835"><a href="#cb46-835"></a></span>
-<span id="cb46-836"><a href="#cb46-836"></a><span class="fu"># summary</span></span>
+<span id="cb46-836"><a href="#cb46-836"></a>all combination of what we've learned in the last example:</span>
 <span id="cb46-837"><a href="#cb46-837"></a></span>
-<span id="cb46-838"><a href="#cb46-838"></a>all combination of what we've learned in the last example:</span>
-<span id="cb46-839"><a href="#cb46-839"></a></span>
-<span id="cb46-840"><a href="#cb46-840"></a><span class="ss">- </span>a **context manager** is merely some piece of code that pairs set up actions and teardown actions. teardown occurs only if set up occurs</span>
-<span id="cb46-841"><a href="#cb46-841"></a><span class="ss">- </span>a **generator** is merely some form of syntax that allows us to do things like enforce sequencing and interleaving notice the</span>
+<span id="cb46-838"><a href="#cb46-838"></a><span class="ss">- </span>a **context manager** is merely some piece of code that pairs set up actions and teardown actions. teardown occurs only if set up occurs</span>
+<span id="cb46-839"><a href="#cb46-839"></a><span class="ss">- </span>a **generator** is merely some form of syntax that allows us to do things like enforce sequencing and interleaving notice the</span>
+<span id="cb46-840"><a href="#cb46-840"></a></span>
+<span id="cb46-841"><a href="#cb46-841"></a>finally we need something to adapt the generator to this data model that we looked at at the very beginning. we have these underscore methods and we have to find some way to take how the generator works and fit it into those underscore methods. one of the things we need to do in order to do that is we need to take this generator object to wrap it in some fashion that wrapping is part of the core of how Python works it's easy to dynamics and construct functions</span>
 <span id="cb46-842"><a href="#cb46-842"></a></span>
-<span id="cb46-843"><a href="#cb46-843"></a>finally we need something to adapt the generator to this data model that we looked at at the very beginning. we have these underscore methods and we have to find some way to take how the generator works and fit it into those underscore methods. one of the things we need to do in order to do that is we need to take this generator object to wrap it in some fashion that wrapping is part of the core of how Python works it's easy to dynamics and construct functions</span>
+<span id="cb46-843"><a href="#cb46-843"></a><span class="ss">- </span>there does happen to be a feature called **decorators** that allows us a nice convenient syntax for doing that exactly.</span>
 <span id="cb46-844"><a href="#cb46-844"></a></span>
-<span id="cb46-845"><a href="#cb46-845"></a><span class="ss">- </span>there does happen to be a feature called **decorators** that allows us a nice convenient syntax for doing that exactly.</span>
-<span id="cb46-846"><a href="#cb46-846"></a></span>
-<span id="cb46-847"><a href="#cb46-847"></a>:::{.callout-tip}</span>
-<span id="cb46-848"><a href="#cb46-848"></a>criteria of Python expert code:</span>
-<span id="cb46-849"><a href="#cb46-849"></a></span>
-<span id="cb46-850"><a href="#cb46-850"></a><span class="ss">- </span>expert level code is not code that uses every single feature;</span>
-<span id="cb46-851"><a href="#cb46-851"></a><span class="ss">- </span>it's in fact not code that even uses that many features of Python;</span>
-<span id="cb46-852"><a href="#cb46-852"></a><span class="ss">- </span>it's code that has a certain clarity to where and when a feature should be used; </span>
-<span id="cb46-853"><a href="#cb46-853"></a><span class="ss">- </span>it's code that doesn't waste the time of the person who's writing it because they say to themselves I have this pattern Python has this mechanism I fit them together</span>
-<span id="cb46-854"><a href="#cb46-854"></a>and everything just seamlessly and and very smoothly works;</span>
-<span id="cb46-855"><a href="#cb46-855"></a><span class="ss">- </span>it's code that doesn't have a lot of additional mechanisms associated with it it doesn't have people creating their own protocols it doesn't have people creating their</span>
-<span id="cb46-856"><a href="#cb46-856"></a>own frameworks where the language itself provides the core pieces that you need and you merely have to understand what those core pieces are what they need and</span>
-<span id="cb46-857"><a href="#cb46-857"></a>how to assemble them.</span>
-<span id="cb46-858"><a href="#cb46-858"></a>:::</span>
+<span id="cb46-845"><a href="#cb46-845"></a>:::{.callout-tip}</span>
+<span id="cb46-846"><a href="#cb46-846"></a>criteria of Python expert code:</span>
+<span id="cb46-847"><a href="#cb46-847"></a></span>
+<span id="cb46-848"><a href="#cb46-848"></a><span class="ss">- </span>expert level code is not code that uses every single feature;</span>
+<span id="cb46-849"><a href="#cb46-849"></a><span class="ss">- </span>it's in fact not code that even uses that many features of Python;</span>
+<span id="cb46-850"><a href="#cb46-850"></a><span class="ss">- </span>it's code that has a certain clarity to where and when a feature should be used; </span>
+<span id="cb46-851"><a href="#cb46-851"></a><span class="ss">- </span>it's code that doesn't waste the time of the person who's writing it because they say to themselves I have this pattern Python has this mechanism I fit them together</span>
+<span id="cb46-852"><a href="#cb46-852"></a>and everything just seamlessly and and very smoothly works;</span>
+<span id="cb46-853"><a href="#cb46-853"></a><span class="ss">- </span>it's code that doesn't have a lot of additional mechanisms associated with it it doesn't have people creating their own protocols it doesn't have people creating their</span>
+<span id="cb46-854"><a href="#cb46-854"></a>own frameworks where the language itself provides the core pieces that you need and you merely have to understand what those core pieces are what they need and</span>
+<span id="cb46-855"><a href="#cb46-855"></a>how to assemble them.</span>
+<span id="cb46-856"><a href="#cb46-856"></a>:::</span>
+<span id="cb46-857"><a href="#cb46-857"></a></span>
+<span id="cb46-858"><a href="#cb46-858"></a><span class="fu"># futher reading</span></span>
 <span id="cb46-859"><a href="#cb46-859"></a></span>
-<span id="cb46-860"><a href="#cb46-860"></a><span class="fu"># futher reading</span></span>
-<span id="cb46-861"><a href="#cb46-861"></a></span>
-<span id="cb46-862"><a href="#cb46-862"></a><span class="ss">1. </span><span class="co">[</span><span class="ot">Python data model</span><span class="co">](https://docs.python.org/3/reference/datamodel.html)</span></span>
-<span id="cb46-863"><a href="#cb46-863"></a><span class="ss">2. </span><span class="co">[</span><span class="ot">Python metaclass `__new__`</span><span class="co">](https://www.geeksforgeeks.org/python-metaclass-__new__-method/)</span></span>
+<span id="cb46-860"><a href="#cb46-860"></a><span class="ss">1. </span><span class="co">[</span><span class="ot">Python data model</span><span class="co">](https://docs.python.org/3/reference/datamodel.html)</span></span>
+<span id="cb46-861"><a href="#cb46-861"></a><span class="ss">2. </span><span class="co">[</span><span class="ot">Python metaclass `__new__`</span><span class="co">](https://www.geeksforgeeks.org/python-metaclass-__new__-method/)</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
