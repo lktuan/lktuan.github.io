@@ -1000,79 +1000,80 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb6-99"><a href="#cb6-99"></a>the basic component of prefect is <span class="in">`task`</span> and <span class="in">`flow`</span>. these are decorators to funtions we want to run. we can name and log easily:</span>
 <span id="cb6-100"><a href="#cb6-100"></a></span>
 <span id="cb6-101"><a href="#cb6-101"></a><span class="in">```{.python filename="e01.py"}</span></span>
-<span id="cb6-102"><a href="#cb6-102"></a><span class="in"># Example of processing some data</span></span>
-<span id="cb6-103"><a href="#cb6-103"></a><span class="in">from prefect import task, flow</span></span>
+<span id="cb6-102"><a href="#cb6-102"></a><span class="in">from prefect import task, flow</span></span>
+<span id="cb6-103"><a href="#cb6-103"></a></span>
 <span id="cb6-104"><a href="#cb6-104"></a></span>
-<span id="cb6-105"><a href="#cb6-105"></a></span>
-<span id="cb6-106"><a href="#cb6-106"></a><span class="in">@task(name="Addition operator")</span></span>
-<span id="cb6-107"><a href="#cb6-107"></a><span class="in">def add(a, b):</span></span>
-<span id="cb6-108"><a href="#cb6-108"></a><span class="in">    return a + b</span></span>
+<span id="cb6-105"><a href="#cb6-105"></a><span class="in">@task(name="Addition operator")  # this task will successfully run</span></span>
+<span id="cb6-106"><a href="#cb6-106"></a><span class="in">def add(a, b):</span></span>
+<span id="cb6-107"><a href="#cb6-107"></a><span class="in">    return a + b</span></span>
+<span id="cb6-108"><a href="#cb6-108"></a></span>
 <span id="cb6-109"><a href="#cb6-109"></a></span>
-<span id="cb6-110"><a href="#cb6-110"></a></span>
-<span id="cb6-111"><a href="#cb6-111"></a><span class="in">@task(name="Squaring operator")</span></span>
-<span id="cb6-112"><a href="#cb6-112"></a><span class="in">def square_num(num):</span></span>
-<span id="cb6-113"><a href="#cb6-113"></a><span class="in">    if True:</span></span>
-<span id="cb6-114"><a href="#cb6-114"></a><span class="in">        raise ValueError</span></span>
-<span id="cb6-115"><a href="#cb6-115"></a><span class="in">    return num ** 2</span></span>
+<span id="cb6-110"><a href="#cb6-110"></a><span class="in">@task(name="Squaring operator")  # this task will fail</span></span>
+<span id="cb6-111"><a href="#cb6-111"></a><span class="in">def square_num(num):</span></span>
+<span id="cb6-112"><a href="#cb6-112"></a><span class="in">    if True:</span></span>
+<span id="cb6-113"><a href="#cb6-113"></a><span class="in">        raise ValueError</span></span>
+<span id="cb6-114"><a href="#cb6-114"></a><span class="in">    return num ** 2</span></span>
+<span id="cb6-115"><a href="#cb6-115"></a></span>
 <span id="cb6-116"><a href="#cb6-116"></a></span>
-<span id="cb6-117"><a href="#cb6-117"></a></span>
-<span id="cb6-118"><a href="#cb6-118"></a><span class="in">@flow(log_prints=True, name="My first simple flow")</span></span>
-<span id="cb6-119"><a href="#cb6-119"></a><span class="in">def add_and_square(a: int = 2, b: int = 3):</span></span>
-<span id="cb6-120"><a href="#cb6-120"></a><span class="in">    add_result = add(a, b)</span></span>
-<span id="cb6-121"><a href="#cb6-121"></a><span class="in">    square_result = square_num(add_result)</span></span>
-<span id="cb6-122"><a href="#cb6-122"></a><span class="in">    print(f"({a} + {b}) squared = {square_result}")</span></span>
-<span id="cb6-123"><a href="#cb6-123"></a></span>
+<span id="cb6-117"><a href="#cb6-117"></a><span class="in">@flow(log_prints=True,</span></span>
+<span id="cb6-118"><a href="#cb6-118"></a><span class="in">      name="Add and Square",</span></span>
+<span id="cb6-119"><a href="#cb6-119"></a><span class="in">      description="My first simple flow")</span></span>
+<span id="cb6-120"><a href="#cb6-120"></a><span class="in">def add_and_square(a: int = 2, b: int = 3):</span></span>
+<span id="cb6-121"><a href="#cb6-121"></a><span class="in">    add_result = add(a, b)</span></span>
+<span id="cb6-122"><a href="#cb6-122"></a><span class="in">    square_result = square_num(add_result)</span></span>
+<span id="cb6-123"><a href="#cb6-123"></a><span class="in">    print(f"({a} + {b}) squared = {square_result}")</span></span>
 <span id="cb6-124"><a href="#cb6-124"></a></span>
-<span id="cb6-125"><a href="#cb6-125"></a><span class="in">if __name__ == "__main__":</span></span>
-<span id="cb6-126"><a href="#cb6-126"></a><span class="in">    add_and_square(4, 8)</span></span>
-<span id="cb6-127"><a href="#cb6-127"></a></span>
-<span id="cb6-128"><a href="#cb6-128"></a><span class="in">```</span></span>
-<span id="cb6-129"><a href="#cb6-129"></a></span>
-<span id="cb6-130"><a href="#cb6-130"></a><span class="fu">## e02a sentiment pipeline v1</span></span>
-<span id="cb6-131"><a href="#cb6-131"></a></span>
-<span id="cb6-132"><a href="#cb6-132"></a><span class="fu">## e02b sentiment pipeline v2</span></span>
-<span id="cb6-133"><a href="#cb6-133"></a></span>
-<span id="cb6-134"><a href="#cb6-134"></a><span class="fu">## e03a kafka tweet publisher</span></span>
-<span id="cb6-135"><a href="#cb6-135"></a></span>
-<span id="cb6-136"><a href="#cb6-136"></a><span class="fu">## e03b kafka tweet deployment</span></span>
-<span id="cb6-137"><a href="#cb6-137"></a></span>
-<span id="cb6-138"><a href="#cb6-138"></a><span class="fu">## e04 sentiment pipeline v3</span></span>
-<span id="cb6-139"><a href="#cb6-139"></a></span>
-<span id="cb6-140"><a href="#cb6-140"></a><span class="fu"># further reading</span></span>
-<span id="cb6-141"><a href="#cb6-141"></a></span>
-<span id="cb6-142"><a href="#cb6-142"></a><span class="ss">1. </span><span class="co">[</span><span class="ot">Prefect vs Airflow on Reddit</span><span class="co">](https://www.reddit.com/r/dataengineering/comments/oqbiiu/airflow_vs_prefect/)</span></span>
-<span id="cb6-143"><a href="#cb6-143"></a></span>
-<span id="cb6-144"><a href="#cb6-144"></a>Bình luận bởi **u/alexisprince**:</span>
-<span id="cb6-145"><a href="#cb6-145"></a></span>
-<span id="cb6-146"><a href="#cb6-146"></a><span class="at">&gt; Tôi đang sử dụng song song Airflow và Prefect (A cho scheduling, P cho execution), P được sử dụng khi yêu cầu về hiệu năng tính toán và phần scheduler của A vẫn chưa thể bị thay thế.</span></span>
-<span id="cb6-147"><a href="#cb6-147"></a><span class="at">&gt; </span></span>
-<span id="cb6-148"><a href="#cb6-148"></a><span class="at">&gt; Lợi thế của A là đã quá phổ biến, dễ tìm hướng dẫn, dễ tuyển người cho chuyên môn. Yếu điểm là A đã quá cũ, không còn phù hợp cho dynamic workflow và modern data env. Hơn nữa A luôn best fit khi sử dụng chung với Astronomer, ngoài ra khá khó dùng.</span></span>
-<span id="cb6-149"><a href="#cb6-149"></a><span class="at">&gt; </span></span>
-<span id="cb6-150"><a href="#cb6-150"></a><span class="at">&gt; P hiện đại hơn, cung cấp nhiều modern execution models, DAG được xác định tại runtime do đó dynamic hơn.</span></span>
-<span id="cb6-151"><a href="#cb6-151"></a><span class="at">&gt; </span></span>
-<span id="cb6-152"><a href="#cb6-152"></a><span class="at">&gt; Prefer P hơn, better modularization of code.</span></span>
-<span id="cb6-153"><a href="#cb6-153"></a></span>
-<span id="cb6-154"><a href="#cb6-154"></a>Bình luận bởi **u/ChrisHC05**:</span>
-<span id="cb6-155"><a href="#cb6-155"></a></span>
-<span id="cb6-156"><a href="#cb6-156"></a><span class="at">&gt; Tao đã đánh giá Airflow, Dagster, Argo và Prefect mấy tháng nay.</span></span>
-<span id="cb6-157"><a href="#cb6-157"></a><span class="at">&gt; </span></span>
-<span id="cb6-158"><a href="#cb6-158"></a><span class="at">&gt; Airflow thì đã già, tuy nhiên tài liệu, hướng dẫn rất phong phú.</span></span>
-<span id="cb6-159"><a href="#cb6-159"></a><span class="at">&gt; </span></span>
-<span id="cb6-160"><a href="#cb6-160"></a><span class="at">&gt; Dagster có vẻ gặp nhiều vấn đề với Production.</span></span>
-<span id="cb6-161"><a href="#cb6-161"></a><span class="at">&gt; </span></span>
-<span id="cb6-162"><a href="#cb6-162"></a><span class="at">&gt; Prefect có cộng đồng phát triển, support, sửa lỗi active.</span></span>
-<span id="cb6-163"><a href="#cb6-163"></a><span class="at">&gt; </span></span>
-<span id="cb6-164"><a href="#cb6-164"></a><span class="at">&gt; Vậy nên tôi chỉ đánh giá cao hai thằng Argo và Prefect. Argo khác biệt một cách mạnh mẽ, config được viết dưới dạng YAML, chạy trên cụm Kubernetes, và việc viết DAG không phụ thuộc vào một ngôn ngữ lập trình nào. Argo (tại thời điểm đó) cũng đang phát triển một module kiểu event listening, from outside, như Sensor của Airflow, thứ mà Prefect thiếu (workaround là call Prefect GraphQL-API).</span></span>
-<span id="cb6-165"><a href="#cb6-165"></a><span class="at">&gt; </span></span>
-<span id="cb6-166"><a href="#cb6-166"></a><span class="at">&gt; Nếu đã có sẵn infra là K8S, khuyến nghị Argo, không chỉ là orchestration mà còn là một hệ sinh thái support từ event responding tới CI/CD. Nhưng learning curve thì steep nhé. Nó có nhiều tiềm năng vì giờ thì phần mềm nào cũng cần dockerized cả, tính trừu tượng cao hơn. "And IT in general is all about abstraction to make complicated things easier."</span></span>
-<span id="cb6-167"><a href="#cb6-167"></a><span class="at">&gt; </span></span>
-<span id="cb6-168"><a href="#cb6-168"></a><span class="at">&gt; Vậy nên:</span></span>
-<span id="cb6-169"><a href="#cb6-169"></a><span class="at">&gt; </span></span>
-<span id="cb6-170"><a href="#cb6-170"></a><span class="at">&gt; - Nếu có sẵn cụm K8S: dùng Argo</span></span>
-<span id="cb6-171"><a href="#cb6-171"></a><span class="at">&gt; - Nếu không: dùng Prefect</span></span>
-<span id="cb6-172"><a href="#cb6-172"></a></span>
-<span id="cb6-173"><a href="#cb6-173"></a><span class="ss">2. </span><span class="co">[</span><span class="ot">Airflow Vs. Prefect: Full Breakdown! by The Data Guy</span><span class="co">](https://www.youtube.com/watch?v=XrZegcm1ftw)</span></span>
-<span id="cb6-174"><a href="#cb6-174"></a><span class="ss">3. </span><span class="co">[</span><span class="ot">Adam Hill's blog</span><span class="co">](https://www.horsewithapointyhat.com/posts/being-a-data-scientist-in-a-post-truth-world/)</span></span>
+<span id="cb6-125"><a href="#cb6-125"></a></span>
+<span id="cb6-126"><a href="#cb6-126"></a><span class="in">if __name__ == "__main__":</span></span>
+<span id="cb6-127"><a href="#cb6-127"></a><span class="in">    add_and_square(4, 8)</span></span>
+<span id="cb6-128"><a href="#cb6-128"></a><span class="in">    </span></span>
+<span id="cb6-129"><a href="#cb6-129"></a><span class="in">```</span></span>
+<span id="cb6-130"><a href="#cb6-130"></a></span>
+<span id="cb6-131"><a href="#cb6-131"></a><span class="fu">## e02a sentiment pipeline v1</span></span>
+<span id="cb6-132"><a href="#cb6-132"></a></span>
+<span id="cb6-133"><a href="#cb6-133"></a><span class="fu">## e02b sentiment pipeline v2</span></span>
+<span id="cb6-134"><a href="#cb6-134"></a></span>
+<span id="cb6-135"><a href="#cb6-135"></a><span class="fu">## e03a kafka tweet publisher</span></span>
+<span id="cb6-136"><a href="#cb6-136"></a></span>
+<span id="cb6-137"><a href="#cb6-137"></a><span class="fu">## e03b kafka tweet deployment</span></span>
+<span id="cb6-138"><a href="#cb6-138"></a></span>
+<span id="cb6-139"><a href="#cb6-139"></a><span class="fu">## e04 sentiment pipeline v3</span></span>
+<span id="cb6-140"><a href="#cb6-140"></a></span>
+<span id="cb6-141"><a href="#cb6-141"></a><span class="fu"># further reading</span></span>
+<span id="cb6-142"><a href="#cb6-142"></a></span>
+<span id="cb6-143"><a href="#cb6-143"></a><span class="ss">1. </span><span class="co">[</span><span class="ot">Prefect vs Airflow on Reddit</span><span class="co">](https://www.reddit.com/r/dataengineering/comments/oqbiiu/airflow_vs_prefect/)</span></span>
+<span id="cb6-144"><a href="#cb6-144"></a></span>
+<span id="cb6-145"><a href="#cb6-145"></a>Bình luận bởi **u/alexisprince**:</span>
+<span id="cb6-146"><a href="#cb6-146"></a></span>
+<span id="cb6-147"><a href="#cb6-147"></a><span class="at">&gt; Tôi đang sử dụng song song Airflow và Prefect (A cho scheduling, P cho execution), P được sử dụng khi yêu cầu về hiệu năng tính toán và phần scheduler của A vẫn chưa thể bị thay thế.</span></span>
+<span id="cb6-148"><a href="#cb6-148"></a><span class="at">&gt; </span></span>
+<span id="cb6-149"><a href="#cb6-149"></a><span class="at">&gt; Lợi thế của A là đã quá phổ biến, dễ tìm hướng dẫn, dễ tuyển người cho chuyên môn. Yếu điểm là A đã quá cũ, không còn phù hợp cho dynamic workflow và modern data env. Hơn nữa A luôn best fit khi sử dụng chung với Astronomer, ngoài ra khá khó dùng.</span></span>
+<span id="cb6-150"><a href="#cb6-150"></a><span class="at">&gt; </span></span>
+<span id="cb6-151"><a href="#cb6-151"></a><span class="at">&gt; P hiện đại hơn, cung cấp nhiều modern execution models, DAG được xác định tại runtime do đó dynamic hơn.</span></span>
+<span id="cb6-152"><a href="#cb6-152"></a><span class="at">&gt; </span></span>
+<span id="cb6-153"><a href="#cb6-153"></a><span class="at">&gt; Prefer P hơn, better modularization of code.</span></span>
+<span id="cb6-154"><a href="#cb6-154"></a></span>
+<span id="cb6-155"><a href="#cb6-155"></a>Bình luận bởi **u/ChrisHC05**:</span>
+<span id="cb6-156"><a href="#cb6-156"></a></span>
+<span id="cb6-157"><a href="#cb6-157"></a><span class="at">&gt; Tao đã đánh giá Airflow, Dagster, Argo và Prefect mấy tháng nay.</span></span>
+<span id="cb6-158"><a href="#cb6-158"></a><span class="at">&gt; </span></span>
+<span id="cb6-159"><a href="#cb6-159"></a><span class="at">&gt; Airflow thì đã già, tuy nhiên tài liệu, hướng dẫn rất phong phú.</span></span>
+<span id="cb6-160"><a href="#cb6-160"></a><span class="at">&gt; </span></span>
+<span id="cb6-161"><a href="#cb6-161"></a><span class="at">&gt; Dagster có vẻ gặp nhiều vấn đề với Production.</span></span>
+<span id="cb6-162"><a href="#cb6-162"></a><span class="at">&gt; </span></span>
+<span id="cb6-163"><a href="#cb6-163"></a><span class="at">&gt; Prefect có cộng đồng phát triển, support, sửa lỗi active.</span></span>
+<span id="cb6-164"><a href="#cb6-164"></a><span class="at">&gt; </span></span>
+<span id="cb6-165"><a href="#cb6-165"></a><span class="at">&gt; Vậy nên tôi chỉ đánh giá cao hai thằng Argo và Prefect. Argo khác biệt một cách mạnh mẽ, config được viết dưới dạng YAML, chạy trên cụm Kubernetes, và việc viết DAG không phụ thuộc vào một ngôn ngữ lập trình nào. Argo (tại thời điểm đó) cũng đang phát triển một module kiểu event listening, from outside, như Sensor của Airflow, thứ mà Prefect thiếu (workaround là call Prefect GraphQL-API).</span></span>
+<span id="cb6-166"><a href="#cb6-166"></a><span class="at">&gt; </span></span>
+<span id="cb6-167"><a href="#cb6-167"></a><span class="at">&gt; Nếu đã có sẵn infra là K8S, khuyến nghị Argo, không chỉ là orchestration mà còn là một hệ sinh thái support từ event responding tới CI/CD. Nhưng learning curve thì steep nhé. Nó có nhiều tiềm năng vì giờ thì phần mềm nào cũng cần dockerized cả, tính trừu tượng cao hơn. "And IT in general is all about abstraction to make complicated things easier."</span></span>
+<span id="cb6-168"><a href="#cb6-168"></a><span class="at">&gt; </span></span>
+<span id="cb6-169"><a href="#cb6-169"></a><span class="at">&gt; Vậy nên:</span></span>
+<span id="cb6-170"><a href="#cb6-170"></a><span class="at">&gt; </span></span>
+<span id="cb6-171"><a href="#cb6-171"></a><span class="at">&gt; - Nếu có sẵn cụm K8S: dùng Argo</span></span>
+<span id="cb6-172"><a href="#cb6-172"></a><span class="at">&gt; - Nếu không: dùng Prefect</span></span>
+<span id="cb6-173"><a href="#cb6-173"></a></span>
+<span id="cb6-174"><a href="#cb6-174"></a><span class="ss">2. </span><span class="co">[</span><span class="ot">Airflow Vs. Prefect: Full Breakdown! by The Data Guy</span><span class="co">](https://www.youtube.com/watch?v=XrZegcm1ftw)</span></span>
+<span id="cb6-175"><a href="#cb6-175"></a><span class="ss">3. </span><span class="co">[</span><span class="ot">Adam Hill's blog</span><span class="co">](https://www.horsewithapointyhat.com/posts/being-a-data-scientist-in-a-post-truth-world/)</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
