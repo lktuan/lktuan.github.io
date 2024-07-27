@@ -212,6 +212,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">April 24, 2024</p>
+      </div>
+    </div>
       
     </div>
     
@@ -1057,209 +1063,210 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb18-5"><a href="#cb18-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
 <span id="cb18-6"><a href="#cb18-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
 <span id="cb18-7"><a href="#cb18-7"></a><span class="an">date:</span><span class="co"> 04-24-2024</span></span>
-<span id="cb18-8"><a href="#cb18-8"></a><span class="an">categories:</span><span class="co"> [QEJ, Julia, Quant Econ] # self-defined categories</span></span>
-<span id="cb18-9"><a href="#cb18-9"></a><span class="co"># citation: </span></span>
-<span id="cb18-10"><a href="#cb18-10"></a><span class="co">#   url: https://github.com/lktuan/lktuan.github.io/blog/2023-12-24_post/</span></span>
-<span id="cb18-11"><a href="#cb18-11"></a><span class="an">image:</span><span class="co"> julia_logo.jpg</span></span>
-<span id="cb18-12"><a href="#cb18-12"></a><span class="an">draft:</span><span class="co"> false # setting this to `true` will prevent your post from appearing on your listing page until you're ready!</span></span>
-<span id="cb18-13"><a href="#cb18-13"></a></span>
-<span id="cb18-14"><a href="#cb18-14"></a><span class="an">format:</span><span class="co"> </span></span>
-<span id="cb18-15"><a href="#cb18-15"></a><span class="co">  html: </span></span>
-<span id="cb18-16"><a href="#cb18-16"></a><span class="co">    code-fold: true</span></span>
-<span id="cb18-17"><a href="#cb18-17"></a><span class="co">    code-summary: "Show the code"</span></span>
-<span id="cb18-18"><a href="#cb18-18"></a><span class="co">    code-line-numbers: true</span></span>
-<span id="cb18-19"><a href="#cb18-19"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
-<span id="cb18-20"><a href="#cb18-20"></a><span class="an">editor:</span><span class="co"> visual</span></span>
-<span id="cb18-21"><a href="#cb18-21"></a><span class="an">theme:</span></span>
-<span id="cb18-22"><a href="#cb18-22"></a><span class="co">  light: flatly</span></span>
-<span id="cb18-23"><a href="#cb18-23"></a><span class="co">  dark: darkly</span></span>
-<span id="cb18-24"><a href="#cb18-24"></a><span class="co">---</span></span>
-<span id="cb18-25"><a href="#cb18-25"></a></span>
-<span id="cb18-26"><a href="#cb18-26"></a><span class="fu"># 1. Bắt đầu với Julia</span></span>
-<span id="cb18-27"><a href="#cb18-27"></a></span>
-<span id="cb18-28"><a href="#cb18-28"></a>Với giả định mình đã quen thuộc với các concepts của một ngôn ngữ lập trình như: Biến (Variables), Các kiểu dữ liệu (như Arrays và Vectors), Vòng lặp (Loops), Điều hướng (Conditionals - if/else), mình sẽ thử thực hành một vài ví dụ nhỏ với Julia với mục đích tìm hiểu các cú pháp và cấu trúc dữ liệu cơ bản.</span>
-<span id="cb18-29"><a href="#cb18-29"></a></span>
-<span id="cb18-30"><a href="#cb18-30"></a>Code không hẳn đã được tối ưu, nhưng sẽ dần được tối ưu theo các ví dụ về sau!</span>
-<span id="cb18-31"><a href="#cb18-31"></a></span>
-<span id="cb18-32"><a href="#cb18-32"></a><span class="fu">## 1.1. Các ví dụ mở đầu</span></span>
-<span id="cb18-33"><a href="#cb18-33"></a></span>
-<span id="cb18-34"><a href="#cb18-34"></a><span class="fu">### 1.1.1. Vẽ một quá trình sinh nhiễu trắng (White Noise Process)</span></span>
-<span id="cb18-35"><a href="#cb18-35"></a></span>
-<span id="cb18-36"><a href="#cb18-36"></a>**Quản lý Packages**: Có hai cách để quản lý Packages và Versions (Phương pháp thứ 2 được recommend khi Julia cung cấp sẵn một phương pháp SOTA cho quản lý môi trường có khả năng tái tạo lại cao):</span>
-<span id="cb18-37"><a href="#cb18-37"></a></span>
-<span id="cb18-38"><a href="#cb18-38"></a><span class="ss">1.  </span><span class="in">`add`</span> pakages một cách trực tiếp (ví dụ <span class="in">`Pkg.add("MyPackage")`</span> hoặc <span class="in">`] add MyPackage`</span>):</span>
-<span id="cb18-39"><a href="#cb18-39"></a></span>
-<span id="cb18-40"><a href="#cb18-40"></a><span class="ss">-   </span>Phải cài đặt <span class="in">`IJulia`</span> trên toàn cục để sử dụng trong mọi dự án;</span>
-<span id="cb18-41"><a href="#cb18-41"></a></span>
-<span id="cb18-42"><a href="#cb18-42"></a><span class="ss">-   </span><span class="in">`]`</span> là phím tắt để truy cập vào quản lý pakages.</span>
-<span id="cb18-43"><a href="#cb18-43"></a></span>
-<span id="cb18-44"><a href="#cb18-44"></a><span class="ss">2.  </span>Dùng các file <span class="in">`Project.toml`</span> và <span class="in">`Manifest.toml`</span>:</span>
-<span id="cb18-45"><a href="#cb18-45"></a></span>
-<span id="cb18-46"><a href="#cb18-46"></a><span class="ss">-   </span>Nếu dùng notebook, các file này sẽ được tự đông xác định, nhưng cài đặt sẽ không tự động, cần <span class="in">`] instantiate`</span>;</span>
-<span id="cb18-47"><a href="#cb18-47"></a></span>
-<span id="cb18-48"><a href="#cb18-48"></a><span class="ss">-   </span>Tệp Project có thể nằm ở folder mẹ của Notebook và Sourcecode.</span>
-<span id="cb18-49"><a href="#cb18-49"></a></span>
-<span id="cb18-52"><a href="#cb18-52"></a><span class="in">```{julia}</span></span>
-<span id="cb18-53"><a href="#cb18-53"></a><span class="in">using LinearAlgebra, Statistics, Plots, LaTeXStrings</span></span>
-<span id="cb18-54"><a href="#cb18-54"></a><span class="in">```</span></span>
-<span id="cb18-55"><a href="#cb18-55"></a></span>
-<span id="cb18-56"><a href="#cb18-56"></a>**Sử dụng các hàm**: Có những function có sẵn trong Julia base, như <span class="in">`randn()`</span></span>
-<span id="cb18-57"><a href="#cb18-57"></a></span>
-<span id="cb18-60"><a href="#cb18-60"></a><span class="in">```{julia}</span></span>
-<span id="cb18-61"><a href="#cb18-61"></a><span class="in">randn()</span></span>
-<span id="cb18-62"><a href="#cb18-62"></a><span class="in">```</span></span>
-<span id="cb18-63"><a href="#cb18-63"></a></span>
-<span id="cb18-64"><a href="#cb18-64"></a>Một số hàm cần gọi các thư viện ngoài Base, ví dụ <span class="in">`plot()`</span> của thư viện <span class="in">`Plots`</span>:</span>
-<span id="cb18-65"><a href="#cb18-65"></a></span>
-<span id="cb18-68"><a href="#cb18-68"></a><span class="in">```{julia}</span></span>
-<span id="cb18-69"><a href="#cb18-69"></a><span class="in">n = 100</span></span>
-<span id="cb18-70"><a href="#cb18-70"></a><span class="in">ep = randn(n)</span></span>
-<span id="cb18-71"><a href="#cb18-71"></a><span class="in">plot(1:n,ep)</span></span>
-<span id="cb18-72"><a href="#cb18-72"></a></span>
-<span id="cb18-73"><a href="#cb18-73"></a><span class="in">    # \ep</span></span>
-<span id="cb18-74"><a href="#cb18-74"></a><span class="in">```</span></span>
-<span id="cb18-75"><a href="#cb18-75"></a></span>
-<span id="cb18-76"><a href="#cb18-76"></a>Note: thay vì <span class="in">`ep`</span> chúng ta có thể dùng các ký tự khoa học như epsilon bằng cách <span class="in">`\epsilon&lt;TAB&gt;`</span> .</span>
-<span id="cb18-77"><a href="#cb18-77"></a></span>
-<span id="cb18-78"><a href="#cb18-78"></a>**Mảng**: <span class="in">`ep`</span> trong ví dụ trên chính là một mảng (array).</span>
-<span id="cb18-79"><a href="#cb18-79"></a></span>
-<span id="cb18-82"><a href="#cb18-82"></a><span class="in">```{julia}</span></span>
-<span id="cb18-83"><a href="#cb18-83"></a><span class="in">typeof(ep)</span></span>
-<span id="cb18-84"><a href="#cb18-84"></a><span class="in">```</span></span>
-<span id="cb18-85"><a href="#cb18-85"></a></span>
-<span id="cb18-86"><a href="#cb18-86"></a>Trích xuất 5 thành tố đầu tiên của mảng</span>
-<span id="cb18-87"><a href="#cb18-87"></a></span>
-<span id="cb18-90"><a href="#cb18-90"></a><span class="in">```{julia}</span></span>
-<span id="cb18-91"><a href="#cb18-91"></a><span class="in">ep[1:5]</span></span>
-<span id="cb18-92"><a href="#cb18-92"></a><span class="in"># Julia là một ngôn ngữ 1-index (như MATLAB hay Fortran, chứ không phải 0 như Python hay C)</span></span>
-<span id="cb18-93"><a href="#cb18-93"></a><span class="in">```</span></span>
-<span id="cb18-94"><a href="#cb18-94"></a></span>
-<span id="cb18-95"><a href="#cb18-95"></a>Để tìm kiếm trợ giúp và ví dụ cho một hàm, dùng <span class="in">`?`</span>:</span>
-<span id="cb18-96"><a href="#cb18-96"></a></span>
-<span id="cb18-99"><a href="#cb18-99"></a><span class="in">```{julia}</span></span>
-<span id="cb18-100"><a href="#cb18-100"></a><span class="in"># help?&gt; typeof</span></span>
-<span id="cb18-101"><a href="#cb18-101"></a><span class="in"># search: typeof typejoin TypeError</span></span>
-<span id="cb18-102"><a href="#cb18-102"></a></span>
-<span id="cb18-103"><a href="#cb18-103"></a><span class="in">#   typeof(x)</span></span>
-<span id="cb18-104"><a href="#cb18-104"></a></span>
-<span id="cb18-105"><a href="#cb18-105"></a><span class="in">#   Get the concrete type of x.</span></span>
-<span id="cb18-106"><a href="#cb18-106"></a></span>
-<span id="cb18-107"><a href="#cb18-107"></a><span class="in">#   See also eltype.</span></span>
-<span id="cb18-108"><a href="#cb18-108"></a></span>
-<span id="cb18-109"><a href="#cb18-109"></a><span class="in">#   Examples</span></span>
-<span id="cb18-110"><a href="#cb18-110"></a><span class="in">#   ≡≡≡≡≡≡≡≡≡≡</span></span>
-<span id="cb18-111"><a href="#cb18-111"></a></span>
-<span id="cb18-112"><a href="#cb18-112"></a><span class="in">#   julia&gt; a = 1//2;</span></span>
-<span id="cb18-113"><a href="#cb18-113"></a><span class="in">  </span></span>
-<span id="cb18-114"><a href="#cb18-114"></a><span class="in">#   julia&gt; typeof(a)</span></span>
-<span id="cb18-115"><a href="#cb18-115"></a><span class="in">#   Rational{Int64}</span></span>
-<span id="cb18-116"><a href="#cb18-116"></a><span class="in">  </span></span>
-<span id="cb18-117"><a href="#cb18-117"></a><span class="in">#   julia&gt; M = [1 2; 3.5 4];</span></span>
-<span id="cb18-118"><a href="#cb18-118"></a><span class="in">  </span></span>
-<span id="cb18-119"><a href="#cb18-119"></a><span class="in">#   julia&gt; typeof(M)</span></span>
-<span id="cb18-120"><a href="#cb18-120"></a><span class="in">#   Matrix{Float64} (alias for Array{Float64, 2})</span></span>
-<span id="cb18-121"><a href="#cb18-121"></a><span class="in">```</span></span>
-<span id="cb18-122"><a href="#cb18-122"></a></span>
-<span id="cb18-123"><a href="#cb18-123"></a>**Vòng lặp**: hãy thử viết lại quy trình tạo random trên bằng <span class="in">`for loops`</span>.</span>
-<span id="cb18-124"><a href="#cb18-124"></a></span>
-<span id="cb18-127"><a href="#cb18-127"></a><span class="in">```{julia}</span></span>
-<span id="cb18-128"><a href="#cb18-128"></a><span class="in"># poor style</span></span>
-<span id="cb18-129"><a href="#cb18-129"></a><span class="in">n = 100 </span></span>
-<span id="cb18-130"><a href="#cb18-130"></a><span class="in">ep = zeros(n) # create an array with 0.0 as initial value</span></span>
-<span id="cb18-131"><a href="#cb18-131"></a><span class="in">for i in 1:n # the index is looped for all 1:n, but none vector of those indices is created.</span></span>
-<span id="cb18-132"><a href="#cb18-132"></a><span class="in">    ep[i] = randn()</span></span>
-<span id="cb18-133"><a href="#cb18-133"></a><span class="in">end # indicates the end of a loop</span></span>
-<span id="cb18-134"><a href="#cb18-134"></a><span class="in">```</span></span>
-<span id="cb18-135"><a href="#cb18-135"></a></span>
-<span id="cb18-136"><a href="#cb18-136"></a>The word&nbsp;<span class="in">`in`</span>&nbsp;from the&nbsp;<span class="in">`for`</span>&nbsp;loop can be replaced by either&nbsp;<span class="in">`∈`</span>&nbsp;or&nbsp;<span class="in">`=`</span>.</span>
-<span id="cb18-137"><a href="#cb18-137"></a></span>
-<span id="cb18-138"><a href="#cb18-138"></a>Code trên thành công tạo ra các giá trị cho mảng <span class="in">`ep`</span>, tuy nhiên mối quan hệ giữa <span class="in">`i`</span> và <span class="in">`ep`</span> được thể hiện không tường minh. Để cải thiện, hãy dùng <span class="in">`eachindex`</span>:</span>
-<span id="cb18-139"><a href="#cb18-139"></a></span>
-<span id="cb18-142"><a href="#cb18-142"></a><span class="in">```{julia}</span></span>
-<span id="cb18-143"><a href="#cb18-143"></a><span class="in"># better style</span></span>
-<span id="cb18-144"><a href="#cb18-144"></a><span class="in">n = 100</span></span>
-<span id="cb18-145"><a href="#cb18-145"></a><span class="in">ep = zeros(n)</span></span>
-<span id="cb18-146"><a href="#cb18-146"></a><span class="in">for i in eachindex(ep)</span></span>
-<span id="cb18-147"><a href="#cb18-147"></a><span class="in">    ep[i] = randn()</span></span>
-<span id="cb18-148"><a href="#cb18-148"></a><span class="in">end</span></span>
-<span id="cb18-149"><a href="#cb18-149"></a><span class="in">```</span></span>
-<span id="cb18-150"><a href="#cb18-150"></a></span>
-<span id="cb18-151"><a href="#cb18-151"></a>Vòng lặp rất có hiệu quả về mặt bộ nhớ tuy nhiên lợi ích chính của nó là (1) thể hiện mã một cách rõ ràng hơn, ít mắc lỗi chính tả hơn, và (2) cho phép trình biên dịch linh hoạt tạo mã nhanh một cách sáng tạo.</span>
-<span id="cb18-152"><a href="#cb18-152"></a></span>
-<span id="cb18-153"><a href="#cb18-153"></a>Trong Julia, chúng ta cũng có thể loop một array trực tiệp, như ví dụ dưới đây:</span>
-<span id="cb18-154"><a href="#cb18-154"></a></span>
-<span id="cb18-157"><a href="#cb18-157"></a><span class="in">```{julia}</span></span>
-<span id="cb18-158"><a href="#cb18-158"></a><span class="in">ep_sum = 0.0 # need to use 0.0 rather than 0</span></span>
-<span id="cb18-159"><a href="#cb18-159"></a><span class="in">m = 5</span></span>
-<span id="cb18-160"><a href="#cb18-160"></a><span class="in">for ep_eval in ep[1:m]</span></span>
-<span id="cb18-161"><a href="#cb18-161"></a><span class="in">    ep_sum = ep_sum + ep_eval</span></span>
-<span id="cb18-162"><a href="#cb18-162"></a><span class="in">end</span></span>
-<span id="cb18-163"><a href="#cb18-163"></a><span class="in">ep_mean = ep_sum / m</span></span>
-<span id="cb18-164"><a href="#cb18-164"></a><span class="in">```</span></span>
-<span id="cb18-165"><a href="#cb18-165"></a></span>
-<span id="cb18-166"><a href="#cb18-166"></a>với <span class="in">`ep[1:m]`</span> trả về các giá trị của vector <span class="in">`1`</span> đến <span class="in">`m`</span>.</span>
-<span id="cb18-167"><a href="#cb18-167"></a></span>
-<span id="cb18-168"><a href="#cb18-168"></a>Julia cũng có các operator/function có sẵn để kiểm tra các kết quả này.</span>
-<span id="cb18-169"><a href="#cb18-169"></a></span>
-<span id="cb18-172"><a href="#cb18-172"></a><span class="in">```{julia}</span></span>
-<span id="cb18-173"><a href="#cb18-173"></a><span class="in">ep_mean ≈ mean(ep[1:m])</span></span>
-<span id="cb18-174"><a href="#cb18-174"></a><span class="in">isapprox(ep_mean, mean(ep[1:m])) # equivalent</span></span>
-<span id="cb18-175"><a href="#cb18-175"></a><span class="in">ep_mean ≈ sum(ep[1:m]) / m</span></span>
-<span id="cb18-176"><a href="#cb18-176"></a><span class="in">```</span></span>
-<span id="cb18-177"><a href="#cb18-177"></a></span>
-<span id="cb18-178"><a href="#cb18-178"></a>Gõ <span class="in">`\approx&lt;TAB&gt;`</span> .</span>
-<span id="cb18-179"><a href="#cb18-179"></a></span>
-<span id="cb18-180"><a href="#cb18-180"></a><span class="in">`≈`</span> và <span class="in">`isapprox`</span> dùng để kiểm tra đẳng thức (equality), khác với giá trị (<span class="in">`==`</span>), sử dụng cho số và các loại khác.</span>
-<span id="cb18-181"><a href="#cb18-181"></a></span>
-<span id="cb18-182"><a href="#cb18-182"></a>**Định nghĩa hàm**: để thực hành, tiếp tục sử dụng <span class="in">`for`</span> để viết một hàm biểu diễn lại quá trình trên, nhưng thú vị hơn thì thử bình phương thay vì các trị số random đơn thuần xem sao.</span>
-<span id="cb18-183"><a href="#cb18-183"></a></span>
-<span id="cb18-186"><a href="#cb18-186"></a><span class="in">```{julia}</span></span>
-<span id="cb18-187"><a href="#cb18-187"></a><span class="in"># poor style</span></span>
-<span id="cb18-188"><a href="#cb18-188"></a><span class="in">function generatedata(n)</span></span>
-<span id="cb18-189"><a href="#cb18-189"></a><span class="in">    ep = zeros(n)</span></span>
-<span id="cb18-190"><a href="#cb18-190"></a><span class="in">    for i in eachindex(ep)</span></span>
-<span id="cb18-191"><a href="#cb18-191"></a><span class="in">        ep[i] = (randn())^2 # squaring the result</span></span>
-<span id="cb18-192"><a href="#cb18-192"></a><span class="in">    end</span></span>
-<span id="cb18-193"><a href="#cb18-193"></a><span class="in">    return ep</span></span>
-<span id="cb18-194"><a href="#cb18-194"></a><span class="in">end</span></span>
-<span id="cb18-195"><a href="#cb18-195"></a></span>
-<span id="cb18-196"><a href="#cb18-196"></a><span class="in">data = generatedata(10)</span></span>
-<span id="cb18-197"><a href="#cb18-197"></a><span class="in">plot(data)</span></span>
-<span id="cb18-198"><a href="#cb18-198"></a><span class="in">```</span></span>
-<span id="cb18-199"><a href="#cb18-199"></a></span>
-<span id="cb18-200"><a href="#cb18-200"></a>Hãy nhớ rằng <span class="in">`randn()`</span> có thể trả về một vector, thử cải thiện xem.</span>
-<span id="cb18-201"><a href="#cb18-201"></a></span>
-<span id="cb18-204"><a href="#cb18-204"></a><span class="in">```{julia}</span></span>
-<span id="cb18-205"><a href="#cb18-205"></a><span class="in"># still poor style</span></span>
-<span id="cb18-206"><a href="#cb18-206"></a><span class="in">function generatedata(n)</span></span>
-<span id="cb18-207"><a href="#cb18-207"></a><span class="in">    ep = randn(n) # use built in function</span></span>
-<span id="cb18-208"><a href="#cb18-208"></a></span>
-<span id="cb18-209"><a href="#cb18-209"></a><span class="in">    for i in eachindex(ep)</span></span>
-<span id="cb18-210"><a href="#cb18-210"></a><span class="in">        ep[i] = ep[i]^2 # squaring the result</span></span>
-<span id="cb18-211"><a href="#cb18-211"></a><span class="in">    end</span></span>
-<span id="cb18-212"><a href="#cb18-212"></a></span>
-<span id="cb18-213"><a href="#cb18-213"></a><span class="in">    return ep</span></span>
-<span id="cb18-214"><a href="#cb18-214"></a><span class="in">end</span></span>
-<span id="cb18-215"><a href="#cb18-215"></a><span class="in">data = generatedata(5)</span></span>
-<span id="cb18-216"><a href="#cb18-216"></a><span class="in">```</span></span>
-<span id="cb18-217"><a href="#cb18-217"></a></span>
-<span id="cb18-218"><a href="#cb18-218"></a><span class="fu">### 1.1.2. Variations on Fixed Points (chưa biết dịch ntn :\&gt;)</span></span>
-<span id="cb18-219"><a href="#cb18-219"></a></span>
-<span id="cb18-220"><a href="#cb18-220"></a><span class="fu">## 1.2. Julia cơ bản</span></span>
-<span id="cb18-221"><a href="#cb18-221"></a></span>
-<span id="cb18-222"><a href="#cb18-222"></a><span class="fu">## 1.3. Các kiểu dữ liệu cơ bản</span></span>
-<span id="cb18-223"><a href="#cb18-223"></a></span>
-<span id="cb18-224"><a href="#cb18-224"></a><span class="fu">## 1.4. Kiểu dữ liệu và Lập trình tổng quát</span></span>
-<span id="cb18-225"><a href="#cb18-225"></a></span>
-<span id="cb18-226"><a href="#cb18-226"></a><span class="fu"># 2. Các thư viện phổ biến của Julia (Package Ecosystem)</span></span>
-<span id="cb18-227"><a href="#cb18-227"></a></span>
-<span id="cb18-228"><a href="#cb18-228"></a><span class="fu">## 2.1. Generic Programming</span></span>
-<span id="cb18-229"><a href="#cb18-229"></a></span>
-<span id="cb18-230"><a href="#cb18-230"></a><span class="fu">## 2.2. General Purpose Packages</span></span>
-<span id="cb18-231"><a href="#cb18-231"></a></span>
-<span id="cb18-232"><a href="#cb18-232"></a><span class="fu">## 2.3. Data and Statistics Packages</span></span>
-<span id="cb18-233"><a href="#cb18-233"></a></span>
-<span id="cb18-234"><a href="#cb18-234"></a><span class="fu">## 2.4. Solvers, Optimizers, and Automatic Differentiation</span></span>
+<span id="cb18-8"><a href="#cb18-8"></a><span class="an">date-modified:</span><span class="co"> 04-24-2024</span></span>
+<span id="cb18-9"><a href="#cb18-9"></a><span class="an">categories:</span><span class="co"> [QEJ, Julia, Quant Econ] # self-defined categories</span></span>
+<span id="cb18-10"><a href="#cb18-10"></a><span class="co"># citation: </span></span>
+<span id="cb18-11"><a href="#cb18-11"></a><span class="co">#   url: https://github.com/lktuan/lktuan.github.io/blog/2023-12-24_post/</span></span>
+<span id="cb18-12"><a href="#cb18-12"></a><span class="an">image:</span><span class="co"> julia_logo.jpg</span></span>
+<span id="cb18-13"><a href="#cb18-13"></a><span class="an">draft:</span><span class="co"> false # setting this to `true` will prevent your post from appearing on your listing page until you're ready!</span></span>
+<span id="cb18-14"><a href="#cb18-14"></a></span>
+<span id="cb18-15"><a href="#cb18-15"></a><span class="an">format:</span><span class="co"> </span></span>
+<span id="cb18-16"><a href="#cb18-16"></a><span class="co">  html: </span></span>
+<span id="cb18-17"><a href="#cb18-17"></a><span class="co">    code-fold: true</span></span>
+<span id="cb18-18"><a href="#cb18-18"></a><span class="co">    code-summary: "Show the code"</span></span>
+<span id="cb18-19"><a href="#cb18-19"></a><span class="co">    code-line-numbers: true</span></span>
+<span id="cb18-20"><a href="#cb18-20"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
+<span id="cb18-21"><a href="#cb18-21"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb18-22"><a href="#cb18-22"></a><span class="an">theme:</span></span>
+<span id="cb18-23"><a href="#cb18-23"></a><span class="co">  light: flatly</span></span>
+<span id="cb18-24"><a href="#cb18-24"></a><span class="co">  dark: darkly</span></span>
+<span id="cb18-25"><a href="#cb18-25"></a><span class="co">---</span></span>
+<span id="cb18-26"><a href="#cb18-26"></a></span>
+<span id="cb18-27"><a href="#cb18-27"></a><span class="fu"># 1. Bắt đầu với Julia</span></span>
+<span id="cb18-28"><a href="#cb18-28"></a></span>
+<span id="cb18-29"><a href="#cb18-29"></a>Với giả định mình đã quen thuộc với các concepts của một ngôn ngữ lập trình như: Biến (Variables), Các kiểu dữ liệu (như Arrays và Vectors), Vòng lặp (Loops), Điều hướng (Conditionals - if/else), mình sẽ thử thực hành một vài ví dụ nhỏ với Julia với mục đích tìm hiểu các cú pháp và cấu trúc dữ liệu cơ bản.</span>
+<span id="cb18-30"><a href="#cb18-30"></a></span>
+<span id="cb18-31"><a href="#cb18-31"></a>Code không hẳn đã được tối ưu, nhưng sẽ dần được tối ưu theo các ví dụ về sau!</span>
+<span id="cb18-32"><a href="#cb18-32"></a></span>
+<span id="cb18-33"><a href="#cb18-33"></a><span class="fu">## 1.1. Các ví dụ mở đầu</span></span>
+<span id="cb18-34"><a href="#cb18-34"></a></span>
+<span id="cb18-35"><a href="#cb18-35"></a><span class="fu">### 1.1.1. Vẽ một quá trình sinh nhiễu trắng (White Noise Process)</span></span>
+<span id="cb18-36"><a href="#cb18-36"></a></span>
+<span id="cb18-37"><a href="#cb18-37"></a>**Quản lý Packages**: Có hai cách để quản lý Packages và Versions (Phương pháp thứ 2 được recommend khi Julia cung cấp sẵn một phương pháp SOTA cho quản lý môi trường có khả năng tái tạo lại cao):</span>
+<span id="cb18-38"><a href="#cb18-38"></a></span>
+<span id="cb18-39"><a href="#cb18-39"></a><span class="ss">1.  </span><span class="in">`add`</span> pakages một cách trực tiếp (ví dụ <span class="in">`Pkg.add("MyPackage")`</span> hoặc <span class="in">`] add MyPackage`</span>):</span>
+<span id="cb18-40"><a href="#cb18-40"></a></span>
+<span id="cb18-41"><a href="#cb18-41"></a><span class="ss">-   </span>Phải cài đặt <span class="in">`IJulia`</span> trên toàn cục để sử dụng trong mọi dự án;</span>
+<span id="cb18-42"><a href="#cb18-42"></a></span>
+<span id="cb18-43"><a href="#cb18-43"></a><span class="ss">-   </span><span class="in">`]`</span> là phím tắt để truy cập vào quản lý pakages.</span>
+<span id="cb18-44"><a href="#cb18-44"></a></span>
+<span id="cb18-45"><a href="#cb18-45"></a><span class="ss">2.  </span>Dùng các file <span class="in">`Project.toml`</span> và <span class="in">`Manifest.toml`</span>:</span>
+<span id="cb18-46"><a href="#cb18-46"></a></span>
+<span id="cb18-47"><a href="#cb18-47"></a><span class="ss">-   </span>Nếu dùng notebook, các file này sẽ được tự đông xác định, nhưng cài đặt sẽ không tự động, cần <span class="in">`] instantiate`</span>;</span>
+<span id="cb18-48"><a href="#cb18-48"></a></span>
+<span id="cb18-49"><a href="#cb18-49"></a><span class="ss">-   </span>Tệp Project có thể nằm ở folder mẹ của Notebook và Sourcecode.</span>
+<span id="cb18-50"><a href="#cb18-50"></a></span>
+<span id="cb18-53"><a href="#cb18-53"></a><span class="in">```{julia}</span></span>
+<span id="cb18-54"><a href="#cb18-54"></a><span class="in">using LinearAlgebra, Statistics, Plots, LaTeXStrings</span></span>
+<span id="cb18-55"><a href="#cb18-55"></a><span class="in">```</span></span>
+<span id="cb18-56"><a href="#cb18-56"></a></span>
+<span id="cb18-57"><a href="#cb18-57"></a>**Sử dụng các hàm**: Có những function có sẵn trong Julia base, như <span class="in">`randn()`</span></span>
+<span id="cb18-58"><a href="#cb18-58"></a></span>
+<span id="cb18-61"><a href="#cb18-61"></a><span class="in">```{julia}</span></span>
+<span id="cb18-62"><a href="#cb18-62"></a><span class="in">randn()</span></span>
+<span id="cb18-63"><a href="#cb18-63"></a><span class="in">```</span></span>
+<span id="cb18-64"><a href="#cb18-64"></a></span>
+<span id="cb18-65"><a href="#cb18-65"></a>Một số hàm cần gọi các thư viện ngoài Base, ví dụ <span class="in">`plot()`</span> của thư viện <span class="in">`Plots`</span>:</span>
+<span id="cb18-66"><a href="#cb18-66"></a></span>
+<span id="cb18-69"><a href="#cb18-69"></a><span class="in">```{julia}</span></span>
+<span id="cb18-70"><a href="#cb18-70"></a><span class="in">n = 100</span></span>
+<span id="cb18-71"><a href="#cb18-71"></a><span class="in">ep = randn(n)</span></span>
+<span id="cb18-72"><a href="#cb18-72"></a><span class="in">plot(1:n,ep)</span></span>
+<span id="cb18-73"><a href="#cb18-73"></a></span>
+<span id="cb18-74"><a href="#cb18-74"></a><span class="in">    # \ep</span></span>
+<span id="cb18-75"><a href="#cb18-75"></a><span class="in">```</span></span>
+<span id="cb18-76"><a href="#cb18-76"></a></span>
+<span id="cb18-77"><a href="#cb18-77"></a>Note: thay vì <span class="in">`ep`</span> chúng ta có thể dùng các ký tự khoa học như epsilon bằng cách <span class="in">`\epsilon&lt;TAB&gt;`</span> .</span>
+<span id="cb18-78"><a href="#cb18-78"></a></span>
+<span id="cb18-79"><a href="#cb18-79"></a>**Mảng**: <span class="in">`ep`</span> trong ví dụ trên chính là một mảng (array).</span>
+<span id="cb18-80"><a href="#cb18-80"></a></span>
+<span id="cb18-83"><a href="#cb18-83"></a><span class="in">```{julia}</span></span>
+<span id="cb18-84"><a href="#cb18-84"></a><span class="in">typeof(ep)</span></span>
+<span id="cb18-85"><a href="#cb18-85"></a><span class="in">```</span></span>
+<span id="cb18-86"><a href="#cb18-86"></a></span>
+<span id="cb18-87"><a href="#cb18-87"></a>Trích xuất 5 thành tố đầu tiên của mảng</span>
+<span id="cb18-88"><a href="#cb18-88"></a></span>
+<span id="cb18-91"><a href="#cb18-91"></a><span class="in">```{julia}</span></span>
+<span id="cb18-92"><a href="#cb18-92"></a><span class="in">ep[1:5]</span></span>
+<span id="cb18-93"><a href="#cb18-93"></a><span class="in"># Julia là một ngôn ngữ 1-index (như MATLAB hay Fortran, chứ không phải 0 như Python hay C)</span></span>
+<span id="cb18-94"><a href="#cb18-94"></a><span class="in">```</span></span>
+<span id="cb18-95"><a href="#cb18-95"></a></span>
+<span id="cb18-96"><a href="#cb18-96"></a>Để tìm kiếm trợ giúp và ví dụ cho một hàm, dùng <span class="in">`?`</span>:</span>
+<span id="cb18-97"><a href="#cb18-97"></a></span>
+<span id="cb18-100"><a href="#cb18-100"></a><span class="in">```{julia}</span></span>
+<span id="cb18-101"><a href="#cb18-101"></a><span class="in"># help?&gt; typeof</span></span>
+<span id="cb18-102"><a href="#cb18-102"></a><span class="in"># search: typeof typejoin TypeError</span></span>
+<span id="cb18-103"><a href="#cb18-103"></a></span>
+<span id="cb18-104"><a href="#cb18-104"></a><span class="in">#   typeof(x)</span></span>
+<span id="cb18-105"><a href="#cb18-105"></a></span>
+<span id="cb18-106"><a href="#cb18-106"></a><span class="in">#   Get the concrete type of x.</span></span>
+<span id="cb18-107"><a href="#cb18-107"></a></span>
+<span id="cb18-108"><a href="#cb18-108"></a><span class="in">#   See also eltype.</span></span>
+<span id="cb18-109"><a href="#cb18-109"></a></span>
+<span id="cb18-110"><a href="#cb18-110"></a><span class="in">#   Examples</span></span>
+<span id="cb18-111"><a href="#cb18-111"></a><span class="in">#   ≡≡≡≡≡≡≡≡≡≡</span></span>
+<span id="cb18-112"><a href="#cb18-112"></a></span>
+<span id="cb18-113"><a href="#cb18-113"></a><span class="in">#   julia&gt; a = 1//2;</span></span>
+<span id="cb18-114"><a href="#cb18-114"></a><span class="in">  </span></span>
+<span id="cb18-115"><a href="#cb18-115"></a><span class="in">#   julia&gt; typeof(a)</span></span>
+<span id="cb18-116"><a href="#cb18-116"></a><span class="in">#   Rational{Int64}</span></span>
+<span id="cb18-117"><a href="#cb18-117"></a><span class="in">  </span></span>
+<span id="cb18-118"><a href="#cb18-118"></a><span class="in">#   julia&gt; M = [1 2; 3.5 4];</span></span>
+<span id="cb18-119"><a href="#cb18-119"></a><span class="in">  </span></span>
+<span id="cb18-120"><a href="#cb18-120"></a><span class="in">#   julia&gt; typeof(M)</span></span>
+<span id="cb18-121"><a href="#cb18-121"></a><span class="in">#   Matrix{Float64} (alias for Array{Float64, 2})</span></span>
+<span id="cb18-122"><a href="#cb18-122"></a><span class="in">```</span></span>
+<span id="cb18-123"><a href="#cb18-123"></a></span>
+<span id="cb18-124"><a href="#cb18-124"></a>**Vòng lặp**: hãy thử viết lại quy trình tạo random trên bằng <span class="in">`for loops`</span>.</span>
+<span id="cb18-125"><a href="#cb18-125"></a></span>
+<span id="cb18-128"><a href="#cb18-128"></a><span class="in">```{julia}</span></span>
+<span id="cb18-129"><a href="#cb18-129"></a><span class="in"># poor style</span></span>
+<span id="cb18-130"><a href="#cb18-130"></a><span class="in">n = 100 </span></span>
+<span id="cb18-131"><a href="#cb18-131"></a><span class="in">ep = zeros(n) # create an array with 0.0 as initial value</span></span>
+<span id="cb18-132"><a href="#cb18-132"></a><span class="in">for i in 1:n # the index is looped for all 1:n, but none vector of those indices is created.</span></span>
+<span id="cb18-133"><a href="#cb18-133"></a><span class="in">    ep[i] = randn()</span></span>
+<span id="cb18-134"><a href="#cb18-134"></a><span class="in">end # indicates the end of a loop</span></span>
+<span id="cb18-135"><a href="#cb18-135"></a><span class="in">```</span></span>
+<span id="cb18-136"><a href="#cb18-136"></a></span>
+<span id="cb18-137"><a href="#cb18-137"></a>The word&nbsp;<span class="in">`in`</span>&nbsp;from the&nbsp;<span class="in">`for`</span>&nbsp;loop can be replaced by either&nbsp;<span class="in">`∈`</span>&nbsp;or&nbsp;<span class="in">`=`</span>.</span>
+<span id="cb18-138"><a href="#cb18-138"></a></span>
+<span id="cb18-139"><a href="#cb18-139"></a>Code trên thành công tạo ra các giá trị cho mảng <span class="in">`ep`</span>, tuy nhiên mối quan hệ giữa <span class="in">`i`</span> và <span class="in">`ep`</span> được thể hiện không tường minh. Để cải thiện, hãy dùng <span class="in">`eachindex`</span>:</span>
+<span id="cb18-140"><a href="#cb18-140"></a></span>
+<span id="cb18-143"><a href="#cb18-143"></a><span class="in">```{julia}</span></span>
+<span id="cb18-144"><a href="#cb18-144"></a><span class="in"># better style</span></span>
+<span id="cb18-145"><a href="#cb18-145"></a><span class="in">n = 100</span></span>
+<span id="cb18-146"><a href="#cb18-146"></a><span class="in">ep = zeros(n)</span></span>
+<span id="cb18-147"><a href="#cb18-147"></a><span class="in">for i in eachindex(ep)</span></span>
+<span id="cb18-148"><a href="#cb18-148"></a><span class="in">    ep[i] = randn()</span></span>
+<span id="cb18-149"><a href="#cb18-149"></a><span class="in">end</span></span>
+<span id="cb18-150"><a href="#cb18-150"></a><span class="in">```</span></span>
+<span id="cb18-151"><a href="#cb18-151"></a></span>
+<span id="cb18-152"><a href="#cb18-152"></a>Vòng lặp rất có hiệu quả về mặt bộ nhớ tuy nhiên lợi ích chính của nó là (1) thể hiện mã một cách rõ ràng hơn, ít mắc lỗi chính tả hơn, và (2) cho phép trình biên dịch linh hoạt tạo mã nhanh một cách sáng tạo.</span>
+<span id="cb18-153"><a href="#cb18-153"></a></span>
+<span id="cb18-154"><a href="#cb18-154"></a>Trong Julia, chúng ta cũng có thể loop một array trực tiệp, như ví dụ dưới đây:</span>
+<span id="cb18-155"><a href="#cb18-155"></a></span>
+<span id="cb18-158"><a href="#cb18-158"></a><span class="in">```{julia}</span></span>
+<span id="cb18-159"><a href="#cb18-159"></a><span class="in">ep_sum = 0.0 # need to use 0.0 rather than 0</span></span>
+<span id="cb18-160"><a href="#cb18-160"></a><span class="in">m = 5</span></span>
+<span id="cb18-161"><a href="#cb18-161"></a><span class="in">for ep_eval in ep[1:m]</span></span>
+<span id="cb18-162"><a href="#cb18-162"></a><span class="in">    ep_sum = ep_sum + ep_eval</span></span>
+<span id="cb18-163"><a href="#cb18-163"></a><span class="in">end</span></span>
+<span id="cb18-164"><a href="#cb18-164"></a><span class="in">ep_mean = ep_sum / m</span></span>
+<span id="cb18-165"><a href="#cb18-165"></a><span class="in">```</span></span>
+<span id="cb18-166"><a href="#cb18-166"></a></span>
+<span id="cb18-167"><a href="#cb18-167"></a>với <span class="in">`ep[1:m]`</span> trả về các giá trị của vector <span class="in">`1`</span> đến <span class="in">`m`</span>.</span>
+<span id="cb18-168"><a href="#cb18-168"></a></span>
+<span id="cb18-169"><a href="#cb18-169"></a>Julia cũng có các operator/function có sẵn để kiểm tra các kết quả này.</span>
+<span id="cb18-170"><a href="#cb18-170"></a></span>
+<span id="cb18-173"><a href="#cb18-173"></a><span class="in">```{julia}</span></span>
+<span id="cb18-174"><a href="#cb18-174"></a><span class="in">ep_mean ≈ mean(ep[1:m])</span></span>
+<span id="cb18-175"><a href="#cb18-175"></a><span class="in">isapprox(ep_mean, mean(ep[1:m])) # equivalent</span></span>
+<span id="cb18-176"><a href="#cb18-176"></a><span class="in">ep_mean ≈ sum(ep[1:m]) / m</span></span>
+<span id="cb18-177"><a href="#cb18-177"></a><span class="in">```</span></span>
+<span id="cb18-178"><a href="#cb18-178"></a></span>
+<span id="cb18-179"><a href="#cb18-179"></a>Gõ <span class="in">`\approx&lt;TAB&gt;`</span> .</span>
+<span id="cb18-180"><a href="#cb18-180"></a></span>
+<span id="cb18-181"><a href="#cb18-181"></a><span class="in">`≈`</span> và <span class="in">`isapprox`</span> dùng để kiểm tra đẳng thức (equality), khác với giá trị (<span class="in">`==`</span>), sử dụng cho số và các loại khác.</span>
+<span id="cb18-182"><a href="#cb18-182"></a></span>
+<span id="cb18-183"><a href="#cb18-183"></a>**Định nghĩa hàm**: để thực hành, tiếp tục sử dụng <span class="in">`for`</span> để viết một hàm biểu diễn lại quá trình trên, nhưng thú vị hơn thì thử bình phương thay vì các trị số random đơn thuần xem sao.</span>
+<span id="cb18-184"><a href="#cb18-184"></a></span>
+<span id="cb18-187"><a href="#cb18-187"></a><span class="in">```{julia}</span></span>
+<span id="cb18-188"><a href="#cb18-188"></a><span class="in"># poor style</span></span>
+<span id="cb18-189"><a href="#cb18-189"></a><span class="in">function generatedata(n)</span></span>
+<span id="cb18-190"><a href="#cb18-190"></a><span class="in">    ep = zeros(n)</span></span>
+<span id="cb18-191"><a href="#cb18-191"></a><span class="in">    for i in eachindex(ep)</span></span>
+<span id="cb18-192"><a href="#cb18-192"></a><span class="in">        ep[i] = (randn())^2 # squaring the result</span></span>
+<span id="cb18-193"><a href="#cb18-193"></a><span class="in">    end</span></span>
+<span id="cb18-194"><a href="#cb18-194"></a><span class="in">    return ep</span></span>
+<span id="cb18-195"><a href="#cb18-195"></a><span class="in">end</span></span>
+<span id="cb18-196"><a href="#cb18-196"></a></span>
+<span id="cb18-197"><a href="#cb18-197"></a><span class="in">data = generatedata(10)</span></span>
+<span id="cb18-198"><a href="#cb18-198"></a><span class="in">plot(data)</span></span>
+<span id="cb18-199"><a href="#cb18-199"></a><span class="in">```</span></span>
+<span id="cb18-200"><a href="#cb18-200"></a></span>
+<span id="cb18-201"><a href="#cb18-201"></a>Hãy nhớ rằng <span class="in">`randn()`</span> có thể trả về một vector, thử cải thiện xem.</span>
+<span id="cb18-202"><a href="#cb18-202"></a></span>
+<span id="cb18-205"><a href="#cb18-205"></a><span class="in">```{julia}</span></span>
+<span id="cb18-206"><a href="#cb18-206"></a><span class="in"># still poor style</span></span>
+<span id="cb18-207"><a href="#cb18-207"></a><span class="in">function generatedata(n)</span></span>
+<span id="cb18-208"><a href="#cb18-208"></a><span class="in">    ep = randn(n) # use built in function</span></span>
+<span id="cb18-209"><a href="#cb18-209"></a></span>
+<span id="cb18-210"><a href="#cb18-210"></a><span class="in">    for i in eachindex(ep)</span></span>
+<span id="cb18-211"><a href="#cb18-211"></a><span class="in">        ep[i] = ep[i]^2 # squaring the result</span></span>
+<span id="cb18-212"><a href="#cb18-212"></a><span class="in">    end</span></span>
+<span id="cb18-213"><a href="#cb18-213"></a></span>
+<span id="cb18-214"><a href="#cb18-214"></a><span class="in">    return ep</span></span>
+<span id="cb18-215"><a href="#cb18-215"></a><span class="in">end</span></span>
+<span id="cb18-216"><a href="#cb18-216"></a><span class="in">data = generatedata(5)</span></span>
+<span id="cb18-217"><a href="#cb18-217"></a><span class="in">```</span></span>
+<span id="cb18-218"><a href="#cb18-218"></a></span>
+<span id="cb18-219"><a href="#cb18-219"></a><span class="fu">### 1.1.2. Variations on Fixed Points (chưa biết dịch ntn :\&gt;)</span></span>
+<span id="cb18-220"><a href="#cb18-220"></a></span>
+<span id="cb18-221"><a href="#cb18-221"></a><span class="fu">## 1.2. Julia cơ bản</span></span>
+<span id="cb18-222"><a href="#cb18-222"></a></span>
+<span id="cb18-223"><a href="#cb18-223"></a><span class="fu">## 1.3. Các kiểu dữ liệu cơ bản</span></span>
+<span id="cb18-224"><a href="#cb18-224"></a></span>
+<span id="cb18-225"><a href="#cb18-225"></a><span class="fu">## 1.4. Kiểu dữ liệu và Lập trình tổng quát</span></span>
+<span id="cb18-226"><a href="#cb18-226"></a></span>
+<span id="cb18-227"><a href="#cb18-227"></a><span class="fu"># 2. Các thư viện phổ biến của Julia (Package Ecosystem)</span></span>
+<span id="cb18-228"><a href="#cb18-228"></a></span>
+<span id="cb18-229"><a href="#cb18-229"></a><span class="fu">## 2.1. Generic Programming</span></span>
+<span id="cb18-230"><a href="#cb18-230"></a></span>
+<span id="cb18-231"><a href="#cb18-231"></a><span class="fu">## 2.2. General Purpose Packages</span></span>
+<span id="cb18-232"><a href="#cb18-232"></a></span>
+<span id="cb18-233"><a href="#cb18-233"></a><span class="fu">## 2.3. Data and Statistics Packages</span></span>
+<span id="cb18-234"><a href="#cb18-234"></a></span>
+<span id="cb18-235"><a href="#cb18-235"></a><span class="fu">## 2.4. Solvers, Optimizers, and Automatic Differentiation</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
