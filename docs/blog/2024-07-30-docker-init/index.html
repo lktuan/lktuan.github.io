@@ -278,7 +278,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Let’s take a look at the <code>Dockerfile</code>. IMHO, this is not yet a optimal Dockerized Python project:</p>
 <ul>
 <li>Lack off a dependency management tool (for e.g, <code>pipenv</code>, <code>poetry</code> both are good, production-ready);</li>
-<li>This is single-step builder. Should we split it to <code>dependencies</code> and <code>runtime</code> steps. </li>
+<li>This is single-step builder. Should we split it to <code>dependencies</code> and <code>runtime</code> steps, which will limit the objects in the <code>runtime</code> image to only those needed to run the application? </li>
 </ul>
 <div class="no-row-height column-margin column-container"><span class="margin-aside">further reading, <a href="https://sourcery.ai/blog/python-docker/">“A perfect way to Dockerize your Pipenv Python application”</a></span></div><p>I do see some good practices here that we should run our apps in a non-privileged user rather than root as well as <em>mounting cache and bind</em>, using Docker’s BuildKit feature, which allows more advanced mounting capabilities during build time:</p>
 <ol type="1">
@@ -941,7 +941,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb4-78"><a href="#cb4-78"></a>Let's take a look at the <span class="in">`Dockerfile`</span>. IMHO, this is not yet a optimal Dockerized Python project:</span>
 <span id="cb4-79"><a href="#cb4-79"></a></span>
 <span id="cb4-80"><a href="#cb4-80"></a><span class="ss">- </span>Lack off a dependency management tool (for e.g, <span class="in">`pipenv`</span>, <span class="in">`poetry`</span> both are good, production-ready);</span>
-<span id="cb4-81"><a href="#cb4-81"></a><span class="ss">- </span>This is single-step builder. Should we split it to <span class="in">`dependencies`</span> and <span class="in">`runtime`</span> steps. <span class="co">[</span><span class="ot">further reading, ["A perfect way to Dockerize your Pipenv Python application"](https://sourcery.ai/blog/python-docker/)</span><span class="co">]</span>{.aside}</span>
+<span id="cb4-81"><a href="#cb4-81"></a><span class="ss">- </span>This is single-step builder. Should we split it to <span class="in">`dependencies`</span> and <span class="in">`runtime`</span> steps, which will limit the objects in the <span class="in">`runtime`</span> image to only those needed to run the application? <span class="co">[</span><span class="ot">further reading, ["A perfect way to Dockerize your Pipenv Python application"](https://sourcery.ai/blog/python-docker/)</span><span class="co">]</span>{.aside}</span>
 <span id="cb4-82"><a href="#cb4-82"></a></span>
 <span id="cb4-83"><a href="#cb4-83"></a>I do see some good practices here that we should run our apps in a non-privileged user rather than root as well as *mounting cache and bind*, using Docker's BuildKit feature, which allows more advanced mounting capabilities during build time:</span>
 <span id="cb4-84"><a href="#cb4-84"></a></span>
