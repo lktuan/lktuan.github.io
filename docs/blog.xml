@@ -10,7 +10,668 @@
 <atom:link href="https://lktuan.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>I am a Risk Modeler 🚀</description>
 <generator>quarto-1.4.554</generator>
-<lastBuildDate>Wed, 17 Jul 2024 17:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 29 Jul 2024 17:00:00 GMT</lastBuildDate>
+<item>
+  <title>Now I know docker init is a thing</title>
+  <dc:creator>Tuan Le Khac</dc:creator>
+  <link>https://lktuan.github.io/blog/2024-07-30-docker-init/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>TIL that Docker has a <a href="https://docs.docker.com/language/python/containerize/">example</a> for containerizing Python apps. It uses a simple <a href="https://fastapi.tiangolo.com/">FastAPI</a> example for demonstration. We can download the project as below:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> clone https://github.com/estebanx64/python-docker-example</span></code></pre></div>
+<p>After navigating to our project, we can easily set up our project for containerization with <code>docker init</code>. This will create:</p>
+<ul>
+<li><code>.dockerignore</code></li>
+<li><code>Dockerfile</code></li>
+<li><code>compose.yaml</code></li>
+<li><code>README.Docker.md</code></li>
+</ul>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">docker</span> init</span>
+<span id="cb2-2"></span>
+<span id="cb2-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Welcome</span> to the Docker Init CLI!</span>
+<span id="cb2-4"></span>
+<span id="cb2-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">This</span> utility will walk you through creating the following files with sensible defaults for your project:</span>
+<span id="cb2-6">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> .dockerignore</span>
+<span id="cb2-7">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> Dockerfile</span>
+<span id="cb2-8">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> compose.yaml</span>
+<span id="cb2-9">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">-</span> README.Docker.md</span>
+<span id="cb2-10"></span>
+<span id="cb2-11"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Let</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'s get started!</span></span>
+<span id="cb2-12"></span>
+<span id="cb2-13"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">? What application platform does your project use? Python</span></span>
+<span id="cb2-14"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">? What version of Python do you want to use? (3.11.4)</span></span>
+<span id="cb2-15"></span>
+<span id="cb2-16"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">? What version of Python do you want to use? 3.11.4</span></span>
+<span id="cb2-17"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">? What port do you want your app to listen on? (8000)</span></span>
+<span id="cb2-18"></span>
+<span id="cb2-19"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">? What port do you want your app to listen on? 8000</span></span>
+<span id="cb2-20"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">? What is the command you use to run your app? (uvicorn '</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">app:app</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">' --host=0.0.0.0 --port=8000)</span></span>
+<span id="cb2-21"></span>
+<span id="cb2-22"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">? What is the command you use to run your app? uvicorn '</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">app:app</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">' --host=0.0.0.0 --port=8000</span></span>
+<span id="cb2-23"></span>
+<span id="cb2-24"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">✔ Created → .dockerignore</span></span>
+<span id="cb2-25"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">✔ Created → Dockerfile</span></span>
+<span id="cb2-26"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">✔ Created → compose.yaml</span></span>
+<span id="cb2-27"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">✔ Created → README.Docker.md</span></span>
+<span id="cb2-28"></span>
+<span id="cb2-29"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">→ Your Docker files are ready!</span></span>
+<span id="cb2-30"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">  Review your Docker files and tailor them to your application.</span></span>
+<span id="cb2-31"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">  Consult README.Docker.md for information about using the generated files.</span></span>
+<span id="cb2-32"></span>
+<span id="cb2-33"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">! Warning → Make sure your requirements.txt contains an entry for the uvicorn package, which is required to run your application.</span></span>
+<span id="cb2-34"></span>
+<span id="cb2-35"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">What'</span><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">s</span> next<span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">?</span></span>
+<span id="cb2-36">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Start</span> your application by running → docker compose up <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--build</span></span>
+<span id="cb2-37">  <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">Your</span> application will be available at http://localhost:8000</span></code></pre></div>
+<p>I can access the application right after running <code>docker compose up --build</code>. The image buidling process was fast, and image size was only <code>203.21MB</code>.</p>
+<p>Let’s take a look at the <code>Dockerfile</code>. IMHO, this is not yet a optimal Dockerized Python project:</p>
+<ul>
+<li>Lack off a dependency management tool (for e.g, <code>pipenv</code>, <code>poetry</code> both are good, production-ready);</li>
+<li>This is single-step builder. Should we split it to <code>dependencies</code> and <code>runtime</code> steps. </li>
+</ul>
+<div class="no-row-height column-margin column-container"><span class="margin-aside">further reading, <a href="https://sourcery.ai/blog/python-docker/">“A perfect way to Dockerize your Pipenv Python application”</a></span></div><p>I do see some good practices here that we should run our apps in a non-privileged user rather than root as well as <em>mounting cache and bind</em>, using Docker’s BuildKit feature, which allows more advanced mounting capabilities during build time:</p>
+<ol type="1">
+<li>first <code>--mount=type=cache,target=/root/.cache/pip</code> option:</li>
+</ol>
+<ul>
+<li>This creates a cache mount for pip’s cache directory;</li>
+<li>It speeds up subsequent builds by reusing cached pip packages;</li>
+<li>The cache persists between builds, saving time and bandwidth.</li>
+</ul>
+<ol start="2" type="1">
+<li>second <code>--mount=type=bind,source=requirements.txt,target=requirements.txt</code> option:</li>
+</ol>
+<ul>
+<li>This creates a bind mount for the <code>requirements.txt</code> file;</li>
+<li>It allows access to the <code>requirements.txt</code> file without copying it into the image layer;</li>
+<li>This is useful for keeping the image size smaller and allowing changes to <code>requirements.txt</code> without rebuilding all layers.</li>
+</ul>
+<p>In conclusion, benefits are:</p>
+<ol type="1">
+<li><strong>Faster builds</strong>: By using a cache mount for pip, subsequent builds can reuse cached packages, significantly speeding up the process.</li>
+<li><strong>Smaller image size</strong>: The bind mount for <code>requirements.txt</code> means the file doesn’t need to be copied into the image, keeping the image size smaller.</li>
+<li><strong>Better caching</strong>: Changes to <code>requirements.txt</code> don’t invalidate the entire layer cache, only the parts that have changed.</li>
+<li><strong>Separation of concerns</strong>: Downloading dependencies is done as a separate step, which can be beneficial for Docker’s layer caching mechanism.</li>
+</ol>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># syntax=docker/dockerfile:1</span></span>
+<span id="cb3-2"></span>
+<span id="cb3-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Comments are provided throughout this file to help you get started.</span></span>
+<span id="cb3-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># If you need more help, visit the Dockerfile reference guide at</span></span>
+<span id="cb3-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># https://docs.docker.com/go/dockerfile-reference/</span></span>
+<span id="cb3-6"></span>
+<span id="cb3-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7</span></span>
+<span id="cb3-8"></span>
+<span id="cb3-9"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">ARG</span> PYTHON_VERSION=3.11.4</span>
+<span id="cb3-10"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">FROM</span> python:<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${PYTHON_VERSION}</span>-slim as base</span>
+<span id="cb3-11"></span>
+<span id="cb3-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Prevents Python from writing pyc files.</span></span>
+<span id="cb3-13"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">ENV</span> PYTHONDONTWRITEBYTECODE=1</span>
+<span id="cb3-14"></span>
+<span id="cb3-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Keeps Python from buffering stdout and stderr to avoid situations where</span></span>
+<span id="cb3-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the application crashes without emitting any logs due to buffering.</span></span>
+<span id="cb3-17"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">ENV</span> PYTHONUNBUFFERED=1</span>
+<span id="cb3-18"></span>
+<span id="cb3-19"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">WORKDIR</span> /app</span>
+<span id="cb3-20"></span>
+<span id="cb3-21"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Create a non-privileged user that the app will run under.</span></span>
+<span id="cb3-22"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># See https://docs.docker.com/go/dockerfile-user-best-practices/</span></span>
+<span id="cb3-23"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">ARG</span> UID=10001</span>
+<span id="cb3-24"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">RUN</span> adduser <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb3-25">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--disabled-password</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb3-26">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--gecos</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb3-27">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--home</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/nonexistent"</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb3-28">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--shell</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/sbin/nologin"</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb3-29">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--no-create-home</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb3-30">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--uid</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${UID}</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb3-31">    appuser</span>
+<span id="cb3-32"></span>
+<span id="cb3-33"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Download dependencies as a separate step to take advantage of Docker's caching.</span></span>
+<span id="cb3-34"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.</span></span>
+<span id="cb3-35"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Leverage a bind mount to requirements.txt to avoid having to copy them into</span></span>
+<span id="cb3-36"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># into this layer.</span></span>
+<span id="cb3-37"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">RUN</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--mount</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>type=cache,target=/root/.cache/pip <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb3-38">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--mount</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>type=bind,source=requirements.txt,target=requirements.txt <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb3-39">    python <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> pip install <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-r</span> requirements.txt</span>
+<span id="cb3-40"></span>
+<span id="cb3-41"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Switch to the non-privileged user to run the application.</span></span>
+<span id="cb3-42"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">USER</span> appuser</span>
+<span id="cb3-43"></span>
+<span id="cb3-44"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Copy the source code into the container.</span></span>
+<span id="cb3-45"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">COPY</span> . .</span>
+<span id="cb3-46"></span>
+<span id="cb3-47"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Expose the port that the application listens on.</span></span>
+<span id="cb3-48"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">EXPOSE</span> 8000</span>
+<span id="cb3-49"></span>
+<span id="cb3-50"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Run the application.</span></span>
+<span id="cb3-51"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">CMD</span> uvicorn <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'app:app'</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--host</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>0.0.0.0 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--port</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>8000</span></code></pre></div>
+<p>Happy coding!</p>
+
+
+<!-- -->
+
+
+ ]]></description>
+  <category>docker</category>
+  <category>python</category>
+  <guid>https://lktuan.github.io/blog/2024-07-30-docker-init/</guid>
+  <pubDate>Mon, 29 Jul 2024 17:00:00 GMT</pubDate>
+  <media:content url="https://lktuan.github.io/blog/2024-07-30-docker-init/python_docker.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>BJJ Beginners Guide</title>
+  <dc:creator>Tuan Le Khac</dc:creator>
+  <link>https://lktuan.github.io/blog/2024-07-29-bjj-beginners-guide/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>Đây là bài (lược) dịch từ beginners guide của Reddit community <code>r/bjj</code>. Link gốc bài viết: <a href="https://www.reddit.com/r/bjj/wiki/beginners-guide/" class="uri">https://www.reddit.com/r/bjj/wiki/beginners-guide/</a>. Một số thuật ngữ mình có thể sẽ để nguyên bản Tiếng Anh, hoặc để kèm trong ngoặc tròn <code>()</code>, chú thích (nếu có) sẽ được đặt trong dấu ngoặc tròn sau “ND”.</p>
+<p>Mục đích đánh giá lại những gì mình đạt được sau 6 tháng theo đuổi BJJ.</p>
+<section id="hướng-dẫn-jiu-jitsu-cho-người-mới-bắt-đầu" class="level1">
+<h1>Hướng dẫn Jiu-jitsu cho người mới bắt đầu</h1>
+<p>Chào mừng đến với Brazil Jiujitsu và chào mừng đến với <code>r/bjj</code>! Đây là hướng dẫn tổng hợp dành cho người mới để bắt đầu hành trình Jiu-jitsu của bạn.</p>
+<p>Chúc may mắn, và hãy tử tế!</p>
+<p>Bạn có đề xuất, cải tiến hoặc nhận xét cho bài viết này? Để nó ở <a href="https://docs.google.com/forms/d/e/1FAIpQLSclF8d-uXVmPVQ3EoV3K-SexnoWbefI5y6lofkSUNI68RpDCQ/viewform">đây</a>.</p>
+</section>
+<section id="bjj-là-gì" class="level1">
+<h1>BJJ là gì?</h1>
+<p>Brazilian Jiu-jitsu, đôi lúc gọi là Jiu-jitsu (ND: 八四柔术 Nhu thuật Brazin) là một môn võ kế thừa từ Judo (ND: 柔道 Nhu đạo Nhật bản). Nó:</p>
+<ul>
+<li>Đối kháng (contact), nghĩa là bạn cần tranh giành ưu thế, chiến thắng với người khác;</li>
+<li>Tay không (bare-handed), nghĩa là không vũ khí nào được chấp nhận;</li>
+<li>Dựa vào vật lộn (grappling-based), phương thức chiến đấu là vật (grappling, wrestling), đấm (punching) và đá (kicking) là không được phép;</li>
+<li>Submission-based (ND: chưa thể dịch từ này), nghĩa là mục tiêu cần đạt được là bắt đối thủ đầu hàng (submission) thông qua một đòn siết nghẹt (choke) hoặc đe dọa tổn thương tới các khớp của họ, hơn là chỉ đơn thuần là chiếm vị trí ưu thế (positioning) hoặc ghim chặt đối thủ (pinning).</li>
+</ul>
+<p>BJJ khác với Judo ở chỗ nó thiên về vật lộn / địa chiến (ground grappling), trong khi Judo nhấn mạnh về quăng (throws) và quật ngã (takedowns) từ vị trí đứng.</p>
+</section>
+<section id="tôi-có-thực-sự-thích-jiu-jitsu-không" class="level1">
+<h1>Tôi có (thực sự) thích Jiu-jitsu không?</h1>
+<p>Bạn sẽ thích Jiu-jitsu nếu:</p>
+<ul>
+<li>Đang tìm kiếm một bài thể thao rèn luyện (workout), nhưng ghét tập các môn thể dục như chạy bộ, nâng tạ;</li>
+<li>Tìm kiếm một cộng đồng sôi động;</li>
+<li>Cần tìm cảm giác có mục đích và tiến bộ;</li>
+<li>Thích các hoạt động thể thao kết hợp thể chất và trí não (cerebral), như leo núi;</li>
+<li>Đã từng đào tạo các môn thể thao đối kháng (combat) khác;</li>
+<li>Muốn thử gì đó mới mẻ?.</li>
+</ul>
+</section>
+<section id="jiu-jitsu-có-phù-hợp-với-tôi-không" class="level1">
+<h1>Jiu-jitsu có phù hợp với tôi không?</h1>
+<p>Nó phù hợp với tất cả bất kể tuổi, thể trạng, giới tính, hoàn cảnh, kinh nghiệm. Tuy nhiên, có thể tập và không cần coi nó là sở thích của bạn, và bạn cũng không cần xuất sắc trong môn này. Mục tiêu không phải là hơn thua với người khác, mà là trở nên <em>tốt nhất có thể</em>.</p>
+</section>
+<section id="làm-sao-để-thử-và-bắt-đầu" class="level1">
+<h1>Làm sao để thử và bắt đầu</h1>
+<ol type="1">
+<li>Tìm một phòng tập, nên là các phòng có đánh giá tốt;</li>
+<li>Tìm hiểu lịch tập, chính sách, giá cả;</li>
+<li>Mặc quần áo thoải mái, không đeo trang sức, mang nước, thời điểm này bạn chưa cần trang bị nào khác;</li>
+<li>Tập thử;</li>
+<li>Lớp thông thường sẽ bao gồm: khởi động (warmups), dạy kĩ thuật và tập luyện (teaching &amp; drilling), sau đó là đối kháng (sparring, rolling, open mat). Tập nhẹ nhàng và không nên kì vọng quá nhiều;</li>
+<li>(&amp; 7) Xin tập thử thêm, hoặc tìm một CLB khác, hãy mạnh dạn, cho tới khi ưng ý.</li>
+</ol>
+</section>
+<section id="lựa-chọn-clbphòng-tập" class="level1">
+<h1>Lựa chọn CLB/Phòng tập</h1>
+<p>Nếu thấy thích BJJ thì bạn nên commit tới một phòng tập. Dưới đây là các tiêu chí:</p>
+<ul>
+<li>Không khí (Vibe): Thấy hợp không (jibe with the vibe), các thành viên có thân thiện không. Trang thiết bị có sơ sài, có mùi hay không?;</li>
+<li>Chất lượng (Quality): Có năng lực tổ chức tốt hay không? Họ focus vào Jiu-jitsu hay các môn khác nữa? Người chủ có đai đen hay không? Họ đào tạo BJJ bao lâu rồi?;</li>
+<li>Địa điểm (Location): Thuận tiện cho bạn hay không?;</li>
+<li>Chi phí (Cost): Có phù hợp với bạn hay không?.</li>
+</ul>
+</section>
+<section id="các-quy-tắc-lịch-sự" class="level1">
+<h1>Các quy tắc lịch sự</h1>
+<section id="tổng-quan" class="level2">
+<h2 class="anchored" data-anchor-id="tổng-quan">Tổng quan</h2>
+<p>Hãy lịch sử và tuân thủ các quy tắc. Bạn đang tham gia một cộng đồng đang cố gắng cải thiện kỹ năng của họ, chứ không phải chiến đấu để đứng đầu theo kiểu của bạn.</p>
+</section>
+<section id="vệ-sinh-và-sức-khỏe" class="level2">
+<h2 class="anchored" data-anchor-id="vệ-sinh-và-sức-khỏe">Vệ sinh và sức khỏe</h2>
+<ul>
+<li>Đừng đến phòng tập nếu bạn ốm hoặc có virus hoặc bệnh truyền nhiễm khác;</li>
+<li>Mang dép hoặc giày ngoài thảm, đi chân đất trên thảm;</li>
+<li>Giặt, vệ sinh đồ tập sau mỗi buổi học;</li>
+<li>Cắt gọn ngón chân / tay để tránh làm bị thương bạn tập;</li>
+<li>Sử dụng xịt khử mùi, nước súc miệng nếu cần;</li>
+<li>Trước buổi tập nếu có mồ hôi hoặc mùi, hãy tắm trước;</li>
+<li>Tắm càng sớm càng tốt sau buổi tập để tránh nhiễm trùng da;</li>
+<li>Chú ý đến da, nếu có vấn đề hãy ngừng tập và gặp bác sĩ.</li>
+</ul>
+</section>
+<section id="tập-luyện-kĩ-thuật-drilling" class="level2">
+<h2 class="anchored" data-anchor-id="tập-luyện-kĩ-thuật-drilling">Tập luyện kĩ thuật (Drilling)</h2>
+<ul>
+<li>Chia đều thời gian của bạn và bạn tập;</li>
+<li>Chỉ nên đưa ra lời khuyên khi bạn thực sự tự tin, nếu không thì nghe coach (ND: Biết thì thưa thốt, không biết dựa cột mà nghe);</li>
+<li>Mục tiêu là tập luyện các động tác trong điều kiện không có áp lực từ đối thủ. Nên đừng tạo áp lực quá nhiều cho bạn tập, cũng không nên quá thoải mái như một người nộm;</li>
+<li>Tập trung vào các chuyện động (movement) hơn là đạt được kết quả của động tác.</li>
+</ul>
+</section>
+<section id="tập-luyện-đối-kháng-rolling" class="level2">
+<h2 class="anchored" data-anchor-id="tập-luyện-đối-kháng-rolling">Tập luyện đối kháng (Rolling)</h2>
+<ul>
+<li>Bạn có quyền từ chối việc roll với bất cứ ai, trong bất cứ thời điểm nào, hoặc bất kì lí do nào. Họ có thể không thích hoặc cho rằng nó thiếu lịch sự, nhưng, bạn có quyền;</li>
+<li>Người ta thường đập và cụng ta (hand slap and dump) để đánh dấu cho một ca roll bắt đầu;</li>
+<li>Cảm ơn bạn tập sau mỗi lần roll, bất kể nó kết thúc như thế nào;</li>
+<li>Mục tiêu của roll là học hỏi chứ không phải chiến thắng, để dành cái ham muốn đó cho các trận đánh thực sự;</li>
+<li>Điều tệ nhất bạn có thể làm là gây ra chấn thương cho bạn tập;</li>
+<li>Một số thế submission có thể chuyển từ không đau cho tới tạo ra chấn thương nghiêm trọng nhất nhanh. Trong các trường hợp đó, hãy siết lực chậm lại để tạo thời gian cho bạn tập tap-out;</li>
+<li>Khi roll với một bạn tập nhỏ hơn mình nhiều, đừng cố gắng dùng trọng lượng để đè họ xuống. Mục tiêu là học hỏi, và 5 phút đè như vậy và chả ai học được gì cả. Hãy cố linh hoạt nhiều tư thế;</li>
+<li>Các va chạm tình cờ vào các vùng nhạy cảm là điều bình thường trong các môn vật. Cứ tiếp tục roll hoặc nói “Sorry” nếu bạn muốn, không nên giải thích dài dòng và nên tập trung vào tập luyện.</li>
+</ul>
+</section>
+</section>
+<section id="tổng-quan-các-vị-trí-trong-bjj" class="level1">
+<h1>Tổng quan các vị trí trong BJJ</h1>
+<p>Jiu-jitsu có phong phú các thế, tư thế chiến đấu (configurations and positions). Mỗi tư thế, đối với cả bạn và bạn tập đều sẽ có các chiến lược, kỹ thuật khác nhau.</p>
+<p>Mỗi thế sẽ tương ưng là sự chiếm ưu thế cho một cá nhân, và sự thất thế cho một bên còn lại. Đối với người chiếm ưu thế, bạn đang tấn công, ngược lại, bạn đang trong vai trò phòng thủ. (ND) Sự chênh lệch giữa ưu / thất thế cũng sẽ khác nhau cho các thế đánh khác nhau. Mỗi người đều sẽ cố gắng dùng các chiến lược và kĩ thuật để tạo lợi thế cho bản thân.</p>
+<p>Dưới đây là một số thế như vậy, bạn không cần ghi nhớ, bạn sẽ được dạy theo thời gian:</p>
+<p><em>All photos below credit to orginal post.</em></p>
+<section id="closed-guard" class="level2">
+<h2 class="anchored" data-anchor-id="closed-guard">Closed Guard</h2>
+<p>Closed Guard là tư thế phố biến nhất cho người mới bắt đầu, hai chân bạn sẽ vòng qua hông (waist) đối thủ và dùng mắt cá chân khóa (ankles) lại. Lợi thế thuộc về người ở trên (bạn tập của bạn).</p>
+<p>Trong Jiu-jitsu, “guard” mang nghĩa tương tự như “chân”, tư thế này được gọi như vậy vì bạn dùng chân khóa kín đối thủ.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-07-29-bjj-beginners-guide/closed_guard.png" class="img-fluid figure-img"></p>
+<figcaption>Closed Guard</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="open-guard" class="level2">
+<h2 class="anchored" data-anchor-id="open-guard">Open Guard</h2>
+<p>Khi người ở trên có thể thoát, gỡ được móc nối giữa hai mắt cá chân, sẽ hình thành nên tư thế Open Guard. Lúc này “guard” đã được “open”, tư thế này rất linh động và có nhiều biến thể / tên gọi cho từng vị trí cụ thể, như <em>Spider Guard</em> hay <em>Lasso Guard</em>. Nhìn chung tư thế này không có lợi cho cả hai người.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-07-29-bjj-beginners-guide/open_guard.png" class="img-fluid figure-img"></p>
+<figcaption>Open Guard</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="side-control" class="level2">
+<h2 class="anchored" data-anchor-id="side-control">Side Control</h2>
+<p>Khi một người có thể vòng qua chân của người phía dưới và kiểm soát thân mình (torso) thì người đó được xem là đã “passed the guard”, động tác này kết thúc bằng từ thế Side Control. Lợi thế thuộc về người đó - người ở trên.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-07-29-bjj-beginners-guide/side_control.png" class="img-fluid figure-img"></p>
+<figcaption>Side Control</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="mount" class="level2">
+<h2 class="anchored" data-anchor-id="mount">Mount</h2>
+<p>Nếu người ở trên có thể giành được nhiều quyền kiểm soát hơn, họ có thể ngồi lên phần bụng (hips) hoặc ngực (chest), tư thế này được gọi là Mount và nó <em>cực kì</em> có lợi cho người ở trên.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-07-29-bjj-beginners-guide/mount.png" class="img-fluid figure-img"></p>
+<figcaption>Mount</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="back" class="level2">
+<h2 class="anchored" data-anchor-id="back">Back</h2>
+<p>Con người giỏi chiến đấu với các mối đe dọa đến trước mặt mình hơn là từ đằng sau. Vì thế lấy lưng là một tư thế tốt cho việc tấn công, và bị lấy lưng sẽ tạo ra sự thất thế cực lớn cho việc phòng ngự.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-07-29-bjj-beginners-guide/back.png" class="img-fluid figure-img"></p>
+<figcaption>Back</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="turtle" class="level2">
+<h2 class="anchored" data-anchor-id="turtle">Turtle</h2>
+<p>Tư thế con rùa mang lại một chút lợi thế cho người ở trên. Gọi là con rùa bởi vì tư thế của người ở dưới.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-07-29-bjj-beginners-guide/turtle.png" class="img-fluid figure-img"></p>
+<figcaption>Turtle</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="half-guard" class="level2">
+<h2 class="anchored" data-anchor-id="half-guard">Half Guard</h2>
+<p>Khi một người có thể dùng chân khống chế được một chân (thay vì từ phần hông và hai chân) của đối thủ, từ phía dưới, ta gọi đó là Half Guard. Ai có lợi thế còn tùy thuộc vào từng trường hợp cụ thể</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-07-29-bjj-beginners-guide/half_guard.png" class="img-fluid figure-img"></p>
+<figcaption>Half Guard</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="làm-sao-để-tiến-bộ" class="level1">
+<h1>Làm sao để tiến bộ</h1>
+<section id="chấp-nhận-thất-bại-nhất-là-khi-chỉ-mới-bắt-đầu" class="level2">
+<h2 class="anchored" data-anchor-id="chấp-nhận-thất-bại-nhất-là-khi-chỉ-mới-bắt-đầu">Chấp nhận thất bại, nhất là khi chỉ mới bắt đầu</h2>
+<ul>
+<li>Rất là bình thường nếu bạn cảm thấy mình tệ. Bạn đang đào sâu vào một lĩnh vực sâu và phức tạp, ngay cả đai đen cũng có lúc nhận thấy nhiều thứ họ chưa thể hiểu được;</li>
+<li>Nếu bạn không có kinh nghiệp vật (grappling) trước đó, 12 tháng đầu tiên bạn sẽ học 108 các phong cách tap-out khác nhau. Vậy nên đừng đo lường mức độ tiến bộ của bạn bằng các chiến thắng, mà nên là cách bạn cải thiện việc phòng thủ;</li>
+<li>Hãy khiêm tốn và học cách trân trọng từng sự tiến bộ, tập trung vào học hỏi thay vì kết quả cuối cùng. Tất cả những gì bạn có thể đạt được là một chút tiến bộ mỗi ngày, ai cũng thế, ngay cả khi bạn không chứng kiến.</li>
+</ul>
+</section>
+<section id="việc-khai-triển-kĩ-thuật-khó-hơn-rất-nhiều-khi-roll" class="level2">
+<h2 class="anchored" data-anchor-id="việc-khai-triển-kĩ-thuật-khó-hơn-rất-nhiều-khi-roll">Việc khai triển kĩ thuật khó hơn rất nhiều khi Roll</h2>
+<ul>
+<li>Bạn có thể học được một kĩ thuật và thực hành nó một cách mượt mà khi đối thủ gần như không kháng cự khi tập luyện;</li>
+<li>Nhưng khi vào live roll thì khác, khi đối thủ biết bạn muốn làm gì, bạn sẽ thậm chí không thế thực hiện được bước đầu tiên và mọi thứ đều đi chệch khỏi hướng. Hoặc, bạn cũng cảm thấy đầu óc bạn hoàn toàn trống rỗng (ND: hành động theo bản năng);</li>
+<li>Điều này là hoàn toàn bình thường, học các bước cơ bản là khởi đầu cho hành trình dài để trở nên thành thạo. Hãy kiên nhẫn nghiên cứu xem mình đã làm chưa đúng ở bước nào, và tiếp tục thực hành.</li>
+</ul>
+</section>
+<section id="làm-sao-tiến-bộ-một-cách-có-hiệu-quả" class="level2">
+<h2 class="anchored" data-anchor-id="làm-sao-tiến-bộ-một-cách-có-hiệu-quả">Làm sao tiến bộ một cách có hiệu quả</h2>
+<ul>
+<li>Hãy đặt câu hỏi cho coach;</li>
+<li>Hãy hỏi các tiền bối đi trước, nhớ rằng cần phải tôn trọng thời gian của họ;</li>
+<li>Hãy xem các video hướng dẫn, tài nguyên rất phong phú trên Youtube. Cẩn thận với click-bait và video-brain - hãy xem có chọn lọc:</li>
+<li>Click-bait: nhờ thuật toán của Youtube mà các video với tiêu đề ‘learn this unstoppable sweep’ hoặc ‘never get submitted again ever’ sẽ xuất hiện rất nhiều. Những thứ này không chính xác, hãy học những thứ basic. Những thứ trông fancy sẽ không phù hợp với mức độ kĩ năng của bạn đâu;</li>
+<li>Video-brain: rất dễ để xem hết hai ba chục video youtube về các kỹ thuật submissions, escapes. Nhưng não bộ bạn sẽ không thể hấp thu hết được chừng đấy các kỹ thuật một cách chi tiết. Nếu bạn muốn áp dụng trong rolling, bạn sẽ thấy đầu ong ong và nhức nhức khi cố nhớ về kỹ thuật nào đó đã xem trong video nào đó trong hàng chục cái video khác. Hãy đi sâu thay vì đi rộng (recommended to go deep rather than broad). Xem nhiều video cho cùng một kĩ thuật, hoặc xem một video lặp lại nhiều lần và cố gắng tiếp thu trước khi move on.</li>
+<li>Yêu cầu các bạn tập open mat học một kĩ thuật cụ thể hơn là rolling. Rolling mang lại cho bạn kinh nghiệm, nhưng nó sẽ rất loãng. Nếu bạn tập một tư thế guard hoặc một kỹ thuật với nhiều bạn tập khác nhau trong một thời gian ngắn, bạn sẽ thấy sự cải thiện rõ rệt. Hãy bắt đầu với tư thế mà bạn chưa thành thạo và reset nếu một trong hai thoát được khỏi đó. Tất nhiên cũng nên hỏi bạn tập xem họ muốn tập kĩ thuật nào;</li>
+<li>Sau mỗi buổi tập, hãy nghĩ về những thứ mình chưa làm được khi roll. Hãy chọn 1, 2 chủ đề trong đó để tự học qua video, buổi sau bạn có thể thực hành cho tới khi thấy có cải thiện. Cứ thế tiếp tục một chu trình như vậy.</li>
+</ul>
+</section>
+</section>
+<section id="trang-bị-phụ-kiện" class="level1">
+<h1>Trang bị, phụ kiện</h1>
+<section id="gi" class="level2">
+<h2 class="anchored" data-anchor-id="gi">Gi</h2>
+</section>
+<section id="rashguard-for-no-gi" class="level2">
+<h2 class="anchored" data-anchor-id="rashguard-for-no-gi">Rashguard (for No Gi)</h2>
+</section>
+<section id="quần-áo-lót-underclothes" class="level2">
+<h2 class="anchored" data-anchor-id="quần-áo-lót-underclothes">Quần áo lót (Underclothes)</h2>
+</section>
+<section id="bảo-vệ-hàm-mounthguard" class="level2">
+<h2 class="anchored" data-anchor-id="bảo-vệ-hàm-mounthguard">Bảo vệ hàm (Mounthguard)</h2>
+</section>
+<section id="cup" class="level2">
+<h2 class="anchored" data-anchor-id="cup">… Cup</h2>
+</section>
+<section id="bảo-vệ-đầu-headgear" class="level2">
+<h2 class="anchored" data-anchor-id="bảo-vệ-đầu-headgear">Bảo vệ đầu (Headgear)</h2>
+</section>
+</section>
+<section id="các-tài-liệu-khác" class="level1">
+<h1>Các tài liệu khác</h1>
+
+
+<!-- -->
+
+</section>
+
+ ]]></description>
+  <category>bjj</category>
+  <guid>https://lktuan.github.io/blog/2024-07-29-bjj-beginners-guide/</guid>
+  <pubDate>Sun, 28 Jul 2024 17:00:00 GMT</pubDate>
+  <media:content url="https://lktuan.github.io/blog/2024-07-29-bjj-beginners-guide/sloth_bjj.png" medium="image" type="image/png" height="141" width="144"/>
+</item>
 <item>
   <title>Another James Powell’s impromptu talk, summary by Clauder 3.5 Sonnet</title>
   <dc:creator>Tuan Le Khac</dc:creator>
