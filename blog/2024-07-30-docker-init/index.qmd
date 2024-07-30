@@ -78,7 +78,7 @@ I can access the application right after running `docker compose up --build`. Th
 Let's take a look at the `Dockerfile`. IMHO, this is not yet a optimal Dockerized Python project:
 
 - Lack off a dependency management tool (for e.g, `pipenv`, `poetry` both are good, production-ready);
-- This is single-step builder. Should we split it to `dependencies` and `runtime` steps. [further reading, ["A perfect way to Dockerize your Pipenv Python application"](https://sourcery.ai/blog/python-docker/)]{.aside}
+- This is single-step builder. Should we split it to `dependencies` and `runtime` steps, which will limit the objects in the `runtime` image to only those needed to run the application? [further reading, ["A perfect way to Dockerize your Pipenv Python application"](https://sourcery.ai/blog/python-docker/)]{.aside}
 
 I do see some good practices here that we should run our apps in a non-privileged user rather than root as well as *mounting cache and bind*, using Docker's BuildKit feature, which allows more advanced mounting capabilities during build time:
 
