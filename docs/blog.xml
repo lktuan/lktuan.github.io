@@ -21,7 +21,7 @@
 
 
 
-<p>TIL that Docker has a <a href="https://docs.docker.com/language/python/containerize/">example</a> for containerizing Python apps. It uses a simple <a href="https://fastapi.tiangolo.com/">FastAPI</a> example for demonstration. We can download the project as below:</p>
+<p>TIL that Docker has an <a href="https://docs.docker.com/language/python/containerize/">example</a> for containerizing Python apps. It uses a simple <a href="https://fastapi.tiangolo.com/">FastAPI</a> example for demonstration. We can download the project as below:</p>
 <div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">git</span> clone https://github.com/estebanx64/python-docker-example</span></code></pre></div>
@@ -143,7 +143,7 @@ font-style: inherit;">Your</span> application will be available at http://localh
 <li>Lack off a dependency management tool (for e.g, <code>pipenv</code>, <code>poetry</code> both are good, production-ready);</li>
 <li>This is single-step builder. Should we split it to <code>dependencies</code> and <code>runtime</code> steps, which will limit the objects in the <code>runtime</code> image to only those needed to run the application? </li>
 </ul>
-<div class="no-row-height column-margin column-container"><span class="margin-aside">further reading, <a href="https://sourcery.ai/blog/python-docker/">“A perfect way to Dockerize your Pipenv Python application”</a></span></div><p>I do see some good practices here that we should run our apps in a non-privileged user rather than root as well as <em>mounting cache and bind</em>, using Docker’s BuildKit feature, which allows more advanced mounting capabilities during build time:</p>
+<div class="no-row-height column-margin column-container"><span class="margin-aside">further reading, <a href="https://sourcery.ai/blog/python-docker/">“A perfect way to Dockerize your Pipenv Python application”</a></span></div><p>I do see some good practices here that we should run our apps in a non-privileged user rather than root as well as <em>mount cache and bind</em>, using Docker’s BuildKit feature, which allows more advanced mounting capabilities during build time:</p>
 <ol type="1">
 <li>first <code>--mount=type=cache,target=/root/.cache/pip</code> option:</li>
 </ol>
@@ -655,7 +655,7 @@ font-style: inherit;">=</span>8000</span></code></pre></div>
 </section>
 <section id="bảo-vệ-hàm-mounthguard" class="level2">
 <h2 class="anchored" data-anchor-id="bảo-vệ-hàm-mounthguard">Bảo vệ hàm (Mounthguard)</h2>
-<p>Mặc dù không phải là môn về đấm / đá (striking), sẽ vấn có khả năng đối thủ, bạn tập của bạn đánh trúng mặt hoặc siết vào hàm của bạn. Do đó, việc đeo bảo vệ hàm sẽ giúp hạn chế các tổn thương tới hàm, răng, môi, lưỡi - những tổn thương rất đau và khó hồi phục.</p>
+<p>Mặc dù không phải là môn về đấm / đá (striking), sẽ vẫn có khả năng đối thủ, bạn tập của bạn đánh trúng mặt hoặc siết vào hàm của bạn. Do đó, việc đeo bảo vệ hàm sẽ giúp hạn chế các tổn thương tới hàm, răng, môi, lưỡi - những tổn thương rất đau và khó hồi phục.</p>
 </section>
 <section id="cup" class="level2">
 <h2 class="anchored" data-anchor-id="cup">… Cup</h2>
