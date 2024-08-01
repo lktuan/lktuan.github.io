@@ -6,7 +6,7 @@ author:
     url: https://lktuan.github.io/
 categories: [python, pydata] 
 date: 07-08-2024
-date-modified: 07-17-2024
+date-modified: 08-01-2024
 image: juan_r.png
 code-tools: true
 code-fold: show
@@ -545,9 +545,385 @@ __all__ = ["tokenize"]
 # 07&08 [oop](https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/07-08_object-oriented-programming.ipynb)
 
 ## what are "objects" anyway?
+
+like pandas's `DataFrame` or matplotlib's `Figure`, an *object* is sthg that has:
+
+- object-bound variables: call **properties**;
+- object-bound functions: call **methods**.
+
+if the object's properties can change, we say they have **states**, in that case they are **mutable**. otherwise, they are **stateless** and **immutable**. a typical example is list (mutable) and tuple (immutable).
+
+```{python}
+my_list = [1, 2, 3]
+print(my_list)
+my_list.append(4)
+print(my_list)
+```
+
+```{python}
+# The operator that creates tuples is not parentheses:
+# is the comma!
+my_tuple = 1, 2, 3  # Notice that I don't need parentheses!
+my_tuple
+```
+
+```{python}
+print(dir(my_tuple))  # Nothing that allows us to change the state of the tuple
+```
+
+```{python}
+#| eval: false
+my_tuple[0] = 99 # This wont work, "TypeError: 'tuple' object does not support item assignment"
+```
+
+::: {.callout-note}
+Immutable objects have the advantage that they can be **hashed**, that is: they can be transformed, using some cryptographical function, into something that uniquely represents that object. Mutable objects can't, because the hash would have to change every time the state of the object changed. **Dictionary keys have to be hashable objects**.
+:::
+
+```{python}
+{
+    my_tuple: "my_tuple"
+}
+```
+
+```{python}
+hash(my_tuple)
+```
+
+```{python}
+#| eval: false
+# this wont work: "TypeError: unhashable type: 'list'"
+{
+    my_list: "my_list"
+}
+```
+
+```{python}
+#| eval: false
+# this wont work: "TypeError: unhashable type: 'list'"
+hash(my_list)
+```
+
 ## classes and instances
-## 
+
+objects are defined by **instantiating a class**. a class is a **template** for objects, where we define it's behaviours, an **instance** is a particular realization of that class.
+
+### Example
+
+we want model the `User` of our company's product, to later study their behaviours:
+
+```{python}
+class User:
+    pass
+type(User)
+```
+
+`User` class is of type `type`, which means that is can be used to created new objects. Let's create 2 instances:
+
+```{python}
+user1 = User()
+user2 = User()
+print(user1)
+print(user2)
+```
+with a slight abuse of notation, we would say we have 2 `User` objects, or just 2 `User`s.
+
+### Using the instance: `self`
+
+let's add a very simple **method** to demonstrate *explicit* `self`, a very important concept. a method is like a function bounded to the object, an can use it's properties:
+
+```{python}
+class User:
+    def whoami(self):
+        print(f'This is : {self}')
+```
+
+```{python}
+user1 = User()
+user1.whoami()
+```
+
+why are methods (instead of plain functions) interesting? Because of **duck typing**:
+
+> "If it walks like a duck and it quacks like a duck, then it must be a duck" -- <https://en.wikipedia.org/wiki/Duck_typing>
+
+if something has a method that I need, I don't care about its type.
+
+```{python}
+def do_stuff(obj):
+    return obj.mean()
+```
+
+```{python}
+import numpy as np
+import pandas as pd
+
+print(do_stuff(np.arange(5)))
+print(do_stuff(pd.Series([0, 1, 2, 3, 4])))
+```
+
+notice how we called `user1.test()` **without passing an extra argument**? This is because Python is automatically passing the instance. It's the equivalent of doing this (**never do this**):
+
+```{python}
+User.whoami(user1)
+```
+
+in fact, if we define a method without a first parameter, it will fail when we call it:
+
+```{python}
+#| eval: false
+class TestClass:
+    def test():
+        pass  # Don't do anything
+
+t = TestClass()
+t.test()  # Fails: "TypeError: test() takes 0 positional arguments but 1 was given"
+```
+
+this first parameter can be called anything, but **everybody uses `self`**. Remember, conventions are important to minimize surprise and enhance collaboration!
+
+### intermezzo: f-strings
+
+```{python}
+print(f"This is {user1}")  # Python >= 3.6
+print("This is {}".format(user1))  # Python < 3.6, equivalent
+print(User.whoami(user1))  # DON'T use! (Although it's equivalent)   
+# %timeit User.whoami(user1)  # They have about the same performance 
+# %timeit user1.whoami()
+```
+
+### initializing our instances
+
+The ellipsis (`...`) is a built-in constant in Python. It's an instance of the `ellipsis` (dấu chấm lửng) class.
+
+```{python}
+...
+```
+
+common uses of ellipsis:
+
+- as a placeholder in function definitions or class bodies
+- in type hinting (especially for variable-length tuples)
+- in slicing operations (especially for multidimensional arrays in libraries like NumPy)
+
+```{python}
+# As a placeholder
+def function_to_be_implemented_later():
+    ...
+
+# In type hinting
+from typing import Tuple
+
+def process_points(*points: Tuple[int, ...]) -> None:
+    for point in points:
+        print(f"Processing point: {point}")
+
+# Usage
+process_points((1, 2), (3, 4, 5), (6,))
+```
+
+```{python}
+user1.this_property = ...  # "99", whatever
+user1.this_property
+```
+
+however, this is considered a bad practice, and can confuse editors and static analysis tools. These properties should be specified on creation, in a way that I cannot have a user without `name` and `signup_date`. Python provides us a special method, `__init__` (this should not be confused with file `__init__.py` we put to project to tell Python our code is a package), that **initializes**[^1] the object:
+
+[^1]: sometimes this method is called the *constructor*, but strictly speaking, in Python the *constructor* is `__new__` and you should not use it. The difference is that the *constructor* returns an instance, whereas the **initializer** works with an already created instance and should return `None`.
+
+```{python}
+class User:
+    # "dunder init" = double underscore init
+    def __init__(self, name, signup_date):
+        self.name = name
+        self.signup_date = signup_date
+```
+
+```{python}
+import datetime as dt
+user1 = User(name="John Doe", signup_date=dt.datetime.now())
+print(user1.name, user1.signup_date, sep='\n')
+```
+
+that's something! However, there are several things we can improve:
+
+- it can be cumbersome to specify the date every time, and it would be nice to have some default.
+- the default representation of the instances contains some hexadecimal memory address and nothing else. It would be nice to at least see the user name and the signup date
+- nothing stops me from changing the name and signup_date of a existing user:
+
+### exercise
+
+- make `signup_date` optional by providing a default value;
+- make the `__repr__` method return a string containing the `name` and `signup_date`, which will override the default.
+
+```{python}
+class User:
+    def __init__(self, name, signup_date=None):
+        if signup_date is None:
+            signup_date = dt.datetime.now() # Watch out with default parameters! They are created when the function is defined.
+
+        self.name = name
+        self.signup_date = signup_date
+
+    def __repr__(self):
+        return f"User(name='{self.name}', signup_date={repr(self.signup_date)})"
+```
+
+```{python}
+user1 = User("John Doe")
+user1
+```
+
+### extra: date formatting
+
+```{python}
+dt.datetime.now().isoformat()  # ISO 8601
+# If you don't like it, there's http://strftime.org/
+```
+
+```{python}
+user1.signup_date.strftime("%Y ::: %d")
+```
+
+### protecting properties
+
+in Python, there are *no private attributes* (neither properties nor methods), and in fact everything can be accessed [^1]. However, we can "hide" them by default in autocomplete and other environments by using a leading underscore `_`: this is usually called **protected variables**.
+
+there is a common pattern in which, if I want to make some property read-only, we can:
+
+- make it protected
+- create a "getter" using the @property decorator, which gets the value of the protected property with a public name
+
+[^1]: This philosophy used to be summarized by the sentence "we are all consenting adults here", which is nowadays being less used.
+
+```{python}
+class User:
+    def __init__(self, name, signup_date=None):
+        if signup_date is None:
+            signup_date = dt.datetime.now()
+
+        self._name = name
+        self._signup_date = signup_date
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def signup_date(self):
+        return self._signup_date
+
+    def __repr__(self):
+        return f"User(name='{self.name}', signup_date='{self.signup_date}')"
+```
+
+```{python}
+user1 = User("Tuan Le")
+user1.name
+```
+
+```{python}
+#| eval: false
+# this wont work: "AttributeError: can't set attribute"
+user1.name = "Tan Le"
+```
+
+::: {.callout-important}
+If you see tutorials mentioning "true private variables", they are wrong!
+:::
+
+```{python}
+class Test:
+    def __init__(self, name):
+        self.__name = name  # Not what you think!
+t1 = Test("This name")
+```
+
+```{python}
+#| eval: false
+# this wont work
+t1.__name
+```
+
+```{python}
+t1._Test__name  # These are *NOT* "private" properties
+```
+
+::: {.callout-note}
+The behavior you're experiencing is due to a feature in Python called "name mangling" for private attributes. Let's break down what's happening:
+
+Double underscore prefix:
+
+- When you define an attribute with a double underscore prefix (__) in a class, Python automatically mangles the name to avoid naming conflicts in inherited classes.
+- Name mangling process: Python changes the name from __name to _ClassName__name. In your case, it becomes _Test__name.
+- Accessing the attribute: Because of this name mangling, you can't access t1.__name directly. Instead, you would need to use the mangled name.
+
+```{python}
+class Test:
+    def __init__(self, name):
+        self.__name = name  # This gets mangled
+
+t1 = Test("This name")
+
+# This will raise an AttributeError
+try:
+    print(t1.__name)
+except AttributeError as e:
+    print(f"AttributeError: {e}")
+
+# This will work
+print(t1._Test__name)
+
+# You can see all attributes, including mangled ones
+print(dir(t1))
+```
+:::
+
+
+## inheritance
+
+```{python}
+class SpecialUser(User):
+    def __init__(self, name, age, signup_date=None):
+        # Initializes self._name and self._signup_date
+        super().__init__(name, signup_date)
+
+        self._age = age
+
+    @property
+    def age(self):
+        return self._age
+
+    def greet(self):
+        print(f"Hi! I'm {self.name}")
+```
+
+```{python}
+s_user1 = SpecialUser("John Doe", 27)
+#s_user1
+```
+
+```{python}
+s_user1.name
+```
+
+```{python}
+s_user1.greet()
+```
+
+- the diamond problem: <https://www.wikiwand.com/en/Multiple_inheritance#/The_diamond_problem>
+- ???: <https://softwareengineering.stackexchange.com/questions/238176/why-would-square-inheriting-from-rectangle-be-problematic-if-we-override-the-set/238184#238184>
+- liskov substitution principle: <https://www.wikiwand.com/en/Liskov_substitution_principle>
+- composition and inheritance: <https://www.thedigitalcatonline.com/blog/2014/08/20/python-3-oop-part-3-delegation-composition-and-inheritance/>
+
+### more special methods
+
+go search for python data model
+
 # 09&10 [flask](https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/09-10_flask.ipynb)
+
+- flask is a "lightweight framework" or a "microframework". "It is designed to make getting started quick and easy, with the ability to scale up to complex applications", and therefore requires less context to get started with;
+- django is a "batteries included" framework that is more focused on good practices and encouraging a "clean, pragmatic design". It's more complex and requires more experience to master.
 
 # [conclusion](https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/99_conclusion.ipynb)
 
@@ -585,5 +961,4 @@ __all__ = ["tokenize"]
 8. [Git commit --amend](https://www.atlassian.com/git/tutorials/rewriting-history), rewriting history;
 9. [The right way to distribute Python code](https://packaging.python.org/en/latest/tutorials/packaging-projects/)
 10. [Python packaging](https://docs.python.org/3/tutorial/modules.html#packages)
-11. [Pytest](https://docs.pytest.org/en/8.2.x/);
-12. 
+11. [Pytest](https://docs.pytest.org/en/8.2.x/).
