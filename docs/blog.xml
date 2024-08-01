@@ -4301,7 +4301,7 @@ font-style: inherit;">&gt;&gt;&gt;</span></span></code></pre></div>
 <section id="the-pythonpath" class="level2">
 <h2 class="anchored" data-anchor-id="the-pythonpath">the <code>PYTHONPATH</code></h2>
 <p>We saw above that we could easily import our <code>tokenize</code> function. However, this only works if we are in the same directory. Why? Python looks in some predefined locations to know where to find what we want to import, called the “PATH”.</p>
-<div id="3a236e54" class="cell" data-execution_count="1">
+<div id="e4b08fa3" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="im" style="color: #00769E;
@@ -4318,7 +4318,7 @@ font-style: inherit;"># i will not execute this code</span></span></code></pre><
 <li>Put our code inside a location predefined in the “PATH”</li>
 </ol>
 <p>The first option can be achieved like this:</p>
-<div id="6c38e56d" class="cell" data-execution_count="2">
+<div id="d729e316" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="op" style="color: #5E5E5E;
@@ -5116,20 +5116,1105 @@ font-style: inherit;">"tokenize"</span>]</span></code></pre></div>
 </div>
 </section>
 </section>
-<section id="oop" class="level1">
+<section id="oop" class="level1 page-columns page-full">
 <h1>07&amp;08 <a href="https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/07-08_object-oriented-programming.ipynb">oop</a></h1>
 <section id="what-are-objects-anyway" class="level2">
 <h2 class="anchored" data-anchor-id="what-are-objects-anyway">what are “objects” anyway?</h2>
+<p>like pandas’s <code>DataFrame</code> or matplotlib’s <code>Figure</code>, an <em>object</em> is sthg that has:</p>
+<ul>
+<li>object-bound variables: call <strong>properties</strong>;</li>
+<li>object-bound functions: call <strong>methods</strong>.</li>
+</ul>
+<p>if the object’s properties can change, we say they have <strong>states</strong>, in that case they are <strong>mutable</strong>. otherwise, they are <strong>stateless</strong> and <strong>immutable</strong>. a typical example is list (mutable) and tuple (immutable).</p>
+<div id="420bf50e" class="cell" data-execution_count="3">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1">my_list <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>]</span>
+<span id="cb20-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(my_list)</span>
+<span id="cb20-3">my_list.append(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>)</span>
+<span id="cb20-4"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(my_list)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1, 2, 3]
+[1, 2, 3, 4]</code></pre>
+</div>
+</div>
+<div id="3893a277" class="cell" data-execution_count="4">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># The operator that creates tuples is not parentheses:</span></span>
+<span id="cb22-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># is the comma!</span></span>
+<span id="cb22-3">my_tuple <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Notice that I don't need parentheses!</span></span>
+<span id="cb22-4">my_tuple</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>(1, 2, 3)</code></pre>
+</div>
+</div>
+<div id="62ffbdb1" class="cell" data-execution_count="5">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">dir</span>(my_tuple))  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Nothing that allows us to change the state of the tuple</span></span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>['__add__', '__class__', '__class_getitem__', '__contains__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__getnewargs__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__rmul__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'count', 'index']</code></pre>
+</div>
+</div>
+<div id="38108e09" class="cell" data-execution_count="6">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1">my_tuple[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">99</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># This wont work, "TypeError: 'tuple' object does not support item assignment"</span></span></code></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Immutable objects have the advantage that they can be <strong>hashed</strong>, that is: they can be transformed, using some cryptographical function, into something that uniquely represents that object. Mutable objects can’t, because the hash would have to change every time the state of the object changed. <strong>Dictionary keys have to be hashable objects</strong>.</p>
+</div>
+</div>
+<div id="12fa6316" class="cell" data-execution_count="7">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1">{</span>
+<span id="cb27-2">    my_tuple: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"my_tuple"</span></span>
+<span id="cb27-3">}</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>{(1, 2, 3): 'my_tuple'}</code></pre>
+</div>
+</div>
+<div id="249e2363" class="cell" data-execution_count="8">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">hash</span>(my_tuple)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>529344067295497451</code></pre>
+</div>
+</div>
+<div id="5ef6beee" class="cell" data-execution_count="9">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># this wont work: "TypeError: unhashable type: 'list'"</span></span>
+<span id="cb31-2">{</span>
+<span id="cb31-3">    my_list: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"my_list"</span></span>
+<span id="cb31-4">}</span></code></pre></div>
+</details>
+</div>
+<div id="0096641b" class="cell" data-execution_count="10">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># this wont work: "TypeError: unhashable type: 'list'"</span></span>
+<span id="cb32-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">hash</span>(my_list)</span></code></pre></div>
+</details>
+</div>
 </section>
-<section id="classes-and-instances" class="level2">
+<section id="classes-and-instances" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="classes-and-instances">classes and instances</h2>
+<p>objects are defined by <strong>instantiating a class</strong>. a class is a <strong>template</strong> for objects, where we define it’s behaviours, an <strong>instance</strong> is a particular realization of that class.</p>
+<section id="example" class="level3">
+<h3 class="anchored" data-anchor-id="example">Example</h3>
+<p>we want model the <code>User</code> of our company’s product, to later study their behaviours:</p>
+<div id="4d14860f" class="cell" data-execution_count="11">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> User:</span>
+<span id="cb33-2">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">pass</span></span>
+<span id="cb33-3"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">type</span>(User)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>type</code></pre>
+</div>
+</div>
+<p><code>User</code> class is of type <code>type</code>, which means that is can be used to created new objects. Let’s create 2 instances:</p>
+<div id="30996245" class="cell" data-execution_count="12">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1">user1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> User()</span>
+<span id="cb35-2">user2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> User()</span>
+<span id="cb35-3"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(user1)</span>
+<span id="cb35-4"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(user2)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;__main__.User object at 0x000001B1AD8D4F90&gt;
+&lt;__main__.User object at 0x000001B1AD8D4D90&gt;</code></pre>
+</div>
+</div>
+<p>with a slight abuse of notation, we would say we have 2 <code>User</code> objects, or just 2 <code>User</code>s.</p>
 </section>
-<section id="section" class="level2">
-<h2 class="anchored" data-anchor-id="section"></h2>
+<section id="using-the-instance-self" class="level3">
+<h3 class="anchored" data-anchor-id="using-the-instance-self">Using the instance: <code>self</code></h3>
+<p>let’s add a very simple <strong>method</strong> to demonstrate <em>explicit</em> <code>self</code>, a very important concept. a method is like a function bounded to the object, an can use it’s properties:</p>
+<div id="ba8a0d18" class="cell" data-execution_count="13">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> User:</span>
+<span id="cb37-2">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> whoami(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb37-3">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'This is : </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'</span>)</span></code></pre></div>
+</details>
+</div>
+<div id="2441e1cb" class="cell" data-execution_count="14">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1">user1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> User()</span>
+<span id="cb38-2">user1.whoami()</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>This is : &lt;__main__.User object at 0x000001B1AD8D4590&gt;</code></pre>
+</div>
+</div>
+<p>why are methods (instead of plain functions) interesting? Because of <strong>duck typing</strong>:</p>
+<blockquote class="blockquote">
+<p>“If it walks like a duck and it quacks like a duck, then it must be a duck” – <a href="https://en.wikipedia.org/wiki/Duck_typing" class="uri">https://en.wikipedia.org/wiki/Duck_typing</a></p>
+</blockquote>
+<p>if something has a method that I need, I don’t care about its type.</p>
+<div id="5032dcea" class="cell" data-execution_count="15">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> do_stuff(obj):</span>
+<span id="cb40-2">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> obj.mean()</span></code></pre></div>
+</details>
+</div>
+<div id="e0da8b5a" class="cell" data-execution_count="16">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> numpy <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> np</span>
+<span id="cb41-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pandas <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pd</span>
+<span id="cb41-3"></span>
+<span id="cb41-4"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(do_stuff(np.arange(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>)))</span>
+<span id="cb41-5"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(do_stuff(pd.Series([<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>])))</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>2.0
+2.0</code></pre>
+</div>
+</div>
+<p>notice how we called <code>user1.test()</code> <strong>without passing an extra argument</strong>? This is because Python is automatically passing the instance. It’s the equivalent of doing this (<strong>never do this</strong>):</p>
+<div id="8b163d53" class="cell" data-execution_count="17">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1">User.whoami(user1)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>This is : &lt;__main__.User object at 0x000001B1AD8D4590&gt;</code></pre>
+</div>
+</div>
+<p>in fact, if we define a method without a first parameter, it will fail when we call it:</p>
+<div id="5bf4beeb" class="cell" data-execution_count="18">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> TestClass:</span>
+<span id="cb45-2">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> test():</span>
+<span id="cb45-3">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">pass</span>  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Don't do anything</span></span>
+<span id="cb45-4"></span>
+<span id="cb45-5">t <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> TestClass()</span>
+<span id="cb45-6">t.test()  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Fails: "TypeError: test() takes 0 positional arguments but 1 was given"</span></span></code></pre></div>
+</details>
+</div>
+<p>this first parameter can be called anything, but <strong>everybody uses <code>self</code></strong>. Remember, conventions are important to minimize surprise and enhance collaboration!</p>
+</section>
+<section id="intermezzo-f-strings" class="level3">
+<h3 class="anchored" data-anchor-id="intermezzo-f-strings">intermezzo: f-strings</h3>
+<div id="669cec83" class="cell" data-execution_count="19">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb46" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb46-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"This is </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>user1<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Python &gt;= 3.6</span></span>
+<span id="cb46-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This is </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{}</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">format</span>(user1))  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Python &lt; 3.6, equivalent</span></span>
+<span id="cb46-3"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(User.whoami(user1))  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># DON'T use! (Although it's equivalent)   </span></span>
+<span id="cb46-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># %timeit User.whoami(user1)  # They have about the same performance </span></span>
+<span id="cb46-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># %timeit user1.whoami()</span></span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>This is &lt;__main__.User object at 0x000001B1AD8D4590&gt;
+This is &lt;__main__.User object at 0x000001B1AD8D4590&gt;
+This is : &lt;__main__.User object at 0x000001B1AD8D4590&gt;
+None</code></pre>
+</div>
+</div>
+</section>
+<section id="initializing-our-instances" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="initializing-our-instances">initializing our instances</h3>
+<p>The ellipsis (<code>...</code>) is a built-in constant in Python. It’s an instance of the <code>ellipsis</code> (dấu chấm lửng) class.</p>
+<div id="dd7c9d48" class="cell" data-execution_count="20">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb48" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb48-1">...</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>Ellipsis</code></pre>
+</div>
+</div>
+<p>common uses of ellipsis:</p>
+<ul>
+<li>as a placeholder in function definitions or class bodies</li>
+<li>in type hinting (especially for variable-length tuples)</li>
+<li>in slicing operations (especially for multidimensional arrays in libraries like NumPy)</li>
+</ul>
+<div id="9042a8b1" class="cell" data-execution_count="21">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb50-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># As a placeholder</span></span>
+<span id="cb50-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> function_to_be_implemented_later():</span>
+<span id="cb50-3">    ...</span>
+<span id="cb50-4"></span>
+<span id="cb50-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># In type hinting</span></span>
+<span id="cb50-6"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> typing <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> Tuple</span>
+<span id="cb50-7"></span>
+<span id="cb50-8"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> process_points(<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>points: Tuple[<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">int</span>, ...]) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>:</span>
+<span id="cb50-9">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> point <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> points:</span>
+<span id="cb50-10">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Processing point: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>point<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb50-11"></span>
+<span id="cb50-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Usage</span></span>
+<span id="cb50-13">process_points((<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>), (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>), (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>,))</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Processing point: (1, 2)
+Processing point: (3, 4, 5)
+Processing point: (6,)</code></pre>
+</div>
+</div>
+<div id="82041adf" class="cell" data-execution_count="22">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb52" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb52-1">user1.this_property <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> ...  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># "99", whatever</span></span>
+<span id="cb52-2">user1.this_property</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>Ellipsis</code></pre>
+</div>
+</div>
+<p>however, this is considered a bad practice, and can confuse editors and static analysis tools. These properties should be specified on creation, in a way that I cannot have a user without <code>name</code> and <code>signup_date</code>. Python provides us a special method, <code>__init__</code> (this should not be confused with file <code>__init__.py</code> we put to project to tell Python our code is a package), that <strong>initializes</strong><sup>1</sup> the object:</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;This philosophy used to be summarized by the sentence “we are all consenting adults here”, which is nowadays being less used.</p></div></div><div id="ab86dd9f" class="cell" data-execution_count="23">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb54" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb54-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> User:</span>
+<span id="cb54-2">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># "dunder init" = double underscore init</span></span>
+<span id="cb54-3">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, name, signup_date):</span>
+<span id="cb54-4">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> name</span>
+<span id="cb54-5">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.signup_date <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> signup_date</span></code></pre></div>
+</details>
+</div>
+<div id="9423fb8d" class="cell" data-execution_count="24">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb55" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb55-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> datetime <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> dt</span>
+<span id="cb55-2">user1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> User(name<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"John Doe"</span>, signup_date<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>dt.datetime.now())</span>
+<span id="cb55-3"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(user1.name, user1.signup_date, sep<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>John Doe
+2024-08-01 23:07:08.587740</code></pre>
+</div>
+</div>
+<p>that’s something! However, there are several things we can improve:</p>
+<ul>
+<li>it can be cumbersome to specify the date every time, and it would be nice to have some default.</li>
+<li>the default representation of the instances contains some hexadecimal memory address and nothing else. It would be nice to at least see the user name and the signup date</li>
+<li>nothing stops me from changing the name and signup_date of a existing user:</li>
+</ul>
+</section>
+<section id="exercise" class="level3">
+<h3 class="anchored" data-anchor-id="exercise">exercise</h3>
+<ul>
+<li>make <code>signup_date</code> optional by providing a default value;</li>
+<li>make the <code>__repr__</code> method return a string containing the <code>name</code> and <code>signup_date</code>, which will override the default.</li>
+</ul>
+<div id="fd72f5b4" class="cell" data-execution_count="25">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb57" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb57-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> User:</span>
+<span id="cb57-2">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, name, signup_date<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>):</span>
+<span id="cb57-3">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> signup_date <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">is</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>:</span>
+<span id="cb57-4">            signup_date <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> dt.datetime.now() <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Watch out with default parameters! They are created when the function is defined.</span></span>
+<span id="cb57-5"></span>
+<span id="cb57-6">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> name</span>
+<span id="cb57-7">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.signup_date <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> signup_date</span>
+<span id="cb57-8"></span>
+<span id="cb57-9">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__repr__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb57-10">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"User(name='</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>name<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">', signup_date=</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">repr</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.signup_date)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">)"</span></span></code></pre></div>
+</details>
+</div>
+<div id="bd10d931" class="cell" data-execution_count="26">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb58" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb58-1">user1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> User(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"John Doe"</span>)</span>
+<span id="cb58-2">user1</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>User(name='John Doe', signup_date=datetime.datetime(2024, 8, 1, 23, 7, 8, 618751))</code></pre>
+</div>
+</div>
+</section>
+<section id="extra-date-formatting" class="level3">
+<h3 class="anchored" data-anchor-id="extra-date-formatting">extra: date formatting</h3>
+<div id="fc4b84ad" class="cell" data-execution_count="27">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb60" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb60-1">dt.datetime.now().isoformat()  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ISO 8601</span></span>
+<span id="cb60-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># If you don't like it, there's http://strftime.org/</span></span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<pre><code>'2024-08-01T23:07:08.625045'</code></pre>
+</div>
+</div>
+<div id="b23b8c74" class="cell" data-execution_count="28">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb62" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb62-1">user1.signup_date.strftime(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"%Y ::: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%d</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<pre><code>'2024 ::: 01'</code></pre>
+</div>
+</div>
+</section>
+<section id="protecting-properties" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="protecting-properties">protecting properties</h3>
+<p>in Python, there are <em>no private attributes</em> (neither properties nor methods), and in fact everything can be accessed <sup>2</sup>. However, we can “hide” them by default in autocomplete and other environments by using a leading underscore <code>_</code>: this is usually called <strong>protected variables</strong>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;This philosophy used to be summarized by the sentence “we are all consenting adults here”, which is nowadays being less used.</p></div></div><p>there is a common pattern in which, if I want to make some property read-only, we can:</p>
+<ul>
+<li>make it protected</li>
+<li>create a “getter” using the <span class="citation" data-cites="property">@property</span> decorator, which gets the value of the protected property with a public name</li>
+</ul>
+<div id="b008d693" class="cell" data-execution_count="29">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb64" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb64-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> User:</span>
+<span id="cb64-2">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, name, signup_date<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>):</span>
+<span id="cb64-3">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> signup_date <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">is</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>:</span>
+<span id="cb64-4">            signup_date <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> dt.datetime.now()</span>
+<span id="cb64-5"></span>
+<span id="cb64-6">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>._name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> name</span>
+<span id="cb64-7">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>._signup_date <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> signup_date</span>
+<span id="cb64-8"></span>
+<span id="cb64-9">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@property</span></span>
+<span id="cb64-10">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> name(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb64-11">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>._name</span>
+<span id="cb64-12"></span>
+<span id="cb64-13">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@property</span></span>
+<span id="cb64-14">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> signup_date(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb64-15">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>._signup_date</span>
+<span id="cb64-16"></span>
+<span id="cb64-17">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__repr__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb64-18">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"User(name='</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>name<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">', signup_date='</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>signup_date<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">')"</span></span></code></pre></div>
+</details>
+</div>
+<div id="e9a3b5f8" class="cell" data-execution_count="30">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb65" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb65-1">user1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> User(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Tuan Le"</span>)</span>
+<span id="cb65-2">user1.name</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>'Tuan Le'</code></pre>
+</div>
+</div>
+<div id="9fb2282d" class="cell" data-execution_count="31">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb67" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb67-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># this wont work: "AttributeError: can't set attribute"</span></span>
+<span id="cb67-2">user1.name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Tan Le"</span></span></code></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you see tutorials mentioning “true private variables”, they are wrong!</p>
+</div>
+</div>
+<div id="88ed0501" class="cell" data-execution_count="32">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb68" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb68-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> Test:</span>
+<span id="cb68-2">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, name):</span>
+<span id="cb68-3">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.__name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> name  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Not what you think!</span></span>
+<span id="cb68-4">t1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Test(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This name"</span>)</span></code></pre></div>
+</details>
+</div>
+<div id="e79d62f4" class="cell" data-execution_count="33">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb69" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb69-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># this wont work</span></span>
+<span id="cb69-2">t1.__name</span></code></pre></div>
+</details>
+</div>
+<div id="ed82f250" class="cell" data-execution_count="34">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb70" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb70-1">t1._Test__name  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># These are *NOT* "private" properties</span></span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="26">
+<pre><code>'This name'</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The behavior you’re experiencing is due to a feature in Python called “name mangling” for private attributes. Let’s break down what’s happening:</p>
+<p>Double underscore prefix:</p>
+<ul>
+<li>When you define an attribute with a double underscore prefix (__) in a class, Python automatically mangles the name to avoid naming conflicts in inherited classes.</li>
+<li>Name mangling process: Python changes the name from __name to _ClassName__name. In your case, it becomes _Test__name.</li>
+<li>Accessing the attribute: Because of this name mangling, you can’t access t1.__name directly. Instead, you would need to use the mangled name.</li>
+</ul>
+<div id="950c80df" class="cell" data-execution_count="35">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb72" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb72-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> Test:</span>
+<span id="cb72-2">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, name):</span>
+<span id="cb72-3">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.__name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> name  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># This gets mangled</span></span>
+<span id="cb72-4"></span>
+<span id="cb72-5">t1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Test(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This name"</span>)</span>
+<span id="cb72-6"></span>
+<span id="cb72-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># This will raise an AttributeError</span></span>
+<span id="cb72-8"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">try</span>:</span>
+<span id="cb72-9">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(t1.__name)</span>
+<span id="cb72-10"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">except</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">AttributeError</span> <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> e:</span>
+<span id="cb72-11">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"AttributeError: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>e<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb72-12"></span>
+<span id="cb72-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># This will work</span></span>
+<span id="cb72-14"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(t1._Test__name)</span>
+<span id="cb72-15"></span>
+<span id="cb72-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># You can see all attributes, including mangled ones</span></span>
+<span id="cb72-17"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">dir</span>(t1))</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>AttributeError: 'Test' object has no attribute '__name'
+This name
+['_Test__name', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__']</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="inheritance" class="level2">
+<h2 class="anchored" data-anchor-id="inheritance">inheritance</h2>
+<div id="d54bc550" class="cell" data-execution_count="36">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb74" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb74-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">class</span> SpecialUser(User):</span>
+<span id="cb74-2">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, name, age, signup_date<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>):</span>
+<span id="cb74-3">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Initializes self._name and self._signup_date</span></span>
+<span id="cb74-4">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">super</span>().<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>(name, signup_date)</span>
+<span id="cb74-5"></span>
+<span id="cb74-6">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>._age <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> age</span>
+<span id="cb74-7"></span>
+<span id="cb74-8">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@property</span></span>
+<span id="cb74-9">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> age(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb74-10">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>._age</span>
+<span id="cb74-11"></span>
+<span id="cb74-12">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> greet(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb74-13">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Hi! I'm </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>name<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div>
+</details>
+</div>
+<div id="dd17b672" class="cell" data-execution_count="37">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb75" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb75-1">s_user1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> SpecialUser(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"John Doe"</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">27</span>)</span>
+<span id="cb75-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#s_user1</span></span></code></pre></div>
+</details>
+</div>
+<div id="bb9e12fb" class="cell" data-execution_count="38">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb76" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb76-1">s_user1.name</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="30">
+<pre><code>'John Doe'</code></pre>
+</div>
+</div>
+<div id="7742acf4" class="cell" data-execution_count="39">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb78" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb78-1">s_user1.greet()</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Hi! I'm John Doe</code></pre>
+</div>
+</div>
+<ul>
+<li>the diamond problem: <a href="https://www.wikiwand.com/en/Multiple_inheritance#/The_diamond_problem" class="uri">https://www.wikiwand.com/en/Multiple_inheritance#/The_diamond_problem</a></li>
+<li>???: <a href="https://softwareengineering.stackexchange.com/questions/238176/why-would-square-inheriting-from-rectangle-be-problematic-if-we-override-the-set/238184#238184" class="uri">https://softwareengineering.stackexchange.com/questions/238176/why-would-square-inheriting-from-rectangle-be-problematic-if-we-override-the-set/238184#238184</a></li>
+<li>liskov substitution principle: <a href="https://www.wikiwand.com/en/Liskov_substitution_principle" class="uri">https://www.wikiwand.com/en/Liskov_substitution_principle</a></li>
+<li>composition and inheritance: <a href="https://www.thedigitalcatonline.com/blog/2014/08/20/python-3-oop-part-3-delegation-composition-and-inheritance/" class="uri">https://www.thedigitalcatonline.com/blog/2014/08/20/python-3-oop-part-3-delegation-composition-and-inheritance/</a></li>
+</ul>
+<section id="more-special-methods" class="level3">
+<h3 class="anchored" data-anchor-id="more-special-methods">more special methods</h3>
+<p>go search for python data model</p>
+</section>
 </section>
 </section>
 <section id="flask" class="level1">
 <h1>09&amp;10 <a href="https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/09-10_flask.ipynb">flask</a></h1>
+<ul>
+<li>flask is a “lightweight framework” or a “microframework”. “It is designed to make getting started quick and easy, with the ability to scale up to complex applications”, and therefore requires less context to get started with;</li>
+<li>django is a “batteries included” framework that is more focused on good practices and encouraging a “clean, pragmatic design”. It’s more complex and requires more experience to master.</li>
+</ul>
 </section>
 <section id="conclusion" class="level1">
 <h1><a href="https://github.com/astrojuanlu/ie-mbd-advanced-python/blob/main/sessions/99_conclusion.ipynb">conclusion</a></h1>
@@ -5186,14 +6271,14 @@ font-style: inherit;">"tokenize"</span>]</span></code></pre></div>
 <li><a href="https://www.atlassian.com/git/tutorials/rewriting-history">Git commit –amend</a>, rewriting history;</li>
 <li><a href="https://packaging.python.org/en/latest/tutorials/packaging-projects/">The right way to distribute Python code</a></li>
 <li><a href="https://docs.python.org/3/tutorial/modules.html#packages">Python packaging</a></li>
-<li><a href="https://docs.pytest.org/en/8.2.x/">Pytest</a>;</li>
-<li></li>
+<li><a href="https://docs.pytest.org/en/8.2.x/">Pytest</a>.</li>
 </ol>
 
 
 <!-- -->
 
 </section>
+
 
  ]]></description>
   <category>python</category>
