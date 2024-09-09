@@ -10,7 +10,112 @@
 <atom:link href="https://lktuan.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>I am a Risk Modeler 🚀</description>
 <generator>quarto-1.4.554</generator>
-<lastBuildDate>Wed, 07 Aug 2024 17:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 08 Sep 2024 17:00:00 GMT</lastBuildDate>
+<item>
+  <title>Reactive dashboard with Shiny in Python</title>
+  <dc:creator>Tuan Le Khac</dc:creator>
+  <link>https://lktuan.github.io/blog/2024-09-09-python-shiny/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="set-up-play-with-a-template" class="level1">
+
+</section>
+<section id="build-from-the-scratch" class="level1">
+<h1>Build from the scratch</h1>
+<section id="simple-ui" class="level2">
+<h2 class="anchored" data-anchor-id="simple-ui">Simple <code>ui</code></h2>
+<div id="751de049" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> shiny.express <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> ui</span>
+<span id="cb1-2"></span>
+<span id="cb1-3">ui.h1(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"My Dashboard"</span>)</span>
+<span id="cb1-4"></span>
+<span id="cb1-5">ui.p(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This is sometext"</span>)</span></code></pre></div>
+</details>
+</div>
+</section>
+<section id="lets-render-something" class="level2">
+<h2 class="anchored" data-anchor-id="lets-render-something">Let’s <code>render</code> something</h2>
+<div id="495f4bbe" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> shiny.express <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> ui, render</span>
+<span id="cb2-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> pathlib <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> Path</span>
+<span id="cb2-3"></span>
+<span id="cb2-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pandas <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pd</span>
+<span id="cb2-5"></span>
+<span id="cb2-6">file_path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Path(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">__file__</span>).parent <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"penguins.csv"</span></span>
+<span id="cb2-7">df <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.read_csv(file_path)</span>
+<span id="cb2-8"></span>
+<span id="cb2-9">ui.h1(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"My Dashboard"</span>)</span>
+<span id="cb2-10"></span>
+<span id="cb2-11">ui.p(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This is sometext"</span>)</span>
+<span id="cb2-12"></span>
+<span id="cb2-13"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@render.data_frame</span></span>
+<span id="cb2-14"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> data():    </span>
+<span id="cb2-15">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> df</span></code></pre></div>
+</details>
+</div>
+</section>
+<section id="lets-create-a-filter-input" class="level2">
+<h2 class="anchored" data-anchor-id="lets-create-a-filter-input">Let’s create a filter, <code>input</code></h2>
+
+
+<!-- -->
+
+</section>
+</section>
+
+ ]]></description>
+  <category>math</category>
+  <guid>https://lktuan.github.io/blog/2024-09-09-python-shiny/</guid>
+  <pubDate>Sun, 08 Sep 2024 17:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Note on Mathematics as the Universal Language of Nature</title>
   <dc:creator>Tuan Le Khac</dc:creator>
@@ -21441,85 +21546,6 @@ font-style: inherit;">5</span>)</span></code></pre></div>
   <guid>https://lktuan.github.io/blog/2024-04-19-qej-1/</guid>
   <pubDate>Tue, 23 Apr 2024 17:00:00 GMT</pubDate>
   <media:content url="https://lktuan.github.io/blog/2024-04-19-qej-1/julia_logo.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>I am starting training Brazilian Jiu-jitsu</title>
-  <dc:creator>Tuan Le Khac</dc:creator>
-  <link>https://lktuan.github.io/blog/2024-02-28-bjj/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p>It was 2018 when I first stumbled upon the term ‘BJJ’ when I joined a martial discussion group named <a href="https://www.facebook.com/groups/1384082055164738">“DOG Brothers Team Vietnam”</a>. There was an active club named <a href="https://www.facebook.com/RoninBjjHanoi/">“RONIN BJJ Hanoi”</a>, but I never tried to find out what BJJ was.</p>
-<p>As an <a href="https://en.wikipedia.org/wiki/Somatotype_and_constitutional_psychology#The_three_types"><em>ectomorphic</em></a>, I’m 1.72 meters tall and weigh only 52kg. My strength lies in <strong>endurance</strong>, not <strong>conditioning</strong><sup>1</sup>. I can hike or walk for hours, even up to 20 kilometers. However, playing left-back in a 5-a-side football match for 15 minutes straight would be a challenge.</p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;<strong>Endurance</strong> is the ability to <strong><em>maintain</em></strong> a certain effort with minimal fatigue, while <strong>conditioning</strong> is the ability to <strong><em>repeat</em></strong> a certain effort with minimal fatigue. See this <a href="https://www.ypsi.de/blogs/english-articles/endurance-vs-conditioning-the-biggest-misconception-in-training-for-sports">article</a>.</p></div></div><p>So upgrade my <strong>body composition</strong> and <strong>physical strength</strong> is one task in my this year to-do-list. I contacted the Dog Brother club and inquired about <em>Kickboxing</em> class, as I’m not a fan of gyms and don’t want to bulk up. Fortunately, I spoke with Head Coach Vu Dinh Tien, a BJJ expert and one of the pioneers of BJJ in Vietnam. After learning about my goals, Coach Tien recommended BJJ. He explained that BJJ focuses on isometric strength (holding positions) and grappling-specific strength (leverage and technique), which builds lean muscle and core strength, making it a better fit for my desire to achieve a toned physique.</p>
-<p>This is also the short comparision between Brazillian Jiu-jitsu &amp; Kickboxing that Gemini gave me:</p>
-<table class="table-striped table-hover table">
-<colgroup>
-<col style="width: 21%">
-<col style="width: 38%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Feature</th>
-<th style="text-align: left;">BJJ</th>
-<th style="text-align: left;">Kickboxing</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Body Form Focus</td>
-<td style="text-align: left;">Lean muscle, core strength</td>
-<td style="text-align: left;">Muscle mass, sculpted physique</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Weight Impact</td>
-<td style="text-align: left;">Can aid weight loss</td>
-<td style="text-align: left;">Excellent for burning calories</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Strength Focus</td>
-<td style="text-align: left;">Isometric, grappling-specific</td>
-<td style="text-align: left;">Explosive power, speed</td>
-</tr>
-</tbody>
-</table>
-<p>He convinced me so that’s how I started training BJJ! 🔥🔥🔥</p>
-<div>
-
-</div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://lktuan.github.io/blog/2024-02-28-bjj/soi_bjj.jpg" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption>My very first day training BJJ, me on the top-right corner ↗, photo credit to <a href="https://www.facebook.com/soibjj">Sói Jiu-jitsu</a></figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<p>The club boasts a friendly atmosphere, with many seasoned athletes who’ve been training for years. They often take the time to help newbies like me during training sessions. Sometimes we also have head coach Tien in the class, his insights on how we and our opponents react in different situations are fascinating ~ we follow principles, not movements. We practice to develop muscle memory for various moves, but more importantly, we learn the principles that guide us in developing strategies for specific games or situations. Just like football, BJJ emphasizes positional control, but the key lies in understanding the underlying principles to adapt strategies in any situation.</p>
-<p>As of June, I’ve been training in BJJ for almost 4 months. Although I did not gain significant weight because my nutrition did not meet the needs of exercise, my physical strength has improved significantly. In rolling, I was able to do basic control and escape control movements, but still didn’t know how to control my explosive energy during a match. I often use my muscles too much instead of <strong>leverage</strong> my body weight at the beginning of the match, leading to a rapid decline in fitness and losing position at the end. This definitely takes more time to improve.</p>
-<p>This article is just my experience so far, so please don’t take the headline too seriously. Let’s just say, I’m not quite at the point where I size up a bigger guy and say (even think): <code>how interesting!</code> lol. (see this <a href="https://www.facebook.com/watch/?v=573772426504379">video</a> for how interesting a BJJ expert handles a bigger guy with nearly 30kg gap weight)</p>
-<p>Happy training!</p>
-<p>Tuan</p>
-
-
-<!-- -->
-
-
-
- ]]></description>
-  <category>life</category>
-  <category>bjj</category>
-  <guid>https://lktuan.github.io/blog/2024-02-28-bjj/</guid>
-  <pubDate>Tue, 27 Feb 2024 17:00:00 GMT</pubDate>
-  <media:content url="https://lktuan.github.io/blog/2024-02-28-bjj/how_cool_is_a_bigger_guy.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>

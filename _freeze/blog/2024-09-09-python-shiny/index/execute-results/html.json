@@ -1,0 +1,12 @@
+{
+  "hash": "c3cc5e75fda0166ce045b04ff641df8e",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"Reactive dashboard with Shiny in Python\"\ndescription: \"tutorial by TalkPython\"\nauthor:\n  - name: \"Tuan Le Khac\"\n    url: https://lktuan.github.io/\ncategories: [math] \n# image: rs_portrait.png\ndate: 09-09-2024\ndate-modified: 09-09-2024\ntoc: true\n---\n\n# Set up & play with a template\n\n# Build from the scratch\n\n## Simple `ui`\n\n::: {#751de049 .cell execution_count=1}\n``` {.python .cell-code}\nfrom shiny.express import ui\n\nui.h1(\"My Dashboard\")\n\nui.p(\"This is sometext\")\n```\n:::\n\n\n## Let's `render` something\n\n::: {#495f4bbe .cell execution_count=2}\n``` {.python .cell-code}\nfrom shiny.express import ui, render\nfrom pathlib import Path\n\nimport pandas as pd\n\nfile_path = Path(__file__).parent / \"penguins.csv\"\ndf = pd.read_csv(file_path)\n\nui.h1(\"My Dashboard\")\n\nui.p(\"This is sometext\")\n\n@render.data_frame\ndef data():    \n    return df\n```\n:::\n\n\n## Let's create a filter, `input`\n\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}
