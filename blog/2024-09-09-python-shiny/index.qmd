@@ -1,0 +1,50 @@
+---
+title: "Reactive dashboard with Shiny in Python"
+description: "tutorial by TalkPython"
+author:
+  - name: "Tuan Le Khac"
+    url: https://lktuan.github.io/
+categories: [math] 
+# image: rs_portrait.png
+date: 09-09-2024
+date-modified: 09-09-2024
+toc: true
+---
+
+# Set up & play with a template
+
+# Build from the scratch
+
+## Simple `ui`
+```{python}
+#| eval: false
+from shiny.express import ui
+
+ui.h1("My Dashboard")
+
+ui.p("This is sometext")
+
+```
+
+## Let's `render` something
+
+```{python}
+#| eval: false
+from shiny.express import ui, render
+from pathlib import Path
+
+import pandas as pd
+
+file_path = Path(__file__).parent / "penguins.csv"
+df = pd.read_csv(file_path)
+
+ui.h1("My Dashboard")
+
+ui.p("This is sometext")
+
+@render.data_frame
+def data():    
+    return df
+```
+
+## Let's create a filter, `input`
