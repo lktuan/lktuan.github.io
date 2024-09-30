@@ -5,17 +5,18 @@ author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
 categories: [math] 
-# image: rs_portrait.png
+image: python_shiny.jpg
 date: 09-09-2024
-date-modified: 09-09-2024
+date-modified: 09-13-2024
 toc: true
 ---
 
-# Set up & play with a template
+# 1. Set up & play with a template
 
-# Build from the scratch
+After creating a `.venv` - virtual environment, activating it, we can 
+# 2. Build from the scratch
 
-## Simple `ui`
+## simple `ui`
 ```{python}
 #| eval: false
 from shiny.express import ui
@@ -26,7 +27,7 @@ ui.p("This is sometext")
 
 ```
 
-## Let's `render` something
+## let's `render` something
 
 ```{python}
 #| eval: false
@@ -38,13 +39,55 @@ import pandas as pd
 file_path = Path(__file__).parent / "penguins.csv"
 df = pd.read_csv(file_path)
 
-ui.h1("My Dashboard")
-
-ui.p("This is sometext")
-
 @render.data_frame
 def data():    
     return df
 ```
 
-## Let's create a filter, `input`
+## let's create a filter, `input`
+
+```{python}
+#| eval: false
+from shiny.express import ui, render, input
+from pathlib import Path
+import pandas as pd
+
+file_path = Path(__file__).parent / "penguins.csv"
+df = pd.read_csv(file_path)
+ui.input_slider("mass", "Max body mass", 2000, 8000, 6000)
+
+@render.data_frame
+def data():    
+    return df[df['body_mass_g'] < input.mass()]
+```
+
+## and create a plot with `plotly`
+
+```{python}
+#| eval: false
+import plotly.express as px
+@render_plotly
+def plot():
+    df_subset = df[df['body_mass_g'] < input.mass()] # we add this filter to make sure this plot and the table above are presenting the same data
+    return px.scatter(df_subset, x="bill_depth_mm", y = "bill_length_mm")
+```
+
+# 3. Basic User Interfaces
+
+# 4. Reactivity
+
+# 5. Reactive effects and events
+
+# 6. Advanced User Interfaces
+
+# 7. Publishing
+
+# 8. Wrap up
+
+# Sources
+
+1. <https://training.talkpython.fm/courses/details/reactive-web-dashboards-with-shiny-for-data-science>;
+2. <https://talkpython.github.io/reactive-web-dashboards-with-shiny-course/>;
+3. <https://shiny.posit.co/py/>;
+4. <https://shiny.posit.co/py/templates/dashboard/index.html>;
+5. <https://medium.com/berk-orbay/deploying-shinypy-0fa449a019e0>
