@@ -222,16 +222,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#calculated-columns" id="toc-calculated-columns" class="nav-link active" data-scroll-target="#calculated-columns">1. Calculated columns</a></li>
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">1.1.</a></li>
   <li><a href="#basic-measures" id="toc-basic-measures" class="nav-link" data-scroll-target="#basic-measures">2. Basic measures</a></li>
-  <li><a href="#variables" id="toc-variables" class="nav-link" data-scroll-target="#variables">3. Variables</a></li>
-  <li><a href="#the-calculate-function" id="toc-the-calculate-function" class="nav-link" data-scroll-target="#the-calculate-function">2. The <code>CALCULATE()</code> function</a></li>
-  <li><a href="#the-filter-function" id="toc-the-filter-function" class="nav-link" data-scroll-target="#the-filter-function">3. The <code>FILTER()</code> function</a></li>
-  <li><a href="#the-values-function" id="toc-the-values-function" class="nav-link" data-scroll-target="#the-values-function">. The <code>VALUES()</code> function</a></li>
-  <li><a href="#dax-queries" id="toc-dax-queries" class="nav-link" data-scroll-target="#dax-queries">. DAX queries</a></li>
-  <li><a href="#calendars-and-dates" id="toc-calendars-and-dates" class="nav-link" data-scroll-target="#calendars-and-dates">. Calendars and dates</a></li>
-  <li><a href="#advanced-date-functions" id="toc-advanced-date-functions" class="nav-link" data-scroll-target="#advanced-date-functions">. Advanced date functions</a></li>
-  <li><a href="#understanding-earlier" id="toc-understanding-earlier" class="nav-link" data-scroll-target="#understanding-earlier">. Understanding <code>EARLIER()</code></a></li>
+  <li><a href="#the-calculate-function" id="toc-the-calculate-function" class="nav-link" data-scroll-target="#the-calculate-function">3. The <code>CALCULATE()</code> function</a></li>
+  <li><a href="#the-values-function" id="toc-the-values-function" class="nav-link" data-scroll-target="#the-values-function">4. The <code>VALUES()</code> function</a></li>
+  <li><a href="#the-filter-function" id="toc-the-filter-function" class="nav-link" data-scroll-target="#the-filter-function">5. The <code>FILTER()</code> function</a></li>
+  <li><a href="#understanding-earlier" id="toc-understanding-earlier" class="nav-link" data-scroll-target="#understanding-earlier">6. Understanding <code>EARLIER()</code></a></li>
+  <li><a href="#calendars-and-dates" id="toc-calendars-and-dates" class="nav-link" data-scroll-target="#calendars-and-dates">7. Calendars and dates</a></li>
+  <li><a href="#advanced-date-functions" id="toc-advanced-date-functions" class="nav-link" data-scroll-target="#advanced-date-functions">8. Advanced date functions</a></li>
+  <li><a href="#dax-queries" id="toc-dax-queries" class="nav-link" data-scroll-target="#dax-queries">9. DAX queries</a></li>
+  <li><a href="#variables" id="toc-variables" class="nav-link" data-scroll-target="#variables">10. Variables</a></li>
   </ul>
 </nav>
     </div>
@@ -246,45 +245,130 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="calculated-columns" class="level1">
 <h1>1. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/">Calculated columns</a></h1>
 <p>Including 11 exercises:</p>
+<section id="operations-in-row-context" class="level4">
+<h4 class="anchored" data-anchor-id="operations-in-row-context">1 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5086/">Operations in Row context</a></h4>
+<p>It’s pretty simple to calculate the <em>total floors</em>, just find the <strong>New column</strong> under <strong>Table tools</strong>, and sum the floors up:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1"></a>Total floors = Building[Floors above ground] + Building[Floors below ground]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="section" class="level1">
-<h1>1.1.</h1>
+<section id="div0" class="level4">
+<h4 class="anchored" data-anchor-id="div0">2 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4409/">!DIV0</a></h4>
+<p>And for <em>Average floor height</em>, we just need to use “/”, or better practice, use <code>DIVIDE()</code>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1"></a>Average floor height = Building[Height m] / Building[Floors above ground]</span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a>-- or</span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a>Average floor height = DIVIDE(Building[Height m], Building[Floors above ground])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>For each column, we have column tools to format the data.</p>
+</section>
+<section id="flow-control-with-if-and-switch" class="level4">
+<h4 class="anchored" data-anchor-id="flow-control-with-if-and-switch">3 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5089/">Flow control with <code>IF()</code> and <code>SWITCH()</code></a></h4>
+<p>The <code>IF()</code> in DAX row context is pretty the same with Excel!</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1"></a>Has basement = IF(Building[Floors below ground] &gt; 0, "Yes", "No")</span>
+<span id="cb3-2"><a href="#cb3-2"></a>Century = IF(Building[Year Opened] &lt; 2001, "20th Century", "21st Century")</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Do you ever use <code>SWITCH()</code> in Excel, it’s the same in PBI:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb4-1"><a href="#cb4-1"></a>Category =</span>
+<span id="cb4-2"><a href="#cb4-2"></a>SWITCH (</span>
+<span id="cb4-3"><a href="#cb4-3"></a>    TRUE (),</span>
+<span id="cb4-4"><a href="#cb4-4"></a>    Building[Height m] &lt; 400, "Tiny",</span>
+<span id="cb4-5"><a href="#cb4-5"></a>    Building[Height m] &lt; 500, "Small",</span>
+<span id="cb4-6"><a href="#cb4-6"></a>    Building[Height m] &lt; 600, "Medium",</span>
+<span id="cb4-7"><a href="#cb4-7"></a>    Building[Height m] &lt; 700, "Big",</span>
+<span id="cb4-8"><a href="#cb4-8"></a>    "Large"</span>
+<span id="cb4-9"><a href="#cb4-9"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="more-operations" class="level4">
+<h4 class="anchored" data-anchor-id="more-operations">4 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5088/">More operations</a></h4>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb5-1"><a href="#cb5-1"></a># This is simple</span>
+<span id="cb5-2"><a href="#cb5-2"></a>Tour length = Tour[End year] - Tour[Start year] + 1</span>
+<span id="cb5-3"><a href="#cb5-3"></a></span>
+<span id="cb5-4"><a href="#cb5-4"></a># With division operation, it's recommended to use DIVIDE() function:</span>
+<span id="cb5-5"><a href="#cb5-5"></a>Shows per year = DIVIDE(Tour[Shows], Tour[Tour length])</span>
+<span id="cb5-6"><a href="#cb5-6"></a>Avg show revenue = DIVIDE(Tour[Actual gross], Tour[Shows])</span>
+<span id="cb5-7"><a href="#cb5-7"></a>Avg attendance = DIVIDE(Tour[Attendance], Tour[Shows])</span>
+<span id="cb5-8"><a href="#cb5-8"></a>Avg ticket price = DIVIDE(Tour[Actual gross], Tour[Attendance])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="using-of-related" class="level4">
+<h4 class="anchored" data-anchor-id="using-of-related">5 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5091/">Using of <code>RELATED()</code></a></h4>
+<p>We can use “<strong>&amp;</strong>” or the <code>CONCANATE()</code> function to join texts (in row context), and use <code>RELATED()</code> to get data from other tables with a relationship set up.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb6-1"><a href="#cb6-1"></a>Name and location = CONCATENATE(Building[Building Name] &amp; ", ", RELATED(City[City]))</span>
+<span id="cb6-2"><a href="#cb6-2"></a></span>
+<span id="cb6-3"><a href="#cb6-3"></a>-- or if we want to include the Country name</span>
+<span id="cb6-4"><a href="#cb6-4"></a></span>
+<span id="cb6-5"><a href="#cb6-5"></a>Name and location =</span>
+<span id="cb6-6"><a href="#cb6-6"></a>CONCATENATE (</span>
+<span id="cb6-7"><a href="#cb6-7"></a>    Building[Building Name] &amp; ", ",</span>
+<span id="cb6-8"><a href="#cb6-8"></a>    RELATED ( City[City] ) &amp; ", "</span>
+<span id="cb6-9"><a href="#cb6-9"></a>        &amp; RELATED ( Country[Country] )</span>
+<span id="cb6-10"><a href="#cb6-10"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="handling-mismatch-with-related" class="level4">
+<h4 class="anchored" data-anchor-id="handling-mismatch-with-related">6 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4410/">Handling mismatch with <code>RELATED()</code></a></h4>
+<p>We can use <code>RELATED()</code> and <code>ISBLANK()</code> to refer and check if there any matching record is returned.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb7-1"><a href="#cb7-1"></a>Quadrant =</span>
+<span id="cb7-2"><a href="#cb7-2"></a>IF (</span>
+<span id="cb7-3"><a href="#cb7-3"></a>    ISBLANK ( RELATED ( Quadrants[QuadrantName] ) ),</span>
+<span id="cb7-4"><a href="#cb7-4"></a>    "No quadrant found",</span>
+<span id="cb7-5"><a href="#cb7-5"></a>    RELATED ( Quadrants[QuadrantName] )</span>
+<span id="cb7-6"><a href="#cb7-6"></a>)</span>
+<span id="cb7-7"><a href="#cb7-7"></a></span>
+<span id="cb7-8"><a href="#cb7-8"></a>Region =</span>
+<span id="cb7-9"><a href="#cb7-9"></a>IF (</span>
+<span id="cb7-10"><a href="#cb7-10"></a>    ISBLANK ( RELATED ( Regions[RegionName] ) ),</span>
+<span id="cb7-11"><a href="#cb7-11"></a>    "No region assigned",</span>
+<span id="cb7-12"><a href="#cb7-12"></a>    RELATED ( Regions[RegionName] )</span>
+<span id="cb7-13"><a href="#cb7-13"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="more-on-related" class="level4">
+<h4 class="anchored" data-anchor-id="more-on-related">6 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5092/">More on <code>RELATED()</code></a></h4>
+</section>
+<section id="context-transition-in-calculated-column" class="level4">
+<h4 class="anchored" data-anchor-id="context-transition-in-calculated-column">7 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4417/">Context transition in calculated column</a></h4>
+<p>The first one <em>Total sales</em> was calculated in <strong>Products</strong> table, simply interate all the table <strong>Purchase</strong>, multiply <em>quanity</em> by <em>price</em> to get the entire revenue:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb8-1"><a href="#cb8-1"></a>Total Sales = SUMX(Purchase, Purchase[Quantity] * Purchase[Price])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The second one - <em>Sales for product</em>, we want to calculate the coresponding sales for each product at the current row, so we just <strong>wrap</strong> the <code>CALCULATE()</code> function for the <strong>context transition</strong>:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb9-1"><a href="#cb9-1"></a>Sales for product =</span>
+<span id="cb9-2"><a href="#cb9-2"></a>CALCULATE (</span>
+<span id="cb9-3"><a href="#cb9-3"></a>    SUMX ( Purchase, Purchase[Quantity] * Purchase[Price] )</span>
+<span id="cb9-4"><a href="#cb9-4"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>And the final one:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb10-1"><a href="#cb10-1"></a>Product contribution = DIVIDE([Sales for product],[Total sales])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
 </section>
 <section id="basic-measures" class="level1">
 <h1>2. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/basic-measures/">Basic measures</a></h1>
 <p>Including 5 exercises:</p>
 </section>
-<section id="variables" class="level1">
-<h1>3. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/variables/">Variables</a></h1>
-<p>Including 3 exercises</p>
-</section>
 <section id="the-calculate-function" class="level1">
-<h1>2. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/filtering/">The <code>CALCULATE()</code> function</a></h1>
+<h1>3. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/filtering/">The <code>CALCULATE()</code> function</a></h1>
 <p>Including 16 exercises</p>
 </section>
-<section id="the-filter-function" class="level1">
-<h1>3. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/filter/">The <code>FILTER()</code> function</a></h1>
-<p>Including 4 exercises</p>
-</section>
 <section id="the-values-function" class="level1">
-<h1>. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/values-function/">The <code>VALUES()</code> function</a></h1>
+<h1>4. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/values-function/">The <code>VALUES()</code> function</a></h1>
 <p>Including 7 exercises</p>
 </section>
-<section id="dax-queries" class="level1">
-<h1>. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/dax-queries/">DAX queries</a></h1>
+<section id="the-filter-function" class="level1">
+<h1>5. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/filter/">The <code>FILTER()</code> function</a></h1>
+<p>Including 4 exercises</p>
+</section>
+<section id="understanding-earlier" class="level1">
+<h1>6. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/understanding-earlier/">Understanding <code>EARLIER()</code></a></h1>
 <p>Including 2 exercises</p>
 </section>
 <section id="calendars-and-dates" class="level1">
-<h1>. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calendars-and-dates/">Calendars and dates</a></h1>
+<h1>7. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calendars-and-dates/">Calendars and dates</a></h1>
 <p>Including 8 exercises</p>
 </section>
 <section id="advanced-date-functions" class="level1">
-<h1>. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/advanced-date-functions/">Advanced date functions</a></h1>
+<h1>8. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/advanced-date-functions/">Advanced date functions</a></h1>
 <p>Including 1 exercise</p>
 </section>
-<section id="understanding-earlier" class="level1">
-<h1>. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/understanding-earlier/">Understanding <code>EARLIER()</code></a></h1>
+<section id="dax-queries" class="level1">
+<h1>9. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/dax-queries/">DAX queries</a></h1>
 <p>Including 2 exercises</p>
+</section>
+<section id="variables" class="level1">
+<h1>10. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/variables/">Variables</a></h1>
+<p>Including 3 exercises</p>
 
 
 <!-- -->
@@ -752,62 +836,185 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="an">title:</span><span class="co"> "DAX exercises by WiseOwl Training"</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="an">description:</span><span class="co"> "I am trying to solve all 59 DAX exercises from WiseOwl Training Platform"</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="an">author:</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="an">categories:</span><span class="co"> [math] </span></span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="an">image:</span><span class="co"> wise_owl.jpg</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a><span class="an">date:</span><span class="co"> 09-30-2024</span></span>
-<span id="cb1-10"><a href="#cb1-10"></a><span class="an">date-modified:</span><span class="co"> 09-30-2024</span></span>
-<span id="cb1-11"><a href="#cb1-11"></a><span class="an">toc:</span><span class="co"> true</span></span>
-<span id="cb1-12"><a href="#cb1-12"></a><span class="co">---</span></span>
-<span id="cb1-13"><a href="#cb1-13"></a></span>
-<span id="cb1-14"><a href="#cb1-14"></a>Link to the challenge: <span class="ot">&lt;https://www.wiseowl.co.uk/power-bi/exercises/dax/&gt;</span></span>
-<span id="cb1-15"><a href="#cb1-15"></a></span>
-<span id="cb1-16"><a href="#cb1-16"></a><span class="fu"># 1. [Calculated columns](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/)</span></span>
-<span id="cb1-17"><a href="#cb1-17"></a></span>
-<span id="cb1-18"><a href="#cb1-18"></a>Including 11 exercises:</span>
-<span id="cb1-19"><a href="#cb1-19"></a></span>
-<span id="cb1-20"><a href="#cb1-20"></a><span class="fu"># 1.1. </span></span>
-<span id="cb1-21"><a href="#cb1-21"></a></span>
-<span id="cb1-22"><a href="#cb1-22"></a><span class="fu"># 2. [Basic measures](https://www.wiseowl.co.uk/power-bi/exercises/dax/basic-measures/)</span></span>
-<span id="cb1-23"><a href="#cb1-23"></a></span>
-<span id="cb1-24"><a href="#cb1-24"></a>Including 5 exercises:</span>
-<span id="cb1-25"><a href="#cb1-25"></a></span>
-<span id="cb1-26"><a href="#cb1-26"></a><span class="fu"># 3. [Variables](https://www.wiseowl.co.uk/power-bi/exercises/dax/variables/)</span></span>
-<span id="cb1-27"><a href="#cb1-27"></a></span>
-<span id="cb1-28"><a href="#cb1-28"></a>Including 3 exercises</span>
-<span id="cb1-29"><a href="#cb1-29"></a></span>
-<span id="cb1-30"><a href="#cb1-30"></a><span class="fu"># 2. [The `CALCULATE()` function](https://www.wiseowl.co.uk/power-bi/exercises/dax/filtering/)</span></span>
-<span id="cb1-31"><a href="#cb1-31"></a></span>
-<span id="cb1-32"><a href="#cb1-32"></a>Including 16 exercises</span>
-<span id="cb1-33"><a href="#cb1-33"></a></span>
-<span id="cb1-34"><a href="#cb1-34"></a><span class="fu"># 3. [The `FILTER()` function](https://www.wiseowl.co.uk/power-bi/exercises/dax/filter/)</span></span>
-<span id="cb1-35"><a href="#cb1-35"></a></span>
-<span id="cb1-36"><a href="#cb1-36"></a>Including 4 exercises</span>
-<span id="cb1-37"><a href="#cb1-37"></a></span>
-<span id="cb1-38"><a href="#cb1-38"></a><span class="fu"># . [The `VALUES()` function](https://www.wiseowl.co.uk/power-bi/exercises/dax/values-function/)</span></span>
-<span id="cb1-39"><a href="#cb1-39"></a></span>
-<span id="cb1-40"><a href="#cb1-40"></a>Including 7 exercises</span>
-<span id="cb1-41"><a href="#cb1-41"></a></span>
-<span id="cb1-42"><a href="#cb1-42"></a><span class="fu"># . [DAX queries](https://www.wiseowl.co.uk/power-bi/exercises/dax/dax-queries/)</span></span>
-<span id="cb1-43"><a href="#cb1-43"></a></span>
-<span id="cb1-44"><a href="#cb1-44"></a>Including 2 exercises</span>
-<span id="cb1-45"><a href="#cb1-45"></a></span>
-<span id="cb1-46"><a href="#cb1-46"></a><span class="fu"># . [Calendars and dates](https://www.wiseowl.co.uk/power-bi/exercises/dax/calendars-and-dates/)</span></span>
-<span id="cb1-47"><a href="#cb1-47"></a></span>
-<span id="cb1-48"><a href="#cb1-48"></a>Including 8 exercises</span>
-<span id="cb1-49"><a href="#cb1-49"></a></span>
-<span id="cb1-50"><a href="#cb1-50"></a><span class="fu"># . [Advanced date functions](https://www.wiseowl.co.uk/power-bi/exercises/dax/advanced-date-functions/)</span></span>
-<span id="cb1-51"><a href="#cb1-51"></a></span>
-<span id="cb1-52"><a href="#cb1-52"></a>Including 1 exercise</span>
-<span id="cb1-53"><a href="#cb1-53"></a></span>
-<span id="cb1-54"><a href="#cb1-54"></a><span class="fu"># . [Understanding `EARLIER()`](https://www.wiseowl.co.uk/power-bi/exercises/dax/understanding-earlier/)</span></span>
-<span id="cb1-55"><a href="#cb1-55"></a></span>
-<span id="cb1-56"><a href="#cb1-56"></a>Including 2 exercises</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1"></a><span class="co">---</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="an">title:</span><span class="co"> "DAX exercises by WiseOwl Training"</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="an">description:</span><span class="co"> "I am trying to solve all 59 DAX exercises from WiseOwl Training Platform"</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="an">author:</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
+<span id="cb11-6"><a href="#cb11-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
+<span id="cb11-7"><a href="#cb11-7"></a><span class="an">categories:</span><span class="co"> [math] </span></span>
+<span id="cb11-8"><a href="#cb11-8"></a><span class="an">image:</span><span class="co"> wise_owl.jpg</span></span>
+<span id="cb11-9"><a href="#cb11-9"></a><span class="an">date:</span><span class="co"> 09-30-2024</span></span>
+<span id="cb11-10"><a href="#cb11-10"></a><span class="an">date-modified:</span><span class="co"> 09-30-2024</span></span>
+<span id="cb11-11"><a href="#cb11-11"></a><span class="an">toc:</span><span class="co"> true</span></span>
+<span id="cb11-12"><a href="#cb11-12"></a><span class="co">---</span></span>
+<span id="cb11-13"><a href="#cb11-13"></a></span>
+<span id="cb11-14"><a href="#cb11-14"></a>Link to the challenge: <span class="ot">&lt;https://www.wiseowl.co.uk/power-bi/exercises/dax/&gt;</span></span>
+<span id="cb11-15"><a href="#cb11-15"></a></span>
+<span id="cb11-16"><a href="#cb11-16"></a><span class="fu"># 1. [Calculated columns](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/)</span></span>
+<span id="cb11-17"><a href="#cb11-17"></a></span>
+<span id="cb11-18"><a href="#cb11-18"></a>Including 11 exercises:</span>
+<span id="cb11-19"><a href="#cb11-19"></a></span>
+<span id="cb11-20"><a href="#cb11-20"></a><span class="fu">#### 1 [Operations in Row context](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5086/)</span></span>
+<span id="cb11-21"><a href="#cb11-21"></a></span>
+<span id="cb11-22"><a href="#cb11-22"></a>It's pretty simple to calculate the *total floors*, just find the **New column** under **Table tools**, and sum the floors up:</span>
+<span id="cb11-23"><a href="#cb11-23"></a></span>
+<span id="cb11-24"><a href="#cb11-24"></a><span class="in">```txt</span></span>
+<span id="cb11-25"><a href="#cb11-25"></a><span class="in">Total floors = Building[Floors above ground] + Building[Floors below ground]</span></span>
+<span id="cb11-26"><a href="#cb11-26"></a><span class="in">```</span></span>
+<span id="cb11-27"><a href="#cb11-27"></a></span>
+<span id="cb11-28"><a href="#cb11-28"></a><span class="fu">#### 2 [!DIV0](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4409/)</span></span>
+<span id="cb11-29"><a href="#cb11-29"></a></span>
+<span id="cb11-30"><a href="#cb11-30"></a>And for *Average floor height*, we just need to use "/", or better practice, use <span class="in">`DIVIDE()`</span>:</span>
+<span id="cb11-31"><a href="#cb11-31"></a></span>
+<span id="cb11-32"><a href="#cb11-32"></a><span class="in">```txt</span></span>
+<span id="cb11-33"><a href="#cb11-33"></a><span class="in">Average floor height = Building[Height m] / Building[Floors above ground]</span></span>
+<span id="cb11-34"><a href="#cb11-34"></a></span>
+<span id="cb11-35"><a href="#cb11-35"></a><span class="in">-- or</span></span>
+<span id="cb11-36"><a href="#cb11-36"></a></span>
+<span id="cb11-37"><a href="#cb11-37"></a><span class="in">Average floor height = DIVIDE(Building[Height m], Building[Floors above ground])</span></span>
+<span id="cb11-38"><a href="#cb11-38"></a><span class="in">```</span></span>
+<span id="cb11-39"><a href="#cb11-39"></a></span>
+<span id="cb11-40"><a href="#cb11-40"></a>For each column, we have column tools to format the data.</span>
+<span id="cb11-41"><a href="#cb11-41"></a></span>
+<span id="cb11-42"><a href="#cb11-42"></a><span class="fu">#### 3 [Flow control with `IF()` and `SWITCH()`](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5089/)</span></span>
+<span id="cb11-43"><a href="#cb11-43"></a></span>
+<span id="cb11-44"><a href="#cb11-44"></a>The <span class="in">`IF()`</span> in DAX row context is pretty the same with Excel!</span>
+<span id="cb11-45"><a href="#cb11-45"></a></span>
+<span id="cb11-46"><a href="#cb11-46"></a><span class="in">```txt</span></span>
+<span id="cb11-47"><a href="#cb11-47"></a><span class="in">Has basement = IF(Building[Floors below ground] &gt; 0, "Yes", "No")</span></span>
+<span id="cb11-48"><a href="#cb11-48"></a><span class="in">Century = IF(Building[Year Opened] &lt; 2001, "20th Century", "21st Century")</span></span>
+<span id="cb11-49"><a href="#cb11-49"></a><span class="in">```</span></span>
+<span id="cb11-50"><a href="#cb11-50"></a></span>
+<span id="cb11-51"><a href="#cb11-51"></a>Do you ever use <span class="in">`SWITCH()`</span> in Excel, it's the same in PBI:</span>
+<span id="cb11-52"><a href="#cb11-52"></a></span>
+<span id="cb11-53"><a href="#cb11-53"></a><span class="in">```txt</span></span>
+<span id="cb11-54"><a href="#cb11-54"></a><span class="in">Category =</span></span>
+<span id="cb11-55"><a href="#cb11-55"></a><span class="in">SWITCH (</span></span>
+<span id="cb11-56"><a href="#cb11-56"></a><span class="in">    TRUE (),</span></span>
+<span id="cb11-57"><a href="#cb11-57"></a><span class="in">    Building[Height m] &lt; 400, "Tiny",</span></span>
+<span id="cb11-58"><a href="#cb11-58"></a><span class="in">    Building[Height m] &lt; 500, "Small",</span></span>
+<span id="cb11-59"><a href="#cb11-59"></a><span class="in">    Building[Height m] &lt; 600, "Medium",</span></span>
+<span id="cb11-60"><a href="#cb11-60"></a><span class="in">    Building[Height m] &lt; 700, "Big",</span></span>
+<span id="cb11-61"><a href="#cb11-61"></a><span class="in">    "Large"</span></span>
+<span id="cb11-62"><a href="#cb11-62"></a><span class="in">)</span></span>
+<span id="cb11-63"><a href="#cb11-63"></a><span class="in">```</span></span>
+<span id="cb11-64"><a href="#cb11-64"></a></span>
+<span id="cb11-65"><a href="#cb11-65"></a><span class="fu">#### 4 [More operations](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5088/)</span></span>
+<span id="cb11-66"><a href="#cb11-66"></a></span>
+<span id="cb11-67"><a href="#cb11-67"></a><span class="in">```txt</span></span>
+<span id="cb11-68"><a href="#cb11-68"></a><span class="in"># This is simple</span></span>
+<span id="cb11-69"><a href="#cb11-69"></a><span class="in">Tour length = Tour[End year] - Tour[Start year] + 1</span></span>
+<span id="cb11-70"><a href="#cb11-70"></a></span>
+<span id="cb11-71"><a href="#cb11-71"></a><span class="in"># With division operation, it's recommended to use DIVIDE() function:</span></span>
+<span id="cb11-72"><a href="#cb11-72"></a><span class="in">Shows per year = DIVIDE(Tour[Shows], Tour[Tour length])</span></span>
+<span id="cb11-73"><a href="#cb11-73"></a><span class="in">Avg show revenue = DIVIDE(Tour[Actual gross], Tour[Shows])</span></span>
+<span id="cb11-74"><a href="#cb11-74"></a><span class="in">Avg attendance = DIVIDE(Tour[Attendance], Tour[Shows])</span></span>
+<span id="cb11-75"><a href="#cb11-75"></a><span class="in">Avg ticket price = DIVIDE(Tour[Actual gross], Tour[Attendance])</span></span>
+<span id="cb11-76"><a href="#cb11-76"></a><span class="in">```</span></span>
+<span id="cb11-77"><a href="#cb11-77"></a></span>
+<span id="cb11-78"><a href="#cb11-78"></a><span class="fu">#### 5 [Using of `RELATED()`](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5091/)</span></span>
+<span id="cb11-79"><a href="#cb11-79"></a></span>
+<span id="cb11-80"><a href="#cb11-80"></a>We can use "**&amp;**" or the <span class="in">`CONCANATE()`</span> function to join texts (in row context), and use <span class="in">`RELATED()`</span> to get data from other tables with a relationship set up.</span>
+<span id="cb11-81"><a href="#cb11-81"></a></span>
+<span id="cb11-82"><a href="#cb11-82"></a><span class="in">```txt</span></span>
+<span id="cb11-83"><a href="#cb11-83"></a><span class="in">Name and location = CONCATENATE(Building[Building Name] &amp; ", ", RELATED(City[City]))</span></span>
+<span id="cb11-84"><a href="#cb11-84"></a></span>
+<span id="cb11-85"><a href="#cb11-85"></a><span class="in">-- or if we want to include the Country name</span></span>
+<span id="cb11-86"><a href="#cb11-86"></a></span>
+<span id="cb11-87"><a href="#cb11-87"></a><span class="in">Name and location =</span></span>
+<span id="cb11-88"><a href="#cb11-88"></a><span class="in">CONCATENATE (</span></span>
+<span id="cb11-89"><a href="#cb11-89"></a><span class="in">    Building[Building Name] &amp; ", ",</span></span>
+<span id="cb11-90"><a href="#cb11-90"></a><span class="in">    RELATED ( City[City] ) &amp; ", "</span></span>
+<span id="cb11-91"><a href="#cb11-91"></a><span class="in">        &amp; RELATED ( Country[Country] )</span></span>
+<span id="cb11-92"><a href="#cb11-92"></a><span class="in">)</span></span>
+<span id="cb11-93"><a href="#cb11-93"></a><span class="in">```</span></span>
+<span id="cb11-94"><a href="#cb11-94"></a></span>
+<span id="cb11-95"><a href="#cb11-95"></a><span class="fu">#### 6 [Handling mismatch with `RELATED()`](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4410/)</span></span>
+<span id="cb11-96"><a href="#cb11-96"></a></span>
+<span id="cb11-97"><a href="#cb11-97"></a>We can use <span class="in">`RELATED()`</span> and <span class="in">`ISBLANK()`</span> to refer and check if there any matching record is returned.</span>
+<span id="cb11-98"><a href="#cb11-98"></a></span>
+<span id="cb11-99"><a href="#cb11-99"></a><span class="in">```txt</span></span>
+<span id="cb11-100"><a href="#cb11-100"></a><span class="in">Quadrant =</span></span>
+<span id="cb11-101"><a href="#cb11-101"></a><span class="in">IF (</span></span>
+<span id="cb11-102"><a href="#cb11-102"></a><span class="in">    ISBLANK ( RELATED ( Quadrants[QuadrantName] ) ),</span></span>
+<span id="cb11-103"><a href="#cb11-103"></a><span class="in">    "No quadrant found",</span></span>
+<span id="cb11-104"><a href="#cb11-104"></a><span class="in">    RELATED ( Quadrants[QuadrantName] )</span></span>
+<span id="cb11-105"><a href="#cb11-105"></a><span class="in">)</span></span>
+<span id="cb11-106"><a href="#cb11-106"></a></span>
+<span id="cb11-107"><a href="#cb11-107"></a><span class="in">Region =</span></span>
+<span id="cb11-108"><a href="#cb11-108"></a><span class="in">IF (</span></span>
+<span id="cb11-109"><a href="#cb11-109"></a><span class="in">    ISBLANK ( RELATED ( Regions[RegionName] ) ),</span></span>
+<span id="cb11-110"><a href="#cb11-110"></a><span class="in">    "No region assigned",</span></span>
+<span id="cb11-111"><a href="#cb11-111"></a><span class="in">    RELATED ( Regions[RegionName] )</span></span>
+<span id="cb11-112"><a href="#cb11-112"></a><span class="in">)</span></span>
+<span id="cb11-113"><a href="#cb11-113"></a><span class="in">```</span></span>
+<span id="cb11-114"><a href="#cb11-114"></a></span>
+<span id="cb11-115"><a href="#cb11-115"></a><span class="fu">#### 6 [More on `RELATED()`](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5092/)</span></span>
+<span id="cb11-116"><a href="#cb11-116"></a></span>
+<span id="cb11-117"><a href="#cb11-117"></a></span>
+<span id="cb11-118"><a href="#cb11-118"></a><span class="fu">#### 7 [Context transition in calculated column](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4417/)</span></span>
+<span id="cb11-119"><a href="#cb11-119"></a></span>
+<span id="cb11-120"><a href="#cb11-120"></a>The first one *Total sales* was calculated in **Products** table, simply interate all the table **Purchase**, multiply *quanity* by *price* to get the entire revenue:</span>
+<span id="cb11-121"><a href="#cb11-121"></a></span>
+<span id="cb11-122"><a href="#cb11-122"></a><span class="in">```txt</span></span>
+<span id="cb11-123"><a href="#cb11-123"></a><span class="in">Total Sales = SUMX(Purchase, Purchase[Quantity] * Purchase[Price])</span></span>
+<span id="cb11-124"><a href="#cb11-124"></a><span class="in">```</span></span>
+<span id="cb11-125"><a href="#cb11-125"></a></span>
+<span id="cb11-126"><a href="#cb11-126"></a>The second one - *Sales for product*, we want to calculate the coresponding sales for each product at the current row, so we just **wrap** the `CALCULATE()` function for the **context transition**:</span>
+<span id="cb11-127"><a href="#cb11-127"></a></span>
+<span id="cb11-128"><a href="#cb11-128"></a><span class="in">```txt</span></span>
+<span id="cb11-129"><a href="#cb11-129"></a><span class="in">Sales for product =</span></span>
+<span id="cb11-130"><a href="#cb11-130"></a><span class="in">CALCULATE (</span></span>
+<span id="cb11-131"><a href="#cb11-131"></a><span class="in">    SUMX ( Purchase, Purchase[Quantity] * Purchase[Price] )</span></span>
+<span id="cb11-132"><a href="#cb11-132"></a><span class="in">)</span></span>
+<span id="cb11-133"><a href="#cb11-133"></a><span class="in">```</span></span>
+<span id="cb11-134"><a href="#cb11-134"></a></span>
+<span id="cb11-135"><a href="#cb11-135"></a>And the final one:</span>
+<span id="cb11-136"><a href="#cb11-136"></a></span>
+<span id="cb11-137"><a href="#cb11-137"></a><span class="in">```txt</span></span>
+<span id="cb11-138"><a href="#cb11-138"></a><span class="in">Product contribution = DIVIDE([Sales for product],[Total sales])</span></span>
+<span id="cb11-139"><a href="#cb11-139"></a><span class="in">```</span></span>
+<span id="cb11-140"><a href="#cb11-140"></a></span>
+<span id="cb11-141"><a href="#cb11-141"></a><span class="fu"># 2. [Basic measures](https://www.wiseowl.co.uk/power-bi/exercises/dax/basic-measures/)</span></span>
+<span id="cb11-142"><a href="#cb11-142"></a></span>
+<span id="cb11-143"><a href="#cb11-143"></a>Including 5 exercises:</span>
+<span id="cb11-144"><a href="#cb11-144"></a></span>
+<span id="cb11-145"><a href="#cb11-145"></a><span class="fu"># 3. [The `CALCULATE()` function](https://www.wiseowl.co.uk/power-bi/exercises/dax/filtering/)</span></span>
+<span id="cb11-146"><a href="#cb11-146"></a></span>
+<span id="cb11-147"><a href="#cb11-147"></a>Including 16 exercises</span>
+<span id="cb11-148"><a href="#cb11-148"></a></span>
+<span id="cb11-149"><a href="#cb11-149"></a><span class="fu"># 4. [The `VALUES()` function](https://www.wiseowl.co.uk/power-bi/exercises/dax/values-function/)</span></span>
+<span id="cb11-150"><a href="#cb11-150"></a></span>
+<span id="cb11-151"><a href="#cb11-151"></a>Including 7 exercises</span>
+<span id="cb11-152"><a href="#cb11-152"></a></span>
+<span id="cb11-153"><a href="#cb11-153"></a><span class="fu"># 5. [The `FILTER()` function](https://www.wiseowl.co.uk/power-bi/exercises/dax/filter/)</span></span>
+<span id="cb11-154"><a href="#cb11-154"></a></span>
+<span id="cb11-155"><a href="#cb11-155"></a>Including 4 exercises</span>
+<span id="cb11-156"><a href="#cb11-156"></a></span>
+<span id="cb11-157"><a href="#cb11-157"></a><span class="fu"># 6. [Understanding `EARLIER()`](https://www.wiseowl.co.uk/power-bi/exercises/dax/understanding-earlier/)</span></span>
+<span id="cb11-158"><a href="#cb11-158"></a></span>
+<span id="cb11-159"><a href="#cb11-159"></a>Including 2 exercises</span>
+<span id="cb11-160"><a href="#cb11-160"></a></span>
+<span id="cb11-161"><a href="#cb11-161"></a><span class="fu"># 7. [Calendars and dates](https://www.wiseowl.co.uk/power-bi/exercises/dax/calendars-and-dates/)</span></span>
+<span id="cb11-162"><a href="#cb11-162"></a></span>
+<span id="cb11-163"><a href="#cb11-163"></a>Including 8 exercises</span>
+<span id="cb11-164"><a href="#cb11-164"></a></span>
+<span id="cb11-165"><a href="#cb11-165"></a><span class="fu"># 8. [Advanced date functions](https://www.wiseowl.co.uk/power-bi/exercises/dax/advanced-date-functions/)</span></span>
+<span id="cb11-166"><a href="#cb11-166"></a></span>
+<span id="cb11-167"><a href="#cb11-167"></a>Including 1 exercise</span>
+<span id="cb11-168"><a href="#cb11-168"></a></span>
+<span id="cb11-169"><a href="#cb11-169"></a></span>
+<span id="cb11-170"><a href="#cb11-170"></a></span>
+<span id="cb11-171"><a href="#cb11-171"></a></span>
+<span id="cb11-172"><a href="#cb11-172"></a><span class="fu"># 9. [DAX queries](https://www.wiseowl.co.uk/power-bi/exercises/dax/dax-queries/)</span></span>
+<span id="cb11-173"><a href="#cb11-173"></a></span>
+<span id="cb11-174"><a href="#cb11-174"></a>Including 2 exercises</span>
+<span id="cb11-175"><a href="#cb11-175"></a></span>
+<span id="cb11-176"><a href="#cb11-176"></a><span class="fu"># 10. [Variables](https://www.wiseowl.co.uk/power-bi/exercises/dax/variables/)</span></span>
+<span id="cb11-177"><a href="#cb11-177"></a></span>
+<span id="cb11-178"><a href="#cb11-178"></a>Including 3 exercises</span>
+<span id="cb11-179"><a href="#cb11-179"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

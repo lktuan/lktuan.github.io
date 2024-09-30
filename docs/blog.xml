@@ -25,45 +25,130 @@
 <section id="calculated-columns" class="level1">
 <h1>1. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/">Calculated columns</a></h1>
 <p>Including 11 exercises:</p>
+<section id="operations-in-row-context" class="level4">
+<h4 class="anchored" data-anchor-id="operations-in-row-context">1 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5086/">Operations in Row context</a></h4>
+<p>It’s pretty simple to calculate the <em>total floors</em>, just find the <strong>New column</strong> under <strong>Table tools</strong>, and sum the floors up:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb1-1">Total floors = Building[Floors above ground] + Building[Floors below ground]</span></code></pre></div>
 </section>
-<section id="section" class="level1">
-<h1>1.1.</h1>
+<section id="div0" class="level4">
+<h4 class="anchored" data-anchor-id="div0">2 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4409/">!DIV0</a></h4>
+<p>And for <em>Average floor height</em>, we just need to use “/”, or better practice, use <code>DIVIDE()</code>:</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb2-1">Average floor height = Building[Height m] / Building[Floors above ground]</span>
+<span id="cb2-2"></span>
+<span id="cb2-3">-- or</span>
+<span id="cb2-4"></span>
+<span id="cb2-5">Average floor height = DIVIDE(Building[Height m], Building[Floors above ground])</span></code></pre></div>
+<p>For each column, we have column tools to format the data.</p>
+</section>
+<section id="flow-control-with-if-and-switch" class="level4">
+<h4 class="anchored" data-anchor-id="flow-control-with-if-and-switch">3 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5089/">Flow control with <code>IF()</code> and <code>SWITCH()</code></a></h4>
+<p>The <code>IF()</code> in DAX row context is pretty the same with Excel!</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb3-1">Has basement = IF(Building[Floors below ground] &gt; 0, "Yes", "No")</span>
+<span id="cb3-2">Century = IF(Building[Year Opened] &lt; 2001, "20th Century", "21st Century")</span></code></pre></div>
+<p>Do you ever use <code>SWITCH()</code> in Excel, it’s the same in PBI:</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb4-1">Category =</span>
+<span id="cb4-2">SWITCH (</span>
+<span id="cb4-3">    TRUE (),</span>
+<span id="cb4-4">    Building[Height m] &lt; 400, "Tiny",</span>
+<span id="cb4-5">    Building[Height m] &lt; 500, "Small",</span>
+<span id="cb4-6">    Building[Height m] &lt; 600, "Medium",</span>
+<span id="cb4-7">    Building[Height m] &lt; 700, "Big",</span>
+<span id="cb4-8">    "Large"</span>
+<span id="cb4-9">)</span></code></pre></div>
+</section>
+<section id="more-operations" class="level4">
+<h4 class="anchored" data-anchor-id="more-operations">4 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5088/">More operations</a></h4>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb5-1"># This is simple</span>
+<span id="cb5-2">Tour length = Tour[End year] - Tour[Start year] + 1</span>
+<span id="cb5-3"></span>
+<span id="cb5-4"># With division operation, it's recommended to use DIVIDE() function:</span>
+<span id="cb5-5">Shows per year = DIVIDE(Tour[Shows], Tour[Tour length])</span>
+<span id="cb5-6">Avg show revenue = DIVIDE(Tour[Actual gross], Tour[Shows])</span>
+<span id="cb5-7">Avg attendance = DIVIDE(Tour[Attendance], Tour[Shows])</span>
+<span id="cb5-8">Avg ticket price = DIVIDE(Tour[Actual gross], Tour[Attendance])</span></code></pre></div>
+</section>
+<section id="using-of-related" class="level4">
+<h4 class="anchored" data-anchor-id="using-of-related">5 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5091/">Using of <code>RELATED()</code></a></h4>
+<p>We can use “<strong>&amp;</strong>” or the <code>CONCANATE()</code> function to join texts (in row context), and use <code>RELATED()</code> to get data from other tables with a relationship set up.</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb6-1">Name and location = CONCATENATE(Building[Building Name] &amp; ", ", RELATED(City[City]))</span>
+<span id="cb6-2"></span>
+<span id="cb6-3">-- or if we want to include the Country name</span>
+<span id="cb6-4"></span>
+<span id="cb6-5">Name and location =</span>
+<span id="cb6-6">CONCATENATE (</span>
+<span id="cb6-7">    Building[Building Name] &amp; ", ",</span>
+<span id="cb6-8">    RELATED ( City[City] ) &amp; ", "</span>
+<span id="cb6-9">        &amp; RELATED ( Country[Country] )</span>
+<span id="cb6-10">)</span></code></pre></div>
+</section>
+<section id="handling-mismatch-with-related" class="level4">
+<h4 class="anchored" data-anchor-id="handling-mismatch-with-related">6 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4410/">Handling mismatch with <code>RELATED()</code></a></h4>
+<p>We can use <code>RELATED()</code> and <code>ISBLANK()</code> to refer and check if there any matching record is returned.</p>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb7-1">Quadrant =</span>
+<span id="cb7-2">IF (</span>
+<span id="cb7-3">    ISBLANK ( RELATED ( Quadrants[QuadrantName] ) ),</span>
+<span id="cb7-4">    "No quadrant found",</span>
+<span id="cb7-5">    RELATED ( Quadrants[QuadrantName] )</span>
+<span id="cb7-6">)</span>
+<span id="cb7-7"></span>
+<span id="cb7-8">Region =</span>
+<span id="cb7-9">IF (</span>
+<span id="cb7-10">    ISBLANK ( RELATED ( Regions[RegionName] ) ),</span>
+<span id="cb7-11">    "No region assigned",</span>
+<span id="cb7-12">    RELATED ( Regions[RegionName] )</span>
+<span id="cb7-13">)</span></code></pre></div>
+</section>
+<section id="more-on-related" class="level4">
+<h4 class="anchored" data-anchor-id="more-on-related">6 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5092/">More on <code>RELATED()</code></a></h4>
+</section>
+<section id="context-transition-in-calculated-column" class="level4">
+<h4 class="anchored" data-anchor-id="context-transition-in-calculated-column">7 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4417/">Context transition in calculated column</a></h4>
+<p>The first one <em>Total sales</em> was calculated in <strong>Products</strong> table, simply interate all the table <strong>Purchase</strong>, multiply <em>quanity</em> by <em>price</em> to get the entire revenue:</p>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb8-1">Total Sales = SUMX(Purchase, Purchase[Quantity] * Purchase[Price])</span></code></pre></div>
+<p>The second one - <em>Sales for product</em>, we want to calculate the coresponding sales for each product at the current row, so we just <strong>wrap</strong> the <code>CALCULATE()</code> function for the <strong>context transition</strong>:</p>
+<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb9-1">Sales for product =</span>
+<span id="cb9-2">CALCULATE (</span>
+<span id="cb9-3">    SUMX ( Purchase, Purchase[Quantity] * Purchase[Price] )</span>
+<span id="cb9-4">)</span></code></pre></div>
+<p>And the final one:</p>
+<div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb10-1">Product contribution = DIVIDE([Sales for product],[Total sales])</span></code></pre></div>
+</section>
 </section>
 <section id="basic-measures" class="level1">
 <h1>2. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/basic-measures/">Basic measures</a></h1>
 <p>Including 5 exercises:</p>
 </section>
-<section id="variables" class="level1">
-<h1>3. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/variables/">Variables</a></h1>
-<p>Including 3 exercises</p>
-</section>
 <section id="the-calculate-function" class="level1">
-<h1>2. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/filtering/">The <code>CALCULATE()</code> function</a></h1>
+<h1>3. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/filtering/">The <code>CALCULATE()</code> function</a></h1>
 <p>Including 16 exercises</p>
 </section>
-<section id="the-filter-function" class="level1">
-<h1>3. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/filter/">The <code>FILTER()</code> function</a></h1>
-<p>Including 4 exercises</p>
-</section>
 <section id="the-values-function" class="level1">
-<h1>. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/values-function/">The <code>VALUES()</code> function</a></h1>
+<h1>4. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/values-function/">The <code>VALUES()</code> function</a></h1>
 <p>Including 7 exercises</p>
 </section>
-<section id="dax-queries" class="level1">
-<h1>. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/dax-queries/">DAX queries</a></h1>
+<section id="the-filter-function" class="level1">
+<h1>5. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/filter/">The <code>FILTER()</code> function</a></h1>
+<p>Including 4 exercises</p>
+</section>
+<section id="understanding-earlier" class="level1">
+<h1>6. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/understanding-earlier/">Understanding <code>EARLIER()</code></a></h1>
 <p>Including 2 exercises</p>
 </section>
 <section id="calendars-and-dates" class="level1">
-<h1>. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calendars-and-dates/">Calendars and dates</a></h1>
+<h1>7. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calendars-and-dates/">Calendars and dates</a></h1>
 <p>Including 8 exercises</p>
 </section>
 <section id="advanced-date-functions" class="level1">
-<h1>. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/advanced-date-functions/">Advanced date functions</a></h1>
+<h1>8. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/advanced-date-functions/">Advanced date functions</a></h1>
 <p>Including 1 exercise</p>
 </section>
-<section id="understanding-earlier" class="level1">
-<h1>. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/understanding-earlier/">Understanding <code>EARLIER()</code></a></h1>
+<section id="dax-queries" class="level1">
+<h1>9. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/dax-queries/">DAX queries</a></h1>
 <p>Including 2 exercises</p>
+</section>
+<section id="variables" class="level1">
+<h1>10. <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/variables/">Variables</a></h1>
+<p>Including 3 exercises</p>
 
 
 <!-- -->

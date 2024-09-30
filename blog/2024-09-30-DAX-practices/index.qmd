@@ -17,41 +17,164 @@ Link to the challenge: <https://www.wiseowl.co.uk/power-bi/exercises/dax/>
 
 Including 11 exercises:
 
-# 1.1. 
+#### 1 [Operations in Row context](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5086/)
+
+It's pretty simple to calculate the *total floors*, just find the **New column** under **Table tools**, and sum the floors up:
+
+```txt
+Total floors = Building[Floors above ground] + Building[Floors below ground]
+```
+
+#### 2 [!DIV0](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4409/)
+
+And for *Average floor height*, we just need to use "/", or better practice, use `DIVIDE()`:
+
+```txt
+Average floor height = Building[Height m] / Building[Floors above ground]
+
+-- or
+
+Average floor height = DIVIDE(Building[Height m], Building[Floors above ground])
+```
+
+For each column, we have column tools to format the data.
+
+#### 3 [Flow control with `IF()` and `SWITCH()`](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5089/)
+
+The `IF()` in DAX row context is pretty the same with Excel!
+
+```txt
+Has basement = IF(Building[Floors below ground] > 0, "Yes", "No")
+Century = IF(Building[Year Opened] < 2001, "20th Century", "21st Century")
+```
+
+Do you ever use `SWITCH()` in Excel, it's the same in PBI:
+
+```txt
+Category =
+SWITCH (
+    TRUE (),
+    Building[Height m] < 400, "Tiny",
+    Building[Height m] < 500, "Small",
+    Building[Height m] < 600, "Medium",
+    Building[Height m] < 700, "Big",
+    "Large"
+)
+```
+
+#### 4 [More operations](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5088/)
+
+```txt
+# This is simple
+Tour length = Tour[End year] - Tour[Start year] + 1
+
+# With division operation, it's recommended to use DIVIDE() function:
+Shows per year = DIVIDE(Tour[Shows], Tour[Tour length])
+Avg show revenue = DIVIDE(Tour[Actual gross], Tour[Shows])
+Avg attendance = DIVIDE(Tour[Attendance], Tour[Shows])
+Avg ticket price = DIVIDE(Tour[Actual gross], Tour[Attendance])
+```
+
+#### 5 [Using of `RELATED()`](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5091/)
+
+We can use "**&**" or the `CONCANATE()` function to join texts (in row context), and use `RELATED()` to get data from other tables with a relationship set up.
+
+```txt
+Name and location = CONCATENATE(Building[Building Name] & ", ", RELATED(City[City]))
+
+-- or if we want to include the Country name
+
+Name and location =
+CONCATENATE (
+    Building[Building Name] & ", ",
+    RELATED ( City[City] ) & ", "
+        & RELATED ( Country[Country] )
+)
+```
+
+#### 6 [Handling mismatch with `RELATED()`](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4410/)
+
+We can use `RELATED()` and `ISBLANK()` to refer and check if there any matching record is returned.
+
+```txt
+Quadrant =
+IF (
+    ISBLANK ( RELATED ( Quadrants[QuadrantName] ) ),
+    "No quadrant found",
+    RELATED ( Quadrants[QuadrantName] )
+)
+
+Region =
+IF (
+    ISBLANK ( RELATED ( Regions[RegionName] ) ),
+    "No region assigned",
+    RELATED ( Regions[RegionName] )
+)
+```
+
+#### 6 [More on `RELATED()`](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5092/)
+
+
+#### 7 [Context transition in calculated column](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4417/)
+
+The first one *Total sales* was calculated in **Products** table, simply interate all the table **Purchase**, multiply *quanity* by *price* to get the entire revenue:
+
+```txt
+Total Sales = SUMX(Purchase, Purchase[Quantity] * Purchase[Price])
+```
+
+The second one - *Sales for product*, we want to calculate the coresponding sales for each product at the current row, so we just **wrap** the `CALCULATE()` function for the **context transition**:
+
+```txt
+Sales for product =
+CALCULATE (
+    SUMX ( Purchase, Purchase[Quantity] * Purchase[Price] )
+)
+```
+
+And the final one:
+
+```txt
+Product contribution = DIVIDE([Sales for product],[Total sales])
+```
 
 # 2. [Basic measures](https://www.wiseowl.co.uk/power-bi/exercises/dax/basic-measures/)
 
 Including 5 exercises:
 
-# 3. [Variables](https://www.wiseowl.co.uk/power-bi/exercises/dax/variables/)
-
-Including 3 exercises
-
-# 2. [The `CALCULATE()` function](https://www.wiseowl.co.uk/power-bi/exercises/dax/filtering/)
+# 3. [The `CALCULATE()` function](https://www.wiseowl.co.uk/power-bi/exercises/dax/filtering/)
 
 Including 16 exercises
 
-# 3. [The `FILTER()` function](https://www.wiseowl.co.uk/power-bi/exercises/dax/filter/)
-
-Including 4 exercises
-
-# . [The `VALUES()` function](https://www.wiseowl.co.uk/power-bi/exercises/dax/values-function/)
+# 4. [The `VALUES()` function](https://www.wiseowl.co.uk/power-bi/exercises/dax/values-function/)
 
 Including 7 exercises
 
-# . [DAX queries](https://www.wiseowl.co.uk/power-bi/exercises/dax/dax-queries/)
+# 5. [The `FILTER()` function](https://www.wiseowl.co.uk/power-bi/exercises/dax/filter/)
+
+Including 4 exercises
+
+# 6. [Understanding `EARLIER()`](https://www.wiseowl.co.uk/power-bi/exercises/dax/understanding-earlier/)
 
 Including 2 exercises
 
-# . [Calendars and dates](https://www.wiseowl.co.uk/power-bi/exercises/dax/calendars-and-dates/)
+# 7. [Calendars and dates](https://www.wiseowl.co.uk/power-bi/exercises/dax/calendars-and-dates/)
 
 Including 8 exercises
 
-# . [Advanced date functions](https://www.wiseowl.co.uk/power-bi/exercises/dax/advanced-date-functions/)
+# 8. [Advanced date functions](https://www.wiseowl.co.uk/power-bi/exercises/dax/advanced-date-functions/)
 
 Including 1 exercise
 
-# . [Understanding `EARLIER()`](https://www.wiseowl.co.uk/power-bi/exercises/dax/understanding-earlier/)
+
+
+
+# 9. [DAX queries](https://www.wiseowl.co.uk/power-bi/exercises/dax/dax-queries/)
 
 Including 2 exercises
+
+# 10. [Variables](https://www.wiseowl.co.uk/power-bi/exercises/dax/variables/)
+
+Including 3 exercises
+
 
