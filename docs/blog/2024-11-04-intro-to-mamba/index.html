@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Tuan Le Khac">
+<meta name="dcterms.date" content="2024-11-04">
+<meta name="description" content="I am a Risk Modeler 🚀">
+
+<title>Le Khac Tuan - Data Science Project with Mamba, Python, and VS Code on Window</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../img/rocket_1613268.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Le Khac Tuan</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../curriculum/index.html"> 
+<span class="menu-text">Curriculum</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../学汉语的日记.html"> 
+<span class="menu-text">学汉语的日记</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../jiu_jitsu_journal/index.html"> 
+<span class="menu-text">Jiu Jitsu Journal</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/lktuan"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/tuanlekhac/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.facebook.com/toilatuan.lk/"> <i class="bi bi-facebook" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:tuan.lekhac0905@gmail.com"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <div class="quarto-title-block"><div><h1 class="title">Data Science Project with Mamba, Python, and VS Code on Window</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+                  <div>
+        <div class="description">
+          In search for the best environment &amp; dependencies management tool for data project
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">python</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p><a href="https://lktuan.github.io/">Tuan Le Khac</a> </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 4, 2024</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">November 4, 2024</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#vì-sao-mà-mamba" id="toc-vì-sao-mà-mamba" class="nav-link active" data-scroll-target="#vì-sao-mà-mamba">Vì sao mà Mamba?</a></li>
+  <li><a href="#hướng-dẫn-cài-đặt-và-sử-dụng-mamba-với-vs-code-trên-windows" id="toc-hướng-dẫn-cài-đặt-và-sử-dụng-mamba-với-vs-code-trên-windows" class="nav-link" data-scroll-target="#hướng-dẫn-cài-đặt-và-sử-dụng-mamba-với-vs-code-trên-windows">Hướng dẫn Cài đặt và Sử dụng Mamba với VS Code trên Windows</a>
+  <ul class="collapse">
+  <li><a href="#cài-đặt-mamba-trên-windows" id="toc-cài-đặt-mamba-trên-windows" class="nav-link" data-scroll-target="#cài-đặt-mamba-trên-windows">1. Cài đặt Mamba trên Windows</a>
+  <ul class="collapse">
+  <li><a href="#cách-1-tải-trực-tiếp" id="toc-cách-1-tải-trực-tiếp" class="nav-link" data-scroll-target="#cách-1-tải-trực-tiếp">Cách 1: Tải trực tiếp</a></li>
+  <li><a href="#cách-2-dùng-windows-terminalpowershell" id="toc-cách-2-dùng-windows-terminalpowershell" class="nav-link" data-scroll-target="#cách-2-dùng-windows-terminalpowershell">Cách 2: Dùng Windows Terminal/PowerShell</a></li>
+  </ul></li>
+  <li><a href="#tích-hợp-với-vs-code" id="toc-tích-hợp-với-vs-code" class="nav-link" data-scroll-target="#tích-hợp-với-vs-code">2. Tích hợp với VS Code</a>
+  <ul class="collapse">
+  <li><a href="#cài-đặt-extensions" id="toc-cài-đặt-extensions" class="nav-link" data-scroll-target="#cài-đặt-extensions">Cài đặt Extensions</a></li>
+  <li><a href="#tạo-và-cấu-hình-môi-trường" id="toc-tạo-và-cấu-hình-môi-trường" class="nav-link" data-scroll-target="#tạo-và-cấu-hình-môi-trường">Tạo và Cấu hình Môi trường</a></li>
+  </ul></li>
+  <li><a href="#cấu-hình-vs-code" id="toc-cấu-hình-vs-code" class="nav-link" data-scroll-target="#cấu-hình-vs-code">3. Cấu hình VS Code</a>
+  <ul class="collapse">
+  <li><a href="#chọn-python-interpreter" id="toc-chọn-python-interpreter" class="nav-link" data-scroll-target="#chọn-python-interpreter">Chọn Python Interpreter</a></li>
+  <li><a href="#cấu-hình-notebooks" id="toc-cấu-hình-notebooks" class="nav-link" data-scroll-target="#cấu-hình-notebooks">Cấu hình Notebooks</a></li>
+  </ul></li>
+  <li><a href="#cấu-trúc-project-đề-xuất" id="toc-cấu-trúc-project-đề-xuất" class="nav-link" data-scroll-target="#cấu-trúc-project-đề-xuất">4. Cấu trúc Project Đề Xuất</a></li>
+  <li><a href="#cấu-hình-vs-code-settings" id="toc-cấu-hình-vs-code-settings" class="nav-link" data-scroll-target="#cấu-hình-vs-code-settings">5. Cấu hình VS Code Settings</a></li>
+  <li><a href="#cấu-hình-development-tools" id="toc-cấu-hình-development-tools" class="nav-link" data-scroll-target="#cấu-hình-development-tools">6. Cấu hình Development Tools</a>
+  <ul class="collapse">
+  <li><a href="#cài-đặt-development-dependencies" id="toc-cài-đặt-development-dependencies" class="nav-link" data-scroll-target="#cài-đặt-development-dependencies">6.1 Cài đặt Development Dependencies</a></li>
+  <li><a href="#cấu-hình-pyproject.toml" id="toc-cấu-hình-pyproject.toml" class="nav-link" data-scroll-target="#cấu-hình-pyproject.toml">6.2 Cấu hình pyproject.toml</a></li>
+  <li><a href="#cấu-hình-pre-commit" id="toc-cấu-hình-pre-commit" class="nav-link" data-scroll-target="#cấu-hình-pre-commit">6.3 Cấu hình Pre-commit</a></li>
+  <li><a href="#cấu-hình-git-ignore" id="toc-cấu-hình-git-ignore" class="nav-link" data-scroll-target="#cấu-hình-git-ignore">6.4 Cấu hình Git Ignore</a></li>
+  <li><a href="#khởi-tạo-pre-commit" id="toc-khởi-tạo-pre-commit" class="nav-link" data-scroll-target="#khởi-tạo-pre-commit">6.5 Khởi tạo Pre-commit</a></li>
+  <li><a href="#extensions-vs-code-cho-notebooks" id="toc-extensions-vs-code-cho-notebooks" class="nav-link" data-scroll-target="#extensions-vs-code-cho-notebooks">6.6 Extensions VS Code cho Notebooks</a></li>
+  <li><a href="#cấu-hình-jupytext" id="toc-cấu-hình-jupytext" class="nav-link" data-scroll-target="#cấu-hình-jupytext">6.7 Cấu hình Jupytext</a></li>
+  </ul></li>
+  <li><a href="#pro-tips-cho-windows" id="toc-pro-tips-cho-windows" class="nav-link" data-scroll-target="#pro-tips-cho-windows">7. Pro Tips cho Windows</a>
+  <ul class="collapse">
+  <li><a href="#path-management" id="toc-path-management" class="nav-link" data-scroll-target="#path-management">Path Management</a></li>
+  <li><a href="#git-configuration" id="toc-git-configuration" class="nav-link" data-scroll-target="#git-configuration">Git Configuration</a></li>
+  <li><a href="#jupyter-trong-vs-code" id="toc-jupyter-trong-vs-code" class="nav-link" data-scroll-target="#jupyter-trong-vs-code">Jupyter trong VS Code</a></li>
+  <li><a href="#debugging" id="toc-debugging" class="nav-link" data-scroll-target="#debugging">Debugging</a></li>
+  </ul></li>
+  <li><a href="#xử-lý-lỗi-thường-gặp" id="toc-xử-lý-lỗi-thường-gặp" class="nav-link" data-scroll-target="#xử-lý-lỗi-thường-gặp">8. Xử lý Lỗi Thường Gặp</a></li>
+  <li><a href="#resources-hữu-ích" id="toc-resources-hữu-ích" class="nav-link" data-scroll-target="#resources-hữu-ích">9. Resources Hữu ích</a></li>
+  <li><a href="#workflow-đề-xuất" id="toc-workflow-đề-xuất" class="nav-link" data-scroll-target="#workflow-đề-xuất">10. Workflow Đề Xuất</a></li>
+  <li><a href="#bonus-nếu-muốn-import-một-module-từ-src-trong-notebook.ipynb-thì-làm-thế-nào" id="toc-bonus-nếu-muốn-import-một-module-từ-src-trong-notebook.ipynb-thì-làm-thế-nào" class="nav-link" data-scroll-target="#bonus-nếu-muốn-import-một-module-từ-src-trong-notebook.ipynb-thì-làm-thế-nào">Bonus: nếu muốn import một module từ <code>src</code> trong <code>notebook.ipynb</code> thì làm thế nào?</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="vì-sao-mà-mamba" class="level1">
+<h1>Vì sao mà Mamba?</h1>
+<p>Là một non-tech data coder, mình vẫn loay hoay việc setup một dự án có thể được tái sử dụng và dễ dàng deploy, đặc biệt là với dự án dạng data - khi mà DS/DA sẽ làm việc nhiều với notebook - rất anti production.</p>
+<div class="columns">
+<div class="column" style="width:60%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="meme_top.png" class="img-fluid figure-img"></p>
+<figcaption>Arggg! Cơn đau đầu của non-tech làm data, nguồn ảnh <a href="https://www.analyticsvidhya.com/blog/2023/03/choosing-the-right-python-environment-tool-for-your-next-project/">Analytics Vidhya</a></figcaption>
+</figure>
+</div>
+</div><div class="column" style="width:40%;">
+<p><img src="meme_bottom.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Mình tìm hiểu một số công cụ và dưới đây là so sánh:</p>
+<ol type="1">
+<li><code>Mamba</code> ✅</li>
+</ol>
+<ul>
+<li><p>Ưu điểm:</p>
+<ul>
+<li>Nhanh hơn Conda nhiều lần</li>
+<li>Tương thích hoàn toàn với Conda</li>
+<li>Quản lý được cả Python và non-Python dependencies</li>
+<li>Tích hợp tốt với notebooks</li>
+</ul></li>
+</ul>
+<ol start="2" type="1">
+<li><code>Poetry</code></li>
+</ol>
+<ul>
+<li><p>Ưu điểm:</p>
+<ul>
+<li>Dependency resolution tốt</li>
+<li>Lock file chính xác</li>
+</ul></li>
+<li><p>Nhược điểm:</p>
+<ul>
+<li>Khó xử lý non-Python dependencies</li>
+<li>Cần thêm setup cho notebook kernels</li>
+<li>Không phù hợp lắm với data science</li>
+</ul></li>
+</ul>
+<ol type="1">
+<li><code>venv</code></li>
+</ol>
+<ul>
+<li>Quá đơn giản cho data science</li>
+<li>Không xử lý được dependencies phức tạp</li>
+<li>Cần nhiều cấu hình thủ công</li>
+</ul>
+<ol start="4" type="1">
+<li><code>pipenv</code></li>
+</ol>
+<ul>
+<li>Tương tự Poetry nhưng ít tính năng hơn</li>
+<li>Không phù hợp với data science</li>
+</ul>
+<ol start="5" type="1">
+<li><code>uv</code></li>
+</ol>
+<ul>
+<li>Mới và nhanh</li>
+<li>Chưa đủ chín muồi cho data science</li>
+<li>Thiếu nhiều tính năng cần thiết</li>
+</ul>
+<p>Xem ra <code>mamba</code> có vẻ ổn nhất, hãy đào sâu hơn về ưu điểm của nó:</p>
+<ol type="1">
+<li>Xử lý dependencies phức tạp</li>
+</ol>
+<ul>
+<li>Data science thường cần nhiều thư viện với dependencies phức tạp (numpy, pandas, scipy, pytorch…)</li>
+<li>Mamba giải quyết dependencies nhanh và hiệu quả hơn Conda</li>
+<li>Xử lý tốt các thư viện có binary dependencies (như CUDA)</li>
+</ul>
+<ol start="2" type="1">
+<li>Quản lý môi trường kernel cho notebooks</li>
+</ol>
+<ul>
+<li>Tự động tích hợp với Jupyter notebooks</li>
+<li>Dễ dàng switch giữa các môi trường trong notebook</li>
+<li>Không cần cấu hình thêm cho notebook kernels</li>
+</ul>
+<p>Oke giờ hãy thử xem làm thế nào để tổ chức phát triển một dự án với mamba - VS Code trên Window.</p>
+</section>
+<section id="hướng-dẫn-cài-đặt-và-sử-dụng-mamba-với-vs-code-trên-windows" class="level1">
+<h1>Hướng dẫn Cài đặt và Sử dụng Mamba với VS Code trên Windows</h1>
+<section id="cài-đặt-mamba-trên-windows" class="level2">
+<h2 class="anchored" data-anchor-id="cài-đặt-mamba-trên-windows">1. Cài đặt Mamba trên Windows</h2>
+<section id="cách-1-tải-trực-tiếp" class="level3">
+<h3 class="anchored" data-anchor-id="cách-1-tải-trực-tiếp">Cách 1: Tải trực tiếp</h3>
+<ul>
+<li>Tải Mambaforge cho Windows từ: <a href="https://github.com/conda-forge/miniforge#mambaforge" class="uri">https://github.com/conda-forge/miniforge#mambaforge</a></li>
+<li>Chạy file installer và làm theo hướng dẫn.</li>
+</ul>
+</section>
+<section id="cách-2-dùng-windows-terminalpowershell" class="level3">
+<h3 class="anchored" data-anchor-id="cách-2-dùng-windows-terminalpowershell">Cách 2: Dùng Windows Terminal/PowerShell</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">wget</span> https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Windows-x86_64.exe <span class="at">-OutFile</span> mambaforge.exe</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="ex">start</span> /wait <span class="st">""</span> mambaforge.exe /InstallationType=JustMe /RegisterPython=0 /S /D=%UserProfile%\Mambaforge</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="tích-hợp-với-vs-code" class="level2">
+<h2 class="anchored" data-anchor-id="tích-hợp-với-vs-code">2. Tích hợp với VS Code</h2>
+<section id="cài-đặt-extensions" class="level3">
+<h3 class="anchored" data-anchor-id="cài-đặt-extensions">Cài đặt Extensions</h3>
+<ol type="1">
+<li>Python (Microsoft)</li>
+<li>Jupyter (Microsoft)</li>
+</ol>
+</section>
+<section id="tạo-và-cấu-hình-môi-trường" class="level3">
+<h3 class="anchored" data-anchor-id="tạo-và-cấu-hình-môi-trường">Tạo và Cấu hình Môi trường</h3>
+<p>Tạo file <code>environment.yml</code>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> ds-project</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">channels</span><span class="kw">:</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="at">  </span><span class="kw">-</span><span class="at"> conda-forge</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="at">  </span><span class="kw">-</span><span class="at"> defaults</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="fu">dependencies</span><span class="kw">:</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="at">  </span><span class="kw">-</span><span class="at"> python=3.10</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="at">  </span><span class="kw">-</span><span class="at"> ipykernel</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="at">  </span><span class="kw">-</span><span class="at"> pandas</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="at">  </span><span class="kw">-</span><span class="at"> numpy</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="at">  </span><span class="kw">-</span><span class="at"> matplotlib</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="at">  </span><span class="kw">-</span><span class="at"> scikit-learn</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="at">  </span><span class="kw">-</span><span class="at"> jupyter</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Tạo môi trường từ file:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="ex">mamba</span> env create <span class="at">-f</span> environment.yml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="cấu-hình-vs-code" class="level2">
+<h2 class="anchored" data-anchor-id="cấu-hình-vs-code">3. Cấu hình VS Code</h2>
+<section id="chọn-python-interpreter" class="level3">
+<h3 class="anchored" data-anchor-id="chọn-python-interpreter">Chọn Python Interpreter</h3>
+<ol type="1">
+<li>Mở Command Palette (<code>Ctrl + Shift + P</code>)</li>
+<li>Tìm “Python: Select Interpreter”</li>
+<li>Chọn môi trường Mamba vừa tạo</li>
+</ol>
+</section>
+<section id="cấu-hình-notebooks" class="level3">
+<h3 class="anchored" data-anchor-id="cấu-hình-notebooks">Cấu hình Notebooks</h3>
+<ul>
+<li>VS Code tự động nhận diện kernel từ môi trường Mamba</li>
+<li>Kernel có thể được chọn ở góc phải trên của notebook</li>
+</ul>
+</section>
+</section>
+<section id="cấu-trúc-project-đề-xuất" class="level2">
+<h2 class="anchored" data-anchor-id="cấu-trúc-project-đề-xuất">4. Cấu trúc Project Đề Xuất</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource md number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1"></a>project/</span>
+<span id="cb4-2"><a href="#cb4-2"></a>│</span>
+<span id="cb4-3"><a href="#cb4-3"></a>├── .vscode/                      # VS Code settings</span>
+<span id="cb4-4"><a href="#cb4-4"></a>│   ├── settings.json</span>
+<span id="cb4-5"><a href="#cb4-5"></a>│   └── launch.json</span>
+<span id="cb4-6"><a href="#cb4-6"></a>│</span>
+<span id="cb4-7"><a href="#cb4-7"></a>├── data/</span>
+<span id="cb4-8"><a href="#cb4-8"></a>│   ├── raw/</span>
+<span id="cb4-9"><a href="#cb4-9"></a>│   └── processed/</span>
+<span id="cb4-10"><a href="#cb4-10"></a>│</span>
+<span id="cb4-11"><a href="#cb4-11"></a>├── notebooks/</span>
+<span id="cb4-12"><a href="#cb4-12"></a>│   ├── 01_exploration.ipynb</span>
+<span id="cb4-13"><a href="#cb4-13"></a>│   └── 02_analysis.ipynb</span>
+<span id="cb4-14"><a href="#cb4-14"></a>│</span>
+<span id="cb4-15"><a href="#cb4-15"></a>├── src/</span>
+<span id="cb4-16"><a href="#cb4-16"></a>│   └── processing/</span>
+<span id="cb4-17"><a href="#cb4-17"></a>│       ├── __init__.py</span>
+<span id="cb4-18"><a href="#cb4-18"></a>│       └── data_processing.py</span>
+<span id="cb4-19"><a href="#cb4-19"></a>│</span>
+<span id="cb4-20"><a href="#cb4-20"></a>├── environment.yml</span>
+<span id="cb4-21"><a href="#cb4-21"></a>├── .gitignore</span>
+<span id="cb4-22"><a href="#cb4-22"></a>└── README.md</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="cấu-hình-vs-code-settings" class="level2">
+<h2 class="anchored" data-anchor-id="cấu-hình-vs-code-settings">5. Cấu hình VS Code Settings</h2>
+<p>Tạo file <code>.vscode/settings.json</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">{</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>    <span class="dt">"python.defaultInterpreterPath"</span><span class="fu">:</span> <span class="st">"${env:USERPROFILE}</span><span class="ch">\\</span><span class="st">Mambaforge</span><span class="ch">\\</span><span class="st">envs</span><span class="ch">\\</span><span class="st">ds-project</span><span class="ch">\\</span><span class="st">python.exe"</span><span class="fu">,</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>    <span class="dt">"jupyter.notebookFileRoot"</span><span class="fu">:</span> <span class="st">"${workspaceFolder}"</span><span class="fu">,</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a>    <span class="dt">"python.analysis.extraPaths"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"${workspaceFolder}/src"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a>    <span class="dt">"python.formatting.provider"</span><span class="fu">:</span> <span class="st">"black"</span><span class="fu">,</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a>    <span class="dt">"editor.formatOnSave"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a>    <span class="dt">"ruff.enable"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a>    <span class="dt">"ruff.format.args"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"--config=pyproject.toml"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a>    <span class="dt">"ruff.lint.args"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"--config=pyproject.toml"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb5-10"><a href="#cb5-10"></a>    <span class="dt">"mypy.enabled"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a>    <span class="dt">"mypy.configFile"</span><span class="fu">:</span> <span class="st">"pyproject.toml"</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="cấu-hình-development-tools" class="level2">
+<h2 class="anchored" data-anchor-id="cấu-hình-development-tools">6. Cấu hình Development Tools</h2>
+<section id="cài-đặt-development-dependencies" class="level3">
+<h3 class="anchored" data-anchor-id="cài-đặt-development-dependencies">6.1 Cài đặt Development Dependencies</h3>
+<p>Cập nhật <code>environment.yml</code>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> ds-project</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="fu">channels</span><span class="kw">:</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="at">  </span><span class="kw">-</span><span class="at"> conda-forge</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="at">  </span><span class="kw">-</span><span class="at"> defaults</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="fu">dependencies</span><span class="kw">:</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="at">  </span><span class="kw">-</span><span class="at"> python=3.10</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="at">  </span><span class="kw">-</span><span class="at"> ipykernel</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="at">  </span><span class="kw">-</span><span class="at"> pandas</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="at">  </span><span class="kw">-</span><span class="at"> numpy</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="at">  </span><span class="kw">-</span><span class="at"> matplotlib</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="at">  </span><span class="kw">-</span><span class="at"> scikit-learn</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="at">  </span><span class="kw">-</span><span class="at"> jupyter</span></span>
+<span id="cb6-13"><a href="#cb6-13"></a><span class="co">  # Dev dependencies</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a><span class="at">  </span><span class="kw">-</span><span class="at"> black</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a><span class="at">  </span><span class="kw">-</span><span class="at"> ruff</span></span>
+<span id="cb6-16"><a href="#cb6-16"></a><span class="at">  </span><span class="kw">-</span><span class="at"> mypy</span></span>
+<span id="cb6-17"><a href="#cb6-17"></a><span class="at">  </span><span class="kw">-</span><span class="at"> pre-commit</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a><span class="at">  </span><span class="kw">-</span><span class="at"> nbqa</span></span>
+<span id="cb6-19"><a href="#cb6-19"></a><span class="at">  </span><span class="kw">-</span><span class="at"> jupytext</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="cấu-hình-pyproject.toml" class="level3">
+<h3 class="anchored" data-anchor-id="cấu-hình-pyproject.toml">6.2 Cấu hình pyproject.toml</h3>
+<p>Tạo file <code>pyproject.toml</code>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource toml number-lines code-with-copy"><code class="sourceCode toml"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">[tool.black]</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="dt">line-length</span> <span class="op">=</span> <span class="dv">88</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="dt">target-version</span> <span class="op">=</span> <span class="op">[</span><span class="st">"py310"</span><span class="op">]</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="dt">include</span> <span class="op">=</span> <span class="st">'</span><span class="vs">\.pyi?$</span><span class="st">'</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="kw">[tool.ruff]</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="dt">line-length</span> <span class="op">=</span> <span class="dv">88</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="dt">target-version</span> <span class="op">=</span> <span class="st">"py310"</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="dt">select</span> <span class="op">=</span> <span class="op">[</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a>    <span class="st">"E"</span><span class="op">,</span>  <span class="co"># pycodestyle</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a>    <span class="st">"F"</span><span class="op">,</span>  <span class="co"># pyflakes</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a>    <span class="st">"I"</span><span class="op">,</span>  <span class="co"># isort</span></span>
+<span id="cb7-13"><a href="#cb7-13"></a>    <span class="st">"UP"</span><span class="op">,</span> <span class="co"># pyupgrade</span></span>
+<span id="cb7-14"><a href="#cb7-14"></a><span class="op">]</span></span>
+<span id="cb7-15"><a href="#cb7-15"></a><span class="dt">ignore</span> <span class="op">=</span> <span class="op">[]</span></span>
+<span id="cb7-16"><a href="#cb7-16"></a></span>
+<span id="cb7-17"><a href="#cb7-17"></a><span class="kw">[tool.ruff.isort]</span></span>
+<span id="cb7-18"><a href="#cb7-18"></a><span class="dt">known-first-party</span> <span class="op">=</span> <span class="op">[</span><span class="st">"src"</span><span class="op">]</span></span>
+<span id="cb7-19"><a href="#cb7-19"></a></span>
+<span id="cb7-20"><a href="#cb7-20"></a><span class="kw">[tool.mypy]</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a><span class="dt">python_version</span> <span class="op">=</span> <span class="st">"3.10"</span></span>
+<span id="cb7-22"><a href="#cb7-22"></a><span class="dt">warn_return_any</span> <span class="op">=</span> <span class="cn">true</span></span>
+<span id="cb7-23"><a href="#cb7-23"></a><span class="dt">warn_unused_configs</span> <span class="op">=</span> <span class="cn">true</span></span>
+<span id="cb7-24"><a href="#cb7-24"></a><span class="dt">disallow_untyped_defs</span> <span class="op">=</span> <span class="cn">true</span></span>
+<span id="cb7-25"><a href="#cb7-25"></a><span class="dt">check_untyped_defs</span> <span class="op">=</span> <span class="cn">true</span></span>
+<span id="cb7-26"><a href="#cb7-26"></a></span>
+<span id="cb7-27"><a href="#cb7-27"></a><span class="kw">[[tool.mypy.overrides]]</span></span>
+<span id="cb7-28"><a href="#cb7-28"></a><span class="dt">module</span> <span class="op">=</span> <span class="op">[</span></span>
+<span id="cb7-29"><a href="#cb7-29"></a>    <span class="st">"pandas.*"</span><span class="op">,</span></span>
+<span id="cb7-30"><a href="#cb7-30"></a>    <span class="st">"numpy.*"</span><span class="op">,</span></span>
+<span id="cb7-31"><a href="#cb7-31"></a>    <span class="st">"matplotlib.*"</span><span class="op">,</span></span>
+<span id="cb7-32"><a href="#cb7-32"></a>    <span class="st">"seaborn.*"</span></span>
+<span id="cb7-33"><a href="#cb7-33"></a><span class="op">]</span></span>
+<span id="cb7-34"><a href="#cb7-34"></a><span class="dt">ignore_missing_imports</span> <span class="op">=</span> <span class="cn">true</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="cấu-hình-pre-commit" class="level3">
+<h3 class="anchored" data-anchor-id="cấu-hình-pre-commit">6.3 Cấu hình Pre-commit</h3>
+<p>Tạo file <code>.pre-commit-config.yaml</code>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">repos</span><span class="kw">:</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">-</span><span class="at">   </span><span class="fu">repo</span><span class="kw">:</span><span class="at"> https://github.com/pre-commit/pre-commit-hooks</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="at">    </span><span class="fu">rev</span><span class="kw">:</span><span class="at"> v4.5.0</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="at">    </span><span class="fu">hooks</span><span class="kw">:</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> trailing-whitespace</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> end-of-file-fixer</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> check-yaml</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> check-json</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> check-added-large-files</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="at">        </span><span class="fu">args</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">'--maxkb=5000'</span><span class="kw">]</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a></span>
+<span id="cb8-12"><a href="#cb8-12"></a><span class="kw">-</span><span class="at">   </span><span class="fu">repo</span><span class="kw">:</span><span class="at"> https://github.com/psf/black</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a><span class="at">    </span><span class="fu">rev</span><span class="kw">:</span><span class="at"> </span><span class="fl">24.1.1</span></span>
+<span id="cb8-14"><a href="#cb8-14"></a><span class="at">    </span><span class="fu">hooks</span><span class="kw">:</span></span>
+<span id="cb8-15"><a href="#cb8-15"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> black</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a></span>
+<span id="cb8-17"><a href="#cb8-17"></a><span class="kw">-</span><span class="at">   </span><span class="fu">repo</span><span class="kw">:</span><span class="at"> https://github.com/astral-sh/ruff-pre-commit</span></span>
+<span id="cb8-18"><a href="#cb8-18"></a><span class="at">    </span><span class="fu">rev</span><span class="kw">:</span><span class="at"> v0.2.1</span></span>
+<span id="cb8-19"><a href="#cb8-19"></a><span class="at">    </span><span class="fu">hooks</span><span class="kw">:</span></span>
+<span id="cb8-20"><a href="#cb8-20"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ruff</span></span>
+<span id="cb8-21"><a href="#cb8-21"></a><span class="at">        </span><span class="fu">args</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">--fix</span><span class="kw">]</span></span>
+<span id="cb8-22"><a href="#cb8-22"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ruff-format</span></span>
+<span id="cb8-23"><a href="#cb8-23"></a></span>
+<span id="cb8-24"><a href="#cb8-24"></a><span class="kw">-</span><span class="at">   </span><span class="fu">repo</span><span class="kw">:</span><span class="at"> https://github.com/pre-commit/mirrors-mypy</span></span>
+<span id="cb8-25"><a href="#cb8-25"></a><span class="at">    </span><span class="fu">rev</span><span class="kw">:</span><span class="at"> v1.8.0</span></span>
+<span id="cb8-26"><a href="#cb8-26"></a><span class="at">    </span><span class="fu">hooks</span><span class="kw">:</span></span>
+<span id="cb8-27"><a href="#cb8-27"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> mypy</span></span>
+<span id="cb8-28"><a href="#cb8-28"></a><span class="at">        </span><span class="fu">additional_dependencies</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">types-all</span><span class="kw">]</span></span>
+<span id="cb8-29"><a href="#cb8-29"></a></span>
+<span id="cb8-30"><a href="#cb8-30"></a><span class="kw">-</span><span class="at">   </span><span class="fu">repo</span><span class="kw">:</span><span class="at"> https://github.com/nbQA-dev/nbQA</span></span>
+<span id="cb8-31"><a href="#cb8-31"></a><span class="at">    </span><span class="fu">rev</span><span class="kw">:</span><span class="at"> </span><span class="fl">1.7.1</span></span>
+<span id="cb8-32"><a href="#cb8-32"></a><span class="at">    </span><span class="fu">hooks</span><span class="kw">:</span></span>
+<span id="cb8-33"><a href="#cb8-33"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> nbqa-black</span></span>
+<span id="cb8-34"><a href="#cb8-34"></a><span class="at">        </span><span class="fu">additional_dependencies</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">black==</span><span class="fl">24.1.1</span><span class="kw">]</span></span>
+<span id="cb8-35"><a href="#cb8-35"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> nbqa-ruff</span></span>
+<span id="cb8-36"><a href="#cb8-36"></a><span class="at">        </span><span class="fu">additional_dependencies</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">ruff==</span><span class="fl">0.2.1</span><span class="kw">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="cấu-hình-git-ignore" class="level3">
+<h3 class="anchored" data-anchor-id="cấu-hình-git-ignore">6.4 Cấu hình Git Ignore</h3>
+<p>Tạo file <code>.gitignore</code>:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource gitignore number-lines code-with-copy"><code class="sourceCode"><span id="cb9-1"><a href="#cb9-1"></a># Python</span>
+<span id="cb9-2"><a href="#cb9-2"></a>__pycache__/</span>
+<span id="cb9-3"><a href="#cb9-3"></a>*.py[cod]</span>
+<span id="cb9-4"><a href="#cb9-4"></a>*$py.class</span>
+<span id="cb9-5"><a href="#cb9-5"></a>*.so</span>
+<span id="cb9-6"><a href="#cb9-6"></a>.Python</span>
+<span id="cb9-7"><a href="#cb9-7"></a>build/</span>
+<span id="cb9-8"><a href="#cb9-8"></a>develop-eggs/</span>
+<span id="cb9-9"><a href="#cb9-9"></a>dist/</span>
+<span id="cb9-10"><a href="#cb9-10"></a>downloads/</span>
+<span id="cb9-11"><a href="#cb9-11"></a>eggs/</span>
+<span id="cb9-12"><a href="#cb9-12"></a>.eggs/</span>
+<span id="cb9-13"><a href="#cb9-13"></a>lib/</span>
+<span id="cb9-14"><a href="#cb9-14"></a>lib64/</span>
+<span id="cb9-15"><a href="#cb9-15"></a>parts/</span>
+<span id="cb9-16"><a href="#cb9-16"></a>sdist/</span>
+<span id="cb9-17"><a href="#cb9-17"></a>var/</span>
+<span id="cb9-18"><a href="#cb9-18"></a>wheels/</span>
+<span id="cb9-19"><a href="#cb9-19"></a>*.egg-info/</span>
+<span id="cb9-20"><a href="#cb9-20"></a>.installed.cfg</span>
+<span id="cb9-21"><a href="#cb9-21"></a>*.egg</span>
+<span id="cb9-22"><a href="#cb9-22"></a></span>
+<span id="cb9-23"><a href="#cb9-23"></a># Jupyter Notebook</span>
+<span id="cb9-24"><a href="#cb9-24"></a>.ipynb_checkpoints</span>
+<span id="cb9-25"><a href="#cb9-25"></a>*/.ipynb_checkpoints/*</span>
+<span id="cb9-26"><a href="#cb9-26"></a>profile_default/</span>
+<span id="cb9-27"><a href="#cb9-27"></a>ipython_config.py</span>
+<span id="cb9-28"><a href="#cb9-28"></a></span>
+<span id="cb9-29"><a href="#cb9-29"></a># VS Code</span>
+<span id="cb9-30"><a href="#cb9-30"></a>.vscode/*</span>
+<span id="cb9-31"><a href="#cb9-31"></a>!.vscode/settings.json</span>
+<span id="cb9-32"><a href="#cb9-32"></a>!.vscode/tasks.json</span>
+<span id="cb9-33"><a href="#cb9-33"></a>!.vscode/launch.json</span>
+<span id="cb9-34"><a href="#cb9-34"></a>!.vscode/extensions.json</span>
+<span id="cb9-35"><a href="#cb9-35"></a></span>
+<span id="cb9-36"><a href="#cb9-36"></a># Environment</span>
+<span id="cb9-37"><a href="#cb9-37"></a>.env</span>
+<span id="cb9-38"><a href="#cb9-38"></a>.venv</span>
+<span id="cb9-39"><a href="#cb9-39"></a>env/</span>
+<span id="cb9-40"><a href="#cb9-40"></a>venv/</span>
+<span id="cb9-41"><a href="#cb9-41"></a>ENV/</span>
+<span id="cb9-42"><a href="#cb9-42"></a>env.bak/</span>
+<span id="cb9-43"><a href="#cb9-43"></a>venv.bak/</span>
+<span id="cb9-44"><a href="#cb9-44"></a>.conda/</span>
+<span id="cb9-45"><a href="#cb9-45"></a>conda-env/</span>
+<span id="cb9-46"><a href="#cb9-46"></a></span>
+<span id="cb9-47"><a href="#cb9-47"></a># Data</span>
+<span id="cb9-48"><a href="#cb9-48"></a>data/raw/*</span>
+<span id="cb9-49"><a href="#cb9-49"></a>!data/raw/.gitkeep</span>
+<span id="cb9-50"><a href="#cb9-50"></a>data/processed/*</span>
+<span id="cb9-51"><a href="#cb9-51"></a>!data/processed/.gitkeep</span>
+<span id="cb9-52"><a href="#cb9-52"></a>*.csv</span>
+<span id="cb9-53"><a href="#cb9-53"></a>*.xlsx</span>
+<span id="cb9-54"><a href="#cb9-54"></a>*.xls</span>
+<span id="cb9-55"><a href="#cb9-55"></a>*.db</span>
+<span id="cb9-56"><a href="#cb9-56"></a>*.sqlite</span>
+<span id="cb9-57"><a href="#cb9-57"></a>*.h5</span>
+<span id="cb9-58"><a href="#cb9-58"></a></span>
+<span id="cb9-59"><a href="#cb9-59"></a># Logs</span>
+<span id="cb9-60"><a href="#cb9-60"></a>logs/</span>
+<span id="cb9-61"><a href="#cb9-61"></a>*.log</span>
+<span id="cb9-62"><a href="#cb9-62"></a>.hypothesis/</span>
+<span id="cb9-63"><a href="#cb9-63"></a>.pytest_cache/</span>
+<span id="cb9-64"><a href="#cb9-64"></a>.coverage</span>
+<span id="cb9-65"><a href="#cb9-65"></a>htmlcov/</span>
+<span id="cb9-66"><a href="#cb9-66"></a></span>
+<span id="cb9-67"><a href="#cb9-67"></a># OS specific</span>
+<span id="cb9-68"><a href="#cb9-68"></a>.DS_Store</span>
+<span id="cb9-69"><a href="#cb9-69"></a>.DS_Store?</span>
+<span id="cb9-70"><a href="#cb9-70"></a>._*</span>
+<span id="cb9-71"><a href="#cb9-71"></a>.Spotlight-V100</span>
+<span id="cb9-72"><a href="#cb9-72"></a>.Trashes</span>
+<span id="cb9-73"><a href="#cb9-73"></a>ehthumbs.db</span>
+<span id="cb9-74"><a href="#cb9-74"></a>Thumbs.db</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="khởi-tạo-pre-commit" class="level3">
+<h3 class="anchored" data-anchor-id="khởi-tạo-pre-commit">6.5 Khởi tạo Pre-commit</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Activate môi trường</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="ex">mamba</span> activate ds-project</span>
+<span id="cb10-3"><a href="#cb10-3"></a></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="co"># Cài đặt pre-commit hooks</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="ex">pre-commit</span> install</span>
+<span id="cb10-6"><a href="#cb10-6"></a></span>
+<span id="cb10-7"><a href="#cb10-7"></a><span class="co"># (Tùy chọn) Chạy pre-commit trên tất cả files</span></span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="ex">pre-commit</span> run <span class="at">--all-files</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="extensions-vs-code-cho-notebooks" class="level3">
+<h3 class="anchored" data-anchor-id="extensions-vs-code-cho-notebooks">6.6 Extensions VS Code cho Notebooks</h3>
+<p>Cài thêm các extensions sau:</p>
+<ol type="1">
+<li>“Jupyter Notebook Renderers”</li>
+<li>“Jupytext for Notebooks”</li>
+<li>“Black Formatter”</li>
+<li>“Ruff”</li>
+<li>“Mypy Type Checker”</li>
+</ol>
+</section>
+<section id="cấu-hình-jupytext" class="level3">
+<h3 class="anchored" data-anchor-id="cấu-hình-jupytext">6.7 Cấu hình Jupytext</h3>
+<p>Tạo file <code>.jupytext.toml</code>:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource toml number-lines code-with-copy"><code class="sourceCode toml"><span id="cb11-1"><a href="#cb11-1"></a><span class="dt">formats</span> <span class="op">=</span> <span class="st">"ipynb,qmd"</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="kw">[formats]</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="dt">ipynb</span> <span class="op">=</span> <span class="op">{}</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="dt">qmd</span> <span class="op">=</span> <span class="op">{}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="pro-tips-cho-windows" class="level2">
+<h2 class="anchored" data-anchor-id="pro-tips-cho-windows">7. Pro Tips cho Windows</h2>
+<section id="path-management" class="level3">
+<h3 class="anchored" data-anchor-id="path-management">Path Management</h3>
+<p>Sử dụng <code>pathlib</code> để xử lý đường dẫn:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb12-2"><a href="#cb12-2"></a>data_path <span class="op">=</span> Path(<span class="st">"data"</span>) <span class="op">/</span> <span class="st">"raw"</span> <span class="op">/</span> <span class="st">"file.csv"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="git-configuration" class="level3">
+<h3 class="anchored" data-anchor-id="git-configuration">Git Configuration</h3>
+<p>Tạo file <code>.gitignore</code>:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource gitignore number-lines code-with-copy"><code class="sourceCode"><span id="cb13-1"><a href="#cb13-1"></a># .gitignore</span>
+<span id="cb13-2"><a href="#cb13-2"></a>data/raw/*</span>
+<span id="cb13-3"><a href="#cb13-3"></a>data/processed/*</span>
+<span id="cb13-4"><a href="#cb13-4"></a>.ipynb_checkpoints/</span>
+<span id="cb13-5"><a href="#cb13-5"></a>__pycache__/</span>
+<span id="cb13-6"><a href="#cb13-6"></a>*.pyc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="jupyter-trong-vs-code" class="level3">
+<h3 class="anchored" data-anchor-id="jupyter-trong-vs-code">Jupyter trong VS Code</h3>
+<ul>
+<li>Chạy cell: <code>Shift + Enter</code></li>
+<li>Variable explorer có sẵn</li>
+<li>Plot viewer tích hợp</li>
+<li>Intellisense hoạt động tốt</li>
+</ul>
+</section>
+<section id="debugging" class="level3">
+<h3 class="anchored" data-anchor-id="debugging">Debugging</h3>
+<ul>
+<li>Debugger tích hợp cho cả <code>.py</code> và <code>.ipynb</code></li>
+<li>Có thể đặt breakpoints trong notebooks</li>
+</ul>
+</section>
+</section>
+<section id="xử-lý-lỗi-thường-gặp" class="level2">
+<h2 class="anchored" data-anchor-id="xử-lý-lỗi-thường-gặp">8. Xử lý Lỗi Thường Gặp</h2>
+<ol type="1">
+<li><p><strong>Path quá dài trên Windows</strong></p>
+<ul>
+<li>Sử dụng đường dẫn ngắn hơn</li>
+<li>Kích hoạt hỗ trợ đường dẫn dài trong Windows</li>
+</ul></li>
+<li><p><strong>Conflict với môi trường Python khác</strong></p>
+<ul>
+<li>Đảm bảo PATH được cập nhật đúng</li>
+<li>Kiểm tra <code>where python</code> trong terminal</li>
+</ul></li>
+<li><p><strong>Jupyter Kernel không hiển thị</strong></p>
+<ul>
+<li>Cài lại <code>ipykernel</code></li>
+<li>Kiểm tra jupyter kernelspec list</li>
+</ul></li>
+</ol>
+</section>
+<section id="resources-hữu-ích" class="level2">
+<h2 class="anchored" data-anchor-id="resources-hữu-ích">9. Resources Hữu ích</h2>
+<ul>
+<li><a href="https://mamba.readthedocs.io/">Mamba Documentation</a></li>
+<li><a href="https://code.visualstudio.com/docs/python/python-tutorial">VS Code Python Documentation</a></li>
+<li><a href="https://code.visualstudio.com/docs/datascience/jupyter-notebooks">Jupyter in VS Code</a></li>
+</ul>
+</section>
+<section id="workflow-đề-xuất" class="level2">
+<h2 class="anchored" data-anchor-id="workflow-đề-xuất">10. Workflow Đề Xuất</h2>
+<ol type="1">
+<li><strong>Khởi tạo project mới</strong>:</li>
+</ol>
+<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># Tạo và activate môi trường</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="ex">mamba</span> env create <span class="at">-f</span> environment.yml</span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="ex">mamba</span> activate ds-project</span>
+<span id="cb14-4"><a href="#cb14-4"></a></span>
+<span id="cb14-5"><a href="#cb14-5"></a><span class="co"># Cài đặt pre-commit hooks</span></span>
+<span id="cb14-6"><a href="#cb14-6"></a><span class="ex">pre-commit</span> install</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="2" type="1">
+<li><strong>Phát triển</strong>:</li>
+</ol>
+<ul>
+<li>Code trong VS Code với các extensions đã cài</li>
+<li>Notebooks sẽ tự động được format bởi nbQA</li>
+<li>Pre-commit sẽ kiểm tra code trước mỗi commit</li>
+</ul>
+<ol start="3" type="1">
+<li><strong>Commit Changes</strong>:</li>
+</ol>
+<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1"></a><span class="fu">git</span> add .</span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"your message"</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="co"># Pre-commit sẽ tự động chạy các checks</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="4" type="1">
+<li><strong>Update Dependencies</strong>:</li>
+</ol>
+<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Thêm package mới</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="ex">mamba</span> install package-name</span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="co"># Export environment</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="ex">mamba</span> env export <span class="op">&gt;</span> environment.yml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="bonus-nếu-muốn-import-một-module-từ-src-trong-notebook.ipynb-thì-làm-thế-nào" class="level2">
+<h2 class="anchored" data-anchor-id="bonus-nếu-muốn-import-một-module-từ-src-trong-notebook.ipynb-thì-làm-thế-nào">Bonus: nếu muốn import một module từ <code>src</code> trong <code>notebook.ipynb</code> thì làm thế nào?</h2>
+<div id="c9cc4dfd" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Trong notebook của bạn (ví dụ notebooks/analysis.ipynb)</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a></span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="co"># 1. Setup path</span></span>
+<span id="cb17-4"><a href="#cb17-4"></a><span class="im">import</span> sys</span>
+<span id="cb17-5"><a href="#cb17-5"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb17-6"><a href="#cb17-6"></a>project_root <span class="op">=</span> <span class="bu">str</span>(Path.cwd().parent)</span>
+<span id="cb17-7"><a href="#cb17-7"></a><span class="cf">if</span> project_root <span class="kw">not</span> <span class="kw">in</span> sys.path:</span>
+<span id="cb17-8"><a href="#cb17-8"></a>    sys.path.append(project_root)</span>
+<span id="cb17-9"><a href="#cb17-9"></a></span>
+<span id="cb17-10"><a href="#cb17-10"></a><span class="co"># 2. Import function</span></span>
+<span id="cb17-11"><a href="#cb17-11"></a><span class="im">from</span> src.processing.data_preprocessing <span class="im">import</span> process_data, clean_data</span>
+<span id="cb17-12"><a href="#cb17-12"></a></span>
+<span id="cb17-13"><a href="#cb17-13"></a><span class="co"># 3. Sử dụng function</span></span>
+<span id="cb17-14"><a href="#cb17-14"></a>df_processed <span class="op">=</span> process_data(df_raw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Với lưu ý:</p>
+<ul>
+<li>Đảm bảo có file <code>__init__.py</code> trong mỗi thư mục Python</li>
+<li>Không nên dùng relative imports (<code>from ...src.processing</code>) vì dễ gây lỗi</li>
+<li>Nên đặt tên module và function theo PEP 8</li>
+<li>Trong <code>data_preprocessing.py</code> nên có docstring mô tả function</li>
+</ul>
+<div id="05d43597" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># src/processing/data_preprocessing.py</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a></span>
+<span id="cb18-3"><a href="#cb18-3"></a><span class="kw">def</span> process_data(df):</span>
+<span id="cb18-4"><a href="#cb18-4"></a>    <span class="co">"""Process the input dataframe.</span></span>
+<span id="cb18-5"><a href="#cb18-5"></a><span class="co">    </span></span>
+<span id="cb18-6"><a href="#cb18-6"></a><span class="co">    Args:</span></span>
+<span id="cb18-7"><a href="#cb18-7"></a><span class="co">        df (pd.DataFrame): Input dataframe</span></span>
+<span id="cb18-8"><a href="#cb18-8"></a><span class="co">        </span></span>
+<span id="cb18-9"><a href="#cb18-9"></a><span class="co">    Returns:</span></span>
+<span id="cb18-10"><a href="#cb18-10"></a><span class="co">        pd.DataFrame: Processed dataframe</span></span>
+<span id="cb18-11"><a href="#cb18-11"></a><span class="co">    """</span></span>
+<span id="cb18-12"><a href="#cb18-12"></a>    <span class="co"># your code here</span></span>
+<span id="cb18-13"><a href="#cb18-13"></a>    <span class="cf">return</span> processed_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+
+
+<!-- -->
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/lktuan\.github\.io\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb19" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb19-1"><a href="#cb19-1"></a><span class="co">---</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="an">title:</span><span class="co"> "Data Science Project with Mamba, Python, and VS Code on Window"</span></span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="an">description:</span><span class="co"> "In search for the best environment &amp; dependencies management tool for data project"</span></span>
+<span id="cb19-4"><a href="#cb19-4"></a><span class="an">author:</span></span>
+<span id="cb19-5"><a href="#cb19-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
+<span id="cb19-6"><a href="#cb19-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
+<span id="cb19-7"><a href="#cb19-7"></a><span class="an">categories:</span><span class="co"> [python] </span></span>
+<span id="cb19-8"><a href="#cb19-8"></a><span class="an">image:</span><span class="co"> mamba.png</span></span>
+<span id="cb19-9"><a href="#cb19-9"></a><span class="an">date:</span><span class="co"> 11-04-2024</span></span>
+<span id="cb19-10"><a href="#cb19-10"></a><span class="an">date-modified:</span><span class="co"> 11-04-2024</span></span>
+<span id="cb19-11"><a href="#cb19-11"></a><span class="an">toc:</span><span class="co"> true</span></span>
+<span id="cb19-12"><a href="#cb19-12"></a><span class="an">code-fold:</span><span class="co"> true</span></span>
+<span id="cb19-13"><a href="#cb19-13"></a><span class="an">format:</span></span>
+<span id="cb19-14"><a href="#cb19-14"></a><span class="co">  html:</span></span>
+<span id="cb19-15"><a href="#cb19-15"></a><span class="co">    code-overflow: wrap</span></span>
+<span id="cb19-16"><a href="#cb19-16"></a><span class="co">---</span></span>
+<span id="cb19-17"><a href="#cb19-17"></a></span>
+<span id="cb19-18"><a href="#cb19-18"></a><span class="fu"># Vì sao mà Mamba?</span></span>
+<span id="cb19-19"><a href="#cb19-19"></a></span>
+<span id="cb19-20"><a href="#cb19-20"></a>Là một non-tech data coder, mình vẫn loay hoay việc setup một dự án có thể được tái sử dụng và dễ dàng deploy, đặc biệt là với dự án dạng data - khi mà DS/DA sẽ làm việc nhiều với notebook - rất anti production.</span>
+<span id="cb19-21"><a href="#cb19-21"></a></span>
+<span id="cb19-22"><a href="#cb19-22"></a>:::: {.columns}</span>
+<span id="cb19-23"><a href="#cb19-23"></a></span>
+<span id="cb19-24"><a href="#cb19-24"></a>::: {.column width="60%"}</span>
+<span id="cb19-25"><a href="#cb19-25"></a>!<span class="co">[</span><span class="ot">Arggg! Cơn đau đầu của non-tech làm data, nguồn ảnh [Analytics Vidhya](https://www.analyticsvidhya.com/blog/2023/03/choosing-the-right-python-environment-tool-for-your-next-project/)</span><span class="co">](meme_top.png)</span></span>
+<span id="cb19-26"><a href="#cb19-26"></a>:::</span>
+<span id="cb19-27"><a href="#cb19-27"></a></span>
+<span id="cb19-28"><a href="#cb19-28"></a>::: {.column width="40%"}</span>
+<span id="cb19-29"><a href="#cb19-29"></a><span class="al">![](meme_bottom.png)</span></span>
+<span id="cb19-30"><a href="#cb19-30"></a>:::</span>
+<span id="cb19-31"><a href="#cb19-31"></a></span>
+<span id="cb19-32"><a href="#cb19-32"></a>::::</span>
+<span id="cb19-33"><a href="#cb19-33"></a></span>
+<span id="cb19-34"><a href="#cb19-34"></a>Mình tìm hiểu một số công cụ và dưới đây là so sánh:</span>
+<span id="cb19-35"><a href="#cb19-35"></a></span>
+<span id="cb19-36"><a href="#cb19-36"></a><span class="ss">1. </span><span class="in">`Mamba`</span> ✅</span>
+<span id="cb19-37"><a href="#cb19-37"></a></span>
+<span id="cb19-38"><a href="#cb19-38"></a><span class="ss">+ </span>Ưu điểm:</span>
+<span id="cb19-39"><a href="#cb19-39"></a></span>
+<span id="cb19-40"><a href="#cb19-40"></a><span class="ss">  - </span>Nhanh hơn Conda nhiều lần</span>
+<span id="cb19-41"><a href="#cb19-41"></a><span class="ss">  - </span>Tương thích hoàn toàn với Conda</span>
+<span id="cb19-42"><a href="#cb19-42"></a><span class="ss">  - </span>Quản lý được cả Python và non-Python dependencies</span>
+<span id="cb19-43"><a href="#cb19-43"></a><span class="ss">  - </span>Tích hợp tốt với notebooks</span>
+<span id="cb19-44"><a href="#cb19-44"></a></span>
+<span id="cb19-45"><a href="#cb19-45"></a><span class="ss">2. </span><span class="in">`Poetry`</span></span>
+<span id="cb19-46"><a href="#cb19-46"></a></span>
+<span id="cb19-47"><a href="#cb19-47"></a><span class="ss">+ </span>Ưu điểm:</span>
+<span id="cb19-48"><a href="#cb19-48"></a></span>
+<span id="cb19-49"><a href="#cb19-49"></a><span class="ss">  - </span>Dependency resolution tốt</span>
+<span id="cb19-50"><a href="#cb19-50"></a><span class="ss">  - </span>Lock file chính xác</span>
+<span id="cb19-51"><a href="#cb19-51"></a></span>
+<span id="cb19-52"><a href="#cb19-52"></a><span class="ss">+ </span>Nhược điểm:</span>
+<span id="cb19-53"><a href="#cb19-53"></a></span>
+<span id="cb19-54"><a href="#cb19-54"></a><span class="ss">  - </span>Khó xử lý non-Python dependencies</span>
+<span id="cb19-55"><a href="#cb19-55"></a><span class="ss">  - </span>Cần thêm setup cho notebook kernels</span>
+<span id="cb19-56"><a href="#cb19-56"></a><span class="ss">  - </span>Không phù hợp lắm với data science</span>
+<span id="cb19-57"><a href="#cb19-57"></a></span>
+<span id="cb19-58"><a href="#cb19-58"></a><span class="ss">1. </span><span class="in">`venv`</span></span>
+<span id="cb19-59"><a href="#cb19-59"></a></span>
+<span id="cb19-60"><a href="#cb19-60"></a><span class="ss">- </span>Quá đơn giản cho data science</span>
+<span id="cb19-61"><a href="#cb19-61"></a><span class="ss">- </span>Không xử lý được dependencies phức tạp</span>
+<span id="cb19-62"><a href="#cb19-62"></a><span class="ss">- </span>Cần nhiều cấu hình thủ công</span>
+<span id="cb19-63"><a href="#cb19-63"></a></span>
+<span id="cb19-64"><a href="#cb19-64"></a><span class="ss">4. </span><span class="in">`pipenv`</span></span>
+<span id="cb19-65"><a href="#cb19-65"></a></span>
+<span id="cb19-66"><a href="#cb19-66"></a><span class="ss">- </span>Tương tự Poetry nhưng ít tính năng hơn</span>
+<span id="cb19-67"><a href="#cb19-67"></a><span class="ss">- </span>Không phù hợp với data science</span>
+<span id="cb19-68"><a href="#cb19-68"></a></span>
+<span id="cb19-69"><a href="#cb19-69"></a><span class="ss">5. </span><span class="in">`uv`</span></span>
+<span id="cb19-70"><a href="#cb19-70"></a></span>
+<span id="cb19-71"><a href="#cb19-71"></a><span class="ss">- </span>Mới và nhanh</span>
+<span id="cb19-72"><a href="#cb19-72"></a><span class="ss">- </span>Chưa đủ chín muồi cho data science</span>
+<span id="cb19-73"><a href="#cb19-73"></a><span class="ss">- </span>Thiếu nhiều tính năng cần thiết</span>
+<span id="cb19-74"><a href="#cb19-74"></a></span>
+<span id="cb19-75"><a href="#cb19-75"></a>Xem ra <span class="in">`mamba`</span> có vẻ ổn nhất, hãy đào sâu hơn về ưu điểm của nó:</span>
+<span id="cb19-76"><a href="#cb19-76"></a></span>
+<span id="cb19-77"><a href="#cb19-77"></a><span class="ss">1. </span>Xử lý dependencies phức tạp</span>
+<span id="cb19-78"><a href="#cb19-78"></a></span>
+<span id="cb19-79"><a href="#cb19-79"></a><span class="ss">- </span>Data science thường cần nhiều thư viện với dependencies phức tạp (numpy, pandas, scipy, pytorch...)</span>
+<span id="cb19-80"><a href="#cb19-80"></a><span class="ss">- </span>Mamba giải quyết dependencies nhanh và hiệu quả hơn Conda</span>
+<span id="cb19-81"><a href="#cb19-81"></a><span class="ss">- </span>Xử lý tốt các thư viện có binary dependencies (như CUDA)</span>
+<span id="cb19-82"><a href="#cb19-82"></a></span>
+<span id="cb19-83"><a href="#cb19-83"></a><span class="ss">2. </span>Quản lý môi trường kernel cho notebooks</span>
+<span id="cb19-84"><a href="#cb19-84"></a></span>
+<span id="cb19-85"><a href="#cb19-85"></a><span class="ss">- </span>Tự động tích hợp với Jupyter notebooks</span>
+<span id="cb19-86"><a href="#cb19-86"></a><span class="ss">- </span>Dễ dàng switch giữa các môi trường trong notebook</span>
+<span id="cb19-87"><a href="#cb19-87"></a><span class="ss">- </span>Không cần cấu hình thêm cho notebook kernels</span>
+<span id="cb19-88"><a href="#cb19-88"></a></span>
+<span id="cb19-89"><a href="#cb19-89"></a>Oke giờ hãy thử xem làm thế nào để tổ chức phát triển một dự án với mamba - VS Code trên Window.</span>
+<span id="cb19-90"><a href="#cb19-90"></a></span>
+<span id="cb19-91"><a href="#cb19-91"></a><span class="fu"># Hướng dẫn Cài đặt và Sử dụng Mamba với VS Code trên Windows</span></span>
+<span id="cb19-92"><a href="#cb19-92"></a></span>
+<span id="cb19-93"><a href="#cb19-93"></a><span class="fu">## 1. Cài đặt Mamba trên Windows</span></span>
+<span id="cb19-94"><a href="#cb19-94"></a></span>
+<span id="cb19-95"><a href="#cb19-95"></a><span class="fu">### Cách 1: Tải trực tiếp</span></span>
+<span id="cb19-96"><a href="#cb19-96"></a></span>
+<span id="cb19-97"><a href="#cb19-97"></a><span class="ss">- </span>Tải Mambaforge cho Windows từ: <span class="ot">&lt;https://github.com/conda-forge/miniforge#mambaforge&gt;</span></span>
+<span id="cb19-98"><a href="#cb19-98"></a><span class="ss">- </span>Chạy file installer và làm theo hướng dẫn.</span>
+<span id="cb19-99"><a href="#cb19-99"></a></span>
+<span id="cb19-100"><a href="#cb19-100"></a><span class="fu">### Cách 2: Dùng Windows Terminal/PowerShell</span></span>
+<span id="cb19-101"><a href="#cb19-101"></a></span>
+<span id="cb19-102"><a href="#cb19-102"></a><span class="in">```bash</span></span>
+<span id="cb19-103"><a href="#cb19-103"></a><span class="fu">wget</span> https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Windows-x86_64.exe <span class="at">-OutFile</span> mambaforge.exe</span>
+<span id="cb19-104"><a href="#cb19-104"></a><span class="ex">start</span> /wait <span class="st">""</span> mambaforge.exe /InstallationType=JustMe /RegisterPython=0 /S /D=%UserProfile%\Mambaforge</span>
+<span id="cb19-105"><a href="#cb19-105"></a><span class="in">```</span></span>
+<span id="cb19-106"><a href="#cb19-106"></a></span>
+<span id="cb19-107"><a href="#cb19-107"></a><span class="fu">## 2. Tích hợp với VS Code</span></span>
+<span id="cb19-108"><a href="#cb19-108"></a></span>
+<span id="cb19-109"><a href="#cb19-109"></a><span class="fu">### Cài đặt Extensions</span></span>
+<span id="cb19-110"><a href="#cb19-110"></a></span>
+<span id="cb19-111"><a href="#cb19-111"></a><span class="ss">1. </span>Python (Microsoft)</span>
+<span id="cb19-112"><a href="#cb19-112"></a><span class="ss">2. </span>Jupyter (Microsoft)</span>
+<span id="cb19-113"><a href="#cb19-113"></a></span>
+<span id="cb19-114"><a href="#cb19-114"></a><span class="fu">### Tạo và Cấu hình Môi trường</span></span>
+<span id="cb19-115"><a href="#cb19-115"></a></span>
+<span id="cb19-116"><a href="#cb19-116"></a>Tạo file <span class="in">`environment.yml`</span>:</span>
+<span id="cb19-117"><a href="#cb19-117"></a></span>
+<span id="cb19-118"><a href="#cb19-118"></a><span class="in">```yaml</span></span>
+<span id="cb19-119"><a href="#cb19-119"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> ds-project</span></span>
+<span id="cb19-120"><a href="#cb19-120"></a><span class="fu">channels</span><span class="kw">:</span></span>
+<span id="cb19-121"><a href="#cb19-121"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>conda-forge</span>
+<span id="cb19-122"><a href="#cb19-122"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>defaults</span>
+<span id="cb19-123"><a href="#cb19-123"></a><span class="fu">dependencies</span><span class="kw">:</span></span>
+<span id="cb19-124"><a href="#cb19-124"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>python=3.10</span>
+<span id="cb19-125"><a href="#cb19-125"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>ipykernel</span>
+<span id="cb19-126"><a href="#cb19-126"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>pandas</span>
+<span id="cb19-127"><a href="#cb19-127"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>numpy</span>
+<span id="cb19-128"><a href="#cb19-128"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>matplotlib</span>
+<span id="cb19-129"><a href="#cb19-129"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>scikit-learn</span>
+<span id="cb19-130"><a href="#cb19-130"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>jupyter</span>
+<span id="cb19-131"><a href="#cb19-131"></a><span class="in">```</span></span>
+<span id="cb19-132"><a href="#cb19-132"></a></span>
+<span id="cb19-133"><a href="#cb19-133"></a>Tạo môi trường từ file:</span>
+<span id="cb19-134"><a href="#cb19-134"></a></span>
+<span id="cb19-135"><a href="#cb19-135"></a><span class="in">```bash</span></span>
+<span id="cb19-136"><a href="#cb19-136"></a><span class="ex">mamba</span> env create <span class="at">-f</span> environment.yml</span>
+<span id="cb19-137"><a href="#cb19-137"></a><span class="in">```</span></span>
+<span id="cb19-138"><a href="#cb19-138"></a></span>
+<span id="cb19-139"><a href="#cb19-139"></a><span class="fu">## 3. Cấu hình VS Code</span></span>
+<span id="cb19-140"><a href="#cb19-140"></a></span>
+<span id="cb19-141"><a href="#cb19-141"></a><span class="fu">### Chọn Python Interpreter</span></span>
+<span id="cb19-142"><a href="#cb19-142"></a></span>
+<span id="cb19-143"><a href="#cb19-143"></a><span class="ss">1. </span>Mở Command Palette (<span class="in">`Ctrl + Shift + P`</span>)</span>
+<span id="cb19-144"><a href="#cb19-144"></a><span class="ss">2. </span>Tìm "Python: Select Interpreter"</span>
+<span id="cb19-145"><a href="#cb19-145"></a><span class="ss">3. </span>Chọn môi trường Mamba vừa tạo</span>
+<span id="cb19-146"><a href="#cb19-146"></a></span>
+<span id="cb19-147"><a href="#cb19-147"></a><span class="fu">### Cấu hình Notebooks</span></span>
+<span id="cb19-148"><a href="#cb19-148"></a></span>
+<span id="cb19-149"><a href="#cb19-149"></a><span class="ss">- </span>VS Code tự động nhận diện kernel từ môi trường Mamba</span>
+<span id="cb19-150"><a href="#cb19-150"></a><span class="ss">- </span>Kernel có thể được chọn ở góc phải trên của notebook</span>
+<span id="cb19-151"><a href="#cb19-151"></a></span>
+<span id="cb19-152"><a href="#cb19-152"></a><span class="fu">## 4. Cấu trúc Project Đề Xuất</span></span>
+<span id="cb19-153"><a href="#cb19-153"></a></span>
+<span id="cb19-154"><a href="#cb19-154"></a><span class="in">```md</span></span>
+<span id="cb19-155"><a href="#cb19-155"></a>project/</span>
+<span id="cb19-156"><a href="#cb19-156"></a>│</span>
+<span id="cb19-157"><a href="#cb19-157"></a>├── .vscode/                      # VS Code settings</span>
+<span id="cb19-158"><a href="#cb19-158"></a>│   ├── settings.json</span>
+<span id="cb19-159"><a href="#cb19-159"></a>│   └── launch.json</span>
+<span id="cb19-160"><a href="#cb19-160"></a>│</span>
+<span id="cb19-161"><a href="#cb19-161"></a>├── data/</span>
+<span id="cb19-162"><a href="#cb19-162"></a>│   ├── raw/</span>
+<span id="cb19-163"><a href="#cb19-163"></a>│   └── processed/</span>
+<span id="cb19-164"><a href="#cb19-164"></a>│</span>
+<span id="cb19-165"><a href="#cb19-165"></a>├── notebooks/</span>
+<span id="cb19-166"><a href="#cb19-166"></a>│   ├── 01_exploration.ipynb</span>
+<span id="cb19-167"><a href="#cb19-167"></a>│   └── 02_analysis.ipynb</span>
+<span id="cb19-168"><a href="#cb19-168"></a>│</span>
+<span id="cb19-169"><a href="#cb19-169"></a>├── src/</span>
+<span id="cb19-170"><a href="#cb19-170"></a>│   └── processing/</span>
+<span id="cb19-171"><a href="#cb19-171"></a>│       ├── __init__.py</span>
+<span id="cb19-172"><a href="#cb19-172"></a>│       └── data_processing.py</span>
+<span id="cb19-173"><a href="#cb19-173"></a>│</span>
+<span id="cb19-174"><a href="#cb19-174"></a>├── environment.yml</span>
+<span id="cb19-175"><a href="#cb19-175"></a>├── .gitignore</span>
+<span id="cb19-176"><a href="#cb19-176"></a>└── README.md</span>
+<span id="cb19-177"><a href="#cb19-177"></a><span class="in">```</span></span>
+<span id="cb19-178"><a href="#cb19-178"></a></span>
+<span id="cb19-179"><a href="#cb19-179"></a><span class="fu">## 5. Cấu hình VS Code Settings</span></span>
+<span id="cb19-180"><a href="#cb19-180"></a></span>
+<span id="cb19-181"><a href="#cb19-181"></a>Tạo file <span class="in">`.vscode/settings.json`</span>:</span>
+<span id="cb19-182"><a href="#cb19-182"></a></span>
+<span id="cb19-183"><a href="#cb19-183"></a><span class="in">```json</span></span>
+<span id="cb19-184"><a href="#cb19-184"></a><span class="fu">{</span></span>
+<span id="cb19-185"><a href="#cb19-185"></a>    <span class="dt">"python.defaultInterpreterPath"</span><span class="fu">:</span> <span class="st">"${env:USERPROFILE}</span><span class="ch">\\</span><span class="st">Mambaforge</span><span class="ch">\\</span><span class="st">envs</span><span class="ch">\\</span><span class="st">ds-project</span><span class="ch">\\</span><span class="st">python.exe"</span><span class="fu">,</span></span>
+<span id="cb19-186"><a href="#cb19-186"></a>    <span class="dt">"jupyter.notebookFileRoot"</span><span class="fu">:</span> <span class="st">"${workspaceFolder}"</span><span class="fu">,</span></span>
+<span id="cb19-187"><a href="#cb19-187"></a>    <span class="dt">"python.analysis.extraPaths"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"${workspaceFolder}/src"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb19-188"><a href="#cb19-188"></a>    <span class="dt">"python.formatting.provider"</span><span class="fu">:</span> <span class="st">"black"</span><span class="fu">,</span></span>
+<span id="cb19-189"><a href="#cb19-189"></a>    <span class="dt">"editor.formatOnSave"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb19-190"><a href="#cb19-190"></a>    <span class="dt">"ruff.enable"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb19-191"><a href="#cb19-191"></a>    <span class="dt">"ruff.format.args"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"--config=pyproject.toml"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb19-192"><a href="#cb19-192"></a>    <span class="dt">"ruff.lint.args"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"--config=pyproject.toml"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb19-193"><a href="#cb19-193"></a>    <span class="dt">"mypy.enabled"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb19-194"><a href="#cb19-194"></a>    <span class="dt">"mypy.configFile"</span><span class="fu">:</span> <span class="st">"pyproject.toml"</span></span>
+<span id="cb19-195"><a href="#cb19-195"></a><span class="fu">}</span></span>
+<span id="cb19-196"><a href="#cb19-196"></a><span class="in">```</span></span>
+<span id="cb19-197"><a href="#cb19-197"></a></span>
+<span id="cb19-198"><a href="#cb19-198"></a><span class="fu">## 6. Cấu hình Development Tools</span></span>
+<span id="cb19-199"><a href="#cb19-199"></a></span>
+<span id="cb19-200"><a href="#cb19-200"></a><span class="fu">### 6.1 Cài đặt Development Dependencies</span></span>
+<span id="cb19-201"><a href="#cb19-201"></a></span>
+<span id="cb19-202"><a href="#cb19-202"></a>Cập nhật <span class="in">`environment.yml`</span>:</span>
+<span id="cb19-203"><a href="#cb19-203"></a></span>
+<span id="cb19-204"><a href="#cb19-204"></a><span class="in">```yaml</span></span>
+<span id="cb19-205"><a href="#cb19-205"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> ds-project</span></span>
+<span id="cb19-206"><a href="#cb19-206"></a><span class="fu">channels</span><span class="kw">:</span></span>
+<span id="cb19-207"><a href="#cb19-207"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>conda-forge</span>
+<span id="cb19-208"><a href="#cb19-208"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>defaults</span>
+<span id="cb19-209"><a href="#cb19-209"></a><span class="fu">dependencies</span><span class="kw">:</span></span>
+<span id="cb19-210"><a href="#cb19-210"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>python=3.10</span>
+<span id="cb19-211"><a href="#cb19-211"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>ipykernel</span>
+<span id="cb19-212"><a href="#cb19-212"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>pandas</span>
+<span id="cb19-213"><a href="#cb19-213"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>numpy</span>
+<span id="cb19-214"><a href="#cb19-214"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>matplotlib</span>
+<span id="cb19-215"><a href="#cb19-215"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>scikit-learn</span>
+<span id="cb19-216"><a href="#cb19-216"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>jupyter</span>
+<span id="cb19-217"><a href="#cb19-217"></a><span class="co">  # Dev dependencies</span></span>
+<span id="cb19-218"><a href="#cb19-218"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>black</span>
+<span id="cb19-219"><a href="#cb19-219"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>ruff</span>
+<span id="cb19-220"><a href="#cb19-220"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>mypy</span>
+<span id="cb19-221"><a href="#cb19-221"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>pre-commit</span>
+<span id="cb19-222"><a href="#cb19-222"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>nbqa</span>
+<span id="cb19-223"><a href="#cb19-223"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span>jupytext</span>
+<span id="cb19-224"><a href="#cb19-224"></a><span class="in">```</span></span>
+<span id="cb19-225"><a href="#cb19-225"></a></span>
+<span id="cb19-226"><a href="#cb19-226"></a><span class="fu">### 6.2 Cấu hình pyproject.toml</span></span>
+<span id="cb19-227"><a href="#cb19-227"></a></span>
+<span id="cb19-228"><a href="#cb19-228"></a>Tạo file <span class="in">`pyproject.toml`</span>:</span>
+<span id="cb19-229"><a href="#cb19-229"></a></span>
+<span id="cb19-230"><a href="#cb19-230"></a><span class="in">```toml</span></span>
+<span id="cb19-231"><a href="#cb19-231"></a><span class="in">[tool.black]</span></span>
+<span id="cb19-232"><a href="#cb19-232"></a><span class="in">line-length = 88</span></span>
+<span id="cb19-233"><a href="#cb19-233"></a><span class="in">target-version = ["py310"]</span></span>
+<span id="cb19-234"><a href="#cb19-234"></a><span class="in">include = '\.pyi?$'</span></span>
+<span id="cb19-235"><a href="#cb19-235"></a></span>
+<span id="cb19-236"><a href="#cb19-236"></a><span class="in">[tool.ruff]</span></span>
+<span id="cb19-237"><a href="#cb19-237"></a><span class="in">line-length = 88</span></span>
+<span id="cb19-238"><a href="#cb19-238"></a><span class="in">target-version = "py310"</span></span>
+<span id="cb19-239"><a href="#cb19-239"></a><span class="in">select = [</span></span>
+<span id="cb19-240"><a href="#cb19-240"></a><span class="in">    "E",  # pycodestyle</span></span>
+<span id="cb19-241"><a href="#cb19-241"></a><span class="in">    "F",  # pyflakes</span></span>
+<span id="cb19-242"><a href="#cb19-242"></a><span class="in">    "I",  # isort</span></span>
+<span id="cb19-243"><a href="#cb19-243"></a><span class="in">    "UP", # pyupgrade</span></span>
+<span id="cb19-244"><a href="#cb19-244"></a><span class="in">]</span></span>
+<span id="cb19-245"><a href="#cb19-245"></a><span class="in">ignore = []</span></span>
+<span id="cb19-246"><a href="#cb19-246"></a></span>
+<span id="cb19-247"><a href="#cb19-247"></a><span class="in">[tool.ruff.isort]</span></span>
+<span id="cb19-248"><a href="#cb19-248"></a><span class="in">known-first-party = ["src"]</span></span>
+<span id="cb19-249"><a href="#cb19-249"></a></span>
+<span id="cb19-250"><a href="#cb19-250"></a><span class="in">[tool.mypy]</span></span>
+<span id="cb19-251"><a href="#cb19-251"></a><span class="in">python_version = "3.10"</span></span>
+<span id="cb19-252"><a href="#cb19-252"></a><span class="in">warn_return_any = true</span></span>
+<span id="cb19-253"><a href="#cb19-253"></a><span class="in">warn_unused_configs = true</span></span>
+<span id="cb19-254"><a href="#cb19-254"></a><span class="in">disallow_untyped_defs = true</span></span>
+<span id="cb19-255"><a href="#cb19-255"></a><span class="in">check_untyped_defs = true</span></span>
+<span id="cb19-256"><a href="#cb19-256"></a></span>
+<span id="cb19-257"><a href="#cb19-257"></a><span class="in">[[tool.mypy.overrides]]</span></span>
+<span id="cb19-258"><a href="#cb19-258"></a><span class="in">module = [</span></span>
+<span id="cb19-259"><a href="#cb19-259"></a><span class="in">    "pandas.*",</span></span>
+<span id="cb19-260"><a href="#cb19-260"></a><span class="in">    "numpy.*",</span></span>
+<span id="cb19-261"><a href="#cb19-261"></a><span class="in">    "matplotlib.*",</span></span>
+<span id="cb19-262"><a href="#cb19-262"></a><span class="in">    "seaborn.*"</span></span>
+<span id="cb19-263"><a href="#cb19-263"></a><span class="in">]</span></span>
+<span id="cb19-264"><a href="#cb19-264"></a><span class="in">ignore_missing_imports = true</span></span>
+<span id="cb19-265"><a href="#cb19-265"></a><span class="in">```</span></span>
+<span id="cb19-266"><a href="#cb19-266"></a></span>
+<span id="cb19-267"><a href="#cb19-267"></a><span class="fu">### 6.3 Cấu hình Pre-commit</span></span>
+<span id="cb19-268"><a href="#cb19-268"></a></span>
+<span id="cb19-269"><a href="#cb19-269"></a>Tạo file <span class="in">`.pre-commit-config.yaml`</span>:</span>
+<span id="cb19-270"><a href="#cb19-270"></a></span>
+<span id="cb19-271"><a href="#cb19-271"></a><span class="in">```yaml</span></span>
+<span id="cb19-272"><a href="#cb19-272"></a><span class="fu">repos</span><span class="kw">:</span></span>
+<span id="cb19-273"><a href="#cb19-273"></a><span class="kw">-</span><span class="at">   </span><span class="fu">repo</span><span class="kw">:</span><span class="at"> https://github.com/pre-commit/pre-commit-hooks</span></span>
+<span id="cb19-274"><a href="#cb19-274"></a><span class="at">    </span><span class="fu">rev</span><span class="kw">:</span><span class="at"> v4.5.0</span></span>
+<span id="cb19-275"><a href="#cb19-275"></a><span class="at">    </span><span class="fu">hooks</span><span class="kw">:</span></span>
+<span id="cb19-276"><a href="#cb19-276"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> trailing-whitespace</span></span>
+<span id="cb19-277"><a href="#cb19-277"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> end-of-file-fixer</span></span>
+<span id="cb19-278"><a href="#cb19-278"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> check-yaml</span></span>
+<span id="cb19-279"><a href="#cb19-279"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> check-json</span></span>
+<span id="cb19-280"><a href="#cb19-280"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> check-added-large-files</span></span>
+<span id="cb19-281"><a href="#cb19-281"></a><span class="at">        </span><span class="fu">args</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">'--maxkb=5000'</span><span class="kw">]</span></span>
+<span id="cb19-282"><a href="#cb19-282"></a></span>
+<span id="cb19-283"><a href="#cb19-283"></a><span class="kw">-</span><span class="at">   </span><span class="fu">repo</span><span class="kw">:</span><span class="at"> https://github.com/psf/black</span></span>
+<span id="cb19-284"><a href="#cb19-284"></a><span class="at">    </span><span class="fu">rev</span><span class="kw">:</span><span class="at"> </span><span class="fl">24.1.1</span></span>
+<span id="cb19-285"><a href="#cb19-285"></a><span class="at">    </span><span class="fu">hooks</span><span class="kw">:</span></span>
+<span id="cb19-286"><a href="#cb19-286"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> black</span></span>
+<span id="cb19-287"><a href="#cb19-287"></a></span>
+<span id="cb19-288"><a href="#cb19-288"></a><span class="kw">-</span><span class="at">   </span><span class="fu">repo</span><span class="kw">:</span><span class="at"> https://github.com/astral-sh/ruff-pre-commit</span></span>
+<span id="cb19-289"><a href="#cb19-289"></a><span class="at">    </span><span class="fu">rev</span><span class="kw">:</span><span class="at"> v0.2.1</span></span>
+<span id="cb19-290"><a href="#cb19-290"></a><span class="at">    </span><span class="fu">hooks</span><span class="kw">:</span></span>
+<span id="cb19-291"><a href="#cb19-291"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ruff</span></span>
+<span id="cb19-292"><a href="#cb19-292"></a><span class="at">        </span><span class="fu">args</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">--fix</span><span class="kw">]</span></span>
+<span id="cb19-293"><a href="#cb19-293"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ruff-format</span></span>
+<span id="cb19-294"><a href="#cb19-294"></a></span>
+<span id="cb19-295"><a href="#cb19-295"></a><span class="kw">-</span><span class="at">   </span><span class="fu">repo</span><span class="kw">:</span><span class="at"> https://github.com/pre-commit/mirrors-mypy</span></span>
+<span id="cb19-296"><a href="#cb19-296"></a><span class="at">    </span><span class="fu">rev</span><span class="kw">:</span><span class="at"> v1.8.0</span></span>
+<span id="cb19-297"><a href="#cb19-297"></a><span class="at">    </span><span class="fu">hooks</span><span class="kw">:</span></span>
+<span id="cb19-298"><a href="#cb19-298"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> mypy</span></span>
+<span id="cb19-299"><a href="#cb19-299"></a><span class="at">        </span><span class="fu">additional_dependencies</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">types-all</span><span class="kw">]</span></span>
+<span id="cb19-300"><a href="#cb19-300"></a></span>
+<span id="cb19-301"><a href="#cb19-301"></a><span class="kw">-</span><span class="at">   </span><span class="fu">repo</span><span class="kw">:</span><span class="at"> https://github.com/nbQA-dev/nbQA</span></span>
+<span id="cb19-302"><a href="#cb19-302"></a><span class="at">    </span><span class="fu">rev</span><span class="kw">:</span><span class="at"> </span><span class="fl">1.7.1</span></span>
+<span id="cb19-303"><a href="#cb19-303"></a><span class="at">    </span><span class="fu">hooks</span><span class="kw">:</span></span>
+<span id="cb19-304"><a href="#cb19-304"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> nbqa-black</span></span>
+<span id="cb19-305"><a href="#cb19-305"></a><span class="at">        </span><span class="fu">additional_dependencies</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">black==</span><span class="fl">24.1.1</span><span class="kw">]</span></span>
+<span id="cb19-306"><a href="#cb19-306"></a><span class="at">    </span><span class="kw">-</span><span class="at">   </span><span class="fu">id</span><span class="kw">:</span><span class="at"> nbqa-ruff</span></span>
+<span id="cb19-307"><a href="#cb19-307"></a><span class="at">        </span><span class="fu">additional_dependencies</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">ruff==</span><span class="fl">0.2.1</span><span class="kw">]</span></span>
+<span id="cb19-308"><a href="#cb19-308"></a><span class="in">```</span></span>
+<span id="cb19-309"><a href="#cb19-309"></a></span>
+<span id="cb19-310"><a href="#cb19-310"></a><span class="fu">### 6.4 Cấu hình Git Ignore</span></span>
+<span id="cb19-311"><a href="#cb19-311"></a></span>
+<span id="cb19-312"><a href="#cb19-312"></a>Tạo file <span class="in">`.gitignore`</span>:</span>
+<span id="cb19-313"><a href="#cb19-313"></a></span>
+<span id="cb19-314"><a href="#cb19-314"></a><span class="in">```gitignore</span></span>
+<span id="cb19-315"><a href="#cb19-315"></a><span class="in"># Python</span></span>
+<span id="cb19-316"><a href="#cb19-316"></a><span class="in">__pycache__/</span></span>
+<span id="cb19-317"><a href="#cb19-317"></a><span class="in">*.py[cod]</span></span>
+<span id="cb19-318"><a href="#cb19-318"></a><span class="in">*$py.class</span></span>
+<span id="cb19-319"><a href="#cb19-319"></a><span class="in">*.so</span></span>
+<span id="cb19-320"><a href="#cb19-320"></a><span class="in">.Python</span></span>
+<span id="cb19-321"><a href="#cb19-321"></a><span class="in">build/</span></span>
+<span id="cb19-322"><a href="#cb19-322"></a><span class="in">develop-eggs/</span></span>
+<span id="cb19-323"><a href="#cb19-323"></a><span class="in">dist/</span></span>
+<span id="cb19-324"><a href="#cb19-324"></a><span class="in">downloads/</span></span>
+<span id="cb19-325"><a href="#cb19-325"></a><span class="in">eggs/</span></span>
+<span id="cb19-326"><a href="#cb19-326"></a><span class="in">.eggs/</span></span>
+<span id="cb19-327"><a href="#cb19-327"></a><span class="in">lib/</span></span>
+<span id="cb19-328"><a href="#cb19-328"></a><span class="in">lib64/</span></span>
+<span id="cb19-329"><a href="#cb19-329"></a><span class="in">parts/</span></span>
+<span id="cb19-330"><a href="#cb19-330"></a><span class="in">sdist/</span></span>
+<span id="cb19-331"><a href="#cb19-331"></a><span class="in">var/</span></span>
+<span id="cb19-332"><a href="#cb19-332"></a><span class="in">wheels/</span></span>
+<span id="cb19-333"><a href="#cb19-333"></a><span class="in">*.egg-info/</span></span>
+<span id="cb19-334"><a href="#cb19-334"></a><span class="in">.installed.cfg</span></span>
+<span id="cb19-335"><a href="#cb19-335"></a><span class="in">*.egg</span></span>
+<span id="cb19-336"><a href="#cb19-336"></a></span>
+<span id="cb19-337"><a href="#cb19-337"></a><span class="in"># Jupyter Notebook</span></span>
+<span id="cb19-338"><a href="#cb19-338"></a><span class="in">.ipynb_checkpoints</span></span>
+<span id="cb19-339"><a href="#cb19-339"></a><span class="in">*/.ipynb_checkpoints/*</span></span>
+<span id="cb19-340"><a href="#cb19-340"></a><span class="in">profile_default/</span></span>
+<span id="cb19-341"><a href="#cb19-341"></a><span class="in">ipython_config.py</span></span>
+<span id="cb19-342"><a href="#cb19-342"></a></span>
+<span id="cb19-343"><a href="#cb19-343"></a><span class="in"># VS Code</span></span>
+<span id="cb19-344"><a href="#cb19-344"></a><span class="in">.vscode/*</span></span>
+<span id="cb19-345"><a href="#cb19-345"></a><span class="in">!.vscode/settings.json</span></span>
+<span id="cb19-346"><a href="#cb19-346"></a><span class="in">!.vscode/tasks.json</span></span>
+<span id="cb19-347"><a href="#cb19-347"></a><span class="in">!.vscode/launch.json</span></span>
+<span id="cb19-348"><a href="#cb19-348"></a><span class="in">!.vscode/extensions.json</span></span>
+<span id="cb19-349"><a href="#cb19-349"></a></span>
+<span id="cb19-350"><a href="#cb19-350"></a><span class="in"># Environment</span></span>
+<span id="cb19-351"><a href="#cb19-351"></a><span class="in">.env</span></span>
+<span id="cb19-352"><a href="#cb19-352"></a><span class="in">.venv</span></span>
+<span id="cb19-353"><a href="#cb19-353"></a><span class="in">env/</span></span>
+<span id="cb19-354"><a href="#cb19-354"></a><span class="in">venv/</span></span>
+<span id="cb19-355"><a href="#cb19-355"></a><span class="in">ENV/</span></span>
+<span id="cb19-356"><a href="#cb19-356"></a><span class="in">env.bak/</span></span>
+<span id="cb19-357"><a href="#cb19-357"></a><span class="in">venv.bak/</span></span>
+<span id="cb19-358"><a href="#cb19-358"></a><span class="in">.conda/</span></span>
+<span id="cb19-359"><a href="#cb19-359"></a><span class="in">conda-env/</span></span>
+<span id="cb19-360"><a href="#cb19-360"></a></span>
+<span id="cb19-361"><a href="#cb19-361"></a><span class="in"># Data</span></span>
+<span id="cb19-362"><a href="#cb19-362"></a><span class="in">data/raw/*</span></span>
+<span id="cb19-363"><a href="#cb19-363"></a><span class="in">!data/raw/.gitkeep</span></span>
+<span id="cb19-364"><a href="#cb19-364"></a><span class="in">data/processed/*</span></span>
+<span id="cb19-365"><a href="#cb19-365"></a><span class="in">!data/processed/.gitkeep</span></span>
+<span id="cb19-366"><a href="#cb19-366"></a><span class="in">*.csv</span></span>
+<span id="cb19-367"><a href="#cb19-367"></a><span class="in">*.xlsx</span></span>
+<span id="cb19-368"><a href="#cb19-368"></a><span class="in">*.xls</span></span>
+<span id="cb19-369"><a href="#cb19-369"></a><span class="in">*.db</span></span>
+<span id="cb19-370"><a href="#cb19-370"></a><span class="in">*.sqlite</span></span>
+<span id="cb19-371"><a href="#cb19-371"></a><span class="in">*.h5</span></span>
+<span id="cb19-372"><a href="#cb19-372"></a></span>
+<span id="cb19-373"><a href="#cb19-373"></a><span class="in"># Logs</span></span>
+<span id="cb19-374"><a href="#cb19-374"></a><span class="in">logs/</span></span>
+<span id="cb19-375"><a href="#cb19-375"></a><span class="in">*.log</span></span>
+<span id="cb19-376"><a href="#cb19-376"></a><span class="in">.hypothesis/</span></span>
+<span id="cb19-377"><a href="#cb19-377"></a><span class="in">.pytest_cache/</span></span>
+<span id="cb19-378"><a href="#cb19-378"></a><span class="in">.coverage</span></span>
+<span id="cb19-379"><a href="#cb19-379"></a><span class="in">htmlcov/</span></span>
+<span id="cb19-380"><a href="#cb19-380"></a></span>
+<span id="cb19-381"><a href="#cb19-381"></a><span class="in"># OS specific</span></span>
+<span id="cb19-382"><a href="#cb19-382"></a><span class="in">.DS_Store</span></span>
+<span id="cb19-383"><a href="#cb19-383"></a><span class="in">.DS_Store?</span></span>
+<span id="cb19-384"><a href="#cb19-384"></a><span class="in">._*</span></span>
+<span id="cb19-385"><a href="#cb19-385"></a><span class="in">.Spotlight-V100</span></span>
+<span id="cb19-386"><a href="#cb19-386"></a><span class="in">.Trashes</span></span>
+<span id="cb19-387"><a href="#cb19-387"></a><span class="in">ehthumbs.db</span></span>
+<span id="cb19-388"><a href="#cb19-388"></a><span class="in">Thumbs.db</span></span>
+<span id="cb19-389"><a href="#cb19-389"></a><span class="in">```</span></span>
+<span id="cb19-390"><a href="#cb19-390"></a></span>
+<span id="cb19-391"><a href="#cb19-391"></a><span class="fu">### 6.5 Khởi tạo Pre-commit</span></span>
+<span id="cb19-392"><a href="#cb19-392"></a></span>
+<span id="cb19-393"><a href="#cb19-393"></a><span class="in">```bash</span></span>
+<span id="cb19-394"><a href="#cb19-394"></a><span class="co"># Activate môi trường</span></span>
+<span id="cb19-395"><a href="#cb19-395"></a><span class="ex">mamba</span> activate ds-project</span>
+<span id="cb19-396"><a href="#cb19-396"></a></span>
+<span id="cb19-397"><a href="#cb19-397"></a><span class="co"># Cài đặt pre-commit hooks</span></span>
+<span id="cb19-398"><a href="#cb19-398"></a><span class="ex">pre-commit</span> install</span>
+<span id="cb19-399"><a href="#cb19-399"></a></span>
+<span id="cb19-400"><a href="#cb19-400"></a><span class="co"># (Tùy chọn) Chạy pre-commit trên tất cả files</span></span>
+<span id="cb19-401"><a href="#cb19-401"></a><span class="ex">pre-commit</span> run <span class="at">--all-files</span></span>
+<span id="cb19-402"><a href="#cb19-402"></a><span class="in">```</span></span>
+<span id="cb19-403"><a href="#cb19-403"></a></span>
+<span id="cb19-404"><a href="#cb19-404"></a><span class="fu">### 6.6 Extensions VS Code cho Notebooks</span></span>
+<span id="cb19-405"><a href="#cb19-405"></a></span>
+<span id="cb19-406"><a href="#cb19-406"></a>Cài thêm các extensions sau:</span>
+<span id="cb19-407"><a href="#cb19-407"></a></span>
+<span id="cb19-408"><a href="#cb19-408"></a><span class="ss">1. </span>"Jupyter Notebook Renderers"</span>
+<span id="cb19-409"><a href="#cb19-409"></a><span class="ss">2. </span>"Jupytext for Notebooks"</span>
+<span id="cb19-410"><a href="#cb19-410"></a><span class="ss">3. </span>"Black Formatter"</span>
+<span id="cb19-411"><a href="#cb19-411"></a><span class="ss">4. </span>"Ruff"</span>
+<span id="cb19-412"><a href="#cb19-412"></a><span class="ss">5. </span>"Mypy Type Checker"</span>
+<span id="cb19-413"><a href="#cb19-413"></a></span>
+<span id="cb19-414"><a href="#cb19-414"></a><span class="fu">### 6.7 Cấu hình Jupytext</span></span>
+<span id="cb19-415"><a href="#cb19-415"></a></span>
+<span id="cb19-416"><a href="#cb19-416"></a>Tạo file <span class="in">`.jupytext.toml`</span>:</span>
+<span id="cb19-417"><a href="#cb19-417"></a></span>
+<span id="cb19-418"><a href="#cb19-418"></a><span class="in">```toml</span></span>
+<span id="cb19-419"><a href="#cb19-419"></a><span class="in">formats = "ipynb,qmd"</span></span>
+<span id="cb19-420"><a href="#cb19-420"></a></span>
+<span id="cb19-421"><a href="#cb19-421"></a><span class="in">[formats]</span></span>
+<span id="cb19-422"><a href="#cb19-422"></a><span class="in">ipynb = {}</span></span>
+<span id="cb19-423"><a href="#cb19-423"></a><span class="in">qmd = {}</span></span>
+<span id="cb19-424"><a href="#cb19-424"></a><span class="in">```</span></span>
+<span id="cb19-425"><a href="#cb19-425"></a></span>
+<span id="cb19-426"><a href="#cb19-426"></a><span class="fu">## 7. Pro Tips cho Windows</span></span>
+<span id="cb19-427"><a href="#cb19-427"></a></span>
+<span id="cb19-428"><a href="#cb19-428"></a><span class="fu">### Path Management</span></span>
+<span id="cb19-429"><a href="#cb19-429"></a></span>
+<span id="cb19-430"><a href="#cb19-430"></a>Sử dụng <span class="in">`pathlib`</span> để xử lý đường dẫn:</span>
+<span id="cb19-431"><a href="#cb19-431"></a><span class="in">```python</span></span>
+<span id="cb19-432"><a href="#cb19-432"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb19-433"><a href="#cb19-433"></a>data_path <span class="op">=</span> Path(<span class="st">"data"</span>) <span class="op">/</span> <span class="st">"raw"</span> <span class="op">/</span> <span class="st">"file.csv"</span></span>
+<span id="cb19-434"><a href="#cb19-434"></a><span class="in">```</span></span>
+<span id="cb19-435"><a href="#cb19-435"></a></span>
+<span id="cb19-436"><a href="#cb19-436"></a><span class="fu">### Git Configuration</span></span>
+<span id="cb19-437"><a href="#cb19-437"></a></span>
+<span id="cb19-438"><a href="#cb19-438"></a>Tạo file <span class="in">`.gitignore`</span>:</span>
+<span id="cb19-439"><a href="#cb19-439"></a><span class="in">```gitignore</span></span>
+<span id="cb19-440"><a href="#cb19-440"></a><span class="in"># .gitignore</span></span>
+<span id="cb19-441"><a href="#cb19-441"></a><span class="in">data/raw/*</span></span>
+<span id="cb19-442"><a href="#cb19-442"></a><span class="in">data/processed/*</span></span>
+<span id="cb19-443"><a href="#cb19-443"></a><span class="in">.ipynb_checkpoints/</span></span>
+<span id="cb19-444"><a href="#cb19-444"></a><span class="in">__pycache__/</span></span>
+<span id="cb19-445"><a href="#cb19-445"></a><span class="in">*.pyc</span></span>
+<span id="cb19-446"><a href="#cb19-446"></a><span class="in">```</span></span>
+<span id="cb19-447"><a href="#cb19-447"></a></span>
+<span id="cb19-448"><a href="#cb19-448"></a><span class="fu">### Jupyter trong VS Code</span></span>
+<span id="cb19-449"><a href="#cb19-449"></a></span>
+<span id="cb19-450"><a href="#cb19-450"></a><span class="ss">- </span>Chạy cell: <span class="in">`Shift + Enter`</span></span>
+<span id="cb19-451"><a href="#cb19-451"></a><span class="ss">- </span>Variable explorer có sẵn</span>
+<span id="cb19-452"><a href="#cb19-452"></a><span class="ss">- </span>Plot viewer tích hợp</span>
+<span id="cb19-453"><a href="#cb19-453"></a><span class="ss">- </span>Intellisense hoạt động tốt</span>
+<span id="cb19-454"><a href="#cb19-454"></a></span>
+<span id="cb19-455"><a href="#cb19-455"></a><span class="fu">### Debugging</span></span>
+<span id="cb19-456"><a href="#cb19-456"></a></span>
+<span id="cb19-457"><a href="#cb19-457"></a><span class="ss">- </span>Debugger tích hợp cho cả <span class="in">`.py`</span> và <span class="in">`.ipynb`</span></span>
+<span id="cb19-458"><a href="#cb19-458"></a><span class="ss">- </span>Có thể đặt breakpoints trong notebooks</span>
+<span id="cb19-459"><a href="#cb19-459"></a></span>
+<span id="cb19-460"><a href="#cb19-460"></a><span class="fu">## 8. Xử lý Lỗi Thường Gặp</span></span>
+<span id="cb19-461"><a href="#cb19-461"></a></span>
+<span id="cb19-462"><a href="#cb19-462"></a><span class="ss">1. </span>**Path quá dài trên Windows**</span>
+<span id="cb19-463"><a href="#cb19-463"></a>   </span>
+<span id="cb19-464"><a href="#cb19-464"></a><span class="ss">   - </span>Sử dụng đường dẫn ngắn hơn</span>
+<span id="cb19-465"><a href="#cb19-465"></a><span class="ss">   - </span>Kích hoạt hỗ trợ đường dẫn dài trong Windows</span>
+<span id="cb19-466"><a href="#cb19-466"></a></span>
+<span id="cb19-467"><a href="#cb19-467"></a><span class="ss">2. </span>**Conflict với môi trường Python khác**</span>
+<span id="cb19-468"><a href="#cb19-468"></a>   </span>
+<span id="cb19-469"><a href="#cb19-469"></a><span class="ss">   - </span>Đảm bảo PATH được cập nhật đúng</span>
+<span id="cb19-470"><a href="#cb19-470"></a><span class="ss">   - </span>Kiểm tra <span class="in">`where python`</span> trong terminal</span>
+<span id="cb19-471"><a href="#cb19-471"></a></span>
+<span id="cb19-472"><a href="#cb19-472"></a><span class="ss">3. </span>**Jupyter Kernel không hiển thị**</span>
+<span id="cb19-473"><a href="#cb19-473"></a>   </span>
+<span id="cb19-474"><a href="#cb19-474"></a><span class="ss">   - </span>Cài lại <span class="in">`ipykernel`</span></span>
+<span id="cb19-475"><a href="#cb19-475"></a><span class="ss">   - </span>Kiểm tra jupyter kernelspec list</span>
+<span id="cb19-476"><a href="#cb19-476"></a></span>
+<span id="cb19-477"><a href="#cb19-477"></a><span class="fu">## 9. Resources Hữu ích</span></span>
+<span id="cb19-478"><a href="#cb19-478"></a></span>
+<span id="cb19-479"><a href="#cb19-479"></a><span class="ss">- </span><span class="co">[</span><span class="ot">Mamba Documentation</span><span class="co">](https://mamba.readthedocs.io/)</span></span>
+<span id="cb19-480"><a href="#cb19-480"></a><span class="ss">- </span><span class="co">[</span><span class="ot">VS Code Python Documentation</span><span class="co">](https://code.visualstudio.com/docs/python/python-tutorial)</span></span>
+<span id="cb19-481"><a href="#cb19-481"></a><span class="ss">- </span><span class="co">[</span><span class="ot">Jupyter in VS Code</span><span class="co">](https://code.visualstudio.com/docs/datascience/jupyter-notebooks)</span></span>
+<span id="cb19-482"><a href="#cb19-482"></a></span>
+<span id="cb19-483"><a href="#cb19-483"></a><span class="fu">## 10. Workflow Đề Xuất</span></span>
+<span id="cb19-484"><a href="#cb19-484"></a></span>
+<span id="cb19-485"><a href="#cb19-485"></a><span class="ss">1. </span>**Khởi tạo project mới**:</span>
+<span id="cb19-486"><a href="#cb19-486"></a></span>
+<span id="cb19-487"><a href="#cb19-487"></a><span class="in">```bash</span></span>
+<span id="cb19-488"><a href="#cb19-488"></a><span class="co"># Tạo và activate môi trường</span></span>
+<span id="cb19-489"><a href="#cb19-489"></a><span class="ex">mamba</span> env create <span class="at">-f</span> environment.yml</span>
+<span id="cb19-490"><a href="#cb19-490"></a><span class="ex">mamba</span> activate ds-project</span>
+<span id="cb19-491"><a href="#cb19-491"></a></span>
+<span id="cb19-492"><a href="#cb19-492"></a><span class="co"># Cài đặt pre-commit hooks</span></span>
+<span id="cb19-493"><a href="#cb19-493"></a><span class="ex">pre-commit</span> install</span>
+<span id="cb19-494"><a href="#cb19-494"></a><span class="in">```</span></span>
+<span id="cb19-495"><a href="#cb19-495"></a></span>
+<span id="cb19-496"><a href="#cb19-496"></a><span class="ss">2. </span>**Phát triển**:</span>
+<span id="cb19-497"><a href="#cb19-497"></a></span>
+<span id="cb19-498"><a href="#cb19-498"></a><span class="ss">- </span>Code trong VS Code với các extensions đã cài</span>
+<span id="cb19-499"><a href="#cb19-499"></a><span class="ss">- </span>Notebooks sẽ tự động được format bởi nbQA</span>
+<span id="cb19-500"><a href="#cb19-500"></a><span class="ss">- </span>Pre-commit sẽ kiểm tra code trước mỗi commit</span>
+<span id="cb19-501"><a href="#cb19-501"></a></span>
+<span id="cb19-502"><a href="#cb19-502"></a><span class="ss">3. </span>**Commit Changes**:</span>
+<span id="cb19-503"><a href="#cb19-503"></a></span>
+<span id="cb19-504"><a href="#cb19-504"></a><span class="in">```bash</span></span>
+<span id="cb19-505"><a href="#cb19-505"></a><span class="fu">git</span> add .</span>
+<span id="cb19-506"><a href="#cb19-506"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"your message"</span></span>
+<span id="cb19-507"><a href="#cb19-507"></a><span class="co"># Pre-commit sẽ tự động chạy các checks</span></span>
+<span id="cb19-508"><a href="#cb19-508"></a><span class="in">```</span></span>
+<span id="cb19-509"><a href="#cb19-509"></a></span>
+<span id="cb19-510"><a href="#cb19-510"></a><span class="ss">4. </span>**Update Dependencies**:</span>
+<span id="cb19-511"><a href="#cb19-511"></a></span>
+<span id="cb19-512"><a href="#cb19-512"></a><span class="in">```bash</span></span>
+<span id="cb19-513"><a href="#cb19-513"></a><span class="co"># Thêm package mới</span></span>
+<span id="cb19-514"><a href="#cb19-514"></a><span class="ex">mamba</span> install package-name</span>
+<span id="cb19-515"><a href="#cb19-515"></a><span class="co"># Export environment</span></span>
+<span id="cb19-516"><a href="#cb19-516"></a><span class="ex">mamba</span> env export <span class="op">&gt;</span> environment.yml</span>
+<span id="cb19-517"><a href="#cb19-517"></a><span class="in">```</span></span>
+<span id="cb19-518"><a href="#cb19-518"></a></span>
+<span id="cb19-519"><a href="#cb19-519"></a><span class="fu">## Bonus: nếu muốn import một module từ `src` trong `notebook.ipynb` thì làm thế nào?</span></span>
+<span id="cb19-520"><a href="#cb19-520"></a></span>
+<span id="cb19-523"><a href="#cb19-523"></a><span class="in">```{python}</span></span>
+<span id="cb19-524"><a href="#cb19-524"></a><span class="co">#| eval: false</span></span>
+<span id="cb19-525"><a href="#cb19-525"></a><span class="co"># Trong notebook của bạn (ví dụ notebooks/analysis.ipynb)</span></span>
+<span id="cb19-526"><a href="#cb19-526"></a></span>
+<span id="cb19-527"><a href="#cb19-527"></a><span class="co"># 1. Setup path</span></span>
+<span id="cb19-528"><a href="#cb19-528"></a><span class="im">import</span> sys</span>
+<span id="cb19-529"><a href="#cb19-529"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb19-530"><a href="#cb19-530"></a>project_root <span class="op">=</span> <span class="bu">str</span>(Path.cwd().parent)</span>
+<span id="cb19-531"><a href="#cb19-531"></a><span class="cf">if</span> project_root <span class="kw">not</span> <span class="kw">in</span> sys.path:</span>
+<span id="cb19-532"><a href="#cb19-532"></a>    sys.path.append(project_root)</span>
+<span id="cb19-533"><a href="#cb19-533"></a></span>
+<span id="cb19-534"><a href="#cb19-534"></a><span class="co"># 2. Import function</span></span>
+<span id="cb19-535"><a href="#cb19-535"></a><span class="im">from</span> src.processing.data_preprocessing <span class="im">import</span> process_data, clean_data</span>
+<span id="cb19-536"><a href="#cb19-536"></a></span>
+<span id="cb19-537"><a href="#cb19-537"></a><span class="co"># 3. Sử dụng function</span></span>
+<span id="cb19-538"><a href="#cb19-538"></a>df_processed <span class="op">=</span> process_data(df_raw)</span>
+<span id="cb19-539"><a href="#cb19-539"></a><span class="in">```</span></span>
+<span id="cb19-540"><a href="#cb19-540"></a></span>
+<span id="cb19-541"><a href="#cb19-541"></a>Với lưu ý:</span>
+<span id="cb19-542"><a href="#cb19-542"></a></span>
+<span id="cb19-543"><a href="#cb19-543"></a><span class="ss">- </span>Đảm bảo có file <span class="in">`__init__.py`</span> trong mỗi thư mục Python</span>
+<span id="cb19-544"><a href="#cb19-544"></a><span class="ss">- </span>Không nên dùng relative imports (<span class="in">`from ...src.processing`</span>) vì dễ gây lỗi</span>
+<span id="cb19-545"><a href="#cb19-545"></a><span class="ss">- </span>Nên đặt tên module và function theo PEP 8</span>
+<span id="cb19-546"><a href="#cb19-546"></a><span class="ss">- </span>Trong <span class="in">`data_preprocessing.py`</span> nên có docstring mô tả function</span>
+<span id="cb19-547"><a href="#cb19-547"></a></span>
+<span id="cb19-550"><a href="#cb19-550"></a><span class="in">```{python}</span></span>
+<span id="cb19-551"><a href="#cb19-551"></a><span class="co">#| eval: false</span></span>
+<span id="cb19-552"><a href="#cb19-552"></a><span class="co"># src/processing/data_preprocessing.py</span></span>
+<span id="cb19-553"><a href="#cb19-553"></a></span>
+<span id="cb19-554"><a href="#cb19-554"></a><span class="kw">def</span> process_data(df):</span>
+<span id="cb19-555"><a href="#cb19-555"></a>    <span class="co">"""Process the input dataframe.</span></span>
+<span id="cb19-556"><a href="#cb19-556"></a><span class="co">    </span></span>
+<span id="cb19-557"><a href="#cb19-557"></a><span class="co">    Args:</span></span>
+<span id="cb19-558"><a href="#cb19-558"></a><span class="co">        df (pd.DataFrame): Input dataframe</span></span>
+<span id="cb19-559"><a href="#cb19-559"></a><span class="co">        </span></span>
+<span id="cb19-560"><a href="#cb19-560"></a><span class="co">    Returns:</span></span>
+<span id="cb19-561"><a href="#cb19-561"></a><span class="co">        pd.DataFrame: Processed dataframe</span></span>
+<span id="cb19-562"><a href="#cb19-562"></a><span class="co">    """</span></span>
+<span id="cb19-563"><a href="#cb19-563"></a>    <span class="co"># your code here</span></span>
+<span id="cb19-564"><a href="#cb19-564"></a>    <span class="cf">return</span> processed_df</span>
+<span id="cb19-565"><a href="#cb19-565"></a><span class="in">```</span></span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2024 Le Khac Tuan</span></p>
+</div>   
+    <div class="nav-footer-center">
+<p><span class="faux-block">Designed with <i class="fa-solid fa-heart" aria-label="heart"></i></span></p>
+</div>
+    <div class="nav-footer-right">
+<p><span class="faux-block">Made with <a href="https://quarto.org/">Quarto</a></span> <span class="faux-block"><a href="https://github.com/lktuan/lktuan.github.io">View the source at <i class="fa-brands fa-github" aria-label="github"></i> GitHub</a></span></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

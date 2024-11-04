@@ -10,7 +10,1495 @@
 <atom:link href="https://lktuan.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>I am a Risk Modeler 🚀</description>
 <generator>quarto-1.4.554</generator>
-<lastBuildDate>Thu, 24 Oct 2024 17:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 03 Nov 2024 17:00:00 GMT</lastBuildDate>
+<item>
+  <title>Data Science Project with Mamba, Python, and VS Code on Window</title>
+  <dc:creator>Tuan Le Khac</dc:creator>
+  <link>https://lktuan.github.io/blog/2024-11-04-intro-to-mamba/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="vì-sao-mà-mamba" class="level1">
+<h1>Vì sao mà Mamba?</h1>
+<p>Là một non-tech data coder, mình vẫn loay hoay việc setup một dự án có thể được tái sử dụng và dễ dàng deploy, đặc biệt là với dự án dạng data - khi mà DS/DA sẽ làm việc nhiều với notebook - rất anti production.</p>
+<div class="columns">
+<div class="column" style="width:60%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-11-04-intro-to-mamba/meme_top.png" class="img-fluid figure-img"></p>
+<figcaption>Arggg! Cơn đau đầu của non-tech làm data, nguồn ảnh <a href="https://www.analyticsvidhya.com/blog/2023/03/choosing-the-right-python-environment-tool-for-your-next-project/">Analytics Vidhya</a></figcaption>
+</figure>
+</div>
+</div><div class="column" style="width:40%;">
+<p><img src="https://lktuan.github.io/blog/2024-11-04-intro-to-mamba/meme_bottom.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Mình tìm hiểu một số công cụ và dưới đây là so sánh:</p>
+<ol type="1">
+<li><code>Mamba</code> ✅</li>
+</ol>
+<ul>
+<li><p>Ưu điểm:</p>
+<ul>
+<li>Nhanh hơn Conda nhiều lần</li>
+<li>Tương thích hoàn toàn với Conda</li>
+<li>Quản lý được cả Python và non-Python dependencies</li>
+<li>Tích hợp tốt với notebooks</li>
+</ul></li>
+</ul>
+<ol start="2" type="1">
+<li><code>Poetry</code></li>
+</ol>
+<ul>
+<li><p>Ưu điểm:</p>
+<ul>
+<li>Dependency resolution tốt</li>
+<li>Lock file chính xác</li>
+</ul></li>
+<li><p>Nhược điểm:</p>
+<ul>
+<li>Khó xử lý non-Python dependencies</li>
+<li>Cần thêm setup cho notebook kernels</li>
+<li>Không phù hợp lắm với data science</li>
+</ul></li>
+</ul>
+<ol type="1">
+<li><code>venv</code></li>
+</ol>
+<ul>
+<li>Quá đơn giản cho data science</li>
+<li>Không xử lý được dependencies phức tạp</li>
+<li>Cần nhiều cấu hình thủ công</li>
+</ul>
+<ol start="4" type="1">
+<li><code>pipenv</code></li>
+</ol>
+<ul>
+<li>Tương tự Poetry nhưng ít tính năng hơn</li>
+<li>Không phù hợp với data science</li>
+</ul>
+<ol start="5" type="1">
+<li><code>uv</code></li>
+</ol>
+<ul>
+<li>Mới và nhanh</li>
+<li>Chưa đủ chín muồi cho data science</li>
+<li>Thiếu nhiều tính năng cần thiết</li>
+</ul>
+<p>Xem ra <code>mamba</code> có vẻ ổn nhất, hãy đào sâu hơn về ưu điểm của nó:</p>
+<ol type="1">
+<li>Xử lý dependencies phức tạp</li>
+</ol>
+<ul>
+<li>Data science thường cần nhiều thư viện với dependencies phức tạp (numpy, pandas, scipy, pytorch…)</li>
+<li>Mamba giải quyết dependencies nhanh và hiệu quả hơn Conda</li>
+<li>Xử lý tốt các thư viện có binary dependencies (như CUDA)</li>
+</ul>
+<ol start="2" type="1">
+<li>Quản lý môi trường kernel cho notebooks</li>
+</ol>
+<ul>
+<li>Tự động tích hợp với Jupyter notebooks</li>
+<li>Dễ dàng switch giữa các môi trường trong notebook</li>
+<li>Không cần cấu hình thêm cho notebook kernels</li>
+</ul>
+<p>Oke giờ hãy thử xem làm thế nào để tổ chức phát triển một dự án với mamba - VS Code trên Window.</p>
+</section>
+<section id="hướng-dẫn-cài-đặt-và-sử-dụng-mamba-với-vs-code-trên-windows" class="level1">
+<h1>Hướng dẫn Cài đặt và Sử dụng Mamba với VS Code trên Windows</h1>
+<section id="cài-đặt-mamba-trên-windows" class="level2">
+<h2 class="anchored" data-anchor-id="cài-đặt-mamba-trên-windows">1. Cài đặt Mamba trên Windows</h2>
+<section id="cách-1-tải-trực-tiếp" class="level3">
+<h3 class="anchored" data-anchor-id="cách-1-tải-trực-tiếp">Cách 1: Tải trực tiếp</h3>
+<ul>
+<li>Tải Mambaforge cho Windows từ: <a href="https://github.com/conda-forge/miniforge#mambaforge" class="uri">https://github.com/conda-forge/miniforge#mambaforge</a></li>
+<li>Chạy file installer và làm theo hướng dẫn.</li>
+</ul>
+</section>
+<section id="cách-2-dùng-windows-terminalpowershell" class="level3">
+<h3 class="anchored" data-anchor-id="cách-2-dùng-windows-terminalpowershell">Cách 2: Dùng Windows Terminal/PowerShell</h3>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">wget</span> https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Windows-x86_64.exe <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-OutFile</span> mambaforge.exe</span>
+<span id="cb1-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">start</span> /wait <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span> mambaforge.exe /InstallationType=JustMe /RegisterPython=0 /S /D=%UserProfile%\Mambaforge</span></code></pre></div>
+</section>
+</section>
+<section id="tích-hợp-với-vs-code" class="level2">
+<h2 class="anchored" data-anchor-id="tích-hợp-với-vs-code">2. Tích hợp với VS Code</h2>
+<section id="cài-đặt-extensions" class="level3">
+<h3 class="anchored" data-anchor-id="cài-đặt-extensions">Cài đặt Extensions</h3>
+<ol type="1">
+<li>Python (Microsoft)</li>
+<li>Jupyter (Microsoft)</li>
+</ol>
+</section>
+<section id="tạo-và-cấu-hình-môi-trường" class="level3">
+<h3 class="anchored" data-anchor-id="tạo-và-cấu-hình-môi-trường">Tạo và Cấu hình Môi trường</h3>
+<p>Tạo file <code>environment.yml</code>:</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">name</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> ds-project</span></span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">channels</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb2-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> conda-forge</span></span>
+<span id="cb2-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> defaults</span></span>
+<span id="cb2-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">dependencies</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb2-6"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> python=3.10</span></span>
+<span id="cb2-7"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> ipykernel</span></span>
+<span id="cb2-8"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> pandas</span></span>
+<span id="cb2-9"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> numpy</span></span>
+<span id="cb2-10"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> matplotlib</span></span>
+<span id="cb2-11"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> scikit-learn</span></span>
+<span id="cb2-12"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> jupyter</span></span></code></pre></div>
+<p>Tạo môi trường từ file:</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">mamba</span> env create <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-f</span> environment.yml</span></code></pre></div>
+</section>
+</section>
+<section id="cấu-hình-vs-code" class="level2">
+<h2 class="anchored" data-anchor-id="cấu-hình-vs-code">3. Cấu hình VS Code</h2>
+<section id="chọn-python-interpreter" class="level3">
+<h3 class="anchored" data-anchor-id="chọn-python-interpreter">Chọn Python Interpreter</h3>
+<ol type="1">
+<li>Mở Command Palette (<code>Ctrl + Shift + P</code>)</li>
+<li>Tìm “Python: Select Interpreter”</li>
+<li>Chọn môi trường Mamba vừa tạo</li>
+</ol>
+</section>
+<section id="cấu-hình-notebooks" class="level3">
+<h3 class="anchored" data-anchor-id="cấu-hình-notebooks">Cấu hình Notebooks</h3>
+<ul>
+<li>VS Code tự động nhận diện kernel từ môi trường Mamba</li>
+<li>Kernel có thể được chọn ở góc phải trên của notebook</li>
+</ul>
+</section>
+</section>
+<section id="cấu-trúc-project-đề-xuất" class="level2">
+<h2 class="anchored" data-anchor-id="cấu-trúc-project-đề-xuất">4. Cấu trúc Project Đề Xuất</h2>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource md number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb4-1">project/</span>
+<span id="cb4-2">│</span>
+<span id="cb4-3">├── .vscode/                      # VS Code settings</span>
+<span id="cb4-4">│   ├── settings.json</span>
+<span id="cb4-5">│   └── launch.json</span>
+<span id="cb4-6">│</span>
+<span id="cb4-7">├── data/</span>
+<span id="cb4-8">│   ├── raw/</span>
+<span id="cb4-9">│   └── processed/</span>
+<span id="cb4-10">│</span>
+<span id="cb4-11">├── notebooks/</span>
+<span id="cb4-12">│   ├── 01_exploration.ipynb</span>
+<span id="cb4-13">│   └── 02_analysis.ipynb</span>
+<span id="cb4-14">│</span>
+<span id="cb4-15">├── src/</span>
+<span id="cb4-16">│   └── processing/</span>
+<span id="cb4-17">│       ├── __init__.py</span>
+<span id="cb4-18">│       └── data_processing.py</span>
+<span id="cb4-19">│</span>
+<span id="cb4-20">├── environment.yml</span>
+<span id="cb4-21">├── .gitignore</span>
+<span id="cb4-22">└── README.md</span></code></pre></div>
+</section>
+<section id="cấu-hình-vs-code-settings" class="level2">
+<h2 class="anchored" data-anchor-id="cấu-hình-vs-code-settings">5. Cấu hình VS Code Settings</h2>
+<p>Tạo file <code>.vscode/settings.json</code>:</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb5-2">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"python.defaultInterpreterPath"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"${env:USERPROFILE}</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\\</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Mambaforge</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\\</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">envs</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\\</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">ds-project</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\\</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">python.exe"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-3">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"jupyter.notebookFileRoot"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"${workspaceFolder}"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-4">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"python.analysis.extraPaths"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"${workspaceFolder}/src"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-5">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"python.formatting.provider"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"black"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-6">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"editor.formatOnSave"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">true</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-7">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"ruff.enable"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">true</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-8">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"ruff.format.args"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"--config=pyproject.toml"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-9">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"ruff.lint.args"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"--config=pyproject.toml"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-10">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"mypy.enabled"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">true</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb5-11">    <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">"mypy.configFile"</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pyproject.toml"</span></span>
+<span id="cb5-12"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">}</span></span></code></pre></div>
+</section>
+<section id="cấu-hình-development-tools" class="level2">
+<h2 class="anchored" data-anchor-id="cấu-hình-development-tools">6. Cấu hình Development Tools</h2>
+<section id="cài-đặt-development-dependencies" class="level3">
+<h3 class="anchored" data-anchor-id="cài-đặt-development-dependencies">6.1 Cài đặt Development Dependencies</h3>
+<p>Cập nhật <code>environment.yml</code>:</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">name</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> ds-project</span></span>
+<span id="cb6-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">channels</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb6-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> conda-forge</span></span>
+<span id="cb6-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> defaults</span></span>
+<span id="cb6-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">dependencies</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb6-6"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> python=3.10</span></span>
+<span id="cb6-7"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> ipykernel</span></span>
+<span id="cb6-8"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> pandas</span></span>
+<span id="cb6-9"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> numpy</span></span>
+<span id="cb6-10"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> matplotlib</span></span>
+<span id="cb6-11"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> scikit-learn</span></span>
+<span id="cb6-12"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> jupyter</span></span>
+<span id="cb6-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">  # Dev dependencies</span></span>
+<span id="cb6-14"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> black</span></span>
+<span id="cb6-15"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> ruff</span></span>
+<span id="cb6-16"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> mypy</span></span>
+<span id="cb6-17"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> pre-commit</span></span>
+<span id="cb6-18"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> nbqa</span></span>
+<span id="cb6-19"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> jupytext</span></span></code></pre></div>
+</section>
+<section id="cấu-hình-pyproject.toml" class="level3">
+<h3 class="anchored" data-anchor-id="cấu-hình-pyproject.toml">6.2 Cấu hình pyproject.toml</h3>
+<p>Tạo file <code>pyproject.toml</code>:</p>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode numberSource toml number-lines code-with-copy"><code class="sourceCode toml"><span id="cb7-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[tool.black]</span></span>
+<span id="cb7-2"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">line-length</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">88</span></span>
+<span id="cb7-3"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">target-version</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"py310"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb7-4"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">include</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'</span><span class="vs" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\.pyi?$</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'</span></span>
+<span id="cb7-5"></span>
+<span id="cb7-6"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[tool.ruff]</span></span>
+<span id="cb7-7"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">line-length</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">88</span></span>
+<span id="cb7-8"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">target-version</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"py310"</span></span>
+<span id="cb7-9"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">select</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span></span>
+<span id="cb7-10">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"E"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span>  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># pycodestyle</span></span>
+<span id="cb7-11">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"F"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span>  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># pyflakes</span></span>
+<span id="cb7-12">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"I"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span>  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># isort</span></span>
+<span id="cb7-13">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"UP"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># pyupgrade</span></span>
+<span id="cb7-14"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb7-15"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">ignore</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[]</span></span>
+<span id="cb7-16"></span>
+<span id="cb7-17"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[tool.ruff.isort]</span></span>
+<span id="cb7-18"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">known-first-party</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"src"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb7-19"></span>
+<span id="cb7-20"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[tool.mypy]</span></span>
+<span id="cb7-21"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">python_version</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"3.10"</span></span>
+<span id="cb7-22"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">warn_return_any</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">true</span></span>
+<span id="cb7-23"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">warn_unused_configs</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">true</span></span>
+<span id="cb7-24"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">disallow_untyped_defs</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">true</span></span>
+<span id="cb7-25"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">check_untyped_defs</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">true</span></span>
+<span id="cb7-26"></span>
+<span id="cb7-27"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[[tool.mypy.overrides]]</span></span>
+<span id="cb7-28"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">module</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span></span>
+<span id="cb7-29">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pandas.*"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb7-30">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"numpy.*"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb7-31">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"matplotlib.*"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span></span>
+<span id="cb7-32">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"seaborn.*"</span></span>
+<span id="cb7-33"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb7-34"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">ignore_missing_imports</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">true</span></span></code></pre></div>
+</section>
+<section id="cấu-hình-pre-commit" class="level3">
+<h3 class="anchored" data-anchor-id="cấu-hình-pre-commit">6.3 Cấu hình Pre-commit</h3>
+<p>Tạo file <code>.pre-commit-config.yaml</code>:</p>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">repos</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb8-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">   </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">repo</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> https://github.com/pre-commit/pre-commit-hooks</span></span>
+<span id="cb8-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rev</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> v4.5.0</span></span>
+<span id="cb8-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">hooks</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb8-5"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">   </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">id</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> trailing-whitespace</span></span>
+<span id="cb8-6"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">   </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">id</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> end-of-file-fixer</span></span>
+<span id="cb8-7"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">   </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">id</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> check-yaml</span></span>
+<span id="cb8-8"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">   </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">id</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> check-json</span></span>
+<span id="cb8-9"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">   </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">id</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> check-added-large-files</span></span>
+<span id="cb8-10"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">args</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'--maxkb=5000'</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb8-11"></span>
+<span id="cb8-12"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">   </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">repo</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> https://github.com/psf/black</span></span>
+<span id="cb8-13"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rev</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">24.1.1</span></span>
+<span id="cb8-14"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">hooks</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb8-15"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">   </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">id</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> black</span></span>
+<span id="cb8-16"></span>
+<span id="cb8-17"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">   </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">repo</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> https://github.com/astral-sh/ruff-pre-commit</span></span>
+<span id="cb8-18"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rev</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> v0.2.1</span></span>
+<span id="cb8-19"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">hooks</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb8-20"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">   </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">id</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> ruff</span></span>
+<span id="cb8-21"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">args</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--fix</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb8-22"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">   </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">id</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> ruff-format</span></span>
+<span id="cb8-23"></span>
+<span id="cb8-24"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">   </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">repo</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> https://github.com/pre-commit/mirrors-mypy</span></span>
+<span id="cb8-25"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rev</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> v1.8.0</span></span>
+<span id="cb8-26"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">hooks</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb8-27"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">   </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">id</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> mypy</span></span>
+<span id="cb8-28"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">additional_dependencies</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">types-all</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb8-29"></span>
+<span id="cb8-30"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">   </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">repo</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> https://github.com/nbQA-dev/nbQA</span></span>
+<span id="cb8-31"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rev</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.7.1</span></span>
+<span id="cb8-32"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">hooks</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb8-33"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">   </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">id</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> nbqa-black</span></span>
+<span id="cb8-34"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">additional_dependencies</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">black==</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">24.1.1</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb8-35"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">   </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">id</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> nbqa-ruff</span></span>
+<span id="cb8-36"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">additional_dependencies</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ruff==</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2.1</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span></span></code></pre></div>
+</section>
+<section id="cấu-hình-git-ignore" class="level3">
+<h3 class="anchored" data-anchor-id="cấu-hình-git-ignore">6.4 Cấu hình Git Ignore</h3>
+<p>Tạo file <code>.gitignore</code>:</p>
+<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode numberSource gitignore number-lines code-with-copy"><code class="sourceCode"><span id="cb9-1"># Python</span>
+<span id="cb9-2">__pycache__/</span>
+<span id="cb9-3">*.py[cod]</span>
+<span id="cb9-4">*$py.class</span>
+<span id="cb9-5">*.so</span>
+<span id="cb9-6">.Python</span>
+<span id="cb9-7">build/</span>
+<span id="cb9-8">develop-eggs/</span>
+<span id="cb9-9">dist/</span>
+<span id="cb9-10">downloads/</span>
+<span id="cb9-11">eggs/</span>
+<span id="cb9-12">.eggs/</span>
+<span id="cb9-13">lib/</span>
+<span id="cb9-14">lib64/</span>
+<span id="cb9-15">parts/</span>
+<span id="cb9-16">sdist/</span>
+<span id="cb9-17">var/</span>
+<span id="cb9-18">wheels/</span>
+<span id="cb9-19">*.egg-info/</span>
+<span id="cb9-20">.installed.cfg</span>
+<span id="cb9-21">*.egg</span>
+<span id="cb9-22"></span>
+<span id="cb9-23"># Jupyter Notebook</span>
+<span id="cb9-24">.ipynb_checkpoints</span>
+<span id="cb9-25">*/.ipynb_checkpoints/*</span>
+<span id="cb9-26">profile_default/</span>
+<span id="cb9-27">ipython_config.py</span>
+<span id="cb9-28"></span>
+<span id="cb9-29"># VS Code</span>
+<span id="cb9-30">.vscode/*</span>
+<span id="cb9-31">!.vscode/settings.json</span>
+<span id="cb9-32">!.vscode/tasks.json</span>
+<span id="cb9-33">!.vscode/launch.json</span>
+<span id="cb9-34">!.vscode/extensions.json</span>
+<span id="cb9-35"></span>
+<span id="cb9-36"># Environment</span>
+<span id="cb9-37">.env</span>
+<span id="cb9-38">.venv</span>
+<span id="cb9-39">env/</span>
+<span id="cb9-40">venv/</span>
+<span id="cb9-41">ENV/</span>
+<span id="cb9-42">env.bak/</span>
+<span id="cb9-43">venv.bak/</span>
+<span id="cb9-44">.conda/</span>
+<span id="cb9-45">conda-env/</span>
+<span id="cb9-46"></span>
+<span id="cb9-47"># Data</span>
+<span id="cb9-48">data/raw/*</span>
+<span id="cb9-49">!data/raw/.gitkeep</span>
+<span id="cb9-50">data/processed/*</span>
+<span id="cb9-51">!data/processed/.gitkeep</span>
+<span id="cb9-52">*.csv</span>
+<span id="cb9-53">*.xlsx</span>
+<span id="cb9-54">*.xls</span>
+<span id="cb9-55">*.db</span>
+<span id="cb9-56">*.sqlite</span>
+<span id="cb9-57">*.h5</span>
+<span id="cb9-58"></span>
+<span id="cb9-59"># Logs</span>
+<span id="cb9-60">logs/</span>
+<span id="cb9-61">*.log</span>
+<span id="cb9-62">.hypothesis/</span>
+<span id="cb9-63">.pytest_cache/</span>
+<span id="cb9-64">.coverage</span>
+<span id="cb9-65">htmlcov/</span>
+<span id="cb9-66"></span>
+<span id="cb9-67"># OS specific</span>
+<span id="cb9-68">.DS_Store</span>
+<span id="cb9-69">.DS_Store?</span>
+<span id="cb9-70">._*</span>
+<span id="cb9-71">.Spotlight-V100</span>
+<span id="cb9-72">.Trashes</span>
+<span id="cb9-73">ehthumbs.db</span>
+<span id="cb9-74">Thumbs.db</span></code></pre></div>
+</section>
+<section id="khởi-tạo-pre-commit" class="level3">
+<h3 class="anchored" data-anchor-id="khởi-tạo-pre-commit">6.5 Khởi tạo Pre-commit</h3>
+<div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Activate môi trường</span></span>
+<span id="cb10-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">mamba</span> activate ds-project</span>
+<span id="cb10-3"></span>
+<span id="cb10-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Cài đặt pre-commit hooks</span></span>
+<span id="cb10-5"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">pre-commit</span> install</span>
+<span id="cb10-6"></span>
+<span id="cb10-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (Tùy chọn) Chạy pre-commit trên tất cả files</span></span>
+<span id="cb10-8"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">pre-commit</span> run <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--all-files</span></span></code></pre></div>
+</section>
+<section id="extensions-vs-code-cho-notebooks" class="level3">
+<h3 class="anchored" data-anchor-id="extensions-vs-code-cho-notebooks">6.6 Extensions VS Code cho Notebooks</h3>
+<p>Cài thêm các extensions sau:</p>
+<ol type="1">
+<li>“Jupyter Notebook Renderers”</li>
+<li>“Jupytext for Notebooks”</li>
+<li>“Black Formatter”</li>
+<li>“Ruff”</li>
+<li>“Mypy Type Checker”</li>
+</ol>
+</section>
+<section id="cấu-hình-jupytext" class="level3">
+<h3 class="anchored" data-anchor-id="cấu-hình-jupytext">6.7 Cấu hình Jupytext</h3>
+<p>Tạo file <code>.jupytext.toml</code>:</p>
+<div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode numberSource toml number-lines code-with-copy"><code class="sourceCode toml"><span id="cb11-1"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">formats</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ipynb,qmd"</span></span>
+<span id="cb11-2"></span>
+<span id="cb11-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[formats]</span></span>
+<span id="cb11-4"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">ipynb</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{}</span></span>
+<span id="cb11-5"><span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">qmd</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{}</span></span></code></pre></div>
+</section>
+</section>
+<section id="pro-tips-cho-windows" class="level2">
+<h2 class="anchored" data-anchor-id="pro-tips-cho-windows">7. Pro Tips cho Windows</h2>
+<section id="path-management" class="level3">
+<h3 class="anchored" data-anchor-id="path-management">Path Management</h3>
+<p>Sử dụng <code>pathlib</code> để xử lý đường dẫn:</p>
+<div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> pathlib <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> Path</span>
+<span id="cb12-2">data_path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Path(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"data"</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"raw"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"file.csv"</span></span></code></pre></div>
+</section>
+<section id="git-configuration" class="level3">
+<h3 class="anchored" data-anchor-id="git-configuration">Git Configuration</h3>
+<p>Tạo file <code>.gitignore</code>:</p>
+<div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode numberSource gitignore number-lines code-with-copy"><code class="sourceCode"><span id="cb13-1"># .gitignore</span>
+<span id="cb13-2">data/raw/*</span>
+<span id="cb13-3">data/processed/*</span>
+<span id="cb13-4">.ipynb_checkpoints/</span>
+<span id="cb13-5">__pycache__/</span>
+<span id="cb13-6">*.pyc</span></code></pre></div>
+</section>
+<section id="jupyter-trong-vs-code" class="level3">
+<h3 class="anchored" data-anchor-id="jupyter-trong-vs-code">Jupyter trong VS Code</h3>
+<ul>
+<li>Chạy cell: <code>Shift + Enter</code></li>
+<li>Variable explorer có sẵn</li>
+<li>Plot viewer tích hợp</li>
+<li>Intellisense hoạt động tốt</li>
+</ul>
+</section>
+<section id="debugging" class="level3">
+<h3 class="anchored" data-anchor-id="debugging">Debugging</h3>
+<ul>
+<li>Debugger tích hợp cho cả <code>.py</code> và <code>.ipynb</code></li>
+<li>Có thể đặt breakpoints trong notebooks</li>
+</ul>
+</section>
+</section>
+<section id="xử-lý-lỗi-thường-gặp" class="level2">
+<h2 class="anchored" data-anchor-id="xử-lý-lỗi-thường-gặp">8. Xử lý Lỗi Thường Gặp</h2>
+<ol type="1">
+<li><p><strong>Path quá dài trên Windows</strong></p>
+<ul>
+<li>Sử dụng đường dẫn ngắn hơn</li>
+<li>Kích hoạt hỗ trợ đường dẫn dài trong Windows</li>
+</ul></li>
+<li><p><strong>Conflict với môi trường Python khác</strong></p>
+<ul>
+<li>Đảm bảo PATH được cập nhật đúng</li>
+<li>Kiểm tra <code>where python</code> trong terminal</li>
+</ul></li>
+<li><p><strong>Jupyter Kernel không hiển thị</strong></p>
+<ul>
+<li>Cài lại <code>ipykernel</code></li>
+<li>Kiểm tra jupyter kernelspec list</li>
+</ul></li>
+</ol>
+</section>
+<section id="resources-hữu-ích" class="level2">
+<h2 class="anchored" data-anchor-id="resources-hữu-ích">9. Resources Hữu ích</h2>
+<ul>
+<li><a href="https://mamba.readthedocs.io/">Mamba Documentation</a></li>
+<li><a href="https://code.visualstudio.com/docs/python/python-tutorial">VS Code Python Documentation</a></li>
+<li><a href="https://code.visualstudio.com/docs/datascience/jupyter-notebooks">Jupyter in VS Code</a></li>
+</ul>
+</section>
+<section id="workflow-đề-xuất" class="level2">
+<h2 class="anchored" data-anchor-id="workflow-đề-xuất">10. Workflow Đề Xuất</h2>
+<ol type="1">
+<li><strong>Khởi tạo project mới</strong>:</li>
+</ol>
+<div class="sourceCode" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Tạo và activate môi trường</span></span>
+<span id="cb14-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">mamba</span> env create <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-f</span> environment.yml</span>
+<span id="cb14-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">mamba</span> activate ds-project</span>
+<span id="cb14-4"></span>
+<span id="cb14-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Cài đặt pre-commit hooks</span></span>
+<span id="cb14-6"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">pre-commit</span> install</span></code></pre></div>
+<ol start="2" type="1">
+<li><strong>Phát triển</strong>:</li>
+</ol>
+<ul>
+<li>Code trong VS Code với các extensions đã cài</li>
+<li>Notebooks sẽ tự động được format bởi nbQA</li>
+<li>Pre-commit sẽ kiểm tra code trước mỗi commit</li>
+</ul>
+<ol start="3" type="1">
+<li><strong>Commit Changes</strong>:</li>
+</ol>
+<div class="sourceCode" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> add .</span>
+<span id="cb15-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">git</span> commit <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"your message"</span></span>
+<span id="cb15-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Pre-commit sẽ tự động chạy các checks</span></span></code></pre></div>
+<ol start="4" type="1">
+<li><strong>Update Dependencies</strong>:</li>
+</ol>
+<div class="sourceCode" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Thêm package mới</span></span>
+<span id="cb16-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">mamba</span> install package-name</span>
+<span id="cb16-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Export environment</span></span>
+<span id="cb16-4"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">mamba</span> env export <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> environment.yml</span></code></pre></div>
+</section>
+<section id="bonus-nếu-muốn-import-một-module-từ-src-trong-notebook.ipynb-thì-làm-thế-nào" class="level2">
+<h2 class="anchored" data-anchor-id="bonus-nếu-muốn-import-một-module-từ-src-trong-notebook.ipynb-thì-làm-thế-nào">Bonus: nếu muốn import một module từ <code>src</code> trong <code>notebook.ipynb</code> thì làm thế nào?</h2>
+<div id="c9cc4dfd" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Trong notebook của bạn (ví dụ notebooks/analysis.ipynb)</span></span>
+<span id="cb17-2"></span>
+<span id="cb17-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 1. Setup path</span></span>
+<span id="cb17-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> sys</span>
+<span id="cb17-5"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> pathlib <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> Path</span>
+<span id="cb17-6">project_root <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">str</span>(Path.cwd().parent)</span>
+<span id="cb17-7"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> project_root <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> sys.path:</span>
+<span id="cb17-8">    sys.path.append(project_root)</span>
+<span id="cb17-9"></span>
+<span id="cb17-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 2. Import function</span></span>
+<span id="cb17-11"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> src.processing.data_preprocessing <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> process_data, clean_data</span>
+<span id="cb17-12"></span>
+<span id="cb17-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 3. Sử dụng function</span></span>
+<span id="cb17-14">df_processed <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> process_data(df_raw)</span></code></pre></div>
+</details>
+</div>
+<p>Với lưu ý:</p>
+<ul>
+<li>Đảm bảo có file <code>__init__.py</code> trong mỗi thư mục Python</li>
+<li>Không nên dùng relative imports (<code>from ...src.processing</code>) vì dễ gây lỗi</li>
+<li>Nên đặt tên module và function theo PEP 8</li>
+<li>Trong <code>data_preprocessing.py</code> nên có docstring mô tả function</li>
+</ul>
+<div id="05d43597" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># src/processing/data_preprocessing.py</span></span>
+<span id="cb18-2"></span>
+<span id="cb18-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> process_data(df):</span>
+<span id="cb18-4">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"""Process the input dataframe.</span></span>
+<span id="cb18-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    </span></span>
+<span id="cb18-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Args:</span></span>
+<span id="cb18-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        df (pd.DataFrame): Input dataframe</span></span>
+<span id="cb18-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        </span></span>
+<span id="cb18-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    Returns:</span></span>
+<span id="cb18-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">        pd.DataFrame: Processed dataframe</span></span>
+<span id="cb18-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">    """</span></span>
+<span id="cb18-12">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># your code here</span></span>
+<span id="cb18-13">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> processed_df</span></code></pre></div>
+</details>
+</div>
+
+
+<!-- -->
+
+</section>
+</section>
+
+ ]]></description>
+  <category>python</category>
+  <guid>https://lktuan.github.io/blog/2024-11-04-intro-to-mamba/</guid>
+  <pubDate>Sun, 03 Nov 2024 17:00:00 GMT</pubDate>
+  <media:content url="https://lktuan.github.io/blog/2024-11-04-intro-to-mamba/mamba.png" medium="image" type="image/png" height="92" width="144"/>
+</item>
 <item>
   <title>Keynote on: Causal Effect Estimation in Practice - lessons learned from E-commerce &amp; Banking</title>
   <dc:creator>Tuan Le Khac</dc:creator>
@@ -18212,1451 +19700,6 @@ font-style: inherit;"> VALAV</span></span></code></pre></div>
   <guid>https://lktuan.github.io/blog/2024-06-05-cnac/</guid>
   <pubDate>Tue, 04 Jun 2024 17:00:00 GMT</pubDate>
   <media:content url="https://lktuan.github.io/blog/2024-06-05-cnac/pepe.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Storytelling with Data: Let’s Practice, Improve this table!</title>
-  <dc:creator>Tuan Le Khac</dc:creator>
-  <link>https://lktuan.github.io/blog/2024-05-22-swd-p2-improve-table/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="motivation" class="level1">
-<h1>1. Motivation</h1>
-<p>Lấy cảm hứng từ bài <a href="https://rpubs.com/chidungkt/1139405">post</a> của thầy Nguyễn Chí Dũng về việc giải các exercise thuộc Chương 2 cuốn sách <strong>Storytelling with Data: Let’s Practice</strong> của tác giả <a href="https://www.linkedin.com/in/colenussbaumer/">Cole Nussbaumer Knaflic</a> sử dụng R, mình muốn cải thiện 1 bảng biểu nhưng sử dụng Python (trong cuốn sách gốc, tác giả sử dụng Excel để makeover các graph).</p>
-<p>Đây là một cuốn sách hay về chủ để visualization, dành cho những người sử dụng biểu đồ nhiều để communicate trong công việc. Cụm từ “storytelling” đang được sử dụng rất nhiều, thậm chí như là một buzzword, một keyword cần có trong CV của mỗi người làm data. Đối với mình, “storytelling” chỉ nên được sử dụng khi bạn đã có sẵn các kết quả phân tích, được thực hiện một cách khoa học, và bạn muốn truyền tải nó tới business unit/management một cách hiệu quả. “Storytelling” nên không bao giờ là động cơ để bạn thực hiện một phân tích (thứ thay vào đó nên là một <strong>câu hỏi</strong>), thiên kiến sẽ ảnh hưởng tới phương pháp thực hiện, và rất dễ nảy sinh ngụy biện khi kết luận. Hãy xem bài viết này của <a href="https://www.linkedin.com/pulse/data-professionals-beware-storytelling-keith-mcnulty/">Keith McNulty</a> và <a href="https://www.linkedin.com/posts/keith-mcnulty_my-most-hated-word-in-data-science-activity-7017097392759918592-2Atc/">discussion</a> trên Linked In.</p>
-<div>
-
-</div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://lktuan.github.io/blog/2024-05-22-swd-p2-improve-table/swd_chap5.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption>Photo credit to <a href="https://www.storytellingwithdata.com/blog/2019/8/27/lets-practice">swd</a></figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="lets-practice" class="level1">
-<h1>2. Let’s Practice</h1>
-<p>Mình đang học <code>{ggplot2}</code> trên R để thực hành hình ảnh hóa dữ liệu, tuy nhiên có vẻ package này (và tương ứng là <code>plotnine</code> trên Python không phù hợp cho báo cáo bảng). Trong bài post, thầy Dũng cũng sử dụng một library khác là <code>kableExtra</code> (tham khảo <a href="https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html">đây</a>).</p>
-<p>Sau một lúc google thì có vẻ có một package của Python phù hợp để làm nhiệm vụ này, đó là <code>great_tables</code> (tham khảo <a href="https://posit-dev.github.io/great-tables/articles/intro.html">đây</a>). Package này cũng được khuyến khích sử dụng cho mục đích communication bởi <a href="https://www.emilyriederer.com/post/py-rgo/#the-stack">Emily Riederer</a>.</p>
-<section id="import-the-data" class="level2">
-<h2 class="anchored" data-anchor-id="import-the-data">2.1. Import the data</h2>
-<p>Okay đầu tiên cần import và làm sạch dữ liệu. Bảng có sẵn trong file Exercise có vẻ dùng để báo cáo hơn là lưu trữ dữ liệu.</p>
-<div id="562db42c" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> pandas <span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">as</span> pd</span>
-<span id="cb1-2"></span>
-<span id="cb1-3">data <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> pd.read_excel(</span>
-<span id="cb1-4">  <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"2.1 EXERCISE.xlsx"</span>,</span>
-<span id="cb1-5">  sheet_name <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"EXERCISE 2.1"</span>,</span>
-<span id="cb1-6">  skiprows<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">6</span></span>
-<span id="cb1-7">)</span>
-<span id="cb1-8"></span>
-<span id="cb1-9">data <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> data.drop(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'Unnamed: 0'</span>, axis<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)</span>
-<span id="cb1-10">data <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> data.rename(columns<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>{ <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Tier"</span>: <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"tier"</span></span>
-<span id="cb1-11">                    ,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"# of Accounts"</span>: <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"no_of_account"</span></span>
-<span id="cb1-12">                    ,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"% Accounts"</span>: <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_account"</span></span>
-<span id="cb1-13">                    ,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Revenue ($M)"</span>: <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"revenue"</span></span>
-<span id="cb1-14">                    ,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"% Revenue"</span>: <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_revenue"</span>})</span></code></pre></div>
-</div>
-</section>
-<section id="data-manipulation" class="level2">
-<h2 class="anchored" data-anchor-id="data-manipulation">2.2. Data manipulation</h2>
-<p>Yep giờ ta đã có 1 bảng data khá sạch, tuy nhiên lưu ý là bảng đang không thể hiện toàn bộ dữ liệu (total của <code>pct_of_account</code> chỉ là <code>81.86%</code>). Ta cần tính toán thêm <code>All other</code> và <code>Grand Total</code> (lý do là mình chưa tìm thấy function hiển thị Grand Total với package đang sử dụng, ngay cả trong ví dụ <a href="https://posit-dev.github.io/great-tables/blog/pycon-2024-great-tables-are-possible/">này</a>, GT cũng sử dụng data đã có sẵn Grand Total).</p>
-<div id="19805bdd" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1">all_other_pct_of_account <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> data[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_account"</span>].<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">sum</span>()</span>
-<span id="cb2-2">all_other_no_of_account <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">round</span>(all_other_pct_of_account <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> data[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_account"</span>][<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>] <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> data[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"no_of_account"</span>][<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>],<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>)</span>
-<span id="cb2-3"></span>
-<span id="cb2-4">all_other_pct_of_revenue <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> data[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_revenue"</span>].<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">sum</span>()</span>
-<span id="cb2-5">all_other_revenue <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">round</span>(all_other_pct_of_revenue <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> data[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_revenue"</span>][<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>] <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> data[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"revenue"</span>][<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>],<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>)</span>
-<span id="cb2-6"></span>
-<span id="cb2-7">all_other <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> pd.Series({ <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"tier"</span>: <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"All other"</span>,</span>
-<span id="cb2-8">                        <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"no_of_account"</span>: all_other_no_of_account,</span>
-<span id="cb2-9">                        <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_account"</span>: all_other_pct_of_account,</span>
-<span id="cb2-10">                        <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"revenue"</span>:all_other_revenue,</span>
-<span id="cb2-11">                        <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_revenue"</span>: all_other_pct_of_revenue})</span>
-<span id="cb2-12"></span>
-<span id="cb2-13">data <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> pd.concat([data, all_other.to_frame().T], ignore_index<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">True</span>)</span>
-<span id="cb2-14"></span>
-<span id="cb2-15">data.loc[<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">len</span>(data.index)] <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> data.<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">sum</span>()</span>
-<span id="cb2-16">data.loc[data.index[<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>], <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'tier'</span>] <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'Grand Total'</span></span></code></pre></div>
-</div>
-<p>Show the data:</p>
-<div id="f85da960" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">from</span> great_tables <span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> GT</span>
-<span id="cb3-2"></span>
-<span id="cb3-3">( </span>
-<span id="cb3-4">  GT(data)</span>
-<span id="cb3-5">  .fmt_number(columns<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"no_of_account"</span>,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_account"</span>,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"revenue"</span>,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_revenue"</span>],decimals<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>))</span></code></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
-<div>
-<div id="craneejhel" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>
-#craneejhel table {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-        }
-
-#craneejhel thead, tbody, tfoot, tr, td, th { border-style: none; }
- tr { background-color: transparent; }
-#craneejhel p { margin: 0; padding: 0; }
- #craneejhel .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
- #craneejhel .gt_caption { padding-top: 4px; padding-bottom: 4px; }
- #craneejhel .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
- #craneejhel .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
- #craneejhel .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #craneejhel .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #craneejhel .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #craneejhel .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
- #craneejhel .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
- #craneejhel .gt_column_spanner_outer:first-child { padding-left: 0; }
- #craneejhel .gt_column_spanner_outer:last-child { padding-right: 0; }
- #craneejhel .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
- #craneejhel .gt_spanner_row { border-bottom-style: hidden; }
- #craneejhel .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
- #craneejhel .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
- #craneejhel .gt_from_md> :first-child { margin-top: 0; }
- #craneejhel .gt_from_md> :last-child { margin-bottom: 0; }
- #craneejhel .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
- #craneejhel .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
- #craneejhel .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
- #craneejhel .gt_row_group_first td { border-top-width: 2px; }
- #craneejhel .gt_row_group_first th { border-top-width: 2px; }
- #craneejhel .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #craneejhel .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #craneejhel .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #craneejhel .gt_left { text-align: left; }
- #craneejhel .gt_center { text-align: center; }
- #craneejhel .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
- #craneejhel .gt_font_normal { font-weight: normal; }
- #craneejhel .gt_font_bold { font-weight: bold; }
- #craneejhel .gt_font_italic { font-style: italic; }
- #craneejhel .gt_super { font-size: 65%; }
- #craneejhel .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
- #craneejhel .gt_asterisk { font-size: 100%; vertical-align: 0; }
- 
-</style>
-
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<tbody>
-<tr class="odd gt_col_headings">
-<td id="tier" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">tier</td>
-<td id="no_of_account" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">no_of_account</td>
-<td id="pct_of_account" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">pct_of_account</td>
-<td id="revenue" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">revenue</td>
-<td id="pct_of_revenue" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">pct_of_revenue</td>
-</tr>
-</tbody>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left">A</td>
-<td class="gt_row gt_right">77.00</td>
-<td class="gt_row gt_right">0.07</td>
-<td class="gt_row gt_right">4.67</td>
-<td class="gt_row gt_right">0.25</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left">A+</td>
-<td class="gt_row gt_right">19.00</td>
-<td class="gt_row gt_right">0.02</td>
-<td class="gt_row gt_right">3.93</td>
-<td class="gt_row gt_right">0.21</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left">B</td>
-<td class="gt_row gt_right">338.00</td>
-<td class="gt_row gt_right">0.31</td>
-<td class="gt_row gt_right">5.98</td>
-<td class="gt_row gt_right">0.32</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left">C</td>
-<td class="gt_row gt_right">425.00</td>
-<td class="gt_row gt_right">0.39</td>
-<td class="gt_row gt_right">2.80</td>
-<td class="gt_row gt_right">0.15</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left">D</td>
-<td class="gt_row gt_right">24.00</td>
-<td class="gt_row gt_right">0.02</td>
-<td class="gt_row gt_right">0.37</td>
-<td class="gt_row gt_right">0.02</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left">All other</td>
-<td class="gt_row gt_right">205.00</td>
-<td class="gt_row gt_right">0.19</td>
-<td class="gt_row gt_right">0.94</td>
-<td class="gt_row gt_right">0.05</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left">Grand Total</td>
-<td class="gt_row gt_right">1,088.00</td>
-<td class="gt_row gt_right">1.00</td>
-<td class="gt_row gt_right">18.70</td>
-<td class="gt_row gt_right">1.00</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-        
-</div>
-</div>
-</div>
-</section>
-<section id="visualization" class="level2">
-<h2 class="anchored" data-anchor-id="visualization">2.3. Visualization</h2>
-<p>Được rồi, giờ ta có thể dùng <code>great_tables</code> để tiến hành visualize. Về cơ bản, chỉ cần khởi tạo một object <code>GT()</code> có thể mở rộng được, các element/hoặc format được định nghĩa về sau.</p>
-<p>Dưới đây chúng ta trình bày một bảng đơn giản với tiêu đề, tên cột, cũng như định dạng lại dữ liệu.</p>
-<div id="de0bc25c" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1">(</span>
-<span id="cb4-2">  GT(data)</span>
-<span id="cb4-3">  .tab_header(title<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"New client tier share"</span>)</span>
-<span id="cb4-4">  .cols_label(</span>
-<span id="cb4-5">    tier <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Tier"</span>,</span>
-<span id="cb4-6">    no_of_account <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"# of Accounts"</span>,</span>
-<span id="cb4-7">    pct_of_account <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"% Accounts"</span>,</span>
-<span id="cb4-8">    revenue <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Revenue ($M)"</span>,</span>
-<span id="cb4-9">    pct_of_revenue <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"% Revenue"</span></span>
-<span id="cb4-10">  )</span>
-<span id="cb4-11">  .fmt_number(columns<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"no_of_account"</span>,decimals<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>)</span>
-<span id="cb4-12">  .fmt_percent(columns<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_account"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_revenue"</span>], decimals<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>)</span>
-<span id="cb4-13">  .fmt_currency(columns <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"revenue"</span>, currency<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"USD"</span>, decimals<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>)</span>
-<span id="cb4-14">  .tab_source_note(source_note<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Figure 2.1b: Slightly improved table"</span>)</span>
-<span id="cb4-15">)</span></code></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<div>
-<div id="owjzkcqqrj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>
-#owjzkcqqrj table {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-        }
-
-#owjzkcqqrj thead, tbody, tfoot, tr, td, th { border-style: none; }
- tr { background-color: transparent; }
-#owjzkcqqrj p { margin: 0; padding: 0; }
- #owjzkcqqrj .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
- #owjzkcqqrj .gt_caption { padding-top: 4px; padding-bottom: 4px; }
- #owjzkcqqrj .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
- #owjzkcqqrj .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
- #owjzkcqqrj .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #owjzkcqqrj .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #owjzkcqqrj .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #owjzkcqqrj .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
- #owjzkcqqrj .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
- #owjzkcqqrj .gt_column_spanner_outer:first-child { padding-left: 0; }
- #owjzkcqqrj .gt_column_spanner_outer:last-child { padding-right: 0; }
- #owjzkcqqrj .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
- #owjzkcqqrj .gt_spanner_row { border-bottom-style: hidden; }
- #owjzkcqqrj .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
- #owjzkcqqrj .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
- #owjzkcqqrj .gt_from_md> :first-child { margin-top: 0; }
- #owjzkcqqrj .gt_from_md> :last-child { margin-bottom: 0; }
- #owjzkcqqrj .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
- #owjzkcqqrj .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
- #owjzkcqqrj .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
- #owjzkcqqrj .gt_row_group_first td { border-top-width: 2px; }
- #owjzkcqqrj .gt_row_group_first th { border-top-width: 2px; }
- #owjzkcqqrj .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #owjzkcqqrj .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #owjzkcqqrj .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #owjzkcqqrj .gt_left { text-align: left; }
- #owjzkcqqrj .gt_center { text-align: center; }
- #owjzkcqqrj .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
- #owjzkcqqrj .gt_font_normal { font-weight: normal; }
- #owjzkcqqrj .gt_font_bold { font-weight: bold; }
- #owjzkcqqrj .gt_font_italic { font-style: italic; }
- #owjzkcqqrj .gt_super { font-size: 65%; }
- #owjzkcqqrj .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
- #owjzkcqqrj .gt_asterisk { font-size: 100%; vertical-align: 0; }
- 
-</style>
-
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead class="gt_header">
-<tr class="header">
-<th colspan="5" class="gt_heading gt_title gt_font_normal" data-quarto-table-cell-role="th">New client tier share</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd gt_col_headings">
-<td id="Tier" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Tier</td>
-<td id="# of Accounts" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col"># of Accounts</td>
-<td id="% Accounts" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">% Accounts</td>
-<td id="Revenue ($M)" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Revenue ($M)</td>
-<td id="% Revenue" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">% Revenue</td>
-</tr>
-</tbody>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left">A</td>
-<td class="gt_row gt_right">77</td>
-<td class="gt_row gt_right">7.08%</td>
-<td class="gt_row gt_right">$4.67</td>
-<td class="gt_row gt_right">25.00%</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left">A+</td>
-<td class="gt_row gt_right">19</td>
-<td class="gt_row gt_right">1.75%</td>
-<td class="gt_row gt_right">$3.93</td>
-<td class="gt_row gt_right">21.00%</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left">B</td>
-<td class="gt_row gt_right">338</td>
-<td class="gt_row gt_right">31.07%</td>
-<td class="gt_row gt_right">$5.98</td>
-<td class="gt_row gt_right">32.00%</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left">C</td>
-<td class="gt_row gt_right">425</td>
-<td class="gt_row gt_right">39.06%</td>
-<td class="gt_row gt_right">$2.80</td>
-<td class="gt_row gt_right">15.00%</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left">D</td>
-<td class="gt_row gt_right">24</td>
-<td class="gt_row gt_right">2.21%</td>
-<td class="gt_row gt_right">$0.37</td>
-<td class="gt_row gt_right">2.00%</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left">All other</td>
-<td class="gt_row gt_right">205</td>
-<td class="gt_row gt_right">18.84%</td>
-<td class="gt_row gt_right">$0.94</td>
-<td class="gt_row gt_right">5.00%</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left">Grand Total</td>
-<td class="gt_row gt_right">1,088</td>
-<td class="gt_row gt_right">100.00%</td>
-<td class="gt_row gt_right">$18.70</td>
-<td class="gt_row gt_right">100.00%</td>
-</tr>
-</tbody><tfoot class="gt_sourcenotes">
-<tr class="odd">
-<td colspan="5" class="gt_sourcenote">Figure 2.1b: Slightly improved table</td>
-</tr>
-</tfoot>
-
-</table>
-
-
-</div>
-        
-</div>
-</div>
-</div>
-<p>Trông ổn (ít nhất là trình bày số liệu một cách toàn vẹn) so với bản gốc rồi!</p>
-<p>Tiếp tục, ta dùng - helper <code>md()</code> để định dạng lại tiêu đề; - sử dụng <code>.data_color()</code> để tạo heatmapping; - sử dụng <code>tab_style()</code> để format dòng Grand Total; - sử dụng <code>.opt_stylize()</code> để theming.</p>
-<div id="35220963" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">from</span> great_tables <span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> md, style, loc</span>
-<span id="cb5-2"></span>
-<span id="cb5-3">(</span>
-<span id="cb5-4">  GT(data)</span>
-<span id="cb5-5">  .tab_header(title<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>md(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;strong&gt;New client tier share&lt;/strong&gt;"</span>))</span>
-<span id="cb5-6">  .opt_align_table_header(align<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"left"</span>)</span>
-<span id="cb5-7">  .cols_label(</span>
-<span id="cb5-8">    tier <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Tier"</span>,</span>
-<span id="cb5-9">    no_of_account <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"# of Accounts"</span>,</span>
-<span id="cb5-10">    pct_of_account <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"% Accounts"</span>,</span>
-<span id="cb5-11">    revenue <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"($M) Revenue"</span>, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># change the label</span></span>
-<span id="cb5-12">    pct_of_revenue <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"% Revenue"</span></span>
-<span id="cb5-13">  )</span>
-<span id="cb5-14">  .fmt_number(columns<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"no_of_account"</span>,decimals<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>)</span>
-<span id="cb5-15">  .fmt_percent(columns<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_account"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_revenue"</span>], decimals<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># changed decimals</span></span>
-<span id="cb5-16">  .fmt_currency(columns <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"revenue"</span>, currency<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"USD"</span>, decimals<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)<span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># changed decimals</span></span>
-<span id="cb5-17">  .tab_source_note(source_note<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Figure 2.1c: Table with heatmapping"</span>)</span>
-<span id="cb5-18">  .data_color(</span>
-<span id="cb5-19">    columns<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_account"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_revenue"</span>],</span>
-<span id="cb5-20">    palette<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#57A6A1"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#577B8D"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#344C64"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#240750"</span>],</span>
-<span id="cb5-21">    domain<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>],</span>
-<span id="cb5-22">    na_color<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"lightgray"</span>,</span>
-<span id="cb5-23">    autocolor_text <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">False</span></span>
-<span id="cb5-24">  )</span>
-<span id="cb5-25">  .tab_style(</span>
-<span id="cb5-26">        style<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>[</span>
-<span id="cb5-27">          style.text(style<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bolder"</span>),</span>
-<span id="cb5-28">          style.fill(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#EEEEEE"</span>),</span>
-<span id="cb5-29">          style.borders(sides<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"top"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bottom"</span>], weight<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'2px'</span>, color<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"grey"</span>)</span>
-<span id="cb5-30">          ],</span>
-<span id="cb5-31">        locations<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>loc.body(rows<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">6</span>])</span>
-<span id="cb5-32">  )</span>
-<span id="cb5-33">  .opt_stylize(style<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span> ,color<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'blue'</span>)</span>
-<span id="cb5-34">)</span></code></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
-<div>
-<div id="xlwzucecqv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>
-#xlwzucecqv table {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-        }
-
-#xlwzucecqv thead, tbody, tfoot, tr, td, th { border-style: none; }
- tr { background-color: transparent; }
-#xlwzucecqv p { margin: 0; padding: 0; }
- #xlwzucecqv .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #D5D5D5; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
- #xlwzucecqv .gt_caption { padding-top: 4px; padding-bottom: 4px; }
- #xlwzucecqv .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
- #xlwzucecqv .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
- #xlwzucecqv .gt_heading { background-color: #FFFFFF; text-align: left; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #xlwzucecqv .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; }
- #xlwzucecqv .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D5D5D5; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #xlwzucecqv .gt_col_heading { color: #FFFFFF; background-color: #004D80; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
- #xlwzucecqv .gt_column_spanner_outer { color: #FFFFFF; background-color: #004D80; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
- #xlwzucecqv .gt_column_spanner_outer:first-child { padding-left: 0; }
- #xlwzucecqv .gt_column_spanner_outer:last-child { padding-right: 0; }
- #xlwzucecqv .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
- #xlwzucecqv .gt_spanner_row { border-bottom-style: hidden; }
- #xlwzucecqv .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D5D5D5; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
- #xlwzucecqv .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D5D5D5; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; vertical-align: middle; }
- #xlwzucecqv .gt_from_md> :first-child { margin-top: 0; }
- #xlwzucecqv .gt_from_md> :last-child { margin-bottom: 0; }
- #xlwzucecqv .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D5D5D5; border-left-style: solid; border-left-width: 1px; border-left-color: #D5D5D5; border-right-style: solid; border-right-width: 1px; border-right-color: #D5D5D5; vertical-align: middle; overflow-x: hidden; }
- #xlwzucecqv .gt_stub { color: #333333; background-color: #929292; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D5D5D5; padding-left: 5px; padding-right: 5px; }
- #xlwzucecqv .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
- #xlwzucecqv .gt_row_group_first td { border-top-width: 2px; }
- #xlwzucecqv .gt_row_group_first th { border-top-width: 2px; }
- #xlwzucecqv .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D5D5D5; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D5D5D5; }
- #xlwzucecqv .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #xlwzucecqv .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #xlwzucecqv .gt_left { text-align: left; }
- #xlwzucecqv .gt_center { text-align: center; }
- #xlwzucecqv .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
- #xlwzucecqv .gt_font_normal { font-weight: normal; }
- #xlwzucecqv .gt_font_bold { font-weight: bold; }
- #xlwzucecqv .gt_font_italic { font-style: italic; }
- #xlwzucecqv .gt_super { font-size: 65%; }
- #xlwzucecqv .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
- #xlwzucecqv .gt_asterisk { font-size: 100%; vertical-align: 0; }
- 
-</style>
-
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead class="gt_header">
-<tr class="header">
-<th colspan="5" class="gt_heading gt_title gt_font_normal" data-quarto-table-cell-role="th"><strong>New client tier share</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd gt_col_headings">
-<td id="Tier" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Tier</td>
-<td id="# of Accounts" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col"># of Accounts</td>
-<td id="% Accounts" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">% Accounts</td>
-<td id="($M) Revenue" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">($M) Revenue</td>
-<td id="% Revenue" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">% Revenue</td>
-</tr>
-</tbody>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left">A</td>
-<td class="gt_row gt_right">77</td>
-<td class="gt_row gt_right" style="background-color: #579d9d">7%</td>
-<td class="gt_row gt_right">$4.7</td>
-<td class="gt_row gt_right" style="background-color: #578692">25%</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left">A+</td>
-<td class="gt_row gt_right">19</td>
-<td class="gt_row gt_right" style="background-color: #57a4a0">2%</td>
-<td class="gt_row gt_right">$3.9</td>
-<td class="gt_row gt_right" style="background-color: #578b94">21%</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left">B</td>
-<td class="gt_row gt_right">338</td>
-<td class="gt_row gt_right" style="background-color: #577e8e">31%</td>
-<td class="gt_row gt_right">$6.0</td>
-<td class="gt_row gt_right" style="background-color: #577d8e">32%</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left">C</td>
-<td class="gt_row gt_right">425</td>
-<td class="gt_row gt_right" style="background-color: #517386">39%</td>
-<td class="gt_row gt_right">$2.8</td>
-<td class="gt_row gt_right" style="background-color: #579398">15%</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left">D</td>
-<td class="gt_row gt_right">24</td>
-<td class="gt_row gt_right" style="background-color: #57a3a0">2%</td>
-<td class="gt_row gt_right">$0.4</td>
-<td class="gt_row gt_right" style="background-color: #57a3a0">2%</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left">All other</td>
-<td class="gt_row gt_right">205</td>
-<td class="gt_row gt_right" style="background-color: #578e96">19%</td>
-<td class="gt_row gt_right">$0.9</td>
-<td class="gt_row gt_right" style="background-color: #57a09e">5%</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" style="font-style: bolder; background-color: #EEEEEE; border-top: 2px solid grey; border-bottom: 2px solid grey">Grand Total</td>
-<td class="gt_row gt_right" style="font-style: bolder; background-color: #EEEEEE; border-top: 2px solid grey; border-bottom: 2px solid grey">1,088</td>
-<td class="gt_row gt_right" style="background-color: #240750; font-style: bolder; background-color: #EEEEEE; border-top: 2px solid grey; border-bottom: 2px solid grey">100%</td>
-<td class="gt_row gt_right" style="font-style: bolder; background-color: #EEEEEE; border-top: 2px solid grey; border-bottom: 2px solid grey">$18.7</td>
-<td class="gt_row gt_right" style="background-color: #240750; font-style: bolder; background-color: #EEEEEE; border-top: 2px solid grey; border-bottom: 2px solid grey">100%</td>
-</tr>
-</tbody><tfoot class="gt_sourcenotes">
-<tr class="odd">
-<td colspan="5" class="gt_sourcenote">Figure 2.1c: Table with heatmapping</td>
-</tr>
-</tfoot>
-
-</table>
-
-
-</div>
-        
-</div>
-</div>
-</div>
-<p>Tiếp theo, chúng ta sẽ thử dùng <code>fmt_nanoplot()</code> để tạo một bar plots thay cho hai cột percentage.</p>
-<p>Đây là một tính năng trong giai đoạn thử nghiệm nên mình thấy chưa thực sử ổn định và tuân theo document mà nhà phát triển đề cập. Trong ví dụ dưới đây mình sử dụng data bar, loại bỏ format do hàng cuối cùng. Tuy nhiên, đồ thị vẫn include giá trị <code>100%</code> ở hàng Grand Total để điều chỉnh bar scale.</p>
-<p>Thêm nữa mình cần chuyển dataframe về polar dataframe, khi đó một column của dl.df là iterable.</p>
-<div id="be86356a" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">from</span> great_tables <span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> md, style, loc, nanoplot_options</span>
-<span id="cb6-2"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> numpy <span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">as</span> np</span>
-<span id="cb6-3"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> polars <span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">as</span> pl</span>
-<span id="cb6-4"></span>
-<span id="cb6-5">data.at[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">6</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_account"</span>] <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> np.nan</span>
-<span id="cb6-6">data.at[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">6</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_revenue"</span>] <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> np.nan</span>
-<span id="cb6-7"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># so that the data scale looks better</span></span>
-<span id="cb6-8"></span>
-<span id="cb6-9">pl_data <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> pl.from_pandas(data)</span>
-<span id="cb6-10"></span>
-<span id="cb6-11">(</span>
-<span id="cb6-12">  GT(pl_data, rowname_col<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"tier"</span>)</span>
-<span id="cb6-13">  .tab_header(title<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>md(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;strong&gt;New client tier share&lt;/strong&gt;"</span>))</span>
-<span id="cb6-14">  .opt_align_table_header(align<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"left"</span>)</span>
-<span id="cb6-15">  .tab_source_note(source_note<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Figure 2.1d: Table with data bar"</span>)</span>
-<span id="cb6-16">  .cols_label(</span>
-<span id="cb6-17">    tier <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Tier"</span>,</span>
-<span id="cb6-18">    no_of_account <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"# of Accounts"</span>,</span>
-<span id="cb6-19">    pct_of_account <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"% Accounts"</span>,</span>
-<span id="cb6-20">    revenue <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"($M) Revenue"</span>, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># change the label</span></span>
-<span id="cb6-21">    pct_of_revenue <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"% Revenue"</span></span>
-<span id="cb6-22">  )</span>
-<span id="cb6-23">  .fmt_number(columns<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"no_of_account"</span>,decimals<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>)</span>
-<span id="cb6-24">  .fmt_currency(columns <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"revenue"</span>, currency<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"USD"</span>, decimals<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)</span>
-<span id="cb6-25">  .fmt_percent(columns<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_account"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_revenue"</span>], decimals<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># changed decimals</span></span>
-<span id="cb6-26">  .cols_width(</span>
-<span id="cb6-27">    cases<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>{</span>
-<span id="cb6-28">        <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"tier"</span>: <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"20%"</span>,</span>
-<span id="cb6-29">        <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"no_of_account"</span>: <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"20%"</span>,</span>
-<span id="cb6-30">        <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_account"</span>: <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"20%"</span>,</span>
-<span id="cb6-31">        <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"revenue"</span>: <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"20%"</span>,</span>
-<span id="cb6-32">        <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_revenue"</span>: <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"20%"</span>      </span>
-<span id="cb6-33">    }</span>
-<span id="cb6-34">    )</span>
-<span id="cb6-35">  .fmt_nanoplot(</span>
-<span id="cb6-36">    columns<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_account"</span>,</span>
-<span id="cb6-37">    rows <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>],</span>
-<span id="cb6-38">    plot_type<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bar"</span>,</span>
-<span id="cb6-39">    plot_height <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"3em"</span>,</span>
-<span id="cb6-40">    autoscale<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">True</span>,</span>
-<span id="cb6-41">    options<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>nanoplot_options(</span>
-<span id="cb6-42">      data_bar_stroke_color<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#577B8D"</span>,</span>
-<span id="cb6-43">      data_bar_stroke_width<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">80</span>,</span>
-<span id="cb6-44">      data_bar_fill_color<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#577B8D"</span>,)</span>
-<span id="cb6-45">    )</span>
-<span id="cb6-46">  .fmt_nanoplot(</span>
-<span id="cb6-47">    columns<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_revenue"</span>,</span>
-<span id="cb6-48">    rows <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>],</span>
-<span id="cb6-49">    plot_type<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bar"</span>,</span>
-<span id="cb6-50">    plot_height <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"3em"</span>,</span>
-<span id="cb6-51">    autoscale<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">True</span>,</span>
-<span id="cb6-52">    options<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>nanoplot_options(</span>
-<span id="cb6-53">      data_bar_stroke_color<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#577B8D"</span>,</span>
-<span id="cb6-54">      data_bar_stroke_width<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">80</span>,</span>
-<span id="cb6-55">      data_bar_fill_color<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#577B8D"</span>,)</span>
-<span id="cb6-56">  )</span>
-<span id="cb6-57">  .tab_style(</span>
-<span id="cb6-58">        style<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>[</span>
-<span id="cb6-59">          style.text(style<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bolder"</span>),</span>
-<span id="cb6-60">          style.fill(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#EEEEEE"</span>),</span>
-<span id="cb6-61">          style.borders(sides<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"top"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bottom"</span>], weight<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'2px'</span>, color<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"grey"</span>)</span>
-<span id="cb6-62">          ],</span>
-<span id="cb6-63">        locations<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>loc.body(rows<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">6</span>])</span>
-<span id="cb6-64">  )</span>
-<span id="cb6-65">  .tab_style(</span>
-<span id="cb6-66">        style<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>[</span>
-<span id="cb6-67">          style.text(color<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#EEEEEE"</span>, size<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.5</span>),</span>
-<span id="cb6-68">          ],</span>
-<span id="cb6-69">        locations<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>loc.body(rows<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">6</span>], columns<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_account"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pct_of_revenue"</span>])</span>
-<span id="cb6-70">  )</span>
-<span id="cb6-71">  .opt_stylize(style<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span> ,color<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'blue'</span>)</span>
-<span id="cb6-72">)</span></code></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<div>
-<div id="xsdfljskly" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>
-#xsdfljskly table {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-        }
-
-#xsdfljskly thead, tbody, tfoot, tr, td, th { border-style: none; }
- tr { background-color: transparent; }
-#xsdfljskly p { margin: 0; padding: 0; }
- #xsdfljskly .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #929292; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
- #xsdfljskly .gt_caption { padding-top: 4px; padding-bottom: 4px; }
- #xsdfljskly .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
- #xsdfljskly .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
- #xsdfljskly .gt_heading { background-color: #FFFFFF; text-align: left; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #xsdfljskly .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; }
- #xsdfljskly .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #929292; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #xsdfljskly .gt_col_heading { color: #FFFFFF; background-color: #004D80; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
- #xsdfljskly .gt_column_spanner_outer { color: #FFFFFF; background-color: #004D80; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
- #xsdfljskly .gt_column_spanner_outer:first-child { padding-left: 0; }
- #xsdfljskly .gt_column_spanner_outer:last-child { padding-right: 0; }
- #xsdfljskly .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
- #xsdfljskly .gt_spanner_row { border-bottom-style: hidden; }
- #xsdfljskly .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #929292; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
- #xsdfljskly .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #929292; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; vertical-align: middle; }
- #xsdfljskly .gt_from_md> :first-child { margin-top: 0; }
- #xsdfljskly .gt_from_md> :last-child { margin-bottom: 0; }
- #xsdfljskly .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: dashed; border-top-width: 1px; border-top-color: #929292; border-left-style: none; border-left-width: 1px; border-left-color: #929292; border-right-style: none; border-right-width: 1px; border-right-color: #929292; vertical-align: middle; overflow-x: hidden; }
- #xsdfljskly .gt_stub { color: #333333; background-color: #D5D5D5; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: none; border-right-width: 2px; border-right-color: #FFFFFF; padding-left: 5px; padding-right: 5px; }
- #xsdfljskly .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
- #xsdfljskly .gt_row_group_first td { border-top-width: 2px; }
- #xsdfljskly .gt_row_group_first th { border-top-width: 2px; }
- #xsdfljskly .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #929292; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #929292; }
- #xsdfljskly .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #xsdfljskly .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #xsdfljskly .gt_left { text-align: left; }
- #xsdfljskly .gt_center { text-align: center; }
- #xsdfljskly .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
- #xsdfljskly .gt_font_normal { font-weight: normal; }
- #xsdfljskly .gt_font_bold { font-weight: bold; }
- #xsdfljskly .gt_font_italic { font-style: italic; }
- #xsdfljskly .gt_super { font-size: 65%; }
- #xsdfljskly .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
- #xsdfljskly .gt_asterisk { font-size: 100%; vertical-align: 0; }
- 
-</style>
-
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-</colgroup>
-<thead class="gt_header">
-<tr class="header">
-<th colspan="5" class="gt_heading gt_title gt_font_normal" data-quarto-table-cell-role="th"><strong>New client tier share</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd gt_col_headings">
-<td class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></td>
-<td id="# of Accounts" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col"># of Accounts</td>
-<td id="% Accounts" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">% Accounts</td>
-<td id="($M) Revenue" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">($M) Revenue</td>
-<td id="% Revenue" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">% Revenue</td>
-</tr>
-</tbody>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th">A</td>
-<td class="gt_row gt_right">77</td>
-<td class="gt_row gt_right"><div>
-<svg viewbox="0 0 600 130" style="height: 3em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="108.70588235294117" height="40" stroke="#577B8D" stroke-width="80" fill="#577B8D"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">0.071</text></g>
-</svg>
-</div></td>
-<td class="gt_row gt_right">$4.7</td>
-<td class="gt_row gt_right"><div>
-<svg viewbox="0 0 600 130" style="height: 3em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="468.75" height="40" stroke="#577B8D" stroke-width="80" fill="#577B8D"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">0.25</text></g>
-</svg>
-</div></td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th">A+</td>
-<td class="gt_row gt_right">19</td>
-<td class="gt_row gt_right"><div>
-<svg viewbox="0 0 600 130" style="height: 3em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="26.823529411764707" height="40" stroke="#577B8D" stroke-width="80" fill="#577B8D"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">0.017</text></g>
-</svg>
-</div></td>
-<td class="gt_row gt_right">$3.9</td>
-<td class="gt_row gt_right"><div>
-<svg viewbox="0 0 600 130" style="height: 3em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="393.75" height="40" stroke="#577B8D" stroke-width="80" fill="#577B8D"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">0.21</text></g>
-</svg>
-</div></td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th">B</td>
-<td class="gt_row gt_right">338</td>
-<td class="gt_row gt_right"><div>
-<svg viewbox="0 0 600 130" style="height: 3em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="477.1764705882353" height="40" stroke="#577B8D" stroke-width="80" fill="#577B8D"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">0.31</text></g>
-</svg>
-</div></td>
-<td class="gt_row gt_right">$6.0</td>
-<td class="gt_row gt_right"><div>
-<svg viewbox="0 0 600 130" style="height: 3em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="600.0" height="40" stroke="#577B8D" stroke-width="80" fill="#577B8D"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">0.32</text></g>
-</svg>
-</div></td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th">C</td>
-<td class="gt_row gt_right">425</td>
-<td class="gt_row gt_right"><div>
-<svg viewbox="0 0 600 130" style="height: 3em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="600.0" height="40" stroke="#577B8D" stroke-width="80" fill="#577B8D"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">0.39</text></g>
-</svg>
-</div></td>
-<td class="gt_row gt_right">$2.8</td>
-<td class="gt_row gt_right"><div>
-<svg viewbox="0 0 600 130" style="height: 3em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="281.25" height="40" stroke="#577B8D" stroke-width="80" fill="#577B8D"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">0.15</text></g>
-</svg>
-</div></td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th">D</td>
-<td class="gt_row gt_right">24</td>
-<td class="gt_row gt_right"><div>
-<svg viewbox="0 0 600 130" style="height: 3em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="33.88235294117647" height="40" stroke="#577B8D" stroke-width="80" fill="#577B8D"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">0.022</text></g>
-</svg>
-</div></td>
-<td class="gt_row gt_right">$0.4</td>
-<td class="gt_row gt_right"><div>
-<svg viewbox="0 0 600 130" style="height: 3em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="37.5" height="40" stroke="#577B8D" stroke-width="80" fill="#577B8D"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">0.020</text></g>
-</svg>
-</div></td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th">All other</td>
-<td class="gt_row gt_right">205</td>
-<td class="gt_row gt_right"><div>
-<svg viewbox="0 0 600 130" style="height: 3em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="289.41176470588226" height="40" stroke="#577B8D" stroke-width="80" fill="#577B8D"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">0.19</text></g>
-</svg>
-</div></td>
-<td class="gt_row gt_right">$0.9</td>
-<td class="gt_row gt_right"><div>
-<svg viewbox="0 0 600 130" style="height: 3em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="93.74999999999987" height="40" stroke="#577B8D" stroke-width="80" fill="#577B8D"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">0.050</text></g>
-</svg>
-</div></td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th">Grand Total</td>
-<td class="gt_row gt_right" style="font-style: bolder; background-color: #EEEEEE; border-top: 2px solid grey; border-bottom: 2px solid grey">1,088</td>
-<td class="gt_row gt_right" style="font-style: bolder; background-color: #EEEEEE; border-top: 2px solid grey; border-bottom: 2px solid grey; color: #EEEEEE; font-size: 0.5">None</td>
-<td class="gt_row gt_right" style="font-style: bolder; background-color: #EEEEEE; border-top: 2px solid grey; border-bottom: 2px solid grey">$18.7</td>
-<td class="gt_row gt_right" style="font-style: bolder; background-color: #EEEEEE; border-top: 2px solid grey; border-bottom: 2px solid grey; color: #EEEEEE; font-size: 0.5">None</td>
-</tr>
-</tbody><tfoot class="gt_sourcenotes">
-<tr class="odd">
-<td colspan="5" class="gt_sourcenote">Figure 2.1d: Table with data bar</td>
-</tr>
-</tfoot>
-
-</table>
-
-
-</div>
-        
-</div>
-</div>
-</div>
-<p><code>great_tables</code> vẫn chưa thực sự render ra được bảng biểu đúng như setting.</p>
-<p>Bài thực hành đến đây là kết thúc! 🚀</p>
-</section>
-</section>
-<section id="references" class="level1">
-<h1>References</h1>
-<ol type="1">
-<li><a href="https://www.storytellingwithdata.com/books" class="uri">https://www.storytellingwithdata.com/books</a></li>
-<li><a href="https://rpubs.com/chidungkt/1139405" class="uri">https://rpubs.com/chidungkt/1139405</a></li>
-<li><a href="https://posit-dev.github.io/great-tables/articles/intro.html" class="uri">https://posit-dev.github.io/great-tables/articles/intro.html</a></li>
-</ol>
-
-
-<!-- -->
-
-</section>
-
- ]]></description>
-  <category>Python</category>
-  <category>Visualization</category>
-  <guid>https://lktuan.github.io/blog/2024-05-22-swd-p2-improve-table/</guid>
-  <pubDate>Tue, 21 May 2024 17:00:00 GMT</pubDate>
-  <media:content url="https://lktuan.github.io/blog/2024-05-22-swd-p2-improve-table/SWD-Cover-FULL-R5-MED.png" medium="image" type="image/png" height="180" width="144"/>
 </item>
 </channel>
 </rss>
