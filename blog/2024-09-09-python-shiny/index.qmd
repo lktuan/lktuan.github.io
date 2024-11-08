@@ -7,16 +7,31 @@ author:
 categories: [math] 
 image: python_shiny.jpg
 date: 09-09-2024
-date-modified: 09-13-2024
+date-modified: 11-08-2024
 toc: true
+format:
+  html:
+    code-overflow: wrap
 ---
 
 # 1. Set up & play with a template
 
-After creating a `.venv` - virtual environment, activating it, we can 
+After creating a `.venv` - virtual environment, activating it, we can try a template with the command `shiny create --template dashboard --mode express --github posit-dev/py-shiny-templates`. The neccesary code, data, css formating will be downloaded to the repository.
+
+![Creating app using template](shiny_create.png)
+
+Follow the instruction and when the installation is done, we can click the *RUN* button on `app.py` or run: `shiny run .\dashboard\app.py` and the dashboard can be accessed to the port `8000` of the localhost. 
+
+![Sample dashboard](sample_dashboard.png)
+
+This gives us a vague understanding of how a shiny project works. Dive into this, we will delete all the code and start over to build a dashboard ourselves from scratch.
+
 # 2. Build from the scratch
 
 ## simple `ui`
+
+This is good start as we provide content for some basic elements (`h1`, `p` - just like HTML)
+
 ```{python}
 #| eval: false
 from shiny.express import ui
@@ -26,6 +41,8 @@ ui.h1("My Dashboard")
 ui.p("This is sometext")
 
 ```
+
+![Header and paragraph](ui_simple_elements.png)
 
 ## let's `render` something
 
@@ -43,6 +60,10 @@ df = pd.read_csv(file_path)
 def data():    
     return df
 ```
+
+Shiny app is **reactive**, as we provide the rendering command, the dashboard will be updated.
+
+![Shiny app is reactive](ui_the_app_is_reactive.png)
 
 ## let's create a filter, `input`
 
@@ -72,7 +93,47 @@ def plot():
     return px.scatter(df_subset, x="bill_depth_mm", y = "bill_length_mm")
 ```
 
+Now we are ready to explore more on the layouts of our **Dashboard**, or **Application layouts**.
+
 # 3. Basic User Interfaces
+
+The documentation of Shiny layouts can be accessed at: <https://shiny.posit.co/py/layouts/>, there are many types of layout:
+
+- `Navbars`: nagivation bar to navigate our app;
+- `Sidebars`: a layout of sidebar on one side (for input), and large dashboard on the other side;
+- `Tabs`: like a multiple pager report;
+- Panels & Cards: for floating content;
+- Arrange Elements: arranging the ordering elements.
+
+For example, below code - in Shiny Express - will create a sidebar layout:
+
+```{python}
+#| eval: false
+from shiny.express import ui
+
+with ui.sidebar(bg="#f8f8f8"):  # context manager
+    "Sidebar"  
+
+"Main content"  
+```
+
+We define the content of the sidebar under *with* statement, other rendering under sidebar context will be display in the large remaining area. For eg, putting the header, slicer in the sidebar:
+
+```{python}
+#| eval: false
+with ui.sidebar(bg="#f8f8f8"):  # context manager
+    ui.h1("My Dashboard")
+    ui.p("This is sometext")
+    ui.input_slider("mass", "Max body mass", 2000, 8000, 6000)
+
+"Main content"
+```
+
+Our dashboard will look like: 
+
+![Sidebar example](sidebar_example.png)
+
+The second layout that comes to our concern is `cards`, which are eneral purpose containers used to group related UI elements together with a border and optional padding
 
 # 4. Reactivity
 

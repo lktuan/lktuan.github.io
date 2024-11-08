@@ -2006,13 +2006,29 @@ font-style: inherit;">return</span> processed_df</span></code></pre></div>
 
 
 <section id="set-up-play-with-a-template" class="level1">
-
+<h1>1. Set up &amp; play with a template</h1>
+<p>After creating a <code>.venv</code> - virtual environment, activating it, we can try a template with the command <code>shiny create --template dashboard --mode express --github posit-dev/py-shiny-templates</code>. The neccesary code, data, css formating will be downloaded to the repository.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-09-09-python-shiny/shiny_create.png" class="img-fluid figure-img"></p>
+<figcaption>Creating app using template</figcaption>
+</figure>
+</div>
+<p>Follow the instruction and when the installation is done, we can click the <em>RUN</em> button on <code>app.py</code> or run: <code>shiny run .\dashboard\app.py</code> and the dashboard can be accessed to the port <code>8000</code> of the localhost.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-09-09-python-shiny/sample_dashboard.png" class="img-fluid figure-img"></p>
+<figcaption>Sample dashboard</figcaption>
+</figure>
+</div>
+<p>This gives us a vague understanding of how a shiny project works. Dive into this, we will delete all the code and start over to build a dashboard ourselves from scratch.</p>
 </section>
 <section id="build-from-the-scratch" class="level1">
-<h1>Build from the scratch</h1>
+<h1>2. Build from the scratch</h1>
 <section id="simple-ui" class="level2">
-<h2 class="anchored" data-anchor-id="simple-ui">Simple <code>ui</code></h2>
-<div id="751de049" class="cell" data-execution_count="1">
+<h2 class="anchored" data-anchor-id="simple-ui">simple <code>ui</code></h2>
+<p>This is good start as we provide content for some basic elements (<code>h1</code>, <code>p</code> - just like HTML)</p>
+<div id="27dd5ccb" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
@@ -2030,10 +2046,16 @@ background-color: null;
 font-style: inherit;">"This is sometext"</span>)</span></code></pre></div>
 </details>
 </div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-09-09-python-shiny/ui_simple_elements.png" class="img-fluid figure-img"></p>
+<figcaption>Header and paragraph</figcaption>
+</figure>
+</div>
 </section>
 <section id="lets-render-something" class="level2">
-<h2 class="anchored" data-anchor-id="lets-render-something">Let’s <code>render</code> something</h2>
-<div id="495f4bbe" class="cell" data-execution_count="2">
+<h2 class="anchored" data-anchor-id="lets-render-something">let’s <code>render</code> something</h2>
+<div id="fccd7ea1" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
@@ -2066,33 +2088,243 @@ font-style: inherit;">"penguins.csv"</span></span>
 background-color: null;
 font-style: inherit;">=</span> pd.read_csv(file_path)</span>
 <span id="cb2-8"></span>
-<span id="cb2-9">ui.h1(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"My Dashboard"</span>)</span>
-<span id="cb2-10"></span>
-<span id="cb2-11">ui.p(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"This is sometext"</span>)</span>
-<span id="cb2-12"></span>
-<span id="cb2-13"><span class="at" style="color: #657422;
+<span id="cb2-9"><span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">@render.data_frame</span></span>
-<span id="cb2-14"><span class="kw" style="color: #003B4F;
+<span id="cb2-10"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">def</span> data():    </span>
-<span id="cb2-15">    <span class="cf" style="color: #003B4F;
+<span id="cb2-11">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">return</span> df</span></code></pre></div>
 </details>
 </div>
+<p>Shiny app is <strong>reactive</strong>, as we provide the rendering command, the dashboard will be updated.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-09-09-python-shiny/ui_the_app_is_reactive.png" class="img-fluid figure-img"></p>
+<figcaption>Shiny app is reactive</figcaption>
+</figure>
+</div>
 </section>
 <section id="lets-create-a-filter-input" class="level2">
-<h2 class="anchored" data-anchor-id="lets-create-a-filter-input">Let’s create a filter, <code>input</code></h2>
+<h2 class="anchored" data-anchor-id="lets-create-a-filter-input">let’s create a filter, <code>input</code></h2>
+<div id="5c1f9a0c" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> shiny.express <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> ui, render, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">input</span></span>
+<span id="cb3-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> pathlib <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> Path</span>
+<span id="cb3-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pandas <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pd</span>
+<span id="cb3-4"></span>
+<span id="cb3-5">file_path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Path(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">__file__</span>).parent <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"penguins.csv"</span></span>
+<span id="cb3-6">df <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.read_csv(file_path)</span>
+<span id="cb3-7">ui.input_slider(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mass"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Max body mass"</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2000</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8000</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6000</span>)</span>
+<span id="cb3-8"></span>
+<span id="cb3-9"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@render.data_frame</span></span>
+<span id="cb3-10"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> data():    </span>
+<span id="cb3-11">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> df[df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'body_mass_g'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">input</span>.mass()]</span></code></pre></div>
+</details>
+</div>
+</section>
+<section id="and-create-a-plot-with-plotly" class="level2">
+<h2 class="anchored" data-anchor-id="and-create-a-plot-with-plotly">and create a plot with <code>plotly</code></h2>
+<div id="ca78ff4c" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> plotly.express <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> px</span>
+<span id="cb4-2"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@render_plotly</span></span>
+<span id="cb4-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> plot():</span>
+<span id="cb4-4">    df_subset <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> df[df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'body_mass_g'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">input</span>.mass()] <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># we add this filter to make sure this plot and the table above are presenting the same data</span></span>
+<span id="cb4-5">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> px.scatter(df_subset, x<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bill_depth_mm"</span>, y <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bill_length_mm"</span>)</span></code></pre></div>
+</details>
+</div>
+<p>Now we are ready to explore more on the layouts of our <strong>Dashboard</strong>, or <strong>Application layouts</strong>.</p>
+</section>
+</section>
+<section id="basic-user-interfaces" class="level1">
+<h1>3. Basic User Interfaces</h1>
+<p>The documentation of Shiny layouts can be accessed at: <a href="https://shiny.posit.co/py/layouts/" class="uri">https://shiny.posit.co/py/layouts/</a>, there are many types of layout:</p>
+<ul>
+<li><code>Navbars</code>: nagivation bar to navigate our app;</li>
+<li><code>Sidebars</code>: a layout of sidebar on one side (for input), and large dashboard on the other side;</li>
+<li><code>Tabs</code>: like a multiple pager report;</li>
+<li>Panels &amp; Cards: for floating content;</li>
+<li>Arrange Elements: arranging the ordering elements.</li>
+</ul>
+<p>For example, below code - in Shiny Express - will create a sidebar layout:</p>
+<div id="ecc6d463" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> shiny.express <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> ui</span>
+<span id="cb5-2"></span>
+<span id="cb5-3"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">with</span> ui.sidebar(bg<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#f8f8f8"</span>):  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># context manager</span></span>
+<span id="cb5-4">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"Sidebar"</span>  </span>
+<span id="cb5-5"></span>
+<span id="cb5-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"Main content"</span>  </span></code></pre></div>
+</details>
+</div>
+<p>We define the content of the sidebar under <em>with</em> statement, other rendering under sidebar context will be display in the large remaining area. For eg, putting the header, slicer in the sidebar:</p>
+<div id="e619d470" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">with</span> ui.sidebar(bg<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#f8f8f8"</span>):  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># context manager</span></span>
+<span id="cb6-2">    ui.h1(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"My Dashboard"</span>)</span>
+<span id="cb6-3">    ui.p(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This is sometext"</span>)</span>
+<span id="cb6-4">    ui.input_slider(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mass"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Max body mass"</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2000</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8000</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6000</span>)</span>
+<span id="cb6-5"></span>
+<span id="cb6-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"Main content"</span></span></code></pre></div>
+</details>
+</div>
+<p>Our dashboard will look like:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-09-09-python-shiny/sidebar_example.png" class="img-fluid figure-img"></p>
+<figcaption>Sidebar example</figcaption>
+</figure>
+</div>
+</section>
+<section id="reactivity" class="level1">
+<h1>4. Reactivity</h1>
+</section>
+<section id="reactive-effects-and-events" class="level1">
+<h1>5. Reactive effects and events</h1>
+</section>
+<section id="advanced-user-interfaces" class="level1">
+<h1>6. Advanced User Interfaces</h1>
+</section>
+<section id="publishing" class="level1">
+<h1>7. Publishing</h1>
+</section>
+<section id="wrap-up" class="level1">
+<h1>8. Wrap up</h1>
+</section>
+<section id="sources" class="level1">
+<h1>Sources</h1>
+<ol type="1">
+<li><a href="https://training.talkpython.fm/courses/details/reactive-web-dashboards-with-shiny-for-data-science" class="uri">https://training.talkpython.fm/courses/details/reactive-web-dashboards-with-shiny-for-data-science</a>;</li>
+<li><a href="https://talkpython.github.io/reactive-web-dashboards-with-shiny-course/" class="uri">https://talkpython.github.io/reactive-web-dashboards-with-shiny-course/</a>;</li>
+<li><a href="https://shiny.posit.co/py/" class="uri">https://shiny.posit.co/py/</a>;</li>
+<li><a href="https://shiny.posit.co/py/templates/dashboard/index.html" class="uri">https://shiny.posit.co/py/templates/dashboard/index.html</a>;</li>
+<li><a href="https://medium.com/berk-orbay/deploying-shinypy-0fa449a019e0" class="uri">https://medium.com/berk-orbay/deploying-shinypy-0fa449a019e0</a></li>
+</ol>
 
 
 <!-- -->
 
-</section>
 </section>
 
  ]]></description>
