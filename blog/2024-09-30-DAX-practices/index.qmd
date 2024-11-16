@@ -9,6 +9,7 @@ image: wise_owl.jpg
 date: 09-30-2024
 date-modified: 09-30-2024
 toc: true
+draft: true
 ---
 
 Link to the challenge: <https://www.wiseowl.co.uk/power-bi/exercises/dax/>
@@ -21,7 +22,7 @@ Including 11 exercises:
 
 It's pretty simple to calculate the *total floors*, just find the **New column** under **Table tools**, and sum the floors up:
 
-```txt
+``` txt
 Total floors = Building[Floors above ground] + Building[Floors below ground]
 ```
 
@@ -29,7 +30,7 @@ Total floors = Building[Floors above ground] + Building[Floors below ground]
 
 And for *Average floor height*, we just need to use "/", or better practice, use `DIVIDE()`:
 
-```txt
+``` txt
 Average floor height = Building[Height m] / Building[Floors above ground]
 
 -- or
@@ -43,14 +44,14 @@ For each column, we have column tools to format the data.
 
 The `IF()` in DAX row context is pretty the same with Excel!
 
-```txt
+``` txt
 Has basement = IF(Building[Floors below ground] > 0, "Yes", "No")
 Century = IF(Building[Year Opened] < 2001, "20th Century", "21st Century")
 ```
 
 Do you ever use `SWITCH()` in Excel, it's the same in PBI:
 
-```txt
+``` txt
 Category =
 SWITCH (
     TRUE (),
@@ -64,7 +65,7 @@ SWITCH (
 
 #### 4 [More operations](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5088/)
 
-```txt
+``` txt
 # This is simple
 Tour length = Tour[End year] - Tour[Start year] + 1
 
@@ -79,7 +80,7 @@ Avg ticket price = DIVIDE(Tour[Actual gross], Tour[Attendance])
 
 We can use "**&**" or the `CONCANATE()` function to join texts (in row context), and use `RELATED()` to get data from other tables with a relationship set up.
 
-```txt
+``` txt
 Name and location = CONCATENATE(Building[Building Name] & ", ", RELATED(City[City]))
 
 -- or if we want to include the Country name
@@ -96,7 +97,7 @@ CONCATENATE (
 
 We can use `RELATED()` and `ISBLANK()` to refer and check if there any matching record is returned.
 
-```txt
+``` txt
 Quadrant =
 IF (
     ISBLANK ( RELATED ( Quadrants[QuadrantName] ) ),
@@ -114,18 +115,17 @@ IF (
 
 #### 6 [More on `RELATED()`](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5092/)
 
-
 #### 7 [Context transition in calculated column](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4417/)
 
 The first one *Total sales* was calculated in **Products** table, simply interate all the table **Purchase**, multiply *quanity* by *price* to get the entire revenue:
 
-```txt
+``` txt
 Total Sales = SUMX(Purchase, Purchase[Quantity] * Purchase[Price])
 ```
 
 The second one - *Sales for product*, we want to calculate the coresponding sales for each product at the current row, so we just **wrap** the `CALCULATE()` function for the **context transition**:
 
-```txt
+``` txt
 Sales for product =
 CALCULATE (
     SUMX ( Purchase, Purchase[Quantity] * Purchase[Price] )
@@ -134,7 +134,7 @@ CALCULATE (
 
 And the final one:
 
-```txt
+``` txt
 Product contribution = DIVIDE([Sales for product],[Total sales])
 ```
 
@@ -173,5 +173,3 @@ Including 2 exercises
 # 10. [Variables](https://www.wiseowl.co.uk/power-bi/exercises/dax/variables/)
 
 Including 3 exercises
-
-

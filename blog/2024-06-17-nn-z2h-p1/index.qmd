@@ -20,27 +20,28 @@ format:
   html:
     code-overflow: wrap
 ---
+
 **Upfront-note**: There are also greate resources in Vietnamese for learning Backpropagation, for e.g.:
 
-1. Blog [machinelearningcoban](https://machinelearningcoban.com/2017/02/24/mlp/)
-2. Blog [dominhhai](https://dominhhai.github.io/vi/2018/04/nn-bp/)
+1.  Blog [machinelearningcoban](https://machinelearningcoban.com/2017/02/24/mlp/)
+2.  Blog [dominhhai](https://dominhhai.github.io/vi/2018/04/nn-bp/)
 
 # MicroGrad from scratch Yayy!
 
-[**🚀 MicroGrad repo**](https://github.com/karpathy/micrograd)
-[**🔥 Video Lecture**](https://www.youtube.com/watch?v=VMj-3S1tku0&list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ)
+[**🚀 MicroGrad repo**](https://github.com/karpathy/micrograd) [**🔥 Video Lecture**](https://www.youtube.com/watch?v=VMj-3S1tku0&list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ)
 
-::: {layout-ncol=1}
-![Backpropagation in Neural Networks, photo credit to [GeekforGeek](https://www.geeksforgeeks.org/backpropagation-in-neural-network/)](https://media.geeksforgeeks.org/wp-content/uploads/20240217152156/Frame-13.png){width=100%}
+::: {layout-ncol="1"}
+![Backpropagation in Neural Networks, photo credit to [GeekforGeek](https://www.geeksforgeeks.org/backpropagation-in-neural-network/)](https://media.geeksforgeeks.org/wp-content/uploads/20240217152156/Frame-13.png){width="100%"}
 :::
 
 ## intro & micrograd overview - what does your neural network training look like under the hood?
 
-What is MicroGrad ❓: a tiny **auto-grad** (automatic gradient) engine, implement of **backpropagation** ~ itertively tune the weight of that nn to minimize the loss function -> improve the accuracy of the neural network. Backpropagation will be the mathematical core of any modern deep neutral network like, say `pytorch`, or `jaxx`.
+What is MicroGrad ❓: a tiny **auto-grad** (automatic gradient) engine, implement of **backpropagation** \~ itertively tune the weight of that nn to minimize the loss function -\> improve the accuracy of the neural network. Backpropagation will be the mathematical core of any modern deep neutral network like, say `pytorch`, or `jaxx`.
 
 Installation: `pip install micrograd`
 
 Example:
+
 ```{python}
 from micrograd.engine import Value
 
@@ -62,20 +63,24 @@ print(f'{a.grad:.4f}') # prints 138.8338, i.e. the numerical value of dg/da     
 print(f'{b.grad:.4f}') # prints 645.5773, i.e. the numerical value of dg/db
 ```
 
-1. Micrograd allows you to build mathematical expressions, in this case `a` and `b` are inputs, wrapped in `Value` object with value equal to `-4.0` and `2.0`, respectively.
-2. `a` and `b` are transformed to `c`, `d`, `e` and eventually `f`, `g`. Mathematical operators are implemented, like `+`, `*`, `**`, even `relu()`.
-3. `Value` object contains `data`, and `grad`.
-4. Call `backpropagation()` process.
+1.  Micrograd allows you to build mathematical expressions, in this case `a` and `b` are inputs, wrapped in `Value` object with value equal to `-4.0` and `2.0`, respectively.
+2.  `a` and `b` are transformed to `c`, `d`, `e` and eventually `f`, `g`. Mathematical operators are implemented, like `+`, `*`, `**`, even `relu()`.
+3.  `Value` object contains `data`, and `grad`.
+4.  Call `backpropagation()` process.
 
 ## derivative of a simple function with one input
+
 ❓What exactly is derivative❓
+
 ```{python}
 import math
 import numpy as np
 import matplotlib.pyplot as plt
 %matplotlib inline
 ```
+
 A simple quadratic function:
+
 ```{python}
 def f(x):
     return 3*x**2 - 4*x + 5
@@ -84,19 +89,24 @@ def f(x):
 ```{python}
 f(3.0)
 ```
+
 Input also can be an array, we can plot it for visibility.
+
 ```{python}
 xs = np.arange(-5, 5, 0.25)
 ys = f(xs)
 plt.plot(xs, ys)
 ```
+
 If we bump up a litle value `h` of `x`, how `f(x)` will response?
+
 ```{python}
 h = 0.000000000001 # <1>
 x = 3.0
 ( f(x+h) - f(x) ) / h
 ```
-1. Change the value of `h` from `0.0001` to be `0.00000...0001` -> the slope value comes to `14` (at the value of `3.0` of `x`).
+
+1.  Change the value of `h` from `0.0001` to be `0.00000...0001` -\> the slope value comes to `14` (at the value of `3.0` of `x`).
 
 Try for `x = -3.0`, `x = 5.0`, we get different values of the slope, for `x = 2/3`, the slope is zero. Let's get more complex.
 
@@ -109,7 +119,9 @@ c = 10.0
 d = a*b + c
 print(d)
 ```
+
 Put our bump-up element to this multi-variables function:
+
 ```{python}
 h = 0.001
 
@@ -126,8 +138,9 @@ print('d1: ', d1)
 print('d2: ', d2)
 print('slope: ', (d2 - d1)/h) # <2>
 ```
-1. Do the same for `b`, `c`, we'll get different slopes.
-2. We say given `b = -3.0` and `c = 10.0` are constants, the derivative of `d` at `a = 2.0` is `-3.0`. The rate of which `d` will increase if we scale `a`!
+
+1.  Do the same for `b`, `c`, we'll get different slopes.
+2.  We say given `b = -3.0` and `c = 10.0` are constants, the derivative of `d` at `a = 2.0` is `-3.0`. The rate of which `d` will increase if we scale `a`!
 
 ## starting the core `Value` object of micrograd and its visualization
 
@@ -200,14 +213,16 @@ class Value:
         for node in reversed(topo):
             node._backward()
 ```
-3. the connective tissue of this expression. We want to keep these expression graphs, so we need to know and keep pointers about what values produce what other values. `_children` is by default a empty tuple.
-4. as we added `_children`, we also need to point out the father - children relationship in method `__add__` and `__mul__` as well.
-5. we want to know the **operation** between father and child, `_op` is empty string by default, the value `+` and `-` will be added to the operator method respectively.
-6. initially assume that node has no impact to the output.
-7. this backward function basically do nothing at the initial.
-8. implement of backward pass for plus node, `+=` represent the accumulate action (rather than overwrite it), assigne the gradient behaviour for each type of operation, call the `_backward` concurrently with function.
+
+3.  the connective tissue of this expression. We want to keep these expression graphs, so we need to know and keep pointers about what values produce what other values. `_children` is by default a empty tuple.
+4.  as we added `_children`, we also need to point out the father - children relationship in method `__add__` and `__mul__` as well.
+5.  we want to know the **operation** between father and child, `_op` is empty string by default, the value `+` and `-` will be added to the operator method respectively.
+6.  initially assume that node has no impact to the output.
+7.  this backward function basically do nothing at the initial.
+8.  implement of backward pass for plus node, `+=` represent the accumulate action (rather than overwrite it), assigne the gradient behaviour for each type of operation, call the `_backward` concurrently with function.
 
 Setting input and expression:
+
 ```{python}
 a = Value(2.0, label='a')
 b = Value(-3.0, label='b')
@@ -225,14 +240,18 @@ f = Value(-2.0, label='f')
 L = d * f; L.label = 'L'
 L
 ```
-1. which will internally call `a.__add__(b)`
-2. which will internally call `(a.__mul__(b)).__add__(c)`
+
+1.  which will internally call `a.__add__(b)`
+2.  which will internally call `(a.__mul__(b)).__add__(c)`
 
 So that we can know the children:
+
 ```{python}
 d._prev
 ```
+
 We can know the operations:
+
 ```{python}
 d._op
 ```
@@ -279,20 +298,22 @@ def draw_dot(root):
 
     return dot
 ```
-1. This will collect all nodes to the `nodes`.
-2. This will iteratively recursively collect all nodes to the `nodes`, add child and node ralationship information to `edges`.
 
-:::{.column-margin}
+1.  This will collect all nodes to the `nodes`.
+2.  This will iteratively recursively collect all nodes to the `nodes`, add child and node ralationship information to `edges`.
+
+::: column-margin
 Remember to let [graphviz](https://graphviz.org/download/) installed on your machine, not only Python package, I also run this:
 
-```{python} 
+```{python}
 #| eval: false
 import os
 os.environ["PATH"] += os.pathsep + 'C:\Program Files (x86)\Graphviz\bin\dot.exe'
 ```
-::: 
+:::
 
-Now we can draw 🚀. 
+Now we can draw 🚀.
+
 ```{python}
 draw_dot(d)
 ```
@@ -311,7 +332,7 @@ We need to know how are those **leaf nodes** `a`, `b`, `c`, `f` are impacting to
 
 ## manual backpropagation example #1: simple expression
 
-:::{.column-page}
+::: column-page
 ```{python}
 draw_dot(L)
 ```
@@ -319,15 +340,16 @@ draw_dot(L)
 
 Let's do the backpropagation **manually**:
 
-1. First we need to calculate the `dL/dL`, how `L` will response if we change `L` a tiny value `h`. The response simply is `1` so `L.grad = 1.0`.
-2. `F = d * f`, so `dL/dd` -> `(f((x+h)) - f(x))/h = ((d+h)*f - d*f)/h = h*f/h = f = -2.0`. Quite straighforward, so `d.grad = -2.0`.
-3. Similarly, `f.grad = d = 4`.  
-4. Next, for `dL/dc`. We first concern `dd/dc`, we know `d = c + e`. Same with (2) we will soon know `dd/dc = 1.0`, by symmetry `dd/de = 1.0`. Following the **Chain Rules** $h'(x) = f'(g(x))g'(x)$, we have `dL/dc = dL/dd * dd/dc = -2.0 * 1 = -2.0`. [[Chain Rules Wiki](https://en.wikipedia.org/wiki/Chain_rule)]{.aside}
-5. By symmetry, `dL/de = -2.0`.
-6. `dL/da = dL/de * de/da = -2.0 * b = -2.0 * -3.0 = 6.0`.
-7. `dl/db = dL/de * de/db = -2.0 * a = -2.0 * 2.0 = -4.0`.
+1.  First we need to calculate the `dL/dL`, how `L` will response if we change `L` a tiny value `h`. The response simply is `1` so `L.grad = 1.0`.
+2.  `F = d * f`, so `dL/dd` -\> `(f((x+h)) - f(x))/h = ((d+h)*f - d*f)/h = h*f/h = f = -2.0`. Quite straighforward, so `d.grad = -2.0`.
+3.  Similarly, `f.grad = d = 4`.\
+4.  Next, for `dL/dc`. We first concern `dd/dc`, we know `d = c + e`. Same with (2) we will soon know `dd/dc = 1.0`, by symmetry `dd/de = 1.0`. Following the **Chain Rules** $h'(x) = f'(g(x))g'(x)$, we have `dL/dc = dL/dd * dd/dc = -2.0 * 1 = -2.0`. [[Chain Rules Wiki](https://en.wikipedia.org/wiki/Chain_rule)]{.aside}
+5.  By symmetry, `dL/de = -2.0`.
+6.  `dL/da = dL/de * de/da = -2.0 * b = -2.0 * -3.0 = 6.0`.
+7.  `dl/db = dL/de * de/db = -2.0 * a = -2.0 * 2.0 = -4.0`.
 
 We can also create a function for playing around / gradient check, and not messing up the global scope.
+
 ```{python}
 def lol():
 
@@ -359,11 +381,12 @@ def lol():
 lol()
 ```
 
-So that is backpropagation ~ just recursively applying the Chain Rules, multiplying local derivatives.
+So that is backpropagation \~ just recursively applying the Chain Rules, multiplying local derivatives.
 
 ## preview of a single optimization step
 
 We can change the input that we can control `a, b, c, f` to see 1 step of the optimization of process.
+
 ```{python}
 a.grad = 6.0
 b.grad = -4.0
@@ -381,9 +404,10 @@ L = d * f
 
 print(L.data)
 ```
+
 We can see the changes, `L` increased a little bit as expected.
 
-:::{.column-page}
+::: column-page
 ```{python}
 draw_dot(L)
 ```
@@ -393,23 +417,24 @@ draw_dot(L)
 
 Anatomy of neurons, we have:
 
-- `axon` as input $x_0$;
-- `synapse` string as weight $w_0$;
-- information flows into the cell body will be $x_0w_0$;
-- there are multiple inputs $x_iw_i$ flow into the cell body;
-- the cell body has some *bias* itself $b$;
-- the cell body processes all information, the output will flow through an *activation* function ~ which is some kind of a squashing function, like `sigmoid`, `tanh` or something like that;
+-   `axon` as input $x_0$;
+-   `synapse` string as weight $w_0$;
+-   information flows into the cell body will be $x_0w_0$;
+-   there are multiple inputs $x_iw_i$ flow into the cell body;
+-   the cell body has some *bias* itself $b$;
+-   the cell body processes all information, the output will flow through an *activation* function \~ which is some kind of a squashing function, like `sigmoid`, `tanh` or something like that;
 
-::: {layout-ncol=1}
-![Neural net Structure with an Activation Function, CS231n Stanford 2017](https://www.researchgate.net/publication/364814302/figure/fig5/AS:11431281092677232@1666928276027/Neural-net-Structure-with-an-Activation-Function-Source-CS231n-Stanford-2017.png){width=100%}
+::: {layout-ncol="1"}
+![Neural net Structure with an Activation Function, CS231n Stanford 2017](https://www.researchgate.net/publication/364814302/figure/fig5/AS:11431281092677232@1666928276027/Neural-net-Structure-with-an-Activation-Function-Source-CS231n-Stanford-2017.png){width="100%"}
 :::
 
-
 🚀How does the `tanh` look like? this hyperbolic function will squash the output to the edge values: `-1.0` or `1.0`.
+
 ```{python}
 plt.plot(np.arange(-5, 5, 0.2), np.tanh(np.arange(-5, 5, 0.2))); plt.grid()
 ```
-:::{.column-margin}
+
+::: column-margin
 We first implement [`tanh`](https://en.wikipedia.org/wiki/Hyperbolic_functions) function to our class `Value`.
 
 ```{python}
@@ -425,6 +450,7 @@ Value.tanh = tanh
 :::
 
 Let's take a simple example of 2-dimensional neuron with 2 inputs `x1` and `x2`:
+
 ```{python}
 # input x1, x2
 x1 = Value(2.0, label='x1')
@@ -442,14 +468,14 @@ n = x1w1x2w2 + b; n.label = 'n'
 
 o = n.tanh(); o.label = 'o' # not define yet
 ```
-:::{.column-page}
+
+::: column-page
 ```{python}
 draw_dot(o)
 ```
 :::
 
-
-:::{.column-margin}
+::: column-margin
 ```{python}
 o.grad = 1.0
 n.grad = 1.0 - o.data ** 2
@@ -466,18 +492,18 @@ w2.grad = x2.data * x2w2.grad
 
 From here we will manually calculate the gradient again:
 
-1. `do/do = 1`, that's the base case, so `o.grad = 1.0`.
-2. `o = tanh(n)`, follow that Wiki link (and of course can be easily proof) we have `do/dn = 1 - tanh(x)^2 = 1 - o^2`.
-3. `n = x1w1x2w2 + b`, this is plus node, which gradient will flow to children equally, `do/db = do/dn * dn/db = do/dn * 1`.
-4. By symmertry, `do/dx1w1x2w2 = do/db`.
-5. `do/dx1w1 = do/dx1w1x2w2`.
-6. `do/dx2w2 = do/dx1w1x2w2`.
-7. `do/dx1 = w1 * do/dx1w1`.
-8. `do/dw1 = x1 * do/dx1w1`.
-9. `do/dx2 = w2 * do/dx2w2`.
+1.  `do/do = 1`, that's the base case, so `o.grad = 1.0`.
+2.  `o = tanh(n)`, follow that Wiki link (and of course can be easily proof) we have `do/dn = 1 - tanh(x)^2 = 1 - o^2`.
+3.  `n = x1w1x2w2 + b`, this is plus node, which gradient will flow to children equally, `do/db = do/dn * dn/db = do/dn * 1`.
+4.  By symmertry, `do/dx1w1x2w2 = do/db`.
+5.  `do/dx1w1 = do/dx1w1x2w2`.
+6.  `do/dx2w2 = do/dx1w1x2w2`.
+7.  `do/dx1 = w1 * do/dx1w1`.
+8.  `do/dw1 = x1 * do/dx1w1`.
+9.  `do/dx2 = w2 * do/dx2w2`.
 10. `do/dw2 = x2 * do/dx2w2`.
 
-:::{.column-page}
+::: column-page
 ```{python}
 draw_dot(o)
 ```
@@ -500,7 +526,7 @@ x1w1._backward()
 x2w2._backward()
 ```
 
-:::{.column-page}
+::: column-page
 ```{python}
 draw_dot(o)
 ```
@@ -514,11 +540,11 @@ In short, we need to do everything after each node before we call the backward f
 
 This ordering of graph can be archived using something like [topological sort](https://en.wikipedia.org/wiki/Topological_sorting).
 
-::: {layout-ncol=1}
-![Topological Sort, photo credit to [Claire Lee](https://yuminlee2.medium.com/topological-sort-cf9f8e43af6a)](https://miro.medium.com/v2/resize:fit:720/format:webp/1*0jRSNI2zo30sENk2qlqEvw.png){width=100%}
+::: {layout-ncol="1"}
+![Topological Sort, photo credit to [Claire Lee](https://yuminlee2.medium.com/topological-sort-cf9f8e43af6a)](https://miro.medium.com/v2/resize:fit:720/format:webp/1*0jRSNI2zo30sENk2qlqEvw.png){width="100%"}
 :::
 
-:::{.column-margin}
+::: column-margin
 ```{python}
 # we first reset the Values
 x1 = Value(2.0, label='x1')
@@ -535,6 +561,7 @@ o = n.tanh(); o.label = 'o'
 :::
 
 Below is the code:
+
 ```{python}
 topo = []
 visited = set()
@@ -551,11 +578,12 @@ topo
 ```
 
 We implement the topological sort to `backward()` (without underscore) function. Now we can trigger the whole process:
+
 ```{python}
 o.backward()
 ```
 
-:::{.column-page}
+::: column-page
 ```{python}
 draw_dot(o)
 ```
@@ -564,6 +592,7 @@ draw_dot(o)
 ## fixing a backprop bug when one node is used multiple times ⛔
 
 This `a.grad` should be `2.0`.
+
 ```{python}
 a = Value(3.0, label='a')
 b = a + a; b.label = 'b' # this case self and other are both a, we should not overwrite the gradient, we should accumulate it.
@@ -663,7 +692,7 @@ o.label = 'o'
 o.backward()
 ```
 
-:::{.column-screen}
+::: column-screen
 ```{python}
 draw_dot(o)
 ```
@@ -702,8 +731,8 @@ print('------------------')
 
 We are going to build out a two-layer perceptron.
 
-::: {layout-ncol=1}
-![A 3-layer neural network with three inputs, two hidden layers of 4 neurons each and one output layer. Notice that in both cases there are connections (synapses) between neurons across layers, but not within a layer, photo credit to [cs231n](https://cs231n.github.io/neural-networks-1/)](https://cs231n.github.io/assets/nn1/neural_net2.jpeg){width=100%}
+::: {layout-ncol="1"}
+![A 3-layer neural network with three inputs, two hidden layers of 4 neurons each and one output layer. Notice that in both cases there are connections (synapses) between neurons across layers, but not within a layer, photo credit to [cs231n](https://cs231n.github.io/neural-networks-1/)](https://cs231n.github.io/assets/nn1/neural_net2.jpeg){width="100%"}
 :::
 
 ```{python}
@@ -752,18 +781,17 @@ class MLP:
     def parameters(self):
         return [p for layer in self.layers for p in layer.parameters()] # for neuron in layer.neurons for neuron.parameters()]
 ```
-1. Number of `input` for the Neuron. `w` is randomly generated for each input, same for `b` which is the bias that controll "the happiness".
-2. Object as a function: define the forward pass of the Neuron $\sum\limits_{i=1}^{nin} w_ix_i+b$, then squash the output using `tanh`.
-3. A Layer is a list of Neurons, `nout` specifies how many Neurons in the Layer. Each neuron has `nin` inputs ~ nin-D. We just initialize completely independent neurons with this given dimensionality.
-4. A MLP is a sequence of Layers, picture above depicts a 3-layers MLP containing 1 input layer and 3 output layers, we say the size is 4. We sequentially create connection from the input layer to the 1st output layer, 1st output layer to 2nd output layer,...
 
+1.  Number of `input` for the Neuron. `w` is randomly generated for each input, same for `b` which is the bias that controll "the happiness".
+2.  Object as a function: define the forward pass of the Neuron $\sum\limits_{i=1}^{nin} w_ix_i+b$, then squash the output using `tanh`.
+3.  A Layer is a list of Neurons, `nout` specifies how many Neurons in the Layer. Each neuron has `nin` inputs \~ nin-D. We just initialize completely independent neurons with this given dimensionality.
+4.  A MLP is a sequence of Layers, picture above depicts a 3-layers MLP containing 1 input layer and 3 output layers, we say the size is 4. We sequentially create connection from the input layer to the 1st output layer, 1st output layer to 2nd output layer,...
 
 ```{python}
 nin = 3
 nouts = [2.0, 3.0, -1.0]
 [nin] + nouts
 ```
-
 
 ```{python}
 x = [2.0, 3.0]
@@ -779,7 +807,7 @@ m = MLP(3, [4, 4, 1]) # a MLP with 3-D input, 3 output layers contains 4, 4, 1 n
 m(x)
 ```
 
-:::{.column-screen}
+::: column-screen
 ```{python}
 draw_dot(m(x))
 ```
@@ -788,6 +816,7 @@ draw_dot(m(x))
 ## creating a tiny dataset, writing the loss function
 
 A simple data set, `m()` is the MLP we defined above.
+
 ```{python}
 xs = [
     [2.0, 3.0, -1.0],
@@ -799,6 +828,7 @@ ys = [1.0, -1.0, -1.0, 1.0] # designed targets
 ```
 
 Writing the loss function. [I was unable to sum a list of Value, found the solution [here](https://stackoverflow.com/questions/54153552/unsupported-operand-type-error-when-adding-objects-within-list-using-sum-functio); Edit: I used Numpy random instead of random]{.aside}
+
 ```{python}
 ypred = [m(x) for x in xs]
 loss = np.array([(yout - ygt)**2 for ygt, yout in zip(ys, ypred)]).sum()
@@ -807,17 +837,19 @@ loss
 ```
 
 Backpropagation the `loss`, some magical here:
+
 ```{python}
 loss.backward()
 ```
 
 We can look into the gradient of weight of the first neuron of the first layer (input layer)
+
 ```{python}
 print('value of 1st neuron in 1st layer: ',m.layers[0].neurons[0].w[0].data)
 print('grad of 1st neuron in 1st layer: ',m.layers[0].neurons[0].w[0].grad)
 ```
 
-:::{.column-screen}
+::: column-screen
 ```{python}
 draw_dot(loss)
 ```
@@ -828,6 +860,7 @@ draw_dot(loss)
 We aim to produce the fitness `ypred`. `xs` is the data, the input of problem, we can not change it. `ys` is the ground true, can not changes as well. What we can change is the "paramters" of each neuron, which is weight `w` and bias `b`.
 
 We add in to each class a `parameters()` function to collect those. Finally we can get all the paramters of the MLP:
+
 ```{python}
 len(m.parameters())
 ```
@@ -837,6 +870,7 @@ len(m.parameters())
 Now we will try to change the paramters to minimize the loss, which means our prediction will be more close to the ground true.
 
 **Forward pass**, calculate the loss:
+
 ```{python}
 ypred = [m(x) for x in xs]
 loss = np.array([(yout - ygt)**2 for ygt, yout in zip(ys, ypred)]).sum()
@@ -844,11 +878,13 @@ loss
 ```
 
 **Backward pass**, calculate the parameters:
+
 ```{python}
 loss.backward()
 ```
 
 **Update the parameters**, change the parameters following opposite direction to reduce the loss:
+
 ```{python}
 for p in m.parameters():
     p.data += -0.01 * p.grad # we want the p.data go on opposite direction of the loss
@@ -857,6 +893,7 @@ for p in m.parameters():
 `0.01` is the learning rate!
 
 **New loss**
+
 ```{python}
 ypred = [m(x) for x in xs]
 loss = np.array([(yout - ygt)**2 for ygt, yout in zip(ys, ypred)]).sum()
@@ -864,6 +901,7 @@ loss
 ```
 
 Yeah the loss decreased. In short, the process is:
+
 ```{mermaid}
 %%{init: {'theme':'dark'}}%%
 flowchart LR
@@ -875,7 +913,7 @@ P2(Parameters to update)  -- Update Pamameters --> P1(Updated parameters)
 
 **Automate the training loop**:
 
-:::{.callout-warning}
+::: callout-warning
 For each process, there remained a subtle bug above that we didn't flush the grads before backpropagation. Because we did not overwrite the gradients (remember the `+=`), they kept accumulated. The next action of backward and changing parameters using learning rate and grad (which produce a massive step size) become wrong! We must set the grad to zero before backward pass.
 
 ![Common guilties when training the NN](guilty.png)
@@ -907,19 +945,19 @@ ypred
 
 ## summary of what we learned, how to go towards modern neural nets
 
-1. What are Neural Nets: they are mathematical expressions, in case of MLP it takes: (1) data as the input, and (2) weights and biases as parameters to build out expression for the forward pass followed by the loss function.
-2. The loss function is kind of measure for the accuracy of predictions. The low loss implies that predicted values are matching our targets and the networks are behaving well.
-3. The process of Gradient Descent is for each step, we calculate the loss (output of the nets), backwarding it to get paramters, then updating data (which we can change - weights and biases) follow the opposite side of the loss (negative grad * learning rate). We'll get a lower loss, and backwarding again and again. This process will find the local minimum of the loss.
+1.  What are Neural Nets: they are mathematical expressions, in case of MLP it takes: (1) data as the input, and (2) weights and biases as parameters to build out expression for the forward pass followed by the loss function.
+2.  The loss function is kind of measure for the accuracy of predictions. The low loss implies that predicted values are matching our targets and the networks are behaving well.
+3.  The process of Gradient Descent is for each step, we calculate the loss (output of the nets), backwarding it to get paramters, then updating data (which we can change - weights and biases) follow the opposite side of the loss (negative grad \* learning rate). We'll get a lower loss, and backwarding again and again. This process will find the local minimum of the loss.
 
 ## walkthrough of the full code of micrograd on github
 
 Same with which we built today:
 
-- engine: Value
-- nn: Neuron, Layer, MLP, and modulize the zero grad process to class Module
-- test: sanity check - compare the backward with `torch`, also for the forward pass
-- demo: a bit complicated example with `sklearn` dataset, using batch processing when the dataset come large, the loss is slightly different - SVM max-margin loss and using of auto L2 regularization
-- learning rate decay: is a scaled as a function of number of iterations, high at begin and low at the end
+-   engine: Value
+-   nn: Neuron, Layer, MLP, and modulize the zero grad process to class Module
+-   test: sanity check - compare the backward with `torch`, also for the forward pass
+-   demo: a bit complicated example with `sklearn` dataset, using batch processing when the dataset come large, the loss is slightly different - SVM max-margin loss and using of auto L2 regularization
+-   learning rate decay: is a scaled as a function of number of iterations, high at begin and low at the end
 
 ## real stuff: diving into PyTorch, finding their backward pass for `tanh`
 
@@ -929,7 +967,7 @@ These libraries unfortunately grow in size and **entropy**, if you just search f
 
 There will be follow up session yeah haha.
 
-## outtakes :\)
+## outtakes :)
 
 Pytorch self-defined autograd.
 

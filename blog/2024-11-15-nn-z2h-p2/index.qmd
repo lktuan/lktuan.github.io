@@ -1,0 +1,145 @@
+---
+title: "NN-Z2H Lesson 2: The spelled-out intro to language modeling - building makemore"
+description: "backpropagation, from neuron to neural network, from micro grad to pytorch, and more"
+author:
+  - name: "Tuan Le Khac"
+    url: https://lktuan.github.io/
+categories: [til, python, andrej karpathy, nn-z2h, backpropagation, neural networks] 
+date: 11-15-2024
+date-modified: 11-15-2024
+image: puppy.jpg
+draft: true
+css: html/styles.scss
+fig-cap-location: bottom
+editor: visual
+format:
+  html:
+    code-overflow: wrap
+    code-tools: true
+    code-fold: show
+    code-annotations: hover
+---
+
+`makemore` on github: <https://github.com/karpathy/makemore>
+
+# PART 1: intro
+
+> `makemore` takes one text file as input, where each line is assumed to be one training thing, and generates more things like it. Under the hood, it is an autoregressive character-level language model, with a wide choice of models from bigrams all the way to a Transformer (exactly as seen in GPT).
+
+## reading and exploring the dataset
+
+```{python}
+import pandas as pd
+
+url = "https://raw.githubusercontent.com/karpathy/makemore/refs/heads/master/names.txt"
+words = pd.read_csv(url, header=None).iloc[:, 0].tolist()
+
+print(words[:10])
+print(len(words))
+```
+
+```{python}
+print("No of chars for the shortest word: ", min(len(w) for w in words))
+print("No of chars for the longest word: ", max(len(w) for w in words))
+```
+
+By looking into (1) the order of characters in individual word, and (2) that pattern for the whole dataset of 32k words, we will try to infer which character is likely to follow a character or chain of characters.
+
+We will first building a `bigrams` languague model - which only works will 2 characters at a time - look at the current character and try to predict the next one. We are just following this local structure!
+
+It's just a simple (and weak) model but a good way to start.
+
+## exploring the `bigrams` in the dataset
+
+```{python}
+for w in words[:3]:
+  chs = ['<S>'] + list(w) + ['<E>'] # special start and ending token, `list()` will turn all character in word to list
+  for ch1, ch2 in zip(chs, chs[1:]):
+    print(ch1, ch2)
+```
+
+## counting `bigrams` in a python dictionary
+
+In order to learn statistics about what character is more likely to follow another character, the simplest way is `counting`.
+
+```{python}
+b = {} # dict to store all pair of character
+for w in words[:5]: # do it for first five words
+  chs = ['<S>'] + list(w) + ['<E>']
+  for ch1, ch2 in zip(chs, chs[1:]):
+    bigram = (ch1, ch2)
+    b[bigram] = b.get(bigram, 0) + 1
+    # print(ch1, ch2)
+```
+
+```{python}
+sorted(b.items(), key = lambda kv: kv[1])
+```
+
+## counting `bigrams` in a 2D `torch` tensor ("training the model")
+
+Instead of `list()`, we will use `torch` 2D array to store this information.
+
+```{python}
+import torch
+```
+
+```{python}
+a = torch.zeros((3,5), dtype=torch.int32)
+a
+```
+
+How can we access/assign a value in torch array
+
+```{python}
+a[1:3] = 10
+a
+```
+
+Now the english alphabet contain 26 characters, we will need to capture the `<S>` and `<E>` also. So it would be 28 x 28 array.
+
+```{python}
+N = torch.zeros((28,28), dtype=torch.int32)
+```
+
+```{python}
+
+```
+
+## visualizing the `bigram` tensor
+
+## deleting spurious (S) and (E) tokens in favor of a single `.` token
+
+## sampling from the model
+
+## efficiency! vectorized normalization of the rows, tensor broadcasting
+
+## loss function (the negative log likelihood of the data under our model)
+
+## model smoothing with fake counts
+
+# PART 2: the neural network approach: intro
+
+## creating the bigram dataset for the neural net
+
+## feeding integers into neural nets? one-hot encodings
+
+## the "neural net": one linear layer of neurons implemented with matrix multiplication
+
+## transforming neural net outputs into probabilities: the softmax
+
+## summary, preview to next steps, reference to micrograd
+
+## vectorized loss
+
+## putting everything together
+
+## note 1: one-hot encoding really just selects a row of the next Linear layer's weight matrix
+
+## note 2: model smoothing as regularization loss
+
+## sampling from the neural net
+
+## conclusion
+
+# resources
