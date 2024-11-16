@@ -6,7 +6,7 @@ author:
     url: https://lktuan.github.io/
 date: 05-22-2024
 date-modified: 05-23-2024
-categories: [Python, Visualization] # self-defined categories
+categories: [python, visualization] # self-defined categories
 image: SWD-Cover-FULL-R5-MED.png
 draft: false # setting this to `true` will prevent your post from appearing on your listing page until you're ready!
 
@@ -21,21 +21,25 @@ fig-cap-location: bottom
 ---
 
 # 1. Motivation
+
 Lấy cảm hứng từ bài [post](https://rpubs.com/chidungkt/1139405) của thầy Nguyễn Chí Dũng về việc giải các exercise thuộc Chương 2 cuốn sách **Storytelling with Data: Let’s Practice** của tác giả [Cole Nussbaumer Knaflic](https://www.linkedin.com/in/colenussbaumer/) sử dụng R, mình muốn cải thiện 1 bảng biểu nhưng sử dụng Python (trong cuốn sách gốc, tác giả sử dụng Excel để makeover các graph).
 
 Đây là một cuốn sách hay về chủ để visualization, dành cho những người sử dụng biểu đồ nhiều để communicate trong công việc. Cụm từ "storytelling" đang được sử dụng rất nhiều, thậm chí như là một buzzword, một keyword cần có trong CV của mỗi người làm data. Đối với mình, "storytelling" chỉ nên được sử dụng khi bạn đã có sẵn các kết quả phân tích, được thực hiện một cách khoa học, và bạn muốn truyền tải nó tới business unit/management một cách hiệu quả. "Storytelling" nên không bao giờ là động cơ để bạn thực hiện một phân tích (thứ thay vào đó nên là một **câu hỏi**), thiên kiến sẽ ảnh hưởng tới phương pháp thực hiện, và rất dễ nảy sinh ngụy biện khi kết luận. Hãy xem bài viết này của [Keith McNulty](https://www.linkedin.com/pulse/data-professionals-beware-storytelling-keith-mcnulty/) và [discussion](https://www.linkedin.com/posts/keith-mcnulty_my-most-hated-word-in-data-science-activity-7017097392759918592-2Atc/) trên Linked In.
 
-::: {layout-ncol=1}
-![Photo credit to [swd](https://www.storytellingwithdata.com/blog/2019/8/27/lets-practice)](swd_chap5.png){width=100%}
+::: {layout-ncol="1"}
+![Photo credit to [swd](https://www.storytellingwithdata.com/blog/2019/8/27/lets-practice)](swd_chap5.png){width="100%"}
 :::
 
 # 2. Let's Practice
+
 Mình đang học `{ggplot2}` trên R để thực hành hình ảnh hóa dữ liệu, tuy nhiên có vẻ package này (và tương ứng là `plotnine` trên Python không phù hợp cho báo cáo bảng). Trong bài post, thầy Dũng cũng sử dụng một library khác là `kableExtra` (tham khảo [đây](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html)).
 
 Sau một lúc google thì có vẻ có một package của Python phù hợp để làm nhiệm vụ này, đó là `great_tables` (tham khảo [đây](https://posit-dev.github.io/great-tables/articles/intro.html)). Package này cũng được khuyến khích sử dụng cho mục đích communication bởi [Emily Riederer](https://www.emilyriederer.com/post/py-rgo/#the-stack).
 
 ## 2.1. Import the data
+
 Okay đầu tiên cần import và làm sạch dữ liệu. Bảng có sẵn trong file Exercise có vẻ dùng để báo cáo hơn là lưu trữ dữ liệu.
+
 ```{python}
 import pandas as pd
 
@@ -54,6 +58,7 @@ data = data.rename(columns={ "Tier": "tier"
 ```
 
 ## 2.2. Data manipulation
+
 Yep giờ ta đã có 1 bảng data khá sạch, tuy nhiên lưu ý là bảng đang không thể hiện toàn bộ dữ liệu (total của `pct_of_account` chỉ là `81.86%`). Ta cần tính toán thêm `All other` và `Grand Total` (lý do là mình chưa tìm thấy function hiển thị Grand Total với package đang sử dụng, ngay cả trong ví dụ [này](https://posit-dev.github.io/great-tables/blog/pycon-2024-great-tables-are-possible/), GT cũng sử dụng data đã có sẵn Grand Total).
 
 ```{python}
@@ -74,7 +79,9 @@ data = pd.concat([data, all_other.to_frame().T], ignore_index=True)
 data.loc[len(data.index)] = data.sum()
 data.loc[data.index[-1], 'tier'] = 'Grand Total'
 ```
+
 Show the data:
+
 ```{python}
 from great_tables import GT
 
@@ -82,10 +89,13 @@ from great_tables import GT
   GT(data)
   .fmt_number(columns= ["no_of_account","pct_of_account","revenue","pct_of_revenue"],decimals=2))
 ```
+
 ## 2.3. Visualization
-Được rồi, giờ ta có thể dùng `great_tables` để tiến hành visualize. Về cơ bản, chỉ cần khởi tạo một object `GT()` có  thể mở rộng được, các element/hoặc format được định nghĩa về sau.
+
+Được rồi, giờ ta có thể dùng `great_tables` để tiến hành visualize. Về cơ bản, chỉ cần khởi tạo một object `GT()` có thể mở rộng được, các element/hoặc format được định nghĩa về sau.
 
 Dưới đây chúng ta trình bày một bảng đơn giản với tiêu đề, tên cột, cũng như định dạng lại dữ liệu.
+
 ```{python}
 (
   GT(data)
@@ -103,13 +113,10 @@ Dưới đây chúng ta trình bày một bảng đơn giản với tiêu đề,
   .tab_source_note(source_note="Figure 2.1b: Slightly improved table")
 )
 ```
+
 Trông ổn (ít nhất là trình bày số liệu một cách toàn vẹn) so với bản gốc rồi!
 
-Tiếp tục, ta dùng
-- helper `md()` để định dạng lại tiêu đề;
-- sử dụng `.data_color()` để tạo heatmapping;
-- sử dụng `tab_style()` để format dòng Grand Total;
-- sử dụng `.opt_stylize()` để theming.
+Tiếp tục, ta dùng - helper `md()` để định dạng lại tiêu đề; - sử dụng `.data_color()` để tạo heatmapping; - sử dụng `tab_style()` để format dòng Grand Total; - sử dụng `.opt_stylize()` để theming.
 
 ```{python}
 from great_tables import md, style, loc
@@ -147,11 +154,13 @@ from great_tables import md, style, loc
   .opt_stylize(style=5 ,color='blue')
 )
 ```
+
 Tiếp theo, chúng ta sẽ thử dùng `fmt_nanoplot()` để tạo một bar plots thay cho hai cột percentage.
 
 Đây là một tính năng trong giai đoạn thử nghiệm nên mình thấy chưa thực sử ổn định và tuân theo document mà nhà phát triển đề cập. Trong ví dụ dưới đây mình sử dụng data bar, loại bỏ format do hàng cuối cùng. Tuy nhiên, đồ thị vẫn include giá trị `100%` ở hàng Grand Total để điều chỉnh bar scale.
 
 Thêm nữa mình cần chuyển dataframe về polar dataframe, khi đó một column của dl.df là iterable.
+
 ```{python}
 from great_tables import md, style, loc, nanoplot_options
 import numpy as np
@@ -232,7 +241,7 @@ pl_data = pl.from_pandas(data)
 Bài thực hành đến đây là kết thúc! 🚀
 
 # References
-1. <https://www.storytellingwithdata.com/books>
-2. <https://rpubs.com/chidungkt/1139405>
-3. <https://posit-dev.github.io/great-tables/articles/intro.html>
 
+1.  <https://www.storytellingwithdata.com/books>
+2.  <https://rpubs.com/chidungkt/1139405>
+3.  <https://posit-dev.github.io/great-tables/articles/intro.html>

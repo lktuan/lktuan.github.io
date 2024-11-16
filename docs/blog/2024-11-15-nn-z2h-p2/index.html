@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Tuan Le Khac">
+<meta name="dcterms.date" content="2024-11-15">
+<meta name="description" content="I am a Risk Modeler 🚀">
+
+<title>Le Khac Tuan - NN-Z2H Lesson 2: The spelled-out intro to language modeling - building makemore</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../img/rocket_1613268.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="html/styles.scss">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Le Khac Tuan</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../curriculum/index.html"> 
+<span class="menu-text">Curriculum</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../学汉语的日记.html"> 
+<span class="menu-text">学汉语的日记</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../jiu_jitsu_journal/index.html"> 
+<span class="menu-text">Jiu Jitsu Journal</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/lktuan"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/tuanlekhac/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.facebook.com/toilatuan.lk/"> <i class="bi bi-facebook" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:tuan.lekhac0905@gmail.com"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <div class="quarto-title-block"><div><h1 class="title">NN-Z2H Lesson 2: The spelled-out intro to language modeling - building makemore</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+                  <div>
+        <div class="description">
+          backpropagation, from neuron to neural network, from micro grad to pytorch, and more
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">til</div>
+                <div class="quarto-category">python</div>
+                <div class="quarto-category">andrej karpathy</div>
+                <div class="quarto-category">nn-z2h</div>
+                <div class="quarto-category">backpropagation</div>
+                <div class="quarto-category">neural networks</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p><a href="https://lktuan.github.io/">Tuan Le Khac</a> </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 15, 2024</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">November 15, 2024</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#part-1-intro" id="toc-part-1-intro" class="nav-link active" data-scroll-target="#part-1-intro">PART 1: intro</a>
+  <ul class="collapse">
+  <li><a href="#reading-and-exploring-the-dataset" id="toc-reading-and-exploring-the-dataset" class="nav-link" data-scroll-target="#reading-and-exploring-the-dataset">reading and exploring the dataset</a></li>
+  <li><a href="#exploring-the-bigrams-in-the-dataset" id="toc-exploring-the-bigrams-in-the-dataset" class="nav-link" data-scroll-target="#exploring-the-bigrams-in-the-dataset">exploring the <code>bigrams</code> in the dataset</a></li>
+  <li><a href="#counting-bigrams-in-a-python-dictionary" id="toc-counting-bigrams-in-a-python-dictionary" class="nav-link" data-scroll-target="#counting-bigrams-in-a-python-dictionary">counting <code>bigrams</code> in a python dictionary</a></li>
+  <li><a href="#counting-bigrams-in-a-2d-torch-tensor-training-the-model" id="toc-counting-bigrams-in-a-2d-torch-tensor-training-the-model" class="nav-link" data-scroll-target="#counting-bigrams-in-a-2d-torch-tensor-training-the-model">counting <code>bigrams</code> in a 2D <code>torch</code> tensor (“training the model”)</a></li>
+  <li><a href="#visualizing-the-bigram-tensor" id="toc-visualizing-the-bigram-tensor" class="nav-link" data-scroll-target="#visualizing-the-bigram-tensor">visualizing the <code>bigram</code> tensor</a></li>
+  <li><a href="#deleting-spurious-s-and-e-tokens-in-favor-of-a-single-.-token" id="toc-deleting-spurious-s-and-e-tokens-in-favor-of-a-single-.-token" class="nav-link" data-scroll-target="#deleting-spurious-s-and-e-tokens-in-favor-of-a-single-.-token">deleting spurious (S) and (E) tokens in favor of a single <code>.</code> token</a></li>
+  <li><a href="#sampling-from-the-model" id="toc-sampling-from-the-model" class="nav-link" data-scroll-target="#sampling-from-the-model">sampling from the model</a></li>
+  <li><a href="#efficiency-vectorized-normalization-of-the-rows-tensor-broadcasting" id="toc-efficiency-vectorized-normalization-of-the-rows-tensor-broadcasting" class="nav-link" data-scroll-target="#efficiency-vectorized-normalization-of-the-rows-tensor-broadcasting">efficiency! vectorized normalization of the rows, tensor broadcasting</a></li>
+  <li><a href="#loss-function-the-negative-log-likelihood-of-the-data-under-our-model" id="toc-loss-function-the-negative-log-likelihood-of-the-data-under-our-model" class="nav-link" data-scroll-target="#loss-function-the-negative-log-likelihood-of-the-data-under-our-model">loss function (the negative log likelihood of the data under our model)</a></li>
+  <li><a href="#model-smoothing-with-fake-counts" id="toc-model-smoothing-with-fake-counts" class="nav-link" data-scroll-target="#model-smoothing-with-fake-counts">model smoothing with fake counts</a></li>
+  </ul></li>
+  <li><a href="#part-2-the-neural-network-approach-intro" id="toc-part-2-the-neural-network-approach-intro" class="nav-link" data-scroll-target="#part-2-the-neural-network-approach-intro">PART 2: the neural network approach: intro</a>
+  <ul class="collapse">
+  <li><a href="#creating-the-bigram-dataset-for-the-neural-net" id="toc-creating-the-bigram-dataset-for-the-neural-net" class="nav-link" data-scroll-target="#creating-the-bigram-dataset-for-the-neural-net">creating the bigram dataset for the neural net</a></li>
+  <li><a href="#feeding-integers-into-neural-nets-one-hot-encodings" id="toc-feeding-integers-into-neural-nets-one-hot-encodings" class="nav-link" data-scroll-target="#feeding-integers-into-neural-nets-one-hot-encodings">feeding integers into neural nets? one-hot encodings</a></li>
+  <li><a href="#the-neural-net-one-linear-layer-of-neurons-implemented-with-matrix-multiplication" id="toc-the-neural-net-one-linear-layer-of-neurons-implemented-with-matrix-multiplication" class="nav-link" data-scroll-target="#the-neural-net-one-linear-layer-of-neurons-implemented-with-matrix-multiplication">the “neural net”: one linear layer of neurons implemented with matrix multiplication</a></li>
+  <li><a href="#transforming-neural-net-outputs-into-probabilities-the-softmax" id="toc-transforming-neural-net-outputs-into-probabilities-the-softmax" class="nav-link" data-scroll-target="#transforming-neural-net-outputs-into-probabilities-the-softmax">transforming neural net outputs into probabilities: the softmax</a></li>
+  <li><a href="#summary-preview-to-next-steps-reference-to-micrograd" id="toc-summary-preview-to-next-steps-reference-to-micrograd" class="nav-link" data-scroll-target="#summary-preview-to-next-steps-reference-to-micrograd">summary, preview to next steps, reference to micrograd</a></li>
+  <li><a href="#vectorized-loss" id="toc-vectorized-loss" class="nav-link" data-scroll-target="#vectorized-loss">vectorized loss</a></li>
+  <li><a href="#putting-everything-together" id="toc-putting-everything-together" class="nav-link" data-scroll-target="#putting-everything-together">putting everything together</a></li>
+  <li><a href="#note-1-one-hot-encoding-really-just-selects-a-row-of-the-next-linear-layers-weight-matrix" id="toc-note-1-one-hot-encoding-really-just-selects-a-row-of-the-next-linear-layers-weight-matrix" class="nav-link" data-scroll-target="#note-1-one-hot-encoding-really-just-selects-a-row-of-the-next-linear-layers-weight-matrix">note 1: one-hot encoding really just selects a row of the next Linear layer’s weight matrix</a></li>
+  <li><a href="#note-2-model-smoothing-as-regularization-loss" id="toc-note-2-model-smoothing-as-regularization-loss" class="nav-link" data-scroll-target="#note-2-model-smoothing-as-regularization-loss">note 2: model smoothing as regularization loss</a></li>
+  <li><a href="#sampling-from-the-neural-net" id="toc-sampling-from-the-neural-net" class="nav-link" data-scroll-target="#sampling-from-the-neural-net">sampling from the neural net</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">conclusion</a></li>
+  </ul></li>
+  <li><a href="#resources" id="toc-resources" class="nav-link" data-scroll-target="#resources">resources</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p><code>makemore</code> on github: <a href="https://github.com/karpathy/makemore" class="uri">https://github.com/karpathy/makemore</a></p>
+<section id="part-1-intro" class="level1">
+<h1>PART 1: intro</h1>
+<blockquote class="blockquote">
+<p><code>makemore</code> takes one text file as input, where each line is assumed to be one training thing, and generates more things like it. Under the hood, it is an autoregressive character-level language model, with a wide choice of models from bigrams all the way to a Transformer (exactly as seen in GPT).</p>
+</blockquote>
+<section id="reading-and-exploring-the-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="reading-and-exploring-the-dataset">reading and exploring the dataset</h2>
+<div id="7b9845eb" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/karpathy/makemore/refs/heads/master/names.txt"</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>words <span class="op">=</span> pd.read_csv(url, header<span class="op">=</span><span class="va">None</span>).iloc[:, <span class="dv">0</span>].tolist()</span>
+<span id="cb1-5"><a href="#cb1-5"></a></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="bu">print</span>(words[:<span class="dv">10</span>])</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="bu">print</span>(<span class="bu">len</span>(words))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>['emma', 'olivia', 'ava', 'isabella', 'sophia', 'charlotte', 'mia', 'amelia', 'harper', 'evelyn']
+32033</code></pre>
+</div>
+</div>
+<div id="8bb21a68" class="cell" data-execution_count="2">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="bu">print</span>(<span class="st">"No of chars for the shortest word: "</span>, <span class="bu">min</span>(<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> words))</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="bu">print</span>(<span class="st">"No of chars for the longest word: "</span>, <span class="bu">max</span>(<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> words))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>No of chars for the shortest word:  2
+No of chars for the longest word:  15</code></pre>
+</div>
+</div>
+<p>By looking into (1) the order of characters in individual word, and (2) that pattern for the whole dataset of 32k words, we will try to infer which character is likely to follow a character or chain of characters.</p>
+<p>We will first building a <code>bigrams</code> languague model - which only works will 2 characters at a time - look at the current character and try to predict the next one. We are just following this local structure!</p>
+<p>It’s just a simple (and weak) model but a good way to start.</p>
+</section>
+<section id="exploring-the-bigrams-in-the-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="exploring-the-bigrams-in-the-dataset">exploring the <code>bigrams</code> in the dataset</h2>
+<div id="a3b1add9" class="cell" data-execution_count="3">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">3</span>]:</span>
+<span id="cb5-2"><a href="#cb5-2"></a>  chs <span class="op">=</span> [<span class="st">'&lt;S&gt;'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'&lt;E&gt;'</span>] <span class="co"># special start and ending token, `list()` will turn all character in word to list</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    <span class="bu">print</span>(ch1, ch2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;S&gt; e
+e m
+m m
+m a
+a &lt;E&gt;
+&lt;S&gt; o
+o l
+l i
+i v
+v i
+i a
+a &lt;E&gt;
+&lt;S&gt; a
+a v
+v a
+a &lt;E&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="counting-bigrams-in-a-python-dictionary" class="level2">
+<h2 class="anchored" data-anchor-id="counting-bigrams-in-a-python-dictionary">counting <code>bigrams</code> in a python dictionary</h2>
+<p>In order to learn statistics about what character is more likely to follow another character, the simplest way is <code>counting</code>.</p>
+<div id="9a9f7b91" class="cell" data-execution_count="4">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>b <span class="op">=</span> {} <span class="co"># dict to store all pair of character</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">5</span>]: <span class="co"># do it for first five words</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>  chs <span class="op">=</span> [<span class="st">'&lt;S&gt;'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'&lt;E&gt;'</span>]</span>
+<span id="cb7-4"><a href="#cb7-4"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb7-5"><a href="#cb7-5"></a>    bigram <span class="op">=</span> (ch1, ch2)</span>
+<span id="cb7-6"><a href="#cb7-6"></a>    b[bigram] <span class="op">=</span> b.get(bigram, <span class="dv">0</span>) <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a>    <span class="co"># print(ch1, ch2)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="e7a09aff" class="cell" data-execution_count="5">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="bu">sorted</span>(b.items(), key <span class="op">=</span> <span class="kw">lambda</span> kv: kv[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>[(('&lt;S&gt;', 'e'), 1),
+ (('e', 'm'), 1),
+ (('m', 'm'), 1),
+ (('m', 'a'), 1),
+ (('&lt;S&gt;', 'o'), 1),
+ (('o', 'l'), 1),
+ (('l', 'i'), 1),
+ (('i', 'v'), 1),
+ (('v', 'i'), 1),
+ (('&lt;S&gt;', 'a'), 1),
+ (('a', 'v'), 1),
+ (('v', 'a'), 1),
+ (('&lt;S&gt;', 'i'), 1),
+ (('i', 's'), 1),
+ (('s', 'a'), 1),
+ (('a', 'b'), 1),
+ (('b', 'e'), 1),
+ (('e', 'l'), 1),
+ (('l', 'l'), 1),
+ (('l', 'a'), 1),
+ (('&lt;S&gt;', 's'), 1),
+ (('s', 'o'), 1),
+ (('o', 'p'), 1),
+ (('p', 'h'), 1),
+ (('h', 'i'), 1),
+ (('i', 'a'), 2),
+ (('a', '&lt;E&gt;'), 5)]</code></pre>
+</div>
+</div>
+</section>
+<section id="counting-bigrams-in-a-2d-torch-tensor-training-the-model" class="level2">
+<h2 class="anchored" data-anchor-id="counting-bigrams-in-a-2d-torch-tensor-training-the-model">counting <code>bigrams</code> in a 2D <code>torch</code> tensor (“training the model”)</h2>
+<p>Instead of <code>list()</code>, we will use <code>torch</code> 2D array to store this information.</p>
+<div id="074d0999" class="cell" data-execution_count="6">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="im">import</span> torch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="922b6fd0" class="cell" data-execution_count="7">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>a <span class="op">=</span> torch.zeros((<span class="dv">3</span>,<span class="dv">5</span>), dtype<span class="op">=</span>torch.int32)</span>
+<span id="cb11-2"><a href="#cb11-2"></a>a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>tensor([[0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0]], dtype=torch.int32)</code></pre>
+</div>
+</div>
+<p>How can we access/assign a value in torch array</p>
+<div id="a3f9a0ad" class="cell" data-execution_count="8">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>a[<span class="dv">1</span>:<span class="dv">3</span>] <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>tensor([[ 0,  0,  0,  0,  0],
+        [10, 10, 10, 10, 10],
+        [10, 10, 10, 10, 10]], dtype=torch.int32)</code></pre>
+</div>
+</div>
+<p>Now the english alphabet contain 26 characters, we will need to capture the <code>&lt;S&gt;</code> and <code>&lt;E&gt;</code> also. So it would be 28 x 28 array.</p>
+<div id="5ce215e3" class="cell" data-execution_count="9">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>N <span class="op">=</span> torch.zeros((<span class="dv">28</span>,<span class="dv">28</span>), dtype<span class="op">=</span>torch.int32)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="visualizing-the-bigram-tensor" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-the-bigram-tensor">visualizing the <code>bigram</code> tensor</h2>
+</section>
+<section id="deleting-spurious-s-and-e-tokens-in-favor-of-a-single-.-token" class="level2">
+<h2 class="anchored" data-anchor-id="deleting-spurious-s-and-e-tokens-in-favor-of-a-single-.-token">deleting spurious (S) and (E) tokens in favor of a single <code>.</code> token</h2>
+</section>
+<section id="sampling-from-the-model" class="level2">
+<h2 class="anchored" data-anchor-id="sampling-from-the-model">sampling from the model</h2>
+</section>
+<section id="efficiency-vectorized-normalization-of-the-rows-tensor-broadcasting" class="level2">
+<h2 class="anchored" data-anchor-id="efficiency-vectorized-normalization-of-the-rows-tensor-broadcasting">efficiency! vectorized normalization of the rows, tensor broadcasting</h2>
+</section>
+<section id="loss-function-the-negative-log-likelihood-of-the-data-under-our-model" class="level2">
+<h2 class="anchored" data-anchor-id="loss-function-the-negative-log-likelihood-of-the-data-under-our-model">loss function (the negative log likelihood of the data under our model)</h2>
+</section>
+<section id="model-smoothing-with-fake-counts" class="level2">
+<h2 class="anchored" data-anchor-id="model-smoothing-with-fake-counts">model smoothing with fake counts</h2>
+</section>
+</section>
+<section id="part-2-the-neural-network-approach-intro" class="level1">
+<h1>PART 2: the neural network approach: intro</h1>
+<section id="creating-the-bigram-dataset-for-the-neural-net" class="level2">
+<h2 class="anchored" data-anchor-id="creating-the-bigram-dataset-for-the-neural-net">creating the bigram dataset for the neural net</h2>
+</section>
+<section id="feeding-integers-into-neural-nets-one-hot-encodings" class="level2">
+<h2 class="anchored" data-anchor-id="feeding-integers-into-neural-nets-one-hot-encodings">feeding integers into neural nets? one-hot encodings</h2>
+</section>
+<section id="the-neural-net-one-linear-layer-of-neurons-implemented-with-matrix-multiplication" class="level2">
+<h2 class="anchored" data-anchor-id="the-neural-net-one-linear-layer-of-neurons-implemented-with-matrix-multiplication">the “neural net”: one linear layer of neurons implemented with matrix multiplication</h2>
+</section>
+<section id="transforming-neural-net-outputs-into-probabilities-the-softmax" class="level2">
+<h2 class="anchored" data-anchor-id="transforming-neural-net-outputs-into-probabilities-the-softmax">transforming neural net outputs into probabilities: the softmax</h2>
+</section>
+<section id="summary-preview-to-next-steps-reference-to-micrograd" class="level2">
+<h2 class="anchored" data-anchor-id="summary-preview-to-next-steps-reference-to-micrograd">summary, preview to next steps, reference to micrograd</h2>
+</section>
+<section id="vectorized-loss" class="level2">
+<h2 class="anchored" data-anchor-id="vectorized-loss">vectorized loss</h2>
+</section>
+<section id="putting-everything-together" class="level2">
+<h2 class="anchored" data-anchor-id="putting-everything-together">putting everything together</h2>
+</section>
+<section id="note-1-one-hot-encoding-really-just-selects-a-row-of-the-next-linear-layers-weight-matrix" class="level2">
+<h2 class="anchored" data-anchor-id="note-1-one-hot-encoding-really-just-selects-a-row-of-the-next-linear-layers-weight-matrix">note 1: one-hot encoding really just selects a row of the next Linear layer’s weight matrix</h2>
+</section>
+<section id="note-2-model-smoothing-as-regularization-loss" class="level2">
+<h2 class="anchored" data-anchor-id="note-2-model-smoothing-as-regularization-loss">note 2: model smoothing as regularization loss</h2>
+</section>
+<section id="sampling-from-the-neural-net" class="level2">
+<h2 class="anchored" data-anchor-id="sampling-from-the-neural-net">sampling from the neural net</h2>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">conclusion</h2>
+</section>
+</section>
+<section id="resources" class="level1">
+<h1>resources</h1>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/lktuan\.github\.io\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'left'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb16" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb16-1"><a href="#cb16-1"></a><span class="co">---</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="an">title:</span><span class="co"> "NN-Z2H Lesson 2: The spelled-out intro to language modeling - building makemore"</span></span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="an">description:</span><span class="co"> "backpropagation, from neuron to neural network, from micro grad to pytorch, and more"</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="an">author:</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="an">categories:</span><span class="co"> [til, python, andrej karpathy, nn-z2h, backpropagation, neural networks] </span></span>
+<span id="cb16-8"><a href="#cb16-8"></a><span class="an">date:</span><span class="co"> 11-15-2024</span></span>
+<span id="cb16-9"><a href="#cb16-9"></a><span class="an">date-modified:</span><span class="co"> 11-15-2024</span></span>
+<span id="cb16-10"><a href="#cb16-10"></a><span class="an">image:</span><span class="co"> puppy.jpg</span></span>
+<span id="cb16-11"><a href="#cb16-11"></a><span class="an">draft:</span><span class="co"> true</span></span>
+<span id="cb16-12"><a href="#cb16-12"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
+<span id="cb16-13"><a href="#cb16-13"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
+<span id="cb16-14"><a href="#cb16-14"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb16-15"><a href="#cb16-15"></a><span class="an">format:</span></span>
+<span id="cb16-16"><a href="#cb16-16"></a><span class="co">  html:</span></span>
+<span id="cb16-17"><a href="#cb16-17"></a><span class="co">    code-overflow: wrap</span></span>
+<span id="cb16-18"><a href="#cb16-18"></a><span class="co">    code-tools: true</span></span>
+<span id="cb16-19"><a href="#cb16-19"></a><span class="co">    code-fold: show</span></span>
+<span id="cb16-20"><a href="#cb16-20"></a><span class="co">    code-annotations: hover</span></span>
+<span id="cb16-21"><a href="#cb16-21"></a><span class="co">---</span></span>
+<span id="cb16-22"><a href="#cb16-22"></a></span>
+<span id="cb16-23"><a href="#cb16-23"></a><span class="in">`makemore`</span> on github: <span class="ot">&lt;https://github.com/karpathy/makemore&gt;</span></span>
+<span id="cb16-24"><a href="#cb16-24"></a></span>
+<span id="cb16-25"><a href="#cb16-25"></a><span class="fu"># PART 1: intro</span></span>
+<span id="cb16-26"><a href="#cb16-26"></a></span>
+<span id="cb16-27"><a href="#cb16-27"></a><span class="at">&gt; </span><span class="in">`makemore`</span><span class="at"> takes one text file as input, where each line is assumed to be one training thing, and generates more things like it. Under the hood, it is an autoregressive character-level language model, with a wide choice of models from bigrams all the way to a Transformer (exactly as seen in GPT).</span></span>
+<span id="cb16-28"><a href="#cb16-28"></a></span>
+<span id="cb16-29"><a href="#cb16-29"></a><span class="fu">## reading and exploring the dataset</span></span>
+<span id="cb16-30"><a href="#cb16-30"></a></span>
+<span id="cb16-33"><a href="#cb16-33"></a><span class="in">```{python}</span></span>
+<span id="cb16-34"><a href="#cb16-34"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb16-35"><a href="#cb16-35"></a></span>
+<span id="cb16-36"><a href="#cb16-36"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/karpathy/makemore/refs/heads/master/names.txt"</span></span>
+<span id="cb16-37"><a href="#cb16-37"></a>words <span class="op">=</span> pd.read_csv(url, header<span class="op">=</span><span class="va">None</span>).iloc[:, <span class="dv">0</span>].tolist()</span>
+<span id="cb16-38"><a href="#cb16-38"></a></span>
+<span id="cb16-39"><a href="#cb16-39"></a><span class="bu">print</span>(words[:<span class="dv">10</span>])</span>
+<span id="cb16-40"><a href="#cb16-40"></a><span class="bu">print</span>(<span class="bu">len</span>(words))</span>
+<span id="cb16-41"><a href="#cb16-41"></a><span class="in">```</span></span>
+<span id="cb16-42"><a href="#cb16-42"></a></span>
+<span id="cb16-45"><a href="#cb16-45"></a><span class="in">```{python}</span></span>
+<span id="cb16-46"><a href="#cb16-46"></a><span class="bu">print</span>(<span class="st">"No of chars for the shortest word: "</span>, <span class="bu">min</span>(<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> words))</span>
+<span id="cb16-47"><a href="#cb16-47"></a><span class="bu">print</span>(<span class="st">"No of chars for the longest word: "</span>, <span class="bu">max</span>(<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> words))</span>
+<span id="cb16-48"><a href="#cb16-48"></a><span class="in">```</span></span>
+<span id="cb16-49"><a href="#cb16-49"></a></span>
+<span id="cb16-50"><a href="#cb16-50"></a>By looking into (1) the order of characters in individual word, and (2) that pattern for the whole dataset of 32k words, we will try to infer which character is likely to follow a character or chain of characters.</span>
+<span id="cb16-51"><a href="#cb16-51"></a></span>
+<span id="cb16-52"><a href="#cb16-52"></a>We will first building a <span class="in">`bigrams`</span> languague model - which only works will 2 characters at a time - look at the current character and try to predict the next one. We are just following this local structure!</span>
+<span id="cb16-53"><a href="#cb16-53"></a></span>
+<span id="cb16-54"><a href="#cb16-54"></a>It's just a simple (and weak) model but a good way to start.</span>
+<span id="cb16-55"><a href="#cb16-55"></a></span>
+<span id="cb16-56"><a href="#cb16-56"></a><span class="fu">## exploring the `bigrams` in the dataset</span></span>
+<span id="cb16-57"><a href="#cb16-57"></a></span>
+<span id="cb16-60"><a href="#cb16-60"></a><span class="in">```{python}</span></span>
+<span id="cb16-61"><a href="#cb16-61"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">3</span>]:</span>
+<span id="cb16-62"><a href="#cb16-62"></a>  chs <span class="op">=</span> [<span class="st">'&lt;S&gt;'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'&lt;E&gt;'</span>] <span class="co"># special start and ending token, `list()` will turn all character in word to list</span></span>
+<span id="cb16-63"><a href="#cb16-63"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb16-64"><a href="#cb16-64"></a>    <span class="bu">print</span>(ch1, ch2)</span>
+<span id="cb16-65"><a href="#cb16-65"></a><span class="in">```</span></span>
+<span id="cb16-66"><a href="#cb16-66"></a></span>
+<span id="cb16-67"><a href="#cb16-67"></a><span class="fu">## counting `bigrams` in a python dictionary</span></span>
+<span id="cb16-68"><a href="#cb16-68"></a></span>
+<span id="cb16-69"><a href="#cb16-69"></a>In order to learn statistics about what character is more likely to follow another character, the simplest way is <span class="in">`counting`</span>.</span>
+<span id="cb16-70"><a href="#cb16-70"></a></span>
+<span id="cb16-73"><a href="#cb16-73"></a><span class="in">```{python}</span></span>
+<span id="cb16-74"><a href="#cb16-74"></a>b <span class="op">=</span> {} <span class="co"># dict to store all pair of character</span></span>
+<span id="cb16-75"><a href="#cb16-75"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">5</span>]: <span class="co"># do it for first five words</span></span>
+<span id="cb16-76"><a href="#cb16-76"></a>  chs <span class="op">=</span> [<span class="st">'&lt;S&gt;'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'&lt;E&gt;'</span>]</span>
+<span id="cb16-77"><a href="#cb16-77"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb16-78"><a href="#cb16-78"></a>    bigram <span class="op">=</span> (ch1, ch2)</span>
+<span id="cb16-79"><a href="#cb16-79"></a>    b[bigram] <span class="op">=</span> b.get(bigram, <span class="dv">0</span>) <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb16-80"><a href="#cb16-80"></a>    <span class="co"># print(ch1, ch2)</span></span>
+<span id="cb16-81"><a href="#cb16-81"></a><span class="in">```</span></span>
+<span id="cb16-82"><a href="#cb16-82"></a></span>
+<span id="cb16-85"><a href="#cb16-85"></a><span class="in">```{python}</span></span>
+<span id="cb16-86"><a href="#cb16-86"></a><span class="bu">sorted</span>(b.items(), key <span class="op">=</span> <span class="kw">lambda</span> kv: kv[<span class="dv">1</span>])</span>
+<span id="cb16-87"><a href="#cb16-87"></a><span class="in">```</span></span>
+<span id="cb16-88"><a href="#cb16-88"></a></span>
+<span id="cb16-89"><a href="#cb16-89"></a><span class="fu">## counting `bigrams` in a 2D `torch` tensor ("training the model")</span></span>
+<span id="cb16-90"><a href="#cb16-90"></a></span>
+<span id="cb16-91"><a href="#cb16-91"></a>Instead of <span class="in">`list()`</span>, we will use <span class="in">`torch`</span> 2D array to store this information.</span>
+<span id="cb16-92"><a href="#cb16-92"></a></span>
+<span id="cb16-95"><a href="#cb16-95"></a><span class="in">```{python}</span></span>
+<span id="cb16-96"><a href="#cb16-96"></a><span class="im">import</span> torch</span>
+<span id="cb16-97"><a href="#cb16-97"></a><span class="in">```</span></span>
+<span id="cb16-98"><a href="#cb16-98"></a></span>
+<span id="cb16-101"><a href="#cb16-101"></a><span class="in">```{python}</span></span>
+<span id="cb16-102"><a href="#cb16-102"></a>a <span class="op">=</span> torch.zeros((<span class="dv">3</span>,<span class="dv">5</span>), dtype<span class="op">=</span>torch.int32)</span>
+<span id="cb16-103"><a href="#cb16-103"></a>a</span>
+<span id="cb16-104"><a href="#cb16-104"></a><span class="in">```</span></span>
+<span id="cb16-105"><a href="#cb16-105"></a></span>
+<span id="cb16-106"><a href="#cb16-106"></a>How can we access/assign a value in torch array</span>
+<span id="cb16-107"><a href="#cb16-107"></a></span>
+<span id="cb16-110"><a href="#cb16-110"></a><span class="in">```{python}</span></span>
+<span id="cb16-111"><a href="#cb16-111"></a>a[<span class="dv">1</span>:<span class="dv">3</span>] <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb16-112"><a href="#cb16-112"></a>a</span>
+<span id="cb16-113"><a href="#cb16-113"></a><span class="in">```</span></span>
+<span id="cb16-114"><a href="#cb16-114"></a></span>
+<span id="cb16-115"><a href="#cb16-115"></a>Now the english alphabet contain 26 characters, we will need to capture the <span class="in">`&lt;S&gt;`</span> and <span class="in">`&lt;E&gt;`</span> also. So it would be 28 x 28 array.</span>
+<span id="cb16-116"><a href="#cb16-116"></a></span>
+<span id="cb16-119"><a href="#cb16-119"></a><span class="in">```{python}</span></span>
+<span id="cb16-120"><a href="#cb16-120"></a>N <span class="op">=</span> torch.zeros((<span class="dv">28</span>,<span class="dv">28</span>), dtype<span class="op">=</span>torch.int32)</span>
+<span id="cb16-121"><a href="#cb16-121"></a><span class="in">```</span></span>
+<span id="cb16-122"><a href="#cb16-122"></a></span>
+<span id="cb16-125"><a href="#cb16-125"></a><span class="in">```{python}</span></span>
+<span id="cb16-126"><a href="#cb16-126"></a><span class="in">```</span></span>
+<span id="cb16-127"><a href="#cb16-127"></a></span>
+<span id="cb16-128"><a href="#cb16-128"></a><span class="fu">## visualizing the `bigram` tensor</span></span>
+<span id="cb16-129"><a href="#cb16-129"></a></span>
+<span id="cb16-130"><a href="#cb16-130"></a><span class="fu">## deleting spurious (S) and (E) tokens in favor of a single `.` token</span></span>
+<span id="cb16-131"><a href="#cb16-131"></a></span>
+<span id="cb16-132"><a href="#cb16-132"></a><span class="fu">## sampling from the model</span></span>
+<span id="cb16-133"><a href="#cb16-133"></a></span>
+<span id="cb16-134"><a href="#cb16-134"></a><span class="fu">## efficiency! vectorized normalization of the rows, tensor broadcasting</span></span>
+<span id="cb16-135"><a href="#cb16-135"></a></span>
+<span id="cb16-136"><a href="#cb16-136"></a><span class="fu">## loss function (the negative log likelihood of the data under our model)</span></span>
+<span id="cb16-137"><a href="#cb16-137"></a></span>
+<span id="cb16-138"><a href="#cb16-138"></a><span class="fu">## model smoothing with fake counts</span></span>
+<span id="cb16-139"><a href="#cb16-139"></a></span>
+<span id="cb16-140"><a href="#cb16-140"></a><span class="fu"># PART 2: the neural network approach: intro</span></span>
+<span id="cb16-141"><a href="#cb16-141"></a></span>
+<span id="cb16-142"><a href="#cb16-142"></a><span class="fu">## creating the bigram dataset for the neural net</span></span>
+<span id="cb16-143"><a href="#cb16-143"></a></span>
+<span id="cb16-144"><a href="#cb16-144"></a><span class="fu">## feeding integers into neural nets? one-hot encodings</span></span>
+<span id="cb16-145"><a href="#cb16-145"></a></span>
+<span id="cb16-146"><a href="#cb16-146"></a><span class="fu">## the "neural net": one linear layer of neurons implemented with matrix multiplication</span></span>
+<span id="cb16-147"><a href="#cb16-147"></a></span>
+<span id="cb16-148"><a href="#cb16-148"></a><span class="fu">## transforming neural net outputs into probabilities: the softmax</span></span>
+<span id="cb16-149"><a href="#cb16-149"></a></span>
+<span id="cb16-150"><a href="#cb16-150"></a><span class="fu">## summary, preview to next steps, reference to micrograd</span></span>
+<span id="cb16-151"><a href="#cb16-151"></a></span>
+<span id="cb16-152"><a href="#cb16-152"></a><span class="fu">## vectorized loss</span></span>
+<span id="cb16-153"><a href="#cb16-153"></a></span>
+<span id="cb16-154"><a href="#cb16-154"></a><span class="fu">## putting everything together</span></span>
+<span id="cb16-155"><a href="#cb16-155"></a></span>
+<span id="cb16-156"><a href="#cb16-156"></a><span class="fu">## note 1: one-hot encoding really just selects a row of the next Linear layer's weight matrix</span></span>
+<span id="cb16-157"><a href="#cb16-157"></a></span>
+<span id="cb16-158"><a href="#cb16-158"></a><span class="fu">## note 2: model smoothing as regularization loss</span></span>
+<span id="cb16-159"><a href="#cb16-159"></a></span>
+<span id="cb16-160"><a href="#cb16-160"></a><span class="fu">## sampling from the neural net</span></span>
+<span id="cb16-161"><a href="#cb16-161"></a></span>
+<span id="cb16-162"><a href="#cb16-162"></a><span class="fu">## conclusion</span></span>
+<span id="cb16-163"><a href="#cb16-163"></a></span>
+<span id="cb16-164"><a href="#cb16-164"></a><span class="fu"># resources</span></span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2024 Le Khac Tuan</span></p>
+</div>   
+    <div class="nav-footer-center">
+<p><span class="faux-block">Designed with <i class="fa-solid fa-heart" aria-label="heart"></i></span></p>
+</div>
+    <div class="nav-footer-right">
+<p><span class="faux-block">Made with <a href="https://quarto.org/">Quarto</a></span> <span class="faux-block"><a href="https://github.com/lktuan/lktuan.github.io">View the source at <i class="fa-brands fa-github" aria-label="github"></i> GitHub</a></span></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -6,7 +6,7 @@ author:
     url: https://lktuan.github.io/
 date: 05-21-2024
 date-modified: 05-22-2024
-categories: [Python, Lambda] # self-defined categories
+categories: [python, lambda] # self-defined categories
 image: python.jpg
 draft: false # setting this to `true` will prevent your post from appearing on your listing page until you're ready!
 
@@ -26,10 +26,9 @@ editor: visual
 
 Đây là một bài thực hành theo một [post](https://github.com/chiphuyen/python-is-cool/tree/master) bởi chị [Chip Huyen](https://huyenchip.com/) về một số features đặc biệt của Python. Là một DA không sử dụng Python quá nhiều, chỉ một số feature dưới đây là mình đã từng *nghe* qua. Hi vọng bài thực hành sẽ giúp mình hứng thú với Python hơn!
 
-::: {layout-ncol=1}
-![Dong Nai Cultural Nature Reserve, a python lying along the stream waiting for the prey. Photo credit to [PhucNguyenPhotos](https://www.instagram.com/vietnamphotos_herping/)](python.jpg){width=100%}
+::: {layout-ncol="1"}
+![Dong Nai Cultural Nature Reserve, a python lying along the stream waiting for the prey. Photo credit to [PhucNguyenPhotos](https://www.instagram.com/vietnamphotos_herping/)](python.jpg){width="100%"}
 :::
-
 
 # 2. Lambda, map, filter, & reduce
 
@@ -274,7 +273,7 @@ for ngram in ngrams_generator:
     print(ngram)
 ```
 
-Lưu ý chúng ta sử dụng `(tokens[...] for i in range(n))`, chứ không phải `[tokens[...] for i in range(n)]`. `[]` trả về một list, `()` trả về generator. # 4. Classes & magic methods
+Lưu ý chúng ta sử dụng `(tokens[...] for i in range(n))`, chứ không phải `[tokens[...] for i in range(n)]`. `[]` trả về một list, `()` trả về generator. \# 4. Classes & magic methods
 
 ------------------------------------------------------------------------
 
@@ -409,14 +408,14 @@ print(model3.__dict__)
 
 Chúng ta thường `import` tất cả như thế này:
 
-```{.python filename="file.py"}
+``` {.python filename="file.py"}
 #| eval: false
 from parts import *
 ```
 
 Sẽ là vô trách nhiệm khi chúng ta import toàn bộ module, ví dụ nếu `parts.py` có cấu trúc như thế này:
 
-```{.python filename="parts.py"}
+``` {.python filename="parts.py"}
 #| eval: false
 import numpy 
 import tensorflow 
@@ -434,7 +433,7 @@ def utils(*args, **kwargs):
 
 Vì `parts.py` không định nghĩa `__all__`, nên `file.py` sẽ import tất cả Encoder, Decoder, Loss, helper, untils cùng với numpy và tensorFlow. Nếu chỉ muốn import Encoder, Decoder, Loss, chúng ta nên làm như sau:
 
-```{.python filename="parts.py"}
+``` {.python filename="parts.py"}
 #| eval: false
 __all__ = ['Encoder', 'Decoder', 'Loss'] 
 import numpy 
@@ -495,7 +494,9 @@ start = time.time()
 fib_m(30)
 print(f'With memoization, it takes {time.time() - start:.7f} seconds.')
 ```
+
 Using decorator, define `timeit`:
+
 ```{python}
 def timeit(fn): 
     # *args and **kwargs are to support positional and named arguments of fn
@@ -506,7 +507,9 @@ def timeit(fn):
         return output  # make sure that the decorator returns the output of fn
     return get_time 
 ```
+
 Sau đó thêm `@timeit` tới function:
+
 ```{python}
 @timeit
 def fib(n):
@@ -519,6 +522,7 @@ def fib_m(n):
 fib(30)
 fib_m(30)
 ```
+
 # 8. Caching with `@functools.lru_cache`
 
 ------------------------------------------------------------------------
@@ -546,6 +550,7 @@ def fib(n):
 fib(50)
 fib_m(50)
 ```
+
 `lru` stands for "least recently used". For more information on cache, see [here](https://docs.python.org/3/library/functools.html).
 
 # Reference

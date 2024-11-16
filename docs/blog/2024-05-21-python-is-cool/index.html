@@ -142,6 +142,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="../../学汉语的日记.html"> 
 <span class="menu-text">学汉语的日记</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../jiu_jitsu_journal/index.html"> 
+<span class="menu-text">Jiu Jitsu Journal</span></a>
+  </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -182,8 +186,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">Python</div>
-                <div class="quarto-category">Lambda</div>
+                <div class="quarto-category">python</div>
+                <div class="quarto-category">lambda</div>
               </div>
                   </div>
   </div>
@@ -276,7 +280,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 <p>Lambda cho phép người dùng định nghĩa in-line functions. Việc sử dụng <code>lambda()</code> rất thuận tiện khi gọi lại (callback ~ một function được thực thi sau khi một function khác được thực thi; một cách lưu trữ function) hoặc khi đầu ra của một function là đối số cho một function khác.</p>
 <p>Hai hàm <code>square_fn</code> và <code>square_ld</code> dưới đây là một:</p>
-<div id="9888a1b5" class="cell" data-execution_count="1">
+<div id="74aad070" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">def</span> square_fn(x):</span>
 <span id="cb1-2"><a href="#cb1-2"></a>    <span class="cf">return</span> x <span class="op">*</span> x</span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
@@ -286,7 +290,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-7"><a href="#cb1-7"></a>    <span class="cf">assert</span> square_fn(i) <span class="op">==</span> square_ld(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>lambda</code> rất hữu ích khi sử dụng cùng với các function khác như <code>map</code>, <code>filter</code>, và <code>reduce</code> (mình rất hay sử dụng pattern này trên Excel 😂). <code>map(fn, interable)</code> sẽ apply hàm <code>fn</code> cho tất cả các phần tử trong <code>iterable</code> (như list, set, dict, tuple, string), trả về map object.</p>
-<div id="122f7ae6" class="cell" data-execution_count="2">
+<div id="c4478da0" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>nums <span class="op">=</span> [<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">2</span><span class="op">/</span><span class="dv">7</span>, <span class="dv">1001</span><span class="op">/</span><span class="dv">37500</span>, <span class="dv">40</span><span class="op">/</span><span class="dv">27</span>]</span>
 <span id="cb2-2"><a href="#cb2-2"></a>nums_squared <span class="op">=</span> [num <span class="op">*</span> num <span class="cf">for</span> num <span class="kw">in</span> nums]</span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="bu">print</span>(nums_squared)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -295,7 +299,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Dùng <code>map</code> và một hàm callback, cho ra kết quả tương đương:</p>
-<div id="f82670d0" class="cell" data-execution_count="3">
+<div id="f16d0683" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>nums_squared_1 <span class="op">=</span> <span class="bu">map</span>(square_fn, nums)</span>
 <span id="cb4-2"><a href="#cb4-2"></a>nums_squared_2 <span class="op">=</span> <span class="bu">map</span>(<span class="kw">lambda</span> x: x<span class="op">*</span>x, nums)</span>
 <span id="cb4-3"><a href="#cb4-3"></a><span class="bu">print</span>(<span class="bu">list</span>(nums_squared_1)) <span class="co"># list to list the elements of map object</span></span>
@@ -306,7 +310,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Có thể dùng <code>map</code> với nhiều hơn 1 iterable. Ví dụ muốn tính MSE cho một hồi quy tuyến tính đơn giản <code>f(x) = ax + b</code> với ground tru <code>labels</code>, hai phương pháp sau tương đương:</p>
-<div id="fd4ece20" class="cell" data-execution_count="4">
+<div id="c4c61582" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>a, b <span class="op">=</span> <span class="dv">3</span>, <span class="op">-</span><span class="fl">0.5</span></span>
 <span id="cb6-2"><a href="#cb6-2"></a>xs <span class="op">=</span> [<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>]</span>
 <span id="cb6-3"><a href="#cb6-3"></a>labels <span class="op">=</span> [<span class="fl">6.4</span>, <span class="fl">8.9</span>, <span class="fl">10.9</span>, <span class="fl">15.3</span>]</span>
@@ -327,7 +331,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p><code>filter(fn, iterable)</code> giống như <code>map</code>, tuy nhiên <code>fn</code> là một hàm trả về giá trị boolean true/false, và <code>filter</code> sẽ trả về các phần tử của <code>iterable</code> khi <code>fn</code> trả về true.</p>
-<div id="ac926059" class="cell" data-execution_count="5">
+<div id="38a8eaee" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>bad_preds <span class="op">=</span> <span class="bu">filter</span>(<span class="kw">lambda</span> x: x <span class="op">&gt;</span> <span class="fl">0.5</span>, errors)</span>
 <span id="cb8-2"><a href="#cb8-2"></a></span>
 <span id="cb8-3"><a href="#cb8-3"></a><span class="bu">print</span>(<span class="bu">list</span>(bad_preds))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -336,7 +340,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p><code>reduce(fn, iterable, initializer)</code> được dùng khi ta muốn áp dụng một toán lên tất cả thành phần trong danh sách. Ví dụ muốn tính kết quả nhân của toàn bộ phần tử:</p>
-<div id="b5b421de" class="cell" data-execution_count="6">
+<div id="1957cfc0" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>product <span class="op">=</span> <span class="dv">1</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a><span class="cf">for</span> num <span class="kw">in</span> nums:</span>
 <span id="cb10-3"><a href="#cb10-3"></a>    product <span class="op">*=</span> num</span>
@@ -346,7 +350,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Sử dụng <code>reduce</code>:</p>
-<div id="6b0aef3b" class="cell" data-execution_count="7">
+<div id="85c74c39" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="im">from</span> functools <span class="im">import</span> <span class="bu">reduce</span></span>
 <span id="cb12-2"><a href="#cb12-2"></a></span>
 <span id="cb12-3"><a href="#cb12-3"></a>product <span class="op">=</span> <span class="bu">reduce</span>(<span class="kw">lambda</span> x, y: x <span class="op">*</span> y, nums)</span>
@@ -371,7 +375,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="unpacking" class="level2">
 <h2 class="anchored" data-anchor-id="unpacking">3.1. Unpacking</h2>
 <p>Chúng ta có thể “giải nén” một list như thế này:</p>
-<div id="efdf8d40" class="cell" data-execution_count="8">
+<div id="fd8c4857" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>elems <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>]</span>
 <span id="cb14-2"><a href="#cb14-2"></a>a,b,c,d <span class="op">=</span> elems</span>
 <span id="cb14-3"><a href="#cb14-3"></a></span>
@@ -381,7 +385,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Cũng có thể làm như thế này:</p>
-<div id="78c1eded" class="cell" data-execution_count="9">
+<div id="9917a429" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>a, <span class="op">*</span>new_elems, d <span class="op">=</span> elems <span class="co"># remember the char * for extended unpacking</span></span>
 <span id="cb16-2"><a href="#cb16-2"></a></span>
 <span id="cb16-3"><a href="#cb16-3"></a><span class="bu">print</span>(a)</span>
@@ -397,7 +401,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="slicing" class="level2">
 <h2 class="anchored" data-anchor-id="slicing">3.2. Slicing</h2>
 <p>Chúng ta có thể reverse/đảo ngược một list với <code>[::-1]</code></p>
-<div id="e21f7cd2" class="cell" data-execution_count="10">
+<div id="eb2bab26" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a>elem <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>))</span>
 <span id="cb18-2"><a href="#cb18-2"></a><span class="bu">print</span>(elem)</span>
 <span id="cb18-3"><a href="#cb18-3"></a></span>
@@ -409,7 +413,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Cú pháp <code>[x:y:z]</code> có nghĩa là lấy <strong><em>mỗi</em></strong> phần tử thứ <code>z</code> từ index <code>x</code> tới index <code>y</code>. Khi <code>z</code> âm, tương đương với việc lấy theo thứ tự ngược lại. <code>x</code> để trống chỉ việc lấy từ phần tử đầu tiên, <code>y</code> để rỗng chỉ việc lấy tới phần tử cuối cùng.</p>
-<div id="9468221c" class="cell" data-execution_count="11">
+<div id="30a31a45" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a>evens <span class="op">=</span> elem[::<span class="dv">2</span>]</span>
 <span id="cb20-2"><a href="#cb20-2"></a><span class="bu">print</span>(evens)</span>
 <span id="cb20-3"><a href="#cb20-3"></a></span>
@@ -421,7 +425,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Cũng có thể dùng slicing để xóa các phần tử như thế này:</p>
-<div id="4267e8c1" class="cell" data-execution_count="12">
+<div id="d74f7e13" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="kw">del</span> elems[::<span class="dv">2</span>]</span>
 <span id="cb22-2"><a href="#cb22-2"></a><span class="bu">print</span>(elems)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -432,7 +436,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="insertion" class="level2">
 <h2 class="anchored" data-anchor-id="insertion">3.3. Insertion</h2>
 <p>Chúng ta có thể thay đổi giá trị một phần tử trong một list như sau:</p>
-<div id="f1ce0405" class="cell" data-execution_count="13">
+<div id="09af6787" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a>elems <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>))</span>
 <span id="cb24-2"><a href="#cb24-2"></a></span>
 <span id="cb24-3"><a href="#cb24-3"></a>elems[<span class="dv">1</span>] <span class="op">=</span> <span class="dv">100</span></span>
@@ -442,7 +446,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Cũng có thể thay thế một giá trị bằng nhiều giá trị:</p>
-<div id="21c62118" class="cell" data-execution_count="14">
+<div id="31f00e3c" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a>elems <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>))</span>
 <span id="cb26-2"><a href="#cb26-2"></a>elems[<span class="dv">1</span>:<span class="dv">2</span>] <span class="op">=</span> [<span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>]</span>
 <span id="cb26-3"><a href="#cb26-3"></a><span class="bu">print</span>(elems)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -451,7 +455,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Nếu chúng ta muốn thêm 3 giá trị <code>0.3, 0.4, 0.5</code> vào giữa phần tử thứ 0 và 1 của list này, thì:</p>
-<div id="f3b4625b" class="cell" data-execution_count="15">
+<div id="1970cbe1" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a>elems <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>))</span>
 <span id="cb28-2"><a href="#cb28-2"></a>elems[<span class="dv">1</span>:<span class="dv">1</span>] <span class="op">=</span> [<span class="fl">.3</span>, <span class="fl">.4</span>, <span class="fl">.5</span>]</span>
 <span id="cb28-3"><a href="#cb28-3"></a><span class="bu">print</span>(elems)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -463,7 +467,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="flattening" class="level2">
 <h2 class="anchored" data-anchor-id="flattening">3.4. Flattening</h2>
 <p>Chúng ta có thể flatten một list sử dung <code>sum(0)</code>:</p>
-<div id="df700b8a" class="cell" data-execution_count="16">
+<div id="e45b4ca7" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a>list_of_lists <span class="op">=</span> [[<span class="dv">1</span>], [<span class="dv">2</span>, <span class="dv">3</span>], [<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>]]</span>
 <span id="cb30-2"><a href="#cb30-2"></a><span class="bu">sum</span>(list_of_lists, [])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="16">
@@ -471,7 +475,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Cũng có thể sử dụng recursive lambda (another beauty of lambda)</p>
-<div id="9e23f219" class="cell" data-execution_count="17">
+<div id="6a0fecdc" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a>nested_lists <span class="op">=</span> [[<span class="dv">1</span>, <span class="dv">2</span>], [[<span class="dv">3</span>, <span class="dv">4</span>], [<span class="dv">5</span>, <span class="dv">6</span>], [[<span class="dv">7</span>, <span class="dv">8</span>], [<span class="dv">9</span>, <span class="dv">10</span>], [[<span class="dv">11</span>, [<span class="dv">12</span>, <span class="dv">13</span>]]]]]]</span>
 <span id="cb32-2"><a href="#cb32-2"></a>flatten <span class="op">=</span> <span class="kw">lambda</span> x: [y <span class="cf">for</span> i <span class="kw">in</span> x <span class="cf">for</span> y <span class="kw">in</span> flatten(i)] <span class="cf">if</span> <span class="bu">type</span>(x) <span class="kw">is</span> <span class="bu">list</span> <span class="cf">else</span> [x]</span>
 <span id="cb32-3"><a href="#cb32-3"></a></span>
@@ -490,7 +494,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <blockquote class="blockquote">
 <p>Từ generator được sử dụng cho cả hàm (hàm generator là hàm đã nói ở trên) và kết quả mà hàm đó sinh ra (đối tượng được hàm generator sinh ra cũng được gọi là generator). Vì vậy đôi khi việc này gây khó hiểu một chút. Hãy xem ví dụ về việc tạo n-grams từ một danh sách tokens dưới đây để hiểu sự khác biệt giữa list và generator:</p>
 </blockquote>
-<div id="4cd2d860" class="cell" data-execution_count="18">
+<div id="16c78c8d" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1"></a>tokens <span class="op">=</span> [<span class="st">'i'</span>, <span class="st">'want'</span>, <span class="st">'to'</span>, <span class="st">'go'</span>, <span class="st">'to'</span>, <span class="st">'school'</span>]</span>
 <span id="cb34-2"><a href="#cb34-2"></a></span>
 <span id="cb34-3"><a href="#cb34-3"></a><span class="kw">def</span> ngrams(tokens, n):</span>
@@ -506,7 +510,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Trong ví dụ này, chúng ta phải lưu toàn bộ n-grams một lúc. Nếu có <code>m</code> tokens, memory requirement là <code>O(nm)</code> - sẽ là vấn đề nếu <code>m</code> lớn. Thay vào đó, chúng ta có thể sử dụng generator để tạo n-grams tiếp theo khi được yêu cầu. Đây gọi là lazy evaluation. Chúng ta có thể tạo một hàm <code>ngrams</code> trả về một generator sử dụng keyword <code>yield</code>, lúc này memory requirement là <code>O(n+m)</code>.</p>
-<div id="deca1bee" class="cell" data-execution_count="19">
+<div id="0ef8bb7f" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a><span class="kw">def</span> ngrams(tokens, n):</span>
 <span id="cb36-2"><a href="#cb36-2"></a>    length <span class="op">=</span> <span class="bu">len</span>(tokens)</span>
 <span id="cb36-3"><a href="#cb36-3"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(length <span class="op">-</span> n <span class="op">+</span> <span class="dv">1</span>):</span>
@@ -518,7 +522,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb36-9"><a href="#cb36-9"></a><span class="cf">for</span> ngram <span class="kw">in</span> ngrams_generator:</span>
 <span id="cb36-10"><a href="#cb36-10"></a>    <span class="bu">print</span>(ngram)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;generator object ngrams at 0x000001FA3A270C70&gt;
+<pre><code>&lt;generator object ngrams at 0x00000239753BDB70&gt;
 ['i', 'want', 'to']
 ['want', 'to', 'go']
 ['to', 'go', 'to']
@@ -526,7 +530,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Một cách khác để tạo n-grams là slice để lấy các sub-list <code>[0, 1, 2, ...,-n]</code>, <code>[1, 2, 3, ...,-n+1]</code>, <code>[2, 3, 4, ...,-n+2]</code>,… <code>[n-1, n, ...,-1]</code>, sau đó <code>zip</code> chúng lại:</p>
-<div id="502fa5c2" class="cell" data-execution_count="20">
+<div id="20bef29e" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1"></a><span class="kw">def</span> ngrams(tokens, n):</span>
 <span id="cb38-2"><a href="#cb38-2"></a>    length <span class="op">=</span> <span class="bu">len</span>(tokens)</span>
 <span id="cb38-3"><a href="#cb38-3"></a>    slices <span class="op">=</span> (tokens[i:length<span class="op">-</span>n<span class="op">+</span>i<span class="op">+</span><span class="dv">1</span>] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n))</span>
@@ -539,7 +543,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb38-10"><a href="#cb38-10"></a><span class="cf">for</span> ngram <span class="kw">in</span> ngrams_generator:</span>
 <span id="cb38-11"><a href="#cb38-11"></a>    <span class="bu">print</span>(ngram)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;zip object at 0x000001FA3A2BBC40&gt;
+<pre><code>&lt;zip object at 0x00000239753EE840&gt;
 ('i', 'want', 'to')
 ('want', 'to', 'go')
 ('to', 'go', 'to')
@@ -549,7 +553,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Lưu ý chúng ta sử dụng <code>(tokens[...] for i in range(n))</code>, chứ không phải <code>[tokens[...] for i in range(n)]</code>. <code>[]</code> trả về một list, <code>()</code> trả về generator. # 4. Classes &amp; magic methods</p>
 <hr>
 <p>Trong Python, magic methods được prefixed và suffixed bởi double underscore <code>__</code> (aka dunder). Magic method được biết đến rộng rãi nhất là <code>__init__</code>.</p>
-<div id="1485fbe8" class="cell" data-execution_count="21">
+<div id="556e4b3e" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1"></a><span class="kw">class</span> Node:</span>
 <span id="cb40-2"><a href="#cb40-2"></a>    <span class="co">""" A struct to denote the node of a binary tree.</span></span>
 <span id="cb40-3"><a href="#cb40-3"></a><span class="co">    It contains a value and pointers to left and right children.</span></span>
@@ -560,15 +564,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb40-8"><a href="#cb40-8"></a>        <span class="va">self</span>.right <span class="op">=</span> right</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In ra object, tuy nhiên nhìn không tường minh lắm!</p>
-<div id="18de2076" class="cell" data-execution_count="22">
+<div id="e88cfb75" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1"></a>root <span class="op">=</span> Node(<span class="dv">5</span>)</span>
 <span id="cb41-2"><a href="#cb41-2"></a><span class="bu">print</span>(root) <span class="co"># &lt;__main__.Node object at 0x1069c4518&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;__main__.Node object at 0x000001FA3A2C4690&gt;</code></pre>
+<pre><code>&lt;__main__.Node object at 0x00000239753ED910&gt;</code></pre>
 </div>
 </div>
 <p>Chúng ta mong muốn khi in ra một Node, giá trị của nó cũng như giá trị của các Node con (nếu có) cũng sẽ được in ra. Chúng ta dùng <code>__repr__</code>:</p>
-<div id="09a226d8" class="cell" data-execution_count="23">
+<div id="0e51d9b7" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1"></a><span class="kw">class</span> Node:</span>
 <span id="cb43-2"><a href="#cb43-2"></a>    <span class="co">""" A struct to denote the node of a binary tree.</span></span>
 <span id="cb43-3"><a href="#cb43-3"></a><span class="co">    It contains a value and pointers to left and right children.</span></span>
@@ -592,7 +596,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Chúng ta cũng muốn hai Node có thể được so sánh được với nhau, vì thế tạo ra các magic method để implement các operator: <code>==</code> với <code>__eq__</code>, <code>&gt;</code> với <code>__lt__</code>, ‘&gt;=’ với <code>__ge__</code>:</p>
-<div id="8f2c4b23" class="cell" data-execution_count="24">
+<div id="708d1089" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1"></a><span class="kw">class</span> Node:</span>
 <span id="cb45-2"><a href="#cb45-2"></a>    <span class="co">""" A struct to denote the node of a binary tree.</span></span>
 <span id="cb45-3"><a href="#cb45-3"></a><span class="co">    It contains a value and pointers to left and right children.</span></span>
@@ -631,7 +635,7 @@ False</code></pre>
 <h1>5. Local namespace, object’s attributes</h1>
 <hr>
 <p>Hàm <code>locals()</code> trả về danh sách các biến nằm trong local namespace:</p>
-<div id="68d48fb4" class="cell" data-execution_count="25">
+<div id="aff88a01" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1"></a><span class="kw">class</span> Model1:</span>
 <span id="cb47-2"><a href="#cb47-2"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, hidden_size<span class="op">=</span><span class="dv">100</span>, num_layers<span class="op">=</span><span class="dv">3</span>, learning_rate<span class="op">=</span><span class="fl">3e-4</span>):</span>
 <span id="cb47-3"><a href="#cb47-3"></a>        <span class="bu">print</span>(<span class="bu">locals</span>())</span>
@@ -641,18 +645,18 @@ False</code></pre>
 <span id="cb47-7"><a href="#cb47-7"></a></span>
 <span id="cb47-8"><a href="#cb47-8"></a>model1 <span class="op">=</span> Model1()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>{'self': &lt;__main__.Model1 object at 0x000001FA3A2C6150&gt;, 'hidden_size': 100, 'num_layers': 3, 'learning_rate': 0.0003}</code></pre>
+<pre><code>{'self': &lt;__main__.Model1 object at 0x00000239754180D0&gt;, 'hidden_size': 100, 'num_layers': 3, 'learning_rate': 0.0003}</code></pre>
 </div>
 </div>
 <p>Các attributes của 1 object cũng được lưu hết trong <code>__dict__</code>:</p>
-<div id="61f3a5e8" class="cell" data-execution_count="26">
+<div id="5542bde4" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1"></a><span class="bu">print</span>(model1.__dict__)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>{'hidden_size': 100, 'num_layers': 3, 'learning_rate': 0.0003}</code></pre>
 </div>
 </div>
 <p>Khi có quá nhiều arguments, việc assign nó trong <code>__init__</code> trở nên phiền hà, chúng ta có thể làm như sau:</p>
-<div id="75043cdd" class="cell" data-execution_count="27">
+<div id="07a2503d" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1"></a><span class="kw">class</span> Model2:</span>
 <span id="cb51-2"><a href="#cb51-2"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, hidden_size<span class="op">=</span><span class="dv">100</span>, num_layers<span class="op">=</span><span class="dv">3</span>, learning_rate<span class="op">=</span><span class="fl">3e-4</span>):</span>
 <span id="cb51-3"><a href="#cb51-3"></a>        params <span class="op">=</span> <span class="bu">locals</span>()</span>
@@ -666,7 +670,7 @@ False</code></pre>
 </div>
 </div>
 <p>Thậm chí rất tiện khi làm việc với <code>*kwargs</code>:</p>
-<div id="9ce39ec7" class="cell" data-execution_count="28">
+<div id="9c52d834" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1"></a><span class="kw">class</span> Model3:</span>
 <span id="cb53-2"><a href="#cb53-2"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">**</span>kwargs):</span>
 <span id="cb53-3"><a href="#cb53-3"></a>        <span class="va">self</span>.__dict__ <span class="op">=</span> kwargs</span>
@@ -728,7 +732,7 @@ False</code></pre>
 <hr>
 <p>Chúng ta thường muốn đo lường thời gian chạy của 1 function. Các tự nhiên thường dùng là đặt <code>time.time()</code> ở hai điểm đầu và cuối giữa các lệnh.</p>
 <p>Ví dụ, với hàm tìm số Fibbonacci thứ n, với hai cách (1 cách sử dụng memoization).</p>
-<div id="5d61710a" class="cell" data-execution_count="29">
+<div id="16d27344" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1"></a><span class="kw">def</span> fib_helper(n):</span>
 <span id="cb58-2"><a href="#cb58-2"></a>    <span class="cf">if</span> n <span class="op">&lt;</span> <span class="dv">2</span>:</span>
 <span id="cb58-3"><a href="#cb58-3"></a>        <span class="cf">return</span> n</span>
@@ -750,12 +754,12 @@ False</code></pre>
 <span id="cb58-19"><a href="#cb58-19"></a>    <span class="cf">return</span> fib_m_helper(n, {<span class="dv">0</span>: <span class="dv">0</span>, <span class="dv">1</span>: <span class="dv">1</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Hãy chắc chắn <code>fib</code> và <code>fib_m</code> tương đương nhau:</p>
-<div id="27d4f072" class="cell" data-execution_count="30">
+<div id="39b0b7a0" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1"></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20</span>):</span>
 <span id="cb59-2"><a href="#cb59-2"></a>    <span class="cf">assert</span> fib(n) <span class="op">==</span> fib_m(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Đo lường thời gian chạy:</p>
-<div id="3f91e92f" class="cell" data-execution_count="31">
+<div id="1ed51064" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1"></a><span class="im">import</span> time</span>
 <span id="cb60-2"><a href="#cb60-2"></a></span>
 <span id="cb60-3"><a href="#cb60-3"></a>start <span class="op">=</span> time.time()</span>
@@ -766,12 +770,12 @@ False</code></pre>
 <span id="cb60-8"><a href="#cb60-8"></a>fib_m(<span class="dv">30</span>)</span>
 <span id="cb60-9"><a href="#cb60-9"></a><span class="bu">print</span>(<span class="ss">f'With memoization, it takes </span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start<span class="sc">:.7f}</span><span class="ss"> seconds.'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Without memoization, it takes 0.160464 seconds.
+<pre><code>Without memoization, it takes 0.133619 seconds.
 With memoization, it takes 0.0000000 seconds.</code></pre>
 </div>
 </div>
 <p>Using decorator, define <code>timeit</code>:</p>
-<div id="298854f3" class="cell" data-execution_count="32">
+<div id="9b085ae7" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1"></a><span class="kw">def</span> timeit(fn): </span>
 <span id="cb62-2"><a href="#cb62-2"></a>    <span class="co"># *args and **kwargs are to support positional and named arguments of fn</span></span>
 <span id="cb62-3"><a href="#cb62-3"></a>    <span class="kw">def</span> get_time(<span class="op">*</span>args, <span class="op">**</span>kwargs): </span>
@@ -782,7 +786,7 @@ With memoization, it takes 0.0000000 seconds.</code></pre>
 <span id="cb62-8"><a href="#cb62-8"></a>    <span class="cf">return</span> get_time </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Sau đó thêm <code>@timeit</code> tới function:</p>
-<div id="409cf0d5" class="cell" data-execution_count="33">
+<div id="4c9cce44" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1"></a><span class="at">@timeit</span></span>
 <span id="cb63-2"><a href="#cb63-2"></a><span class="kw">def</span> fib(n):</span>
 <span id="cb63-3"><a href="#cb63-3"></a>    <span class="cf">return</span> fib_helper(n)</span>
@@ -794,7 +798,7 @@ With memoization, it takes 0.0000000 seconds.</code></pre>
 <span id="cb63-9"><a href="#cb63-9"></a>fib(<span class="dv">30</span>)</span>
 <span id="cb63-10"><a href="#cb63-10"></a>fib_m(<span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time taken in fib: 0.1869819
+<pre><code>Time taken in fib: 0.1192429
 Time taken in fib_m: 0.0000000</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="33">
@@ -809,7 +813,7 @@ Time taken in fib_m: 0.0000000</code></pre>
 <blockquote class="blockquote">
 <p>Memoization is a form of cache: we cache the previously calculated Fibonacci numbers so that we don’t have to calculate them again.</p>
 </blockquote>
-<div id="3f0078d5" class="cell" data-execution_count="34">
+<div id="5c69b429" class="cell" data-execution_count="34">
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1"></a><span class="im">import</span> functools</span>
 <span id="cb66-2"><a href="#cb66-2"></a></span>
 <span id="cb66-3"><a href="#cb66-3"></a><span class="at">@functools.lru_cache</span>()</span>
@@ -1316,7 +1320,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb69-6"><a href="#cb69-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
 <span id="cb69-7"><a href="#cb69-7"></a><span class="an">date:</span><span class="co"> 05-21-2024</span></span>
 <span id="cb69-8"><a href="#cb69-8"></a><span class="an">date-modified:</span><span class="co"> 05-22-2024</span></span>
-<span id="cb69-9"><a href="#cb69-9"></a><span class="an">categories:</span><span class="co"> [Python, Lambda] # self-defined categories</span></span>
+<span id="cb69-9"><a href="#cb69-9"></a><span class="an">categories:</span><span class="co"> [python, lambda] # self-defined categories</span></span>
 <span id="cb69-10"><a href="#cb69-10"></a><span class="an">image:</span><span class="co"> python.jpg</span></span>
 <span id="cb69-11"><a href="#cb69-11"></a><span class="an">draft:</span><span class="co"> false # setting this to `true` will prevent your post from appearing on your listing page until you're ready!</span></span>
 <span id="cb69-12"><a href="#cb69-12"></a></span>
@@ -1336,533 +1340,538 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb69-26"><a href="#cb69-26"></a></span>
 <span id="cb69-27"><a href="#cb69-27"></a>Đây là một bài thực hành theo một <span class="co">[</span><span class="ot">post</span><span class="co">](https://github.com/chiphuyen/python-is-cool/tree/master)</span> bởi chị <span class="co">[</span><span class="ot">Chip Huyen</span><span class="co">](https://huyenchip.com/)</span> về một số features đặc biệt của Python. Là một DA không sử dụng Python quá nhiều, chỉ một số feature dưới đây là mình đã từng *nghe* qua. Hi vọng bài thực hành sẽ giúp mình hứng thú với Python hơn!</span>
 <span id="cb69-28"><a href="#cb69-28"></a></span>
-<span id="cb69-29"><a href="#cb69-29"></a>::: {layout-ncol=1}</span>
-<span id="cb69-30"><a href="#cb69-30"></a>!<span class="co">[</span><span class="ot">Dong Nai Cultural Nature Reserve, a python lying along the stream waiting for the prey. Photo credit to [PhucNguyenPhotos](https://www.instagram.com/vietnamphotos_herping/)</span><span class="co">](python.jpg)</span>{width=100%}</span>
+<span id="cb69-29"><a href="#cb69-29"></a>::: {layout-ncol="1"}</span>
+<span id="cb69-30"><a href="#cb69-30"></a>!<span class="co">[</span><span class="ot">Dong Nai Cultural Nature Reserve, a python lying along the stream waiting for the prey. Photo credit to [PhucNguyenPhotos](https://www.instagram.com/vietnamphotos_herping/)</span><span class="co">](python.jpg)</span>{width="100%"}</span>
 <span id="cb69-31"><a href="#cb69-31"></a>:::</span>
 <span id="cb69-32"><a href="#cb69-32"></a></span>
-<span id="cb69-33"><a href="#cb69-33"></a></span>
-<span id="cb69-34"><a href="#cb69-34"></a><span class="fu"># 2. Lambda, map, filter, &amp; reduce</span></span>
-<span id="cb69-35"><a href="#cb69-35"></a></span>
-<span id="cb69-36"><a href="#cb69-36"></a>------------------------------------------------------------------------</span>
-<span id="cb69-37"><a href="#cb69-37"></a></span>
-<span id="cb69-38"><a href="#cb69-38"></a>Lambda cho phép người dùng định nghĩa in-line functions. Việc sử dụng <span class="in">`lambda()`</span> rất thuận tiện khi gọi lại (callback \~ một function được thực thi sau khi một function khác được thực thi; một cách lưu trữ function) hoặc khi đầu ra của một function là đối số cho một function khác.</span>
-<span id="cb69-39"><a href="#cb69-39"></a></span>
-<span id="cb69-40"><a href="#cb69-40"></a>Hai hàm <span class="in">`square_fn`</span> và <span class="in">`square_ld`</span> dưới đây là một:</span>
-<span id="cb69-41"><a href="#cb69-41"></a></span>
-<span id="cb69-44"><a href="#cb69-44"></a><span class="in">```{python}</span></span>
-<span id="cb69-45"><a href="#cb69-45"></a><span class="kw">def</span> square_fn(x):</span>
-<span id="cb69-46"><a href="#cb69-46"></a>    <span class="cf">return</span> x <span class="op">*</span> x</span>
-<span id="cb69-47"><a href="#cb69-47"></a></span>
-<span id="cb69-48"><a href="#cb69-48"></a>square_ld <span class="op">=</span> <span class="kw">lambda</span> x : x <span class="op">*</span> x</span>
-<span id="cb69-49"><a href="#cb69-49"></a></span>
-<span id="cb69-50"><a href="#cb69-50"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
-<span id="cb69-51"><a href="#cb69-51"></a>    <span class="cf">assert</span> square_fn(i) <span class="op">==</span> square_ld(i)</span>
-<span id="cb69-52"><a href="#cb69-52"></a><span class="in">```</span></span>
-<span id="cb69-53"><a href="#cb69-53"></a></span>
-<span id="cb69-54"><a href="#cb69-54"></a><span class="in">`lambda`</span> rất hữu ích khi sử dụng cùng với các function khác như <span class="in">`map`</span>, <span class="in">`filter`</span>, và <span class="in">`reduce`</span> (mình rất hay sử dụng pattern này trên Excel 😂). <span class="in">`map(fn, interable)`</span> sẽ apply hàm <span class="in">`fn`</span> cho tất cả các phần tử trong <span class="in">`iterable`</span> (như list, set, dict, tuple, string), trả về map object.</span>
-<span id="cb69-55"><a href="#cb69-55"></a></span>
-<span id="cb69-58"><a href="#cb69-58"></a><span class="in">```{python}</span></span>
-<span id="cb69-59"><a href="#cb69-59"></a>nums <span class="op">=</span> [<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">2</span><span class="op">/</span><span class="dv">7</span>, <span class="dv">1001</span><span class="op">/</span><span class="dv">37500</span>, <span class="dv">40</span><span class="op">/</span><span class="dv">27</span>]</span>
-<span id="cb69-60"><a href="#cb69-60"></a>nums_squared <span class="op">=</span> [num <span class="op">*</span> num <span class="cf">for</span> num <span class="kw">in</span> nums]</span>
-<span id="cb69-61"><a href="#cb69-61"></a><span class="bu">print</span>(nums_squared)</span>
-<span id="cb69-62"><a href="#cb69-62"></a><span class="in">```</span></span>
-<span id="cb69-63"><a href="#cb69-63"></a></span>
-<span id="cb69-64"><a href="#cb69-64"></a>Dùng <span class="in">`map`</span> và một hàm callback, cho ra kết quả tương đương:</span>
-<span id="cb69-65"><a href="#cb69-65"></a></span>
-<span id="cb69-68"><a href="#cb69-68"></a><span class="in">```{python}</span></span>
-<span id="cb69-69"><a href="#cb69-69"></a>nums_squared_1 <span class="op">=</span> <span class="bu">map</span>(square_fn, nums)</span>
-<span id="cb69-70"><a href="#cb69-70"></a>nums_squared_2 <span class="op">=</span> <span class="bu">map</span>(<span class="kw">lambda</span> x: x<span class="op">*</span>x, nums)</span>
-<span id="cb69-71"><a href="#cb69-71"></a><span class="bu">print</span>(<span class="bu">list</span>(nums_squared_1)) <span class="co"># list to list the elements of map object</span></span>
-<span id="cb69-72"><a href="#cb69-72"></a><span class="bu">print</span>(<span class="bu">list</span>(nums_squared_2))</span>
-<span id="cb69-73"><a href="#cb69-73"></a><span class="in">```</span></span>
-<span id="cb69-74"><a href="#cb69-74"></a></span>
-<span id="cb69-75"><a href="#cb69-75"></a>Có thể dùng <span class="in">`map`</span> với nhiều hơn 1 iterable. Ví dụ muốn tính MSE cho một hồi quy tuyến tính đơn giản <span class="in">`f(x) = ax + b`</span> với ground tru <span class="in">`labels`</span>, hai phương pháp sau tương đương:</span>
-<span id="cb69-76"><a href="#cb69-76"></a></span>
-<span id="cb69-79"><a href="#cb69-79"></a><span class="in">```{python}</span></span>
-<span id="cb69-80"><a href="#cb69-80"></a>a, b <span class="op">=</span> <span class="dv">3</span>, <span class="op">-</span><span class="fl">0.5</span></span>
-<span id="cb69-81"><a href="#cb69-81"></a>xs <span class="op">=</span> [<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>]</span>
-<span id="cb69-82"><a href="#cb69-82"></a>labels <span class="op">=</span> [<span class="fl">6.4</span>, <span class="fl">8.9</span>, <span class="fl">10.9</span>, <span class="fl">15.3</span>]</span>
-<span id="cb69-83"><a href="#cb69-83"></a></span>
-<span id="cb69-84"><a href="#cb69-84"></a><span class="co"># Phương pháp 1, loop</span></span>
-<span id="cb69-85"><a href="#cb69-85"></a>errors <span class="op">=</span> []</span>
-<span id="cb69-86"><a href="#cb69-86"></a><span class="cf">for</span> i,x <span class="kw">in</span> <span class="bu">enumerate</span>(xs):</span>
-<span id="cb69-87"><a href="#cb69-87"></a>    errors.append( (a <span class="op">*</span> x <span class="op">+</span> b <span class="op">-</span> labels[i])<span class="op">**</span><span class="dv">2</span> )</span>
-<span id="cb69-88"><a href="#cb69-88"></a>result_1 <span class="op">=</span> <span class="bu">sum</span>(errors)<span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>) <span class="op">/</span> <span class="bu">len</span>(xs)</span>
-<span id="cb69-89"><a href="#cb69-89"></a></span>
-<span id="cb69-90"><a href="#cb69-90"></a><span class="co"># Phương pháp 2, map</span></span>
-<span id="cb69-91"><a href="#cb69-91"></a>diff <span class="op">=</span> <span class="bu">map</span>(<span class="kw">lambda</span> x, y: (a <span class="op">*</span> x <span class="op">+</span> b <span class="op">-</span> y) <span class="op">**</span> <span class="dv">2</span>, xs, labels) </span>
-<span id="cb69-92"><a href="#cb69-92"></a>result_2 <span class="op">=</span> <span class="bu">sum</span>(diff)<span class="op">**</span><span class="fl">.5</span> <span class="op">/</span> <span class="bu">len</span>(xs)</span>
-<span id="cb69-93"><a href="#cb69-93"></a></span>
-<span id="cb69-94"><a href="#cb69-94"></a><span class="bu">print</span>(result_1, result_2)</span>
-<span id="cb69-95"><a href="#cb69-95"></a><span class="in">```</span></span>
-<span id="cb69-96"><a href="#cb69-96"></a></span>
-<span id="cb69-97"><a href="#cb69-97"></a><span class="in">`filter(fn, iterable)`</span> giống như <span class="in">`map`</span>, tuy nhiên <span class="in">`fn`</span> là một hàm trả về giá trị boolean true/false, và <span class="in">`filter`</span> sẽ trả về các phần tử của <span class="in">`iterable`</span> khi <span class="in">`fn`</span> trả về true.</span>
-<span id="cb69-98"><a href="#cb69-98"></a></span>
-<span id="cb69-101"><a href="#cb69-101"></a><span class="in">```{python}</span></span>
-<span id="cb69-102"><a href="#cb69-102"></a>bad_preds <span class="op">=</span> <span class="bu">filter</span>(<span class="kw">lambda</span> x: x <span class="op">&gt;</span> <span class="fl">0.5</span>, errors)</span>
-<span id="cb69-103"><a href="#cb69-103"></a></span>
-<span id="cb69-104"><a href="#cb69-104"></a><span class="bu">print</span>(<span class="bu">list</span>(bad_preds))</span>
-<span id="cb69-105"><a href="#cb69-105"></a><span class="in">```</span></span>
-<span id="cb69-106"><a href="#cb69-106"></a></span>
-<span id="cb69-107"><a href="#cb69-107"></a><span class="in">`reduce(fn, iterable, initializer)`</span> được dùng khi ta muốn áp dụng một toán lên tất cả thành phần trong danh sách. Ví dụ muốn tính kết quả nhân của toàn bộ phần tử:</span>
-<span id="cb69-108"><a href="#cb69-108"></a></span>
-<span id="cb69-111"><a href="#cb69-111"></a><span class="in">```{python}</span></span>
-<span id="cb69-112"><a href="#cb69-112"></a>product <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb69-113"><a href="#cb69-113"></a><span class="cf">for</span> num <span class="kw">in</span> nums:</span>
-<span id="cb69-114"><a href="#cb69-114"></a>    product <span class="op">*=</span> num</span>
-<span id="cb69-115"><a href="#cb69-115"></a><span class="bu">print</span>(product)</span>
-<span id="cb69-116"><a href="#cb69-116"></a><span class="in">```</span></span>
-<span id="cb69-117"><a href="#cb69-117"></a></span>
-<span id="cb69-118"><a href="#cb69-118"></a>Sử dụng <span class="in">`reduce`</span>:</span>
-<span id="cb69-119"><a href="#cb69-119"></a></span>
-<span id="cb69-122"><a href="#cb69-122"></a><span class="in">```{python}</span></span>
-<span id="cb69-123"><a href="#cb69-123"></a><span class="im">from</span> functools <span class="im">import</span> <span class="bu">reduce</span></span>
-<span id="cb69-124"><a href="#cb69-124"></a></span>
-<span id="cb69-125"><a href="#cb69-125"></a>product <span class="op">=</span> <span class="bu">reduce</span>(<span class="kw">lambda</span> x, y: x <span class="op">*</span> y, nums)</span>
-<span id="cb69-126"><a href="#cb69-126"></a><span class="bu">print</span>(product)</span>
-<span id="cb69-127"><a href="#cb69-127"></a><span class="in">```</span></span>
-<span id="cb69-128"><a href="#cb69-128"></a></span>
-<span id="cb69-129"><a href="#cb69-129"></a><span class="fu">### Hiệu suất hàm Lambda</span></span>
-<span id="cb69-130"><a href="#cb69-130"></a></span>
-<span id="cb69-131"><a href="#cb69-131"></a>Lambda được thiết kế để sử dụng một lần. Mỗi lần được gọi, hàm <span class="in">`lambda x: dosomething(x)`</span> đều được tạo lại, và do đó ảnh hưởng tới hiệu suất.</span>
-<span id="cb69-132"><a href="#cb69-132"></a></span>
-<span id="cb69-133"><a href="#cb69-133"></a>Khi hàm lambda được định nghĩa trước <span class="in">`fn = lambda x: dosomething(x)`</span>, hiệu suất của nó vẫn chậm hơn <span class="in">`def`</span>, tuy nhiên không <span class="co">[</span><span class="ot">đáng kể</span><span class="co">](https://stackoverflow.com/questions/26540885/lambda-is-slower-than-function-call-in-python-why)</span>.</span>
-<span id="cb69-134"><a href="#cb69-134"></a></span>
-<span id="cb69-135"><a href="#cb69-135"></a>🚀Nguyên văn chị Chip:</span>
-<span id="cb69-136"><a href="#cb69-136"></a></span>
-<span id="cb69-137"><a href="#cb69-137"></a><span class="at">&gt; Even though I find lambdas cool, I personally recommend using named functions when you can for the sake of clarity.</span></span>
-<span id="cb69-138"><a href="#cb69-138"></a></span>
-<span id="cb69-139"><a href="#cb69-139"></a><span class="fu"># 3. List manipulation</span></span>
-<span id="cb69-140"><a href="#cb69-140"></a></span>
-<span id="cb69-141"><a href="#cb69-141"></a>------------------------------------------------------------------------</span>
-<span id="cb69-142"><a href="#cb69-142"></a></span>
-<span id="cb69-143"><a href="#cb69-143"></a><span class="fu">## 3.1. Unpacking</span></span>
-<span id="cb69-144"><a href="#cb69-144"></a></span>
-<span id="cb69-145"><a href="#cb69-145"></a>Chúng ta có thể "giải nén" một list như thế này:</span>
-<span id="cb69-146"><a href="#cb69-146"></a></span>
-<span id="cb69-149"><a href="#cb69-149"></a><span class="in">```{python}</span></span>
-<span id="cb69-150"><a href="#cb69-150"></a>elems <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>]</span>
-<span id="cb69-151"><a href="#cb69-151"></a>a,b,c,d <span class="op">=</span> elems</span>
-<span id="cb69-152"><a href="#cb69-152"></a></span>
-<span id="cb69-153"><a href="#cb69-153"></a><span class="bu">print</span>(a,b,c,d)</span>
-<span id="cb69-154"><a href="#cb69-154"></a><span class="in">```</span></span>
-<span id="cb69-155"><a href="#cb69-155"></a></span>
-<span id="cb69-156"><a href="#cb69-156"></a>Cũng có thể làm như thế này:</span>
-<span id="cb69-157"><a href="#cb69-157"></a></span>
-<span id="cb69-160"><a href="#cb69-160"></a><span class="in">```{python}</span></span>
-<span id="cb69-161"><a href="#cb69-161"></a>a, <span class="op">*</span>new_elems, d <span class="op">=</span> elems <span class="co"># remember the char * for extended unpacking</span></span>
-<span id="cb69-162"><a href="#cb69-162"></a></span>
-<span id="cb69-163"><a href="#cb69-163"></a><span class="bu">print</span>(a)</span>
-<span id="cb69-164"><a href="#cb69-164"></a><span class="bu">print</span>(new_elems)</span>
-<span id="cb69-165"><a href="#cb69-165"></a><span class="bu">print</span>(b)</span>
-<span id="cb69-166"><a href="#cb69-166"></a><span class="in">```</span></span>
-<span id="cb69-167"><a href="#cb69-167"></a></span>
-<span id="cb69-168"><a href="#cb69-168"></a><span class="fu">## 3.2. Slicing</span></span>
-<span id="cb69-169"><a href="#cb69-169"></a></span>
-<span id="cb69-170"><a href="#cb69-170"></a>Chúng ta có thể reverse/đảo ngược một list với <span class="in">`[::-1]`</span></span>
-<span id="cb69-171"><a href="#cb69-171"></a></span>
-<span id="cb69-174"><a href="#cb69-174"></a><span class="in">```{python}</span></span>
-<span id="cb69-175"><a href="#cb69-175"></a>elem <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>))</span>
-<span id="cb69-176"><a href="#cb69-176"></a><span class="bu">print</span>(elem)</span>
+<span id="cb69-33"><a href="#cb69-33"></a><span class="fu"># 2. Lambda, map, filter, &amp; reduce</span></span>
+<span id="cb69-34"><a href="#cb69-34"></a></span>
+<span id="cb69-35"><a href="#cb69-35"></a>------------------------------------------------------------------------</span>
+<span id="cb69-36"><a href="#cb69-36"></a></span>
+<span id="cb69-37"><a href="#cb69-37"></a>Lambda cho phép người dùng định nghĩa in-line functions. Việc sử dụng <span class="in">`lambda()`</span> rất thuận tiện khi gọi lại (callback \~ một function được thực thi sau khi một function khác được thực thi; một cách lưu trữ function) hoặc khi đầu ra của một function là đối số cho một function khác.</span>
+<span id="cb69-38"><a href="#cb69-38"></a></span>
+<span id="cb69-39"><a href="#cb69-39"></a>Hai hàm <span class="in">`square_fn`</span> và <span class="in">`square_ld`</span> dưới đây là một:</span>
+<span id="cb69-40"><a href="#cb69-40"></a></span>
+<span id="cb69-43"><a href="#cb69-43"></a><span class="in">```{python}</span></span>
+<span id="cb69-44"><a href="#cb69-44"></a><span class="kw">def</span> square_fn(x):</span>
+<span id="cb69-45"><a href="#cb69-45"></a>    <span class="cf">return</span> x <span class="op">*</span> x</span>
+<span id="cb69-46"><a href="#cb69-46"></a></span>
+<span id="cb69-47"><a href="#cb69-47"></a>square_ld <span class="op">=</span> <span class="kw">lambda</span> x : x <span class="op">*</span> x</span>
+<span id="cb69-48"><a href="#cb69-48"></a></span>
+<span id="cb69-49"><a href="#cb69-49"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb69-50"><a href="#cb69-50"></a>    <span class="cf">assert</span> square_fn(i) <span class="op">==</span> square_ld(i)</span>
+<span id="cb69-51"><a href="#cb69-51"></a><span class="in">```</span></span>
+<span id="cb69-52"><a href="#cb69-52"></a></span>
+<span id="cb69-53"><a href="#cb69-53"></a><span class="in">`lambda`</span> rất hữu ích khi sử dụng cùng với các function khác như <span class="in">`map`</span>, <span class="in">`filter`</span>, và <span class="in">`reduce`</span> (mình rất hay sử dụng pattern này trên Excel 😂). <span class="in">`map(fn, interable)`</span> sẽ apply hàm <span class="in">`fn`</span> cho tất cả các phần tử trong <span class="in">`iterable`</span> (như list, set, dict, tuple, string), trả về map object.</span>
+<span id="cb69-54"><a href="#cb69-54"></a></span>
+<span id="cb69-57"><a href="#cb69-57"></a><span class="in">```{python}</span></span>
+<span id="cb69-58"><a href="#cb69-58"></a>nums <span class="op">=</span> [<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">2</span><span class="op">/</span><span class="dv">7</span>, <span class="dv">1001</span><span class="op">/</span><span class="dv">37500</span>, <span class="dv">40</span><span class="op">/</span><span class="dv">27</span>]</span>
+<span id="cb69-59"><a href="#cb69-59"></a>nums_squared <span class="op">=</span> [num <span class="op">*</span> num <span class="cf">for</span> num <span class="kw">in</span> nums]</span>
+<span id="cb69-60"><a href="#cb69-60"></a><span class="bu">print</span>(nums_squared)</span>
+<span id="cb69-61"><a href="#cb69-61"></a><span class="in">```</span></span>
+<span id="cb69-62"><a href="#cb69-62"></a></span>
+<span id="cb69-63"><a href="#cb69-63"></a>Dùng <span class="in">`map`</span> và một hàm callback, cho ra kết quả tương đương:</span>
+<span id="cb69-64"><a href="#cb69-64"></a></span>
+<span id="cb69-67"><a href="#cb69-67"></a><span class="in">```{python}</span></span>
+<span id="cb69-68"><a href="#cb69-68"></a>nums_squared_1 <span class="op">=</span> <span class="bu">map</span>(square_fn, nums)</span>
+<span id="cb69-69"><a href="#cb69-69"></a>nums_squared_2 <span class="op">=</span> <span class="bu">map</span>(<span class="kw">lambda</span> x: x<span class="op">*</span>x, nums)</span>
+<span id="cb69-70"><a href="#cb69-70"></a><span class="bu">print</span>(<span class="bu">list</span>(nums_squared_1)) <span class="co"># list to list the elements of map object</span></span>
+<span id="cb69-71"><a href="#cb69-71"></a><span class="bu">print</span>(<span class="bu">list</span>(nums_squared_2))</span>
+<span id="cb69-72"><a href="#cb69-72"></a><span class="in">```</span></span>
+<span id="cb69-73"><a href="#cb69-73"></a></span>
+<span id="cb69-74"><a href="#cb69-74"></a>Có thể dùng <span class="in">`map`</span> với nhiều hơn 1 iterable. Ví dụ muốn tính MSE cho một hồi quy tuyến tính đơn giản <span class="in">`f(x) = ax + b`</span> với ground tru <span class="in">`labels`</span>, hai phương pháp sau tương đương:</span>
+<span id="cb69-75"><a href="#cb69-75"></a></span>
+<span id="cb69-78"><a href="#cb69-78"></a><span class="in">```{python}</span></span>
+<span id="cb69-79"><a href="#cb69-79"></a>a, b <span class="op">=</span> <span class="dv">3</span>, <span class="op">-</span><span class="fl">0.5</span></span>
+<span id="cb69-80"><a href="#cb69-80"></a>xs <span class="op">=</span> [<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>]</span>
+<span id="cb69-81"><a href="#cb69-81"></a>labels <span class="op">=</span> [<span class="fl">6.4</span>, <span class="fl">8.9</span>, <span class="fl">10.9</span>, <span class="fl">15.3</span>]</span>
+<span id="cb69-82"><a href="#cb69-82"></a></span>
+<span id="cb69-83"><a href="#cb69-83"></a><span class="co"># Phương pháp 1, loop</span></span>
+<span id="cb69-84"><a href="#cb69-84"></a>errors <span class="op">=</span> []</span>
+<span id="cb69-85"><a href="#cb69-85"></a><span class="cf">for</span> i,x <span class="kw">in</span> <span class="bu">enumerate</span>(xs):</span>
+<span id="cb69-86"><a href="#cb69-86"></a>    errors.append( (a <span class="op">*</span> x <span class="op">+</span> b <span class="op">-</span> labels[i])<span class="op">**</span><span class="dv">2</span> )</span>
+<span id="cb69-87"><a href="#cb69-87"></a>result_1 <span class="op">=</span> <span class="bu">sum</span>(errors)<span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>) <span class="op">/</span> <span class="bu">len</span>(xs)</span>
+<span id="cb69-88"><a href="#cb69-88"></a></span>
+<span id="cb69-89"><a href="#cb69-89"></a><span class="co"># Phương pháp 2, map</span></span>
+<span id="cb69-90"><a href="#cb69-90"></a>diff <span class="op">=</span> <span class="bu">map</span>(<span class="kw">lambda</span> x, y: (a <span class="op">*</span> x <span class="op">+</span> b <span class="op">-</span> y) <span class="op">**</span> <span class="dv">2</span>, xs, labels) </span>
+<span id="cb69-91"><a href="#cb69-91"></a>result_2 <span class="op">=</span> <span class="bu">sum</span>(diff)<span class="op">**</span><span class="fl">.5</span> <span class="op">/</span> <span class="bu">len</span>(xs)</span>
+<span id="cb69-92"><a href="#cb69-92"></a></span>
+<span id="cb69-93"><a href="#cb69-93"></a><span class="bu">print</span>(result_1, result_2)</span>
+<span id="cb69-94"><a href="#cb69-94"></a><span class="in">```</span></span>
+<span id="cb69-95"><a href="#cb69-95"></a></span>
+<span id="cb69-96"><a href="#cb69-96"></a><span class="in">`filter(fn, iterable)`</span> giống như <span class="in">`map`</span>, tuy nhiên <span class="in">`fn`</span> là một hàm trả về giá trị boolean true/false, và <span class="in">`filter`</span> sẽ trả về các phần tử của <span class="in">`iterable`</span> khi <span class="in">`fn`</span> trả về true.</span>
+<span id="cb69-97"><a href="#cb69-97"></a></span>
+<span id="cb69-100"><a href="#cb69-100"></a><span class="in">```{python}</span></span>
+<span id="cb69-101"><a href="#cb69-101"></a>bad_preds <span class="op">=</span> <span class="bu">filter</span>(<span class="kw">lambda</span> x: x <span class="op">&gt;</span> <span class="fl">0.5</span>, errors)</span>
+<span id="cb69-102"><a href="#cb69-102"></a></span>
+<span id="cb69-103"><a href="#cb69-103"></a><span class="bu">print</span>(<span class="bu">list</span>(bad_preds))</span>
+<span id="cb69-104"><a href="#cb69-104"></a><span class="in">```</span></span>
+<span id="cb69-105"><a href="#cb69-105"></a></span>
+<span id="cb69-106"><a href="#cb69-106"></a><span class="in">`reduce(fn, iterable, initializer)`</span> được dùng khi ta muốn áp dụng một toán lên tất cả thành phần trong danh sách. Ví dụ muốn tính kết quả nhân của toàn bộ phần tử:</span>
+<span id="cb69-107"><a href="#cb69-107"></a></span>
+<span id="cb69-110"><a href="#cb69-110"></a><span class="in">```{python}</span></span>
+<span id="cb69-111"><a href="#cb69-111"></a>product <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb69-112"><a href="#cb69-112"></a><span class="cf">for</span> num <span class="kw">in</span> nums:</span>
+<span id="cb69-113"><a href="#cb69-113"></a>    product <span class="op">*=</span> num</span>
+<span id="cb69-114"><a href="#cb69-114"></a><span class="bu">print</span>(product)</span>
+<span id="cb69-115"><a href="#cb69-115"></a><span class="in">```</span></span>
+<span id="cb69-116"><a href="#cb69-116"></a></span>
+<span id="cb69-117"><a href="#cb69-117"></a>Sử dụng <span class="in">`reduce`</span>:</span>
+<span id="cb69-118"><a href="#cb69-118"></a></span>
+<span id="cb69-121"><a href="#cb69-121"></a><span class="in">```{python}</span></span>
+<span id="cb69-122"><a href="#cb69-122"></a><span class="im">from</span> functools <span class="im">import</span> <span class="bu">reduce</span></span>
+<span id="cb69-123"><a href="#cb69-123"></a></span>
+<span id="cb69-124"><a href="#cb69-124"></a>product <span class="op">=</span> <span class="bu">reduce</span>(<span class="kw">lambda</span> x, y: x <span class="op">*</span> y, nums)</span>
+<span id="cb69-125"><a href="#cb69-125"></a><span class="bu">print</span>(product)</span>
+<span id="cb69-126"><a href="#cb69-126"></a><span class="in">```</span></span>
+<span id="cb69-127"><a href="#cb69-127"></a></span>
+<span id="cb69-128"><a href="#cb69-128"></a><span class="fu">### Hiệu suất hàm Lambda</span></span>
+<span id="cb69-129"><a href="#cb69-129"></a></span>
+<span id="cb69-130"><a href="#cb69-130"></a>Lambda được thiết kế để sử dụng một lần. Mỗi lần được gọi, hàm <span class="in">`lambda x: dosomething(x)`</span> đều được tạo lại, và do đó ảnh hưởng tới hiệu suất.</span>
+<span id="cb69-131"><a href="#cb69-131"></a></span>
+<span id="cb69-132"><a href="#cb69-132"></a>Khi hàm lambda được định nghĩa trước <span class="in">`fn = lambda x: dosomething(x)`</span>, hiệu suất của nó vẫn chậm hơn <span class="in">`def`</span>, tuy nhiên không <span class="co">[</span><span class="ot">đáng kể</span><span class="co">](https://stackoverflow.com/questions/26540885/lambda-is-slower-than-function-call-in-python-why)</span>.</span>
+<span id="cb69-133"><a href="#cb69-133"></a></span>
+<span id="cb69-134"><a href="#cb69-134"></a>🚀Nguyên văn chị Chip:</span>
+<span id="cb69-135"><a href="#cb69-135"></a></span>
+<span id="cb69-136"><a href="#cb69-136"></a><span class="at">&gt; Even though I find lambdas cool, I personally recommend using named functions when you can for the sake of clarity.</span></span>
+<span id="cb69-137"><a href="#cb69-137"></a></span>
+<span id="cb69-138"><a href="#cb69-138"></a><span class="fu"># 3. List manipulation</span></span>
+<span id="cb69-139"><a href="#cb69-139"></a></span>
+<span id="cb69-140"><a href="#cb69-140"></a>------------------------------------------------------------------------</span>
+<span id="cb69-141"><a href="#cb69-141"></a></span>
+<span id="cb69-142"><a href="#cb69-142"></a><span class="fu">## 3.1. Unpacking</span></span>
+<span id="cb69-143"><a href="#cb69-143"></a></span>
+<span id="cb69-144"><a href="#cb69-144"></a>Chúng ta có thể "giải nén" một list như thế này:</span>
+<span id="cb69-145"><a href="#cb69-145"></a></span>
+<span id="cb69-148"><a href="#cb69-148"></a><span class="in">```{python}</span></span>
+<span id="cb69-149"><a href="#cb69-149"></a>elems <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>]</span>
+<span id="cb69-150"><a href="#cb69-150"></a>a,b,c,d <span class="op">=</span> elems</span>
+<span id="cb69-151"><a href="#cb69-151"></a></span>
+<span id="cb69-152"><a href="#cb69-152"></a><span class="bu">print</span>(a,b,c,d)</span>
+<span id="cb69-153"><a href="#cb69-153"></a><span class="in">```</span></span>
+<span id="cb69-154"><a href="#cb69-154"></a></span>
+<span id="cb69-155"><a href="#cb69-155"></a>Cũng có thể làm như thế này:</span>
+<span id="cb69-156"><a href="#cb69-156"></a></span>
+<span id="cb69-159"><a href="#cb69-159"></a><span class="in">```{python}</span></span>
+<span id="cb69-160"><a href="#cb69-160"></a>a, <span class="op">*</span>new_elems, d <span class="op">=</span> elems <span class="co"># remember the char * for extended unpacking</span></span>
+<span id="cb69-161"><a href="#cb69-161"></a></span>
+<span id="cb69-162"><a href="#cb69-162"></a><span class="bu">print</span>(a)</span>
+<span id="cb69-163"><a href="#cb69-163"></a><span class="bu">print</span>(new_elems)</span>
+<span id="cb69-164"><a href="#cb69-164"></a><span class="bu">print</span>(b)</span>
+<span id="cb69-165"><a href="#cb69-165"></a><span class="in">```</span></span>
+<span id="cb69-166"><a href="#cb69-166"></a></span>
+<span id="cb69-167"><a href="#cb69-167"></a><span class="fu">## 3.2. Slicing</span></span>
+<span id="cb69-168"><a href="#cb69-168"></a></span>
+<span id="cb69-169"><a href="#cb69-169"></a>Chúng ta có thể reverse/đảo ngược một list với <span class="in">`[::-1]`</span></span>
+<span id="cb69-170"><a href="#cb69-170"></a></span>
+<span id="cb69-173"><a href="#cb69-173"></a><span class="in">```{python}</span></span>
+<span id="cb69-174"><a href="#cb69-174"></a>elem <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>))</span>
+<span id="cb69-175"><a href="#cb69-175"></a><span class="bu">print</span>(elem)</span>
+<span id="cb69-176"><a href="#cb69-176"></a></span>
 <span id="cb69-177"><a href="#cb69-177"></a></span>
-<span id="cb69-178"><a href="#cb69-178"></a></span>
-<span id="cb69-179"><a href="#cb69-179"></a><span class="bu">print</span>(elem[::<span class="op">-</span><span class="dv">1</span>])</span>
-<span id="cb69-180"><a href="#cb69-180"></a><span class="in">```</span></span>
-<span id="cb69-181"><a href="#cb69-181"></a></span>
-<span id="cb69-182"><a href="#cb69-182"></a>Cú pháp <span class="in">`[x:y:z]`</span> có nghĩa là lấy ***mỗi*** phần tử thứ <span class="in">`z`</span> từ index <span class="in">`x`</span> tới index <span class="in">`y`</span>. Khi <span class="in">`z`</span> âm, tương đương với việc lấy theo thứ tự ngược lại. <span class="in">`x`</span> để trống chỉ việc lấy từ phần tử đầu tiên, <span class="in">`y`</span> để rỗng chỉ việc lấy tới phần tử cuối cùng.</span>
-<span id="cb69-183"><a href="#cb69-183"></a></span>
-<span id="cb69-186"><a href="#cb69-186"></a><span class="in">```{python}</span></span>
-<span id="cb69-187"><a href="#cb69-187"></a>evens <span class="op">=</span> elem[::<span class="dv">2</span>]</span>
-<span id="cb69-188"><a href="#cb69-188"></a><span class="bu">print</span>(evens)</span>
-<span id="cb69-189"><a href="#cb69-189"></a></span>
-<span id="cb69-190"><a href="#cb69-190"></a>reversed_evens <span class="op">=</span> elem[<span class="dv">2</span>::<span class="op">-</span><span class="dv">2</span>]</span>
-<span id="cb69-191"><a href="#cb69-191"></a><span class="bu">print</span>(reversed_evens)</span>
-<span id="cb69-192"><a href="#cb69-192"></a><span class="in">```</span></span>
-<span id="cb69-193"><a href="#cb69-193"></a></span>
-<span id="cb69-194"><a href="#cb69-194"></a>Cũng có thể dùng slicing để xóa các phần tử như thế này:</span>
-<span id="cb69-195"><a href="#cb69-195"></a></span>
-<span id="cb69-198"><a href="#cb69-198"></a><span class="in">```{python}</span></span>
-<span id="cb69-199"><a href="#cb69-199"></a><span class="kw">del</span> elems[::<span class="dv">2</span>]</span>
-<span id="cb69-200"><a href="#cb69-200"></a><span class="bu">print</span>(elems)</span>
-<span id="cb69-201"><a href="#cb69-201"></a><span class="in">```</span></span>
-<span id="cb69-202"><a href="#cb69-202"></a></span>
-<span id="cb69-203"><a href="#cb69-203"></a><span class="fu">## 3.3. Insertion</span></span>
-<span id="cb69-204"><a href="#cb69-204"></a></span>
-<span id="cb69-205"><a href="#cb69-205"></a>Chúng ta có thể thay đổi giá trị một phần tử trong một list như sau:</span>
-<span id="cb69-206"><a href="#cb69-206"></a></span>
-<span id="cb69-209"><a href="#cb69-209"></a><span class="in">```{python}</span></span>
-<span id="cb69-210"><a href="#cb69-210"></a>elems <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>))</span>
-<span id="cb69-211"><a href="#cb69-211"></a></span>
-<span id="cb69-212"><a href="#cb69-212"></a>elems[<span class="dv">1</span>] <span class="op">=</span> <span class="dv">100</span></span>
-<span id="cb69-213"><a href="#cb69-213"></a><span class="bu">print</span>(elems)</span>
-<span id="cb69-214"><a href="#cb69-214"></a><span class="in">```</span></span>
-<span id="cb69-215"><a href="#cb69-215"></a></span>
-<span id="cb69-216"><a href="#cb69-216"></a>Cũng có thể thay thế một giá trị bằng nhiều giá trị:</span>
-<span id="cb69-217"><a href="#cb69-217"></a></span>
-<span id="cb69-220"><a href="#cb69-220"></a><span class="in">```{python}</span></span>
-<span id="cb69-221"><a href="#cb69-221"></a>elems <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>))</span>
-<span id="cb69-222"><a href="#cb69-222"></a>elems[<span class="dv">1</span>:<span class="dv">2</span>] <span class="op">=</span> [<span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>]</span>
-<span id="cb69-223"><a href="#cb69-223"></a><span class="bu">print</span>(elems)</span>
-<span id="cb69-224"><a href="#cb69-224"></a><span class="in">```</span></span>
-<span id="cb69-225"><a href="#cb69-225"></a></span>
-<span id="cb69-226"><a href="#cb69-226"></a>Nếu chúng ta muốn thêm 3 giá trị <span class="in">`0.3, 0.4, 0.5`</span> vào giữa phần tử thứ 0 và 1 của list này, thì:</span>
-<span id="cb69-227"><a href="#cb69-227"></a></span>
-<span id="cb69-230"><a href="#cb69-230"></a><span class="in">```{python}</span></span>
-<span id="cb69-231"><a href="#cb69-231"></a>elems <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>))</span>
-<span id="cb69-232"><a href="#cb69-232"></a>elems[<span class="dv">1</span>:<span class="dv">1</span>] <span class="op">=</span> [<span class="fl">.3</span>, <span class="fl">.4</span>, <span class="fl">.5</span>]</span>
-<span id="cb69-233"><a href="#cb69-233"></a><span class="bu">print</span>(elems)</span>
-<span id="cb69-234"><a href="#cb69-234"></a><span class="in">```</span></span>
-<span id="cb69-235"><a href="#cb69-235"></a></span>
-<span id="cb69-236"><a href="#cb69-236"></a><span class="fu">## 3.4. Flattening</span></span>
-<span id="cb69-237"><a href="#cb69-237"></a></span>
-<span id="cb69-238"><a href="#cb69-238"></a>Chúng ta có thể flatten một list sử dung <span class="in">`sum(0)`</span>:</span>
-<span id="cb69-239"><a href="#cb69-239"></a></span>
-<span id="cb69-242"><a href="#cb69-242"></a><span class="in">```{python}</span></span>
-<span id="cb69-243"><a href="#cb69-243"></a>list_of_lists <span class="op">=</span> [[<span class="dv">1</span>], [<span class="dv">2</span>, <span class="dv">3</span>], [<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>]]</span>
-<span id="cb69-244"><a href="#cb69-244"></a><span class="bu">sum</span>(list_of_lists, [])</span>
-<span id="cb69-245"><a href="#cb69-245"></a><span class="in">```</span></span>
-<span id="cb69-246"><a href="#cb69-246"></a></span>
-<span id="cb69-247"><a href="#cb69-247"></a>Cũng có thể sử dụng recursive lambda (another beauty of lambda)</span>
-<span id="cb69-248"><a href="#cb69-248"></a></span>
-<span id="cb69-251"><a href="#cb69-251"></a><span class="in">```{python}</span></span>
-<span id="cb69-252"><a href="#cb69-252"></a>nested_lists <span class="op">=</span> [[<span class="dv">1</span>, <span class="dv">2</span>], [[<span class="dv">3</span>, <span class="dv">4</span>], [<span class="dv">5</span>, <span class="dv">6</span>], [[<span class="dv">7</span>, <span class="dv">8</span>], [<span class="dv">9</span>, <span class="dv">10</span>], [[<span class="dv">11</span>, [<span class="dv">12</span>, <span class="dv">13</span>]]]]]]</span>
-<span id="cb69-253"><a href="#cb69-253"></a>flatten <span class="op">=</span> <span class="kw">lambda</span> x: [y <span class="cf">for</span> i <span class="kw">in</span> x <span class="cf">for</span> y <span class="kw">in</span> flatten(i)] <span class="cf">if</span> <span class="bu">type</span>(x) <span class="kw">is</span> <span class="bu">list</span> <span class="cf">else</span> [x]</span>
-<span id="cb69-254"><a href="#cb69-254"></a></span>
-<span id="cb69-255"><a href="#cb69-255"></a><span class="bu">print</span>(flatten(nested_lists))</span>
-<span id="cb69-256"><a href="#cb69-256"></a></span>
-<span id="cb69-257"><a href="#cb69-257"></a><span class="co"># This line of code is from</span></span>
-<span id="cb69-258"><a href="#cb69-258"></a><span class="co"># https://github.com/sahands/python-by-example/blob/master/python-by-example.rst#flattening-lists</span></span>
-<span id="cb69-259"><a href="#cb69-259"></a><span class="in">```</span></span>
-<span id="cb69-260"><a href="#cb69-260"></a></span>
-<span id="cb69-261"><a href="#cb69-261"></a><span class="fu">## 3.5. List vs Generator</span></span>
-<span id="cb69-262"><a href="#cb69-262"></a></span>
-<span id="cb69-263"><a href="#cb69-263"></a>🚀Generator là cái gì vậy? Trích <span class="co">[</span><span class="ot">bài viết</span><span class="co">](https://manhhomienbienthuy.github.io/2016/01/05/python-iterator-generator.html)</span>:</span>
-<span id="cb69-264"><a href="#cb69-264"></a></span>
-<span id="cb69-265"><a href="#cb69-265"></a><span class="at">&gt; Từ generator được sử dụng cho cả hàm (hàm generator là hàm đã nói ở trên) và kết quả mà hàm đó sinh ra (đối tượng được hàm generator sinh ra cũng được gọi là generator). Vì vậy đôi khi việc này gây khó hiểu một chút. Hãy xem ví dụ về việc tạo n-grams từ một danh sách tokens dưới đây để hiểu sự khác biệt giữa list và generator:</span></span>
-<span id="cb69-266"><a href="#cb69-266"></a></span>
-<span id="cb69-269"><a href="#cb69-269"></a><span class="in">```{python}</span></span>
-<span id="cb69-270"><a href="#cb69-270"></a>tokens <span class="op">=</span> [<span class="st">'i'</span>, <span class="st">'want'</span>, <span class="st">'to'</span>, <span class="st">'go'</span>, <span class="st">'to'</span>, <span class="st">'school'</span>]</span>
-<span id="cb69-271"><a href="#cb69-271"></a></span>
-<span id="cb69-272"><a href="#cb69-272"></a><span class="kw">def</span> ngrams(tokens, n):</span>
-<span id="cb69-273"><a href="#cb69-273"></a>    length <span class="op">=</span> <span class="bu">len</span>(tokens)</span>
-<span id="cb69-274"><a href="#cb69-274"></a>    grams <span class="op">=</span> []</span>
-<span id="cb69-275"><a href="#cb69-275"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(length <span class="op">-</span> n <span class="op">+</span> <span class="dv">1</span>):</span>
-<span id="cb69-276"><a href="#cb69-276"></a>        grams.append(tokens[i:i<span class="op">+</span>n])</span>
-<span id="cb69-277"><a href="#cb69-277"></a>    <span class="cf">return</span> grams</span>
-<span id="cb69-278"><a href="#cb69-278"></a></span>
-<span id="cb69-279"><a href="#cb69-279"></a><span class="bu">print</span>(ngrams(tokens, <span class="dv">3</span>))</span>
-<span id="cb69-280"><a href="#cb69-280"></a><span class="in">```</span></span>
-<span id="cb69-281"><a href="#cb69-281"></a></span>
-<span id="cb69-282"><a href="#cb69-282"></a>Trong ví dụ này, chúng ta phải lưu toàn bộ n-grams một lúc. Nếu có <span class="in">`m`</span> tokens, memory requirement là <span class="in">`O(nm)`</span> - sẽ là vấn đề nếu <span class="in">`m`</span> lớn. Thay vào đó, chúng ta có thể sử dụng generator để tạo n-grams tiếp theo khi được yêu cầu. Đây gọi là lazy evaluation. Chúng ta có thể tạo một hàm <span class="in">`ngrams`</span> trả về một generator sử dụng keyword <span class="in">`yield`</span>, lúc này memory requirement là <span class="in">`O(n+m)`</span>.</span>
-<span id="cb69-283"><a href="#cb69-283"></a></span>
-<span id="cb69-286"><a href="#cb69-286"></a><span class="in">```{python}</span></span>
-<span id="cb69-287"><a href="#cb69-287"></a><span class="kw">def</span> ngrams(tokens, n):</span>
-<span id="cb69-288"><a href="#cb69-288"></a>    length <span class="op">=</span> <span class="bu">len</span>(tokens)</span>
-<span id="cb69-289"><a href="#cb69-289"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(length <span class="op">-</span> n <span class="op">+</span> <span class="dv">1</span>):</span>
-<span id="cb69-290"><a href="#cb69-290"></a>        <span class="cf">yield</span> tokens[i:i<span class="op">+</span>n]</span>
-<span id="cb69-291"><a href="#cb69-291"></a></span>
-<span id="cb69-292"><a href="#cb69-292"></a>ngrams_generator <span class="op">=</span> ngrams(tokens, <span class="dv">3</span>)</span>
-<span id="cb69-293"><a href="#cb69-293"></a><span class="bu">print</span>(ngrams_generator)</span>
-<span id="cb69-294"><a href="#cb69-294"></a></span>
-<span id="cb69-295"><a href="#cb69-295"></a><span class="cf">for</span> ngram <span class="kw">in</span> ngrams_generator:</span>
-<span id="cb69-296"><a href="#cb69-296"></a>    <span class="bu">print</span>(ngram)</span>
-<span id="cb69-297"><a href="#cb69-297"></a><span class="in">```</span></span>
-<span id="cb69-298"><a href="#cb69-298"></a></span>
-<span id="cb69-299"><a href="#cb69-299"></a>Một cách khác để tạo n-grams là slice để lấy các sub-list <span class="in">`[0, 1, 2, ...,-n]`</span>, <span class="in">`[1, 2, 3, ...,-n+1]`</span>, <span class="in">`[2, 3, 4, ...,-n+2]`</span>,... <span class="in">`[n-1, n, ...,-1]`</span>, sau đó <span class="in">`zip`</span> chúng lại:</span>
-<span id="cb69-300"><a href="#cb69-300"></a></span>
-<span id="cb69-303"><a href="#cb69-303"></a><span class="in">```{python}</span></span>
-<span id="cb69-304"><a href="#cb69-304"></a><span class="kw">def</span> ngrams(tokens, n):</span>
-<span id="cb69-305"><a href="#cb69-305"></a>    length <span class="op">=</span> <span class="bu">len</span>(tokens)</span>
-<span id="cb69-306"><a href="#cb69-306"></a>    slices <span class="op">=</span> (tokens[i:length<span class="op">-</span>n<span class="op">+</span>i<span class="op">+</span><span class="dv">1</span>] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n))</span>
-<span id="cb69-307"><a href="#cb69-307"></a>    <span class="cf">return</span> <span class="bu">zip</span>(<span class="op">*</span>slices)</span>
-<span id="cb69-308"><a href="#cb69-308"></a></span>
-<span id="cb69-309"><a href="#cb69-309"></a>ngrams_generator <span class="op">=</span> ngrams(tokens, <span class="dv">3</span>)</span>
-<span id="cb69-310"><a href="#cb69-310"></a><span class="bu">print</span>(ngrams_generator)</span>
+<span id="cb69-178"><a href="#cb69-178"></a><span class="bu">print</span>(elem[::<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb69-179"><a href="#cb69-179"></a><span class="in">```</span></span>
+<span id="cb69-180"><a href="#cb69-180"></a></span>
+<span id="cb69-181"><a href="#cb69-181"></a>Cú pháp <span class="in">`[x:y:z]`</span> có nghĩa là lấy ***mỗi*** phần tử thứ <span class="in">`z`</span> từ index <span class="in">`x`</span> tới index <span class="in">`y`</span>. Khi <span class="in">`z`</span> âm, tương đương với việc lấy theo thứ tự ngược lại. <span class="in">`x`</span> để trống chỉ việc lấy từ phần tử đầu tiên, <span class="in">`y`</span> để rỗng chỉ việc lấy tới phần tử cuối cùng.</span>
+<span id="cb69-182"><a href="#cb69-182"></a></span>
+<span id="cb69-185"><a href="#cb69-185"></a><span class="in">```{python}</span></span>
+<span id="cb69-186"><a href="#cb69-186"></a>evens <span class="op">=</span> elem[::<span class="dv">2</span>]</span>
+<span id="cb69-187"><a href="#cb69-187"></a><span class="bu">print</span>(evens)</span>
+<span id="cb69-188"><a href="#cb69-188"></a></span>
+<span id="cb69-189"><a href="#cb69-189"></a>reversed_evens <span class="op">=</span> elem[<span class="dv">2</span>::<span class="op">-</span><span class="dv">2</span>]</span>
+<span id="cb69-190"><a href="#cb69-190"></a><span class="bu">print</span>(reversed_evens)</span>
+<span id="cb69-191"><a href="#cb69-191"></a><span class="in">```</span></span>
+<span id="cb69-192"><a href="#cb69-192"></a></span>
+<span id="cb69-193"><a href="#cb69-193"></a>Cũng có thể dùng slicing để xóa các phần tử như thế này:</span>
+<span id="cb69-194"><a href="#cb69-194"></a></span>
+<span id="cb69-197"><a href="#cb69-197"></a><span class="in">```{python}</span></span>
+<span id="cb69-198"><a href="#cb69-198"></a><span class="kw">del</span> elems[::<span class="dv">2</span>]</span>
+<span id="cb69-199"><a href="#cb69-199"></a><span class="bu">print</span>(elems)</span>
+<span id="cb69-200"><a href="#cb69-200"></a><span class="in">```</span></span>
+<span id="cb69-201"><a href="#cb69-201"></a></span>
+<span id="cb69-202"><a href="#cb69-202"></a><span class="fu">## 3.3. Insertion</span></span>
+<span id="cb69-203"><a href="#cb69-203"></a></span>
+<span id="cb69-204"><a href="#cb69-204"></a>Chúng ta có thể thay đổi giá trị một phần tử trong một list như sau:</span>
+<span id="cb69-205"><a href="#cb69-205"></a></span>
+<span id="cb69-208"><a href="#cb69-208"></a><span class="in">```{python}</span></span>
+<span id="cb69-209"><a href="#cb69-209"></a>elems <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>))</span>
+<span id="cb69-210"><a href="#cb69-210"></a></span>
+<span id="cb69-211"><a href="#cb69-211"></a>elems[<span class="dv">1</span>] <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb69-212"><a href="#cb69-212"></a><span class="bu">print</span>(elems)</span>
+<span id="cb69-213"><a href="#cb69-213"></a><span class="in">```</span></span>
+<span id="cb69-214"><a href="#cb69-214"></a></span>
+<span id="cb69-215"><a href="#cb69-215"></a>Cũng có thể thay thế một giá trị bằng nhiều giá trị:</span>
+<span id="cb69-216"><a href="#cb69-216"></a></span>
+<span id="cb69-219"><a href="#cb69-219"></a><span class="in">```{python}</span></span>
+<span id="cb69-220"><a href="#cb69-220"></a>elems <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>))</span>
+<span id="cb69-221"><a href="#cb69-221"></a>elems[<span class="dv">1</span>:<span class="dv">2</span>] <span class="op">=</span> [<span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>]</span>
+<span id="cb69-222"><a href="#cb69-222"></a><span class="bu">print</span>(elems)</span>
+<span id="cb69-223"><a href="#cb69-223"></a><span class="in">```</span></span>
+<span id="cb69-224"><a href="#cb69-224"></a></span>
+<span id="cb69-225"><a href="#cb69-225"></a>Nếu chúng ta muốn thêm 3 giá trị <span class="in">`0.3, 0.4, 0.5`</span> vào giữa phần tử thứ 0 và 1 của list này, thì:</span>
+<span id="cb69-226"><a href="#cb69-226"></a></span>
+<span id="cb69-229"><a href="#cb69-229"></a><span class="in">```{python}</span></span>
+<span id="cb69-230"><a href="#cb69-230"></a>elems <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>))</span>
+<span id="cb69-231"><a href="#cb69-231"></a>elems[<span class="dv">1</span>:<span class="dv">1</span>] <span class="op">=</span> [<span class="fl">.3</span>, <span class="fl">.4</span>, <span class="fl">.5</span>]</span>
+<span id="cb69-232"><a href="#cb69-232"></a><span class="bu">print</span>(elems)</span>
+<span id="cb69-233"><a href="#cb69-233"></a><span class="in">```</span></span>
+<span id="cb69-234"><a href="#cb69-234"></a></span>
+<span id="cb69-235"><a href="#cb69-235"></a><span class="fu">## 3.4. Flattening</span></span>
+<span id="cb69-236"><a href="#cb69-236"></a></span>
+<span id="cb69-237"><a href="#cb69-237"></a>Chúng ta có thể flatten một list sử dung <span class="in">`sum(0)`</span>:</span>
+<span id="cb69-238"><a href="#cb69-238"></a></span>
+<span id="cb69-241"><a href="#cb69-241"></a><span class="in">```{python}</span></span>
+<span id="cb69-242"><a href="#cb69-242"></a>list_of_lists <span class="op">=</span> [[<span class="dv">1</span>], [<span class="dv">2</span>, <span class="dv">3</span>], [<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>]]</span>
+<span id="cb69-243"><a href="#cb69-243"></a><span class="bu">sum</span>(list_of_lists, [])</span>
+<span id="cb69-244"><a href="#cb69-244"></a><span class="in">```</span></span>
+<span id="cb69-245"><a href="#cb69-245"></a></span>
+<span id="cb69-246"><a href="#cb69-246"></a>Cũng có thể sử dụng recursive lambda (another beauty of lambda)</span>
+<span id="cb69-247"><a href="#cb69-247"></a></span>
+<span id="cb69-250"><a href="#cb69-250"></a><span class="in">```{python}</span></span>
+<span id="cb69-251"><a href="#cb69-251"></a>nested_lists <span class="op">=</span> [[<span class="dv">1</span>, <span class="dv">2</span>], [[<span class="dv">3</span>, <span class="dv">4</span>], [<span class="dv">5</span>, <span class="dv">6</span>], [[<span class="dv">7</span>, <span class="dv">8</span>], [<span class="dv">9</span>, <span class="dv">10</span>], [[<span class="dv">11</span>, [<span class="dv">12</span>, <span class="dv">13</span>]]]]]]</span>
+<span id="cb69-252"><a href="#cb69-252"></a>flatten <span class="op">=</span> <span class="kw">lambda</span> x: [y <span class="cf">for</span> i <span class="kw">in</span> x <span class="cf">for</span> y <span class="kw">in</span> flatten(i)] <span class="cf">if</span> <span class="bu">type</span>(x) <span class="kw">is</span> <span class="bu">list</span> <span class="cf">else</span> [x]</span>
+<span id="cb69-253"><a href="#cb69-253"></a></span>
+<span id="cb69-254"><a href="#cb69-254"></a><span class="bu">print</span>(flatten(nested_lists))</span>
+<span id="cb69-255"><a href="#cb69-255"></a></span>
+<span id="cb69-256"><a href="#cb69-256"></a><span class="co"># This line of code is from</span></span>
+<span id="cb69-257"><a href="#cb69-257"></a><span class="co"># https://github.com/sahands/python-by-example/blob/master/python-by-example.rst#flattening-lists</span></span>
+<span id="cb69-258"><a href="#cb69-258"></a><span class="in">```</span></span>
+<span id="cb69-259"><a href="#cb69-259"></a></span>
+<span id="cb69-260"><a href="#cb69-260"></a><span class="fu">## 3.5. List vs Generator</span></span>
+<span id="cb69-261"><a href="#cb69-261"></a></span>
+<span id="cb69-262"><a href="#cb69-262"></a>🚀Generator là cái gì vậy? Trích <span class="co">[</span><span class="ot">bài viết</span><span class="co">](https://manhhomienbienthuy.github.io/2016/01/05/python-iterator-generator.html)</span>:</span>
+<span id="cb69-263"><a href="#cb69-263"></a></span>
+<span id="cb69-264"><a href="#cb69-264"></a><span class="at">&gt; Từ generator được sử dụng cho cả hàm (hàm generator là hàm đã nói ở trên) và kết quả mà hàm đó sinh ra (đối tượng được hàm generator sinh ra cũng được gọi là generator). Vì vậy đôi khi việc này gây khó hiểu một chút. Hãy xem ví dụ về việc tạo n-grams từ một danh sách tokens dưới đây để hiểu sự khác biệt giữa list và generator:</span></span>
+<span id="cb69-265"><a href="#cb69-265"></a></span>
+<span id="cb69-268"><a href="#cb69-268"></a><span class="in">```{python}</span></span>
+<span id="cb69-269"><a href="#cb69-269"></a>tokens <span class="op">=</span> [<span class="st">'i'</span>, <span class="st">'want'</span>, <span class="st">'to'</span>, <span class="st">'go'</span>, <span class="st">'to'</span>, <span class="st">'school'</span>]</span>
+<span id="cb69-270"><a href="#cb69-270"></a></span>
+<span id="cb69-271"><a href="#cb69-271"></a><span class="kw">def</span> ngrams(tokens, n):</span>
+<span id="cb69-272"><a href="#cb69-272"></a>    length <span class="op">=</span> <span class="bu">len</span>(tokens)</span>
+<span id="cb69-273"><a href="#cb69-273"></a>    grams <span class="op">=</span> []</span>
+<span id="cb69-274"><a href="#cb69-274"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(length <span class="op">-</span> n <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb69-275"><a href="#cb69-275"></a>        grams.append(tokens[i:i<span class="op">+</span>n])</span>
+<span id="cb69-276"><a href="#cb69-276"></a>    <span class="cf">return</span> grams</span>
+<span id="cb69-277"><a href="#cb69-277"></a></span>
+<span id="cb69-278"><a href="#cb69-278"></a><span class="bu">print</span>(ngrams(tokens, <span class="dv">3</span>))</span>
+<span id="cb69-279"><a href="#cb69-279"></a><span class="in">```</span></span>
+<span id="cb69-280"><a href="#cb69-280"></a></span>
+<span id="cb69-281"><a href="#cb69-281"></a>Trong ví dụ này, chúng ta phải lưu toàn bộ n-grams một lúc. Nếu có <span class="in">`m`</span> tokens, memory requirement là <span class="in">`O(nm)`</span> - sẽ là vấn đề nếu <span class="in">`m`</span> lớn. Thay vào đó, chúng ta có thể sử dụng generator để tạo n-grams tiếp theo khi được yêu cầu. Đây gọi là lazy evaluation. Chúng ta có thể tạo một hàm <span class="in">`ngrams`</span> trả về một generator sử dụng keyword <span class="in">`yield`</span>, lúc này memory requirement là <span class="in">`O(n+m)`</span>.</span>
+<span id="cb69-282"><a href="#cb69-282"></a></span>
+<span id="cb69-285"><a href="#cb69-285"></a><span class="in">```{python}</span></span>
+<span id="cb69-286"><a href="#cb69-286"></a><span class="kw">def</span> ngrams(tokens, n):</span>
+<span id="cb69-287"><a href="#cb69-287"></a>    length <span class="op">=</span> <span class="bu">len</span>(tokens)</span>
+<span id="cb69-288"><a href="#cb69-288"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(length <span class="op">-</span> n <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb69-289"><a href="#cb69-289"></a>        <span class="cf">yield</span> tokens[i:i<span class="op">+</span>n]</span>
+<span id="cb69-290"><a href="#cb69-290"></a></span>
+<span id="cb69-291"><a href="#cb69-291"></a>ngrams_generator <span class="op">=</span> ngrams(tokens, <span class="dv">3</span>)</span>
+<span id="cb69-292"><a href="#cb69-292"></a><span class="bu">print</span>(ngrams_generator)</span>
+<span id="cb69-293"><a href="#cb69-293"></a></span>
+<span id="cb69-294"><a href="#cb69-294"></a><span class="cf">for</span> ngram <span class="kw">in</span> ngrams_generator:</span>
+<span id="cb69-295"><a href="#cb69-295"></a>    <span class="bu">print</span>(ngram)</span>
+<span id="cb69-296"><a href="#cb69-296"></a><span class="in">```</span></span>
+<span id="cb69-297"><a href="#cb69-297"></a></span>
+<span id="cb69-298"><a href="#cb69-298"></a>Một cách khác để tạo n-grams là slice để lấy các sub-list <span class="in">`[0, 1, 2, ...,-n]`</span>, <span class="in">`[1, 2, 3, ...,-n+1]`</span>, <span class="in">`[2, 3, 4, ...,-n+2]`</span>,... <span class="in">`[n-1, n, ...,-1]`</span>, sau đó <span class="in">`zip`</span> chúng lại:</span>
+<span id="cb69-299"><a href="#cb69-299"></a></span>
+<span id="cb69-302"><a href="#cb69-302"></a><span class="in">```{python}</span></span>
+<span id="cb69-303"><a href="#cb69-303"></a><span class="kw">def</span> ngrams(tokens, n):</span>
+<span id="cb69-304"><a href="#cb69-304"></a>    length <span class="op">=</span> <span class="bu">len</span>(tokens)</span>
+<span id="cb69-305"><a href="#cb69-305"></a>    slices <span class="op">=</span> (tokens[i:length<span class="op">-</span>n<span class="op">+</span>i<span class="op">+</span><span class="dv">1</span>] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n))</span>
+<span id="cb69-306"><a href="#cb69-306"></a>    <span class="cf">return</span> <span class="bu">zip</span>(<span class="op">*</span>slices)</span>
+<span id="cb69-307"><a href="#cb69-307"></a></span>
+<span id="cb69-308"><a href="#cb69-308"></a>ngrams_generator <span class="op">=</span> ngrams(tokens, <span class="dv">3</span>)</span>
+<span id="cb69-309"><a href="#cb69-309"></a><span class="bu">print</span>(ngrams_generator)</span>
+<span id="cb69-310"><a href="#cb69-310"></a></span>
 <span id="cb69-311"><a href="#cb69-311"></a></span>
-<span id="cb69-312"><a href="#cb69-312"></a></span>
-<span id="cb69-313"><a href="#cb69-313"></a><span class="cf">for</span> ngram <span class="kw">in</span> ngrams_generator:</span>
-<span id="cb69-314"><a href="#cb69-314"></a>    <span class="bu">print</span>(ngram)</span>
-<span id="cb69-315"><a href="#cb69-315"></a><span class="in">```</span></span>
-<span id="cb69-316"><a href="#cb69-316"></a></span>
-<span id="cb69-317"><a href="#cb69-317"></a>Lưu ý chúng ta sử dụng <span class="in">`(tokens[...] for i in range(n))`</span>, chứ không phải <span class="in">`[tokens[...] for i in range(n)]`</span>. <span class="in">`[]`</span> trả về một list, <span class="in">`()`</span> trả về generator. # 4. Classes &amp; magic methods</span>
-<span id="cb69-318"><a href="#cb69-318"></a></span>
-<span id="cb69-319"><a href="#cb69-319"></a>------------------------------------------------------------------------</span>
-<span id="cb69-320"><a href="#cb69-320"></a></span>
-<span id="cb69-321"><a href="#cb69-321"></a>Trong Python, magic methods được prefixed và suffixed bởi double underscore <span class="in">`__`</span> (aka dunder). Magic method được biết đến rộng rãi nhất là <span class="in">`__init__`</span>.</span>
-<span id="cb69-322"><a href="#cb69-322"></a></span>
-<span id="cb69-325"><a href="#cb69-325"></a><span class="in">```{python}</span></span>
-<span id="cb69-326"><a href="#cb69-326"></a><span class="kw">class</span> Node:</span>
-<span id="cb69-327"><a href="#cb69-327"></a>    <span class="co">""" A struct to denote the node of a binary tree.</span></span>
-<span id="cb69-328"><a href="#cb69-328"></a><span class="co">    It contains a value and pointers to left and right children.</span></span>
-<span id="cb69-329"><a href="#cb69-329"></a><span class="co">    """</span></span>
-<span id="cb69-330"><a href="#cb69-330"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, value, left<span class="op">=</span><span class="va">None</span>, right<span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb69-331"><a href="#cb69-331"></a>        <span class="va">self</span>.value <span class="op">=</span> value</span>
-<span id="cb69-332"><a href="#cb69-332"></a>        <span class="va">self</span>.left <span class="op">=</span> left</span>
-<span id="cb69-333"><a href="#cb69-333"></a>        <span class="va">self</span>.right <span class="op">=</span> right</span>
-<span id="cb69-334"><a href="#cb69-334"></a><span class="in">```</span></span>
-<span id="cb69-335"><a href="#cb69-335"></a></span>
-<span id="cb69-336"><a href="#cb69-336"></a>In ra object, tuy nhiên nhìn không tường minh lắm!</span>
-<span id="cb69-337"><a href="#cb69-337"></a></span>
-<span id="cb69-340"><a href="#cb69-340"></a><span class="in">```{python}</span></span>
-<span id="cb69-341"><a href="#cb69-341"></a>root <span class="op">=</span> Node(<span class="dv">5</span>)</span>
-<span id="cb69-342"><a href="#cb69-342"></a><span class="bu">print</span>(root) <span class="co"># &lt;__main__.Node object at 0x1069c4518&gt;</span></span>
-<span id="cb69-343"><a href="#cb69-343"></a><span class="in">```</span></span>
-<span id="cb69-344"><a href="#cb69-344"></a></span>
-<span id="cb69-345"><a href="#cb69-345"></a>Chúng ta mong muốn khi in ra một Node, giá trị của nó cũng như giá trị của các Node con (nếu có) cũng sẽ được in ra. Chúng ta dùng <span class="in">`__repr__`</span>:</span>
-<span id="cb69-346"><a href="#cb69-346"></a></span>
-<span id="cb69-349"><a href="#cb69-349"></a><span class="in">```{python}</span></span>
-<span id="cb69-350"><a href="#cb69-350"></a><span class="kw">class</span> Node:</span>
-<span id="cb69-351"><a href="#cb69-351"></a>    <span class="co">""" A struct to denote the node of a binary tree.</span></span>
-<span id="cb69-352"><a href="#cb69-352"></a><span class="co">    It contains a value and pointers to left and right children.</span></span>
-<span id="cb69-353"><a href="#cb69-353"></a><span class="co">    """</span></span>
-<span id="cb69-354"><a href="#cb69-354"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, value, left<span class="op">=</span><span class="va">None</span>, right<span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb69-355"><a href="#cb69-355"></a>        <span class="va">self</span>.value <span class="op">=</span> value</span>
-<span id="cb69-356"><a href="#cb69-356"></a>        <span class="va">self</span>.left <span class="op">=</span> left</span>
-<span id="cb69-357"><a href="#cb69-357"></a>        <span class="va">self</span>.right <span class="op">=</span> right</span>
-<span id="cb69-358"><a href="#cb69-358"></a></span>
-<span id="cb69-359"><a href="#cb69-359"></a>    <span class="kw">def</span> <span class="fu">__repr__</span>(<span class="va">self</span>):</span>
-<span id="cb69-360"><a href="#cb69-360"></a>        strings <span class="op">=</span> [<span class="ss">f'value: </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>value<span class="sc">}</span><span class="ss">'</span>]</span>
-<span id="cb69-361"><a href="#cb69-361"></a>        strings.append(<span class="ss">f'left: </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>left<span class="sc">.</span>value<span class="sc">}</span><span class="ss">'</span> <span class="cf">if</span> <span class="va">self</span>.left <span class="cf">else</span> <span class="st">'left: None'</span>)</span>
-<span id="cb69-362"><a href="#cb69-362"></a>        strings.append(<span class="ss">f'right: </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>right<span class="sc">.</span>value<span class="sc">}</span><span class="ss">'</span> <span class="cf">if</span> <span class="va">self</span>.right <span class="cf">else</span> <span class="st">'right: None'</span>)</span>
-<span id="cb69-363"><a href="#cb69-363"></a>        <span class="cf">return</span> <span class="st">', '</span>.join(strings)</span>
-<span id="cb69-364"><a href="#cb69-364"></a></span>
-<span id="cb69-365"><a href="#cb69-365"></a>left <span class="op">=</span> Node(<span class="dv">4</span>)</span>
-<span id="cb69-366"><a href="#cb69-366"></a>root <span class="op">=</span> Node(<span class="dv">5</span>, left)</span>
-<span id="cb69-367"><a href="#cb69-367"></a><span class="bu">print</span>(root) <span class="co"># value: 5, left: 4, right: None</span></span>
-<span id="cb69-368"><a href="#cb69-368"></a><span class="in">```</span></span>
-<span id="cb69-369"><a href="#cb69-369"></a></span>
-<span id="cb69-370"><a href="#cb69-370"></a>Chúng ta cũng muốn hai Node có thể được so sánh được với nhau, vì thế tạo ra các magic method để implement các operator: <span class="in">`==`</span> với <span class="in">`__eq__`</span>, <span class="in">`&gt;`</span> với <span class="in">`__lt__`</span>, '<span class="sc">\&gt;</span>=' với <span class="in">`__ge__`</span>:</span>
-<span id="cb69-371"><a href="#cb69-371"></a></span>
-<span id="cb69-374"><a href="#cb69-374"></a><span class="in">```{python}</span></span>
-<span id="cb69-375"><a href="#cb69-375"></a><span class="kw">class</span> Node:</span>
-<span id="cb69-376"><a href="#cb69-376"></a>    <span class="co">""" A struct to denote the node of a binary tree.</span></span>
-<span id="cb69-377"><a href="#cb69-377"></a><span class="co">    It contains a value and pointers to left and right children.</span></span>
-<span id="cb69-378"><a href="#cb69-378"></a><span class="co">    """</span></span>
-<span id="cb69-379"><a href="#cb69-379"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, value, left<span class="op">=</span><span class="va">None</span>, right<span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb69-380"><a href="#cb69-380"></a>        <span class="va">self</span>.value <span class="op">=</span> value</span>
-<span id="cb69-381"><a href="#cb69-381"></a>        <span class="va">self</span>.left <span class="op">=</span> left</span>
-<span id="cb69-382"><a href="#cb69-382"></a>        <span class="va">self</span>.right <span class="op">=</span> right</span>
-<span id="cb69-383"><a href="#cb69-383"></a></span>
-<span id="cb69-384"><a href="#cb69-384"></a>    <span class="kw">def</span> <span class="fu">__eq__</span>(<span class="va">self</span>, other):</span>
-<span id="cb69-385"><a href="#cb69-385"></a>        <span class="cf">return</span> <span class="va">self</span>.value <span class="op">==</span> other.value</span>
-<span id="cb69-386"><a href="#cb69-386"></a></span>
-<span id="cb69-387"><a href="#cb69-387"></a>    <span class="kw">def</span> <span class="fu">__lt__</span>(<span class="va">self</span>, other):</span>
-<span id="cb69-388"><a href="#cb69-388"></a>        <span class="cf">return</span> <span class="va">self</span>.value <span class="op">&lt;</span> other.value</span>
-<span id="cb69-389"><a href="#cb69-389"></a></span>
-<span id="cb69-390"><a href="#cb69-390"></a>    <span class="kw">def</span> <span class="fu">__ge__</span>(<span class="va">self</span>, other):</span>
-<span id="cb69-391"><a href="#cb69-391"></a>        <span class="cf">return</span> <span class="va">self</span>.value <span class="op">&gt;=</span> other.value</span>
+<span id="cb69-312"><a href="#cb69-312"></a><span class="cf">for</span> ngram <span class="kw">in</span> ngrams_generator:</span>
+<span id="cb69-313"><a href="#cb69-313"></a>    <span class="bu">print</span>(ngram)</span>
+<span id="cb69-314"><a href="#cb69-314"></a><span class="in">```</span></span>
+<span id="cb69-315"><a href="#cb69-315"></a></span>
+<span id="cb69-316"><a href="#cb69-316"></a>Lưu ý chúng ta sử dụng <span class="in">`(tokens[...] for i in range(n))`</span>, chứ không phải <span class="in">`[tokens[...] for i in range(n)]`</span>. <span class="in">`[]`</span> trả về một list, <span class="in">`()`</span> trả về generator. <span class="sc">\#</span> 4. Classes &amp; magic methods</span>
+<span id="cb69-317"><a href="#cb69-317"></a></span>
+<span id="cb69-318"><a href="#cb69-318"></a>------------------------------------------------------------------------</span>
+<span id="cb69-319"><a href="#cb69-319"></a></span>
+<span id="cb69-320"><a href="#cb69-320"></a>Trong Python, magic methods được prefixed và suffixed bởi double underscore <span class="in">`__`</span> (aka dunder). Magic method được biết đến rộng rãi nhất là <span class="in">`__init__`</span>.</span>
+<span id="cb69-321"><a href="#cb69-321"></a></span>
+<span id="cb69-324"><a href="#cb69-324"></a><span class="in">```{python}</span></span>
+<span id="cb69-325"><a href="#cb69-325"></a><span class="kw">class</span> Node:</span>
+<span id="cb69-326"><a href="#cb69-326"></a>    <span class="co">""" A struct to denote the node of a binary tree.</span></span>
+<span id="cb69-327"><a href="#cb69-327"></a><span class="co">    It contains a value and pointers to left and right children.</span></span>
+<span id="cb69-328"><a href="#cb69-328"></a><span class="co">    """</span></span>
+<span id="cb69-329"><a href="#cb69-329"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, value, left<span class="op">=</span><span class="va">None</span>, right<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb69-330"><a href="#cb69-330"></a>        <span class="va">self</span>.value <span class="op">=</span> value</span>
+<span id="cb69-331"><a href="#cb69-331"></a>        <span class="va">self</span>.left <span class="op">=</span> left</span>
+<span id="cb69-332"><a href="#cb69-332"></a>        <span class="va">self</span>.right <span class="op">=</span> right</span>
+<span id="cb69-333"><a href="#cb69-333"></a><span class="in">```</span></span>
+<span id="cb69-334"><a href="#cb69-334"></a></span>
+<span id="cb69-335"><a href="#cb69-335"></a>In ra object, tuy nhiên nhìn không tường minh lắm!</span>
+<span id="cb69-336"><a href="#cb69-336"></a></span>
+<span id="cb69-339"><a href="#cb69-339"></a><span class="in">```{python}</span></span>
+<span id="cb69-340"><a href="#cb69-340"></a>root <span class="op">=</span> Node(<span class="dv">5</span>)</span>
+<span id="cb69-341"><a href="#cb69-341"></a><span class="bu">print</span>(root) <span class="co"># &lt;__main__.Node object at 0x1069c4518&gt;</span></span>
+<span id="cb69-342"><a href="#cb69-342"></a><span class="in">```</span></span>
+<span id="cb69-343"><a href="#cb69-343"></a></span>
+<span id="cb69-344"><a href="#cb69-344"></a>Chúng ta mong muốn khi in ra một Node, giá trị của nó cũng như giá trị của các Node con (nếu có) cũng sẽ được in ra. Chúng ta dùng <span class="in">`__repr__`</span>:</span>
+<span id="cb69-345"><a href="#cb69-345"></a></span>
+<span id="cb69-348"><a href="#cb69-348"></a><span class="in">```{python}</span></span>
+<span id="cb69-349"><a href="#cb69-349"></a><span class="kw">class</span> Node:</span>
+<span id="cb69-350"><a href="#cb69-350"></a>    <span class="co">""" A struct to denote the node of a binary tree.</span></span>
+<span id="cb69-351"><a href="#cb69-351"></a><span class="co">    It contains a value and pointers to left and right children.</span></span>
+<span id="cb69-352"><a href="#cb69-352"></a><span class="co">    """</span></span>
+<span id="cb69-353"><a href="#cb69-353"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, value, left<span class="op">=</span><span class="va">None</span>, right<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb69-354"><a href="#cb69-354"></a>        <span class="va">self</span>.value <span class="op">=</span> value</span>
+<span id="cb69-355"><a href="#cb69-355"></a>        <span class="va">self</span>.left <span class="op">=</span> left</span>
+<span id="cb69-356"><a href="#cb69-356"></a>        <span class="va">self</span>.right <span class="op">=</span> right</span>
+<span id="cb69-357"><a href="#cb69-357"></a></span>
+<span id="cb69-358"><a href="#cb69-358"></a>    <span class="kw">def</span> <span class="fu">__repr__</span>(<span class="va">self</span>):</span>
+<span id="cb69-359"><a href="#cb69-359"></a>        strings <span class="op">=</span> [<span class="ss">f'value: </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>value<span class="sc">}</span><span class="ss">'</span>]</span>
+<span id="cb69-360"><a href="#cb69-360"></a>        strings.append(<span class="ss">f'left: </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>left<span class="sc">.</span>value<span class="sc">}</span><span class="ss">'</span> <span class="cf">if</span> <span class="va">self</span>.left <span class="cf">else</span> <span class="st">'left: None'</span>)</span>
+<span id="cb69-361"><a href="#cb69-361"></a>        strings.append(<span class="ss">f'right: </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>right<span class="sc">.</span>value<span class="sc">}</span><span class="ss">'</span> <span class="cf">if</span> <span class="va">self</span>.right <span class="cf">else</span> <span class="st">'right: None'</span>)</span>
+<span id="cb69-362"><a href="#cb69-362"></a>        <span class="cf">return</span> <span class="st">', '</span>.join(strings)</span>
+<span id="cb69-363"><a href="#cb69-363"></a></span>
+<span id="cb69-364"><a href="#cb69-364"></a>left <span class="op">=</span> Node(<span class="dv">4</span>)</span>
+<span id="cb69-365"><a href="#cb69-365"></a>root <span class="op">=</span> Node(<span class="dv">5</span>, left)</span>
+<span id="cb69-366"><a href="#cb69-366"></a><span class="bu">print</span>(root) <span class="co"># value: 5, left: 4, right: None</span></span>
+<span id="cb69-367"><a href="#cb69-367"></a><span class="in">```</span></span>
+<span id="cb69-368"><a href="#cb69-368"></a></span>
+<span id="cb69-369"><a href="#cb69-369"></a>Chúng ta cũng muốn hai Node có thể được so sánh được với nhau, vì thế tạo ra các magic method để implement các operator: <span class="in">`==`</span> với <span class="in">`__eq__`</span>, <span class="in">`&gt;`</span> với <span class="in">`__lt__`</span>, '<span class="sc">\&gt;</span>=' với <span class="in">`__ge__`</span>:</span>
+<span id="cb69-370"><a href="#cb69-370"></a></span>
+<span id="cb69-373"><a href="#cb69-373"></a><span class="in">```{python}</span></span>
+<span id="cb69-374"><a href="#cb69-374"></a><span class="kw">class</span> Node:</span>
+<span id="cb69-375"><a href="#cb69-375"></a>    <span class="co">""" A struct to denote the node of a binary tree.</span></span>
+<span id="cb69-376"><a href="#cb69-376"></a><span class="co">    It contains a value and pointers to left and right children.</span></span>
+<span id="cb69-377"><a href="#cb69-377"></a><span class="co">    """</span></span>
+<span id="cb69-378"><a href="#cb69-378"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, value, left<span class="op">=</span><span class="va">None</span>, right<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb69-379"><a href="#cb69-379"></a>        <span class="va">self</span>.value <span class="op">=</span> value</span>
+<span id="cb69-380"><a href="#cb69-380"></a>        <span class="va">self</span>.left <span class="op">=</span> left</span>
+<span id="cb69-381"><a href="#cb69-381"></a>        <span class="va">self</span>.right <span class="op">=</span> right</span>
+<span id="cb69-382"><a href="#cb69-382"></a></span>
+<span id="cb69-383"><a href="#cb69-383"></a>    <span class="kw">def</span> <span class="fu">__eq__</span>(<span class="va">self</span>, other):</span>
+<span id="cb69-384"><a href="#cb69-384"></a>        <span class="cf">return</span> <span class="va">self</span>.value <span class="op">==</span> other.value</span>
+<span id="cb69-385"><a href="#cb69-385"></a></span>
+<span id="cb69-386"><a href="#cb69-386"></a>    <span class="kw">def</span> <span class="fu">__lt__</span>(<span class="va">self</span>, other):</span>
+<span id="cb69-387"><a href="#cb69-387"></a>        <span class="cf">return</span> <span class="va">self</span>.value <span class="op">&lt;</span> other.value</span>
+<span id="cb69-388"><a href="#cb69-388"></a></span>
+<span id="cb69-389"><a href="#cb69-389"></a>    <span class="kw">def</span> <span class="fu">__ge__</span>(<span class="va">self</span>, other):</span>
+<span id="cb69-390"><a href="#cb69-390"></a>        <span class="cf">return</span> <span class="va">self</span>.value <span class="op">&gt;=</span> other.value</span>
+<span id="cb69-391"><a href="#cb69-391"></a></span>
 <span id="cb69-392"><a href="#cb69-392"></a></span>
-<span id="cb69-393"><a href="#cb69-393"></a></span>
-<span id="cb69-394"><a href="#cb69-394"></a>left <span class="op">=</span> Node(<span class="dv">4</span>)</span>
-<span id="cb69-395"><a href="#cb69-395"></a>root <span class="op">=</span> Node(<span class="dv">5</span>, left)</span>
-<span id="cb69-396"><a href="#cb69-396"></a><span class="bu">print</span>(left <span class="op">==</span> root) <span class="co"># False</span></span>
-<span id="cb69-397"><a href="#cb69-397"></a><span class="bu">print</span>(left <span class="op">&lt;</span> root) <span class="co"># True</span></span>
-<span id="cb69-398"><a href="#cb69-398"></a><span class="bu">print</span>(left <span class="op">&gt;=</span> root) <span class="co"># False</span></span>
-<span id="cb69-399"><a href="#cb69-399"></a><span class="in">```</span></span>
-<span id="cb69-400"><a href="#cb69-400"></a></span>
-<span id="cb69-401"><a href="#cb69-401"></a>Xem <span class="co">[</span><span class="ot">ở đây</span><span class="co">](https://www.tutorialsteacher.com/python/magic-methods-in-python)</span>, hoặc <span class="co">[</span><span class="ot">ở đây</span><span class="co">](https://docs.python.org/3/reference/datamodel.html#special-method-names)</span> danh sách đầy đủ các magic method mà Python hỗ trợ.</span>
-<span id="cb69-402"><a href="#cb69-402"></a></span>
-<span id="cb69-403"><a href="#cb69-403"></a>Một số magic method khác cần chú ý <span class="in">`__len__`</span>, <span class="in">`__str__`</span>, <span class="in">`__iter__`</span>, and <span class="in">`__slots__`</span> (tham khảo <span class="co">[</span><span class="ot">đây</span><span class="co">](https://stackoverflow.com/questions/472000/usage-of-slots/28059785#28059785)</span>)</span>
-<span id="cb69-404"><a href="#cb69-404"></a></span>
-<span id="cb69-405"><a href="#cb69-405"></a><span class="fu"># 5. Local namespace, object's attributes</span></span>
-<span id="cb69-406"><a href="#cb69-406"></a></span>
-<span id="cb69-407"><a href="#cb69-407"></a>------------------------------------------------------------------------</span>
-<span id="cb69-408"><a href="#cb69-408"></a></span>
-<span id="cb69-409"><a href="#cb69-409"></a>Hàm <span class="in">`locals()`</span> trả về danh sách các biến nằm trong local namespace:</span>
-<span id="cb69-410"><a href="#cb69-410"></a></span>
-<span id="cb69-413"><a href="#cb69-413"></a><span class="in">```{python}</span></span>
-<span id="cb69-414"><a href="#cb69-414"></a><span class="kw">class</span> Model1:</span>
-<span id="cb69-415"><a href="#cb69-415"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, hidden_size<span class="op">=</span><span class="dv">100</span>, num_layers<span class="op">=</span><span class="dv">3</span>, learning_rate<span class="op">=</span><span class="fl">3e-4</span>):</span>
-<span id="cb69-416"><a href="#cb69-416"></a>        <span class="bu">print</span>(<span class="bu">locals</span>())</span>
-<span id="cb69-417"><a href="#cb69-417"></a>        <span class="va">self</span>.hidden_size <span class="op">=</span> hidden_size</span>
-<span id="cb69-418"><a href="#cb69-418"></a>        <span class="va">self</span>.num_layers <span class="op">=</span> num_layers</span>
-<span id="cb69-419"><a href="#cb69-419"></a>        <span class="va">self</span>.learning_rate <span class="op">=</span> learning_rate</span>
-<span id="cb69-420"><a href="#cb69-420"></a></span>
-<span id="cb69-421"><a href="#cb69-421"></a>model1 <span class="op">=</span> Model1()</span>
-<span id="cb69-422"><a href="#cb69-422"></a><span class="in">```</span></span>
-<span id="cb69-423"><a href="#cb69-423"></a></span>
-<span id="cb69-424"><a href="#cb69-424"></a>Các attributes của 1 object cũng được lưu hết trong <span class="in">`__dict__`</span>:</span>
-<span id="cb69-425"><a href="#cb69-425"></a></span>
-<span id="cb69-428"><a href="#cb69-428"></a><span class="in">```{python}</span></span>
-<span id="cb69-429"><a href="#cb69-429"></a><span class="bu">print</span>(model1.__dict__)</span>
-<span id="cb69-430"><a href="#cb69-430"></a><span class="in">```</span></span>
-<span id="cb69-431"><a href="#cb69-431"></a></span>
-<span id="cb69-432"><a href="#cb69-432"></a>Khi có quá nhiều arguments, việc assign nó trong <span class="in">`__init__`</span> trở nên phiền hà, chúng ta có thể làm như sau:</span>
-<span id="cb69-433"><a href="#cb69-433"></a></span>
-<span id="cb69-436"><a href="#cb69-436"></a><span class="in">```{python}</span></span>
-<span id="cb69-437"><a href="#cb69-437"></a><span class="kw">class</span> Model2:</span>
-<span id="cb69-438"><a href="#cb69-438"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, hidden_size<span class="op">=</span><span class="dv">100</span>, num_layers<span class="op">=</span><span class="dv">3</span>, learning_rate<span class="op">=</span><span class="fl">3e-4</span>):</span>
-<span id="cb69-439"><a href="#cb69-439"></a>        params <span class="op">=</span> <span class="bu">locals</span>()</span>
-<span id="cb69-440"><a href="#cb69-440"></a>        <span class="kw">del</span> params[<span class="st">'self'</span>]</span>
-<span id="cb69-441"><a href="#cb69-441"></a>        <span class="va">self</span>.__dict__ <span class="op">=</span> params</span>
-<span id="cb69-442"><a href="#cb69-442"></a></span>
-<span id="cb69-443"><a href="#cb69-443"></a>model2 <span class="op">=</span> Model2()</span>
-<span id="cb69-444"><a href="#cb69-444"></a><span class="bu">print</span>(model2.__dict__)</span>
-<span id="cb69-445"><a href="#cb69-445"></a><span class="in">```</span></span>
-<span id="cb69-446"><a href="#cb69-446"></a></span>
-<span id="cb69-447"><a href="#cb69-447"></a>Thậm chí rất tiện khi làm việc với <span class="in">`*kwargs`</span>:</span>
-<span id="cb69-448"><a href="#cb69-448"></a></span>
-<span id="cb69-451"><a href="#cb69-451"></a><span class="in">```{python}</span></span>
-<span id="cb69-452"><a href="#cb69-452"></a><span class="kw">class</span> Model3:</span>
-<span id="cb69-453"><a href="#cb69-453"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">**</span>kwargs):</span>
-<span id="cb69-454"><a href="#cb69-454"></a>        <span class="va">self</span>.__dict__ <span class="op">=</span> kwargs</span>
-<span id="cb69-455"><a href="#cb69-455"></a></span>
-<span id="cb69-456"><a href="#cb69-456"></a>model3 <span class="op">=</span> Model3(hidden_size<span class="op">=</span><span class="dv">100</span>, num_layers<span class="op">=</span><span class="dv">3</span>, learning_rate<span class="op">=</span><span class="fl">3e-4</span>)</span>
-<span id="cb69-457"><a href="#cb69-457"></a><span class="bu">print</span>(model3.__dict__)</span>
-<span id="cb69-458"><a href="#cb69-458"></a><span class="in">```</span></span>
-<span id="cb69-459"><a href="#cb69-459"></a></span>
-<span id="cb69-460"><a href="#cb69-460"></a>Đọc thêm về <span class="in">`*args`</span> và <span class="in">`*kwargs`</span> ở <span class="co">[</span><span class="ot">đây</span><span class="co">](https://manhhomienbienthuy.github.io/2019/09/20/python-args-kwargs.html)</span>.</span>
-<span id="cb69-461"><a href="#cb69-461"></a></span>
-<span id="cb69-462"><a href="#cb69-462"></a><span class="fu"># 6. Wild Import</span></span>
-<span id="cb69-463"><a href="#cb69-463"></a></span>
-<span id="cb69-464"><a href="#cb69-464"></a>------------------------------------------------------------------------</span>
-<span id="cb69-465"><a href="#cb69-465"></a></span>
-<span id="cb69-466"><a href="#cb69-466"></a>Chúng ta thường <span class="in">`import`</span> tất cả như thế này:</span>
-<span id="cb69-467"><a href="#cb69-467"></a></span>
-<span id="cb69-468"><a href="#cb69-468"></a><span class="in">```{.python filename="file.py"}</span></span>
-<span id="cb69-469"><a href="#cb69-469"></a><span class="in">#| eval: false</span></span>
-<span id="cb69-470"><a href="#cb69-470"></a><span class="in">from parts import *</span></span>
-<span id="cb69-471"><a href="#cb69-471"></a><span class="in">```</span></span>
-<span id="cb69-472"><a href="#cb69-472"></a></span>
-<span id="cb69-473"><a href="#cb69-473"></a>Sẽ là vô trách nhiệm khi chúng ta import toàn bộ module, ví dụ nếu <span class="in">`parts.py`</span> có cấu trúc như thế này:</span>
-<span id="cb69-474"><a href="#cb69-474"></a></span>
-<span id="cb69-475"><a href="#cb69-475"></a><span class="in">```{.python filename="parts.py"}</span></span>
-<span id="cb69-476"><a href="#cb69-476"></a><span class="in">#| eval: false</span></span>
-<span id="cb69-477"><a href="#cb69-477"></a><span class="in">import numpy </span></span>
-<span id="cb69-478"><a href="#cb69-478"></a><span class="in">import tensorflow </span></span>
-<span id="cb69-479"><a href="#cb69-479"></a><span class="in">class Encoder: </span></span>
-<span id="cb69-480"><a href="#cb69-480"></a><span class="in">    ... </span></span>
-<span id="cb69-481"><a href="#cb69-481"></a><span class="in">class Decoder: </span></span>
-<span id="cb69-482"><a href="#cb69-482"></a><span class="in">    ... </span></span>
-<span id="cb69-483"><a href="#cb69-483"></a><span class="in">class Loss: </span></span>
-<span id="cb69-484"><a href="#cb69-484"></a><span class="in">    ... </span></span>
-<span id="cb69-485"><a href="#cb69-485"></a><span class="in">def helper(*args, **kwargs): </span></span>
-<span id="cb69-486"><a href="#cb69-486"></a><span class="in">    ...</span></span>
-<span id="cb69-487"><a href="#cb69-487"></a><span class="in">def utils(*args, **kwargs): </span></span>
-<span id="cb69-488"><a href="#cb69-488"></a><span class="in">    ... </span></span>
-<span id="cb69-489"><a href="#cb69-489"></a><span class="in">```</span></span>
-<span id="cb69-490"><a href="#cb69-490"></a></span>
-<span id="cb69-491"><a href="#cb69-491"></a>Vì <span class="in">`parts.py`</span> không định nghĩa <span class="in">`__all__`</span>, nên <span class="in">`file.py`</span> sẽ import tất cả Encoder, Decoder, Loss, helper, untils cùng với numpy và tensorFlow. Nếu chỉ muốn import Encoder, Decoder, Loss, chúng ta nên làm như sau:</span>
-<span id="cb69-492"><a href="#cb69-492"></a></span>
-<span id="cb69-493"><a href="#cb69-493"></a><span class="in">```{.python filename="parts.py"}</span></span>
-<span id="cb69-494"><a href="#cb69-494"></a><span class="in">#| eval: false</span></span>
-<span id="cb69-495"><a href="#cb69-495"></a><span class="in">__all__ = ['Encoder', 'Decoder', 'Loss'] </span></span>
-<span id="cb69-496"><a href="#cb69-496"></a><span class="in">import numpy </span></span>
-<span id="cb69-497"><a href="#cb69-497"></a><span class="in">import tensorflow </span></span>
-<span id="cb69-498"><a href="#cb69-498"></a><span class="in">class Encoder: </span></span>
-<span id="cb69-499"><a href="#cb69-499"></a><span class="in">    ... </span></span>
-<span id="cb69-500"><a href="#cb69-500"></a><span class="in">```</span></span>
-<span id="cb69-501"><a href="#cb69-501"></a></span>
-<span id="cb69-502"><a href="#cb69-502"></a>Chúng ta có thể dùng <span class="in">`__all__`</span> để tìm hiểu thành phần một module.</span>
-<span id="cb69-503"><a href="#cb69-503"></a></span>
-<span id="cb69-504"><a href="#cb69-504"></a><span class="fu"># 7. Decorator to time your functions</span></span>
-<span id="cb69-505"><a href="#cb69-505"></a></span>
-<span id="cb69-506"><a href="#cb69-506"></a>------------------------------------------------------------------------</span>
-<span id="cb69-507"><a href="#cb69-507"></a></span>
-<span id="cb69-508"><a href="#cb69-508"></a>Chúng ta thường muốn đo lường thời gian chạy của 1 function. Các tự nhiên thường dùng là đặt <span class="in">`time.time()`</span> ở hai điểm đầu và cuối giữa các lệnh.</span>
-<span id="cb69-509"><a href="#cb69-509"></a></span>
-<span id="cb69-510"><a href="#cb69-510"></a>Ví dụ, với hàm tìm số Fibbonacci thứ n, với hai cách (1 cách sử dụng memoization).</span>
-<span id="cb69-511"><a href="#cb69-511"></a></span>
-<span id="cb69-514"><a href="#cb69-514"></a><span class="in">```{python}</span></span>
-<span id="cb69-515"><a href="#cb69-515"></a><span class="kw">def</span> fib_helper(n):</span>
-<span id="cb69-516"><a href="#cb69-516"></a>    <span class="cf">if</span> n <span class="op">&lt;</span> <span class="dv">2</span>:</span>
-<span id="cb69-517"><a href="#cb69-517"></a>        <span class="cf">return</span> n</span>
-<span id="cb69-518"><a href="#cb69-518"></a>    <span class="cf">return</span> fib_helper(n <span class="op">-</span> <span class="dv">1</span>) <span class="op">+</span> fib_helper(n <span class="op">-</span> <span class="dv">2</span>)</span>
-<span id="cb69-519"><a href="#cb69-519"></a></span>
-<span id="cb69-520"><a href="#cb69-520"></a><span class="kw">def</span> fib(n):</span>
-<span id="cb69-521"><a href="#cb69-521"></a>    <span class="co">""" fib is a wrapper function so that later we can change its behavior</span></span>
-<span id="cb69-522"><a href="#cb69-522"></a><span class="co">    at the top level without affecting the behavior at every recursion step.</span></span>
-<span id="cb69-523"><a href="#cb69-523"></a><span class="co">    """</span></span>
-<span id="cb69-524"><a href="#cb69-524"></a>    <span class="cf">return</span> fib_helper(n)</span>
-<span id="cb69-525"><a href="#cb69-525"></a></span>
-<span id="cb69-526"><a href="#cb69-526"></a><span class="kw">def</span> fib_m_helper(n, computed):</span>
-<span id="cb69-527"><a href="#cb69-527"></a>    <span class="cf">if</span> n <span class="kw">in</span> computed:</span>
-<span id="cb69-528"><a href="#cb69-528"></a>        <span class="cf">return</span> computed[n]</span>
-<span id="cb69-529"><a href="#cb69-529"></a>    computed[n] <span class="op">=</span> fib_m_helper(n <span class="op">-</span> <span class="dv">1</span>, computed) <span class="op">+</span> fib_m_helper(n <span class="op">-</span> <span class="dv">2</span>, computed)</span>
-<span id="cb69-530"><a href="#cb69-530"></a>    <span class="cf">return</span> computed[n]</span>
-<span id="cb69-531"><a href="#cb69-531"></a></span>
-<span id="cb69-532"><a href="#cb69-532"></a><span class="kw">def</span> fib_m(n):</span>
-<span id="cb69-533"><a href="#cb69-533"></a>    <span class="cf">return</span> fib_m_helper(n, {<span class="dv">0</span>: <span class="dv">0</span>, <span class="dv">1</span>: <span class="dv">1</span>})</span>
-<span id="cb69-534"><a href="#cb69-534"></a><span class="in">```</span></span>
-<span id="cb69-535"><a href="#cb69-535"></a></span>
-<span id="cb69-536"><a href="#cb69-536"></a>Hãy chắc chắn <span class="in">`fib`</span> và <span class="in">`fib_m`</span> tương đương nhau:</span>
-<span id="cb69-537"><a href="#cb69-537"></a></span>
-<span id="cb69-540"><a href="#cb69-540"></a><span class="in">```{python}</span></span>
-<span id="cb69-541"><a href="#cb69-541"></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20</span>):</span>
-<span id="cb69-542"><a href="#cb69-542"></a>    <span class="cf">assert</span> fib(n) <span class="op">==</span> fib_m(n)</span>
-<span id="cb69-543"><a href="#cb69-543"></a><span class="in">```</span></span>
-<span id="cb69-544"><a href="#cb69-544"></a></span>
-<span id="cb69-545"><a href="#cb69-545"></a>Đo lường thời gian chạy:</span>
-<span id="cb69-546"><a href="#cb69-546"></a></span>
-<span id="cb69-549"><a href="#cb69-549"></a><span class="in">```{python}</span></span>
-<span id="cb69-550"><a href="#cb69-550"></a><span class="im">import</span> time</span>
-<span id="cb69-551"><a href="#cb69-551"></a></span>
-<span id="cb69-552"><a href="#cb69-552"></a>start <span class="op">=</span> time.time()</span>
-<span id="cb69-553"><a href="#cb69-553"></a>fib(<span class="dv">30</span>)</span>
-<span id="cb69-554"><a href="#cb69-554"></a><span class="bu">print</span>(<span class="ss">f'Without memoization, it takes </span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start<span class="sc">:7f}</span><span class="ss"> seconds.'</span>)</span>
-<span id="cb69-555"><a href="#cb69-555"></a></span>
-<span id="cb69-556"><a href="#cb69-556"></a>start <span class="op">=</span> time.time()</span>
-<span id="cb69-557"><a href="#cb69-557"></a>fib_m(<span class="dv">30</span>)</span>
-<span id="cb69-558"><a href="#cb69-558"></a><span class="bu">print</span>(<span class="ss">f'With memoization, it takes </span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start<span class="sc">:.7f}</span><span class="ss"> seconds.'</span>)</span>
-<span id="cb69-559"><a href="#cb69-559"></a><span class="in">```</span></span>
+<span id="cb69-393"><a href="#cb69-393"></a>left <span class="op">=</span> Node(<span class="dv">4</span>)</span>
+<span id="cb69-394"><a href="#cb69-394"></a>root <span class="op">=</span> Node(<span class="dv">5</span>, left)</span>
+<span id="cb69-395"><a href="#cb69-395"></a><span class="bu">print</span>(left <span class="op">==</span> root) <span class="co"># False</span></span>
+<span id="cb69-396"><a href="#cb69-396"></a><span class="bu">print</span>(left <span class="op">&lt;</span> root) <span class="co"># True</span></span>
+<span id="cb69-397"><a href="#cb69-397"></a><span class="bu">print</span>(left <span class="op">&gt;=</span> root) <span class="co"># False</span></span>
+<span id="cb69-398"><a href="#cb69-398"></a><span class="in">```</span></span>
+<span id="cb69-399"><a href="#cb69-399"></a></span>
+<span id="cb69-400"><a href="#cb69-400"></a>Xem <span class="co">[</span><span class="ot">ở đây</span><span class="co">](https://www.tutorialsteacher.com/python/magic-methods-in-python)</span>, hoặc <span class="co">[</span><span class="ot">ở đây</span><span class="co">](https://docs.python.org/3/reference/datamodel.html#special-method-names)</span> danh sách đầy đủ các magic method mà Python hỗ trợ.</span>
+<span id="cb69-401"><a href="#cb69-401"></a></span>
+<span id="cb69-402"><a href="#cb69-402"></a>Một số magic method khác cần chú ý <span class="in">`__len__`</span>, <span class="in">`__str__`</span>, <span class="in">`__iter__`</span>, and <span class="in">`__slots__`</span> (tham khảo <span class="co">[</span><span class="ot">đây</span><span class="co">](https://stackoverflow.com/questions/472000/usage-of-slots/28059785#28059785)</span>)</span>
+<span id="cb69-403"><a href="#cb69-403"></a></span>
+<span id="cb69-404"><a href="#cb69-404"></a><span class="fu"># 5. Local namespace, object's attributes</span></span>
+<span id="cb69-405"><a href="#cb69-405"></a></span>
+<span id="cb69-406"><a href="#cb69-406"></a>------------------------------------------------------------------------</span>
+<span id="cb69-407"><a href="#cb69-407"></a></span>
+<span id="cb69-408"><a href="#cb69-408"></a>Hàm <span class="in">`locals()`</span> trả về danh sách các biến nằm trong local namespace:</span>
+<span id="cb69-409"><a href="#cb69-409"></a></span>
+<span id="cb69-412"><a href="#cb69-412"></a><span class="in">```{python}</span></span>
+<span id="cb69-413"><a href="#cb69-413"></a><span class="kw">class</span> Model1:</span>
+<span id="cb69-414"><a href="#cb69-414"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, hidden_size<span class="op">=</span><span class="dv">100</span>, num_layers<span class="op">=</span><span class="dv">3</span>, learning_rate<span class="op">=</span><span class="fl">3e-4</span>):</span>
+<span id="cb69-415"><a href="#cb69-415"></a>        <span class="bu">print</span>(<span class="bu">locals</span>())</span>
+<span id="cb69-416"><a href="#cb69-416"></a>        <span class="va">self</span>.hidden_size <span class="op">=</span> hidden_size</span>
+<span id="cb69-417"><a href="#cb69-417"></a>        <span class="va">self</span>.num_layers <span class="op">=</span> num_layers</span>
+<span id="cb69-418"><a href="#cb69-418"></a>        <span class="va">self</span>.learning_rate <span class="op">=</span> learning_rate</span>
+<span id="cb69-419"><a href="#cb69-419"></a></span>
+<span id="cb69-420"><a href="#cb69-420"></a>model1 <span class="op">=</span> Model1()</span>
+<span id="cb69-421"><a href="#cb69-421"></a><span class="in">```</span></span>
+<span id="cb69-422"><a href="#cb69-422"></a></span>
+<span id="cb69-423"><a href="#cb69-423"></a>Các attributes của 1 object cũng được lưu hết trong <span class="in">`__dict__`</span>:</span>
+<span id="cb69-424"><a href="#cb69-424"></a></span>
+<span id="cb69-427"><a href="#cb69-427"></a><span class="in">```{python}</span></span>
+<span id="cb69-428"><a href="#cb69-428"></a><span class="bu">print</span>(model1.__dict__)</span>
+<span id="cb69-429"><a href="#cb69-429"></a><span class="in">```</span></span>
+<span id="cb69-430"><a href="#cb69-430"></a></span>
+<span id="cb69-431"><a href="#cb69-431"></a>Khi có quá nhiều arguments, việc assign nó trong <span class="in">`__init__`</span> trở nên phiền hà, chúng ta có thể làm như sau:</span>
+<span id="cb69-432"><a href="#cb69-432"></a></span>
+<span id="cb69-435"><a href="#cb69-435"></a><span class="in">```{python}</span></span>
+<span id="cb69-436"><a href="#cb69-436"></a><span class="kw">class</span> Model2:</span>
+<span id="cb69-437"><a href="#cb69-437"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, hidden_size<span class="op">=</span><span class="dv">100</span>, num_layers<span class="op">=</span><span class="dv">3</span>, learning_rate<span class="op">=</span><span class="fl">3e-4</span>):</span>
+<span id="cb69-438"><a href="#cb69-438"></a>        params <span class="op">=</span> <span class="bu">locals</span>()</span>
+<span id="cb69-439"><a href="#cb69-439"></a>        <span class="kw">del</span> params[<span class="st">'self'</span>]</span>
+<span id="cb69-440"><a href="#cb69-440"></a>        <span class="va">self</span>.__dict__ <span class="op">=</span> params</span>
+<span id="cb69-441"><a href="#cb69-441"></a></span>
+<span id="cb69-442"><a href="#cb69-442"></a>model2 <span class="op">=</span> Model2()</span>
+<span id="cb69-443"><a href="#cb69-443"></a><span class="bu">print</span>(model2.__dict__)</span>
+<span id="cb69-444"><a href="#cb69-444"></a><span class="in">```</span></span>
+<span id="cb69-445"><a href="#cb69-445"></a></span>
+<span id="cb69-446"><a href="#cb69-446"></a>Thậm chí rất tiện khi làm việc với <span class="in">`*kwargs`</span>:</span>
+<span id="cb69-447"><a href="#cb69-447"></a></span>
+<span id="cb69-450"><a href="#cb69-450"></a><span class="in">```{python}</span></span>
+<span id="cb69-451"><a href="#cb69-451"></a><span class="kw">class</span> Model3:</span>
+<span id="cb69-452"><a href="#cb69-452"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">**</span>kwargs):</span>
+<span id="cb69-453"><a href="#cb69-453"></a>        <span class="va">self</span>.__dict__ <span class="op">=</span> kwargs</span>
+<span id="cb69-454"><a href="#cb69-454"></a></span>
+<span id="cb69-455"><a href="#cb69-455"></a>model3 <span class="op">=</span> Model3(hidden_size<span class="op">=</span><span class="dv">100</span>, num_layers<span class="op">=</span><span class="dv">3</span>, learning_rate<span class="op">=</span><span class="fl">3e-4</span>)</span>
+<span id="cb69-456"><a href="#cb69-456"></a><span class="bu">print</span>(model3.__dict__)</span>
+<span id="cb69-457"><a href="#cb69-457"></a><span class="in">```</span></span>
+<span id="cb69-458"><a href="#cb69-458"></a></span>
+<span id="cb69-459"><a href="#cb69-459"></a>Đọc thêm về <span class="in">`*args`</span> và <span class="in">`*kwargs`</span> ở <span class="co">[</span><span class="ot">đây</span><span class="co">](https://manhhomienbienthuy.github.io/2019/09/20/python-args-kwargs.html)</span>.</span>
+<span id="cb69-460"><a href="#cb69-460"></a></span>
+<span id="cb69-461"><a href="#cb69-461"></a><span class="fu"># 6. Wild Import</span></span>
+<span id="cb69-462"><a href="#cb69-462"></a></span>
+<span id="cb69-463"><a href="#cb69-463"></a>------------------------------------------------------------------------</span>
+<span id="cb69-464"><a href="#cb69-464"></a></span>
+<span id="cb69-465"><a href="#cb69-465"></a>Chúng ta thường <span class="in">`import`</span> tất cả như thế này:</span>
+<span id="cb69-466"><a href="#cb69-466"></a></span>
+<span id="cb69-467"><a href="#cb69-467"></a><span class="in">``` {.python filename="file.py"}</span></span>
+<span id="cb69-468"><a href="#cb69-468"></a><span class="in">#| eval: false</span></span>
+<span id="cb69-469"><a href="#cb69-469"></a><span class="in">from parts import *</span></span>
+<span id="cb69-470"><a href="#cb69-470"></a><span class="in">```</span></span>
+<span id="cb69-471"><a href="#cb69-471"></a></span>
+<span id="cb69-472"><a href="#cb69-472"></a>Sẽ là vô trách nhiệm khi chúng ta import toàn bộ module, ví dụ nếu <span class="in">`parts.py`</span> có cấu trúc như thế này:</span>
+<span id="cb69-473"><a href="#cb69-473"></a></span>
+<span id="cb69-474"><a href="#cb69-474"></a><span class="in">``` {.python filename="parts.py"}</span></span>
+<span id="cb69-475"><a href="#cb69-475"></a><span class="in">#| eval: false</span></span>
+<span id="cb69-476"><a href="#cb69-476"></a><span class="in">import numpy </span></span>
+<span id="cb69-477"><a href="#cb69-477"></a><span class="in">import tensorflow </span></span>
+<span id="cb69-478"><a href="#cb69-478"></a><span class="in">class Encoder: </span></span>
+<span id="cb69-479"><a href="#cb69-479"></a><span class="in">    ... </span></span>
+<span id="cb69-480"><a href="#cb69-480"></a><span class="in">class Decoder: </span></span>
+<span id="cb69-481"><a href="#cb69-481"></a><span class="in">    ... </span></span>
+<span id="cb69-482"><a href="#cb69-482"></a><span class="in">class Loss: </span></span>
+<span id="cb69-483"><a href="#cb69-483"></a><span class="in">    ... </span></span>
+<span id="cb69-484"><a href="#cb69-484"></a><span class="in">def helper(*args, **kwargs): </span></span>
+<span id="cb69-485"><a href="#cb69-485"></a><span class="in">    ...</span></span>
+<span id="cb69-486"><a href="#cb69-486"></a><span class="in">def utils(*args, **kwargs): </span></span>
+<span id="cb69-487"><a href="#cb69-487"></a><span class="in">    ... </span></span>
+<span id="cb69-488"><a href="#cb69-488"></a><span class="in">```</span></span>
+<span id="cb69-489"><a href="#cb69-489"></a></span>
+<span id="cb69-490"><a href="#cb69-490"></a>Vì <span class="in">`parts.py`</span> không định nghĩa <span class="in">`__all__`</span>, nên <span class="in">`file.py`</span> sẽ import tất cả Encoder, Decoder, Loss, helper, untils cùng với numpy và tensorFlow. Nếu chỉ muốn import Encoder, Decoder, Loss, chúng ta nên làm như sau:</span>
+<span id="cb69-491"><a href="#cb69-491"></a></span>
+<span id="cb69-492"><a href="#cb69-492"></a><span class="in">``` {.python filename="parts.py"}</span></span>
+<span id="cb69-493"><a href="#cb69-493"></a><span class="in">#| eval: false</span></span>
+<span id="cb69-494"><a href="#cb69-494"></a><span class="in">__all__ = ['Encoder', 'Decoder', 'Loss'] </span></span>
+<span id="cb69-495"><a href="#cb69-495"></a><span class="in">import numpy </span></span>
+<span id="cb69-496"><a href="#cb69-496"></a><span class="in">import tensorflow </span></span>
+<span id="cb69-497"><a href="#cb69-497"></a><span class="in">class Encoder: </span></span>
+<span id="cb69-498"><a href="#cb69-498"></a><span class="in">    ... </span></span>
+<span id="cb69-499"><a href="#cb69-499"></a><span class="in">```</span></span>
+<span id="cb69-500"><a href="#cb69-500"></a></span>
+<span id="cb69-501"><a href="#cb69-501"></a>Chúng ta có thể dùng <span class="in">`__all__`</span> để tìm hiểu thành phần một module.</span>
+<span id="cb69-502"><a href="#cb69-502"></a></span>
+<span id="cb69-503"><a href="#cb69-503"></a><span class="fu"># 7. Decorator to time your functions</span></span>
+<span id="cb69-504"><a href="#cb69-504"></a></span>
+<span id="cb69-505"><a href="#cb69-505"></a>------------------------------------------------------------------------</span>
+<span id="cb69-506"><a href="#cb69-506"></a></span>
+<span id="cb69-507"><a href="#cb69-507"></a>Chúng ta thường muốn đo lường thời gian chạy của 1 function. Các tự nhiên thường dùng là đặt <span class="in">`time.time()`</span> ở hai điểm đầu và cuối giữa các lệnh.</span>
+<span id="cb69-508"><a href="#cb69-508"></a></span>
+<span id="cb69-509"><a href="#cb69-509"></a>Ví dụ, với hàm tìm số Fibbonacci thứ n, với hai cách (1 cách sử dụng memoization).</span>
+<span id="cb69-510"><a href="#cb69-510"></a></span>
+<span id="cb69-513"><a href="#cb69-513"></a><span class="in">```{python}</span></span>
+<span id="cb69-514"><a href="#cb69-514"></a><span class="kw">def</span> fib_helper(n):</span>
+<span id="cb69-515"><a href="#cb69-515"></a>    <span class="cf">if</span> n <span class="op">&lt;</span> <span class="dv">2</span>:</span>
+<span id="cb69-516"><a href="#cb69-516"></a>        <span class="cf">return</span> n</span>
+<span id="cb69-517"><a href="#cb69-517"></a>    <span class="cf">return</span> fib_helper(n <span class="op">-</span> <span class="dv">1</span>) <span class="op">+</span> fib_helper(n <span class="op">-</span> <span class="dv">2</span>)</span>
+<span id="cb69-518"><a href="#cb69-518"></a></span>
+<span id="cb69-519"><a href="#cb69-519"></a><span class="kw">def</span> fib(n):</span>
+<span id="cb69-520"><a href="#cb69-520"></a>    <span class="co">""" fib is a wrapper function so that later we can change its behavior</span></span>
+<span id="cb69-521"><a href="#cb69-521"></a><span class="co">    at the top level without affecting the behavior at every recursion step.</span></span>
+<span id="cb69-522"><a href="#cb69-522"></a><span class="co">    """</span></span>
+<span id="cb69-523"><a href="#cb69-523"></a>    <span class="cf">return</span> fib_helper(n)</span>
+<span id="cb69-524"><a href="#cb69-524"></a></span>
+<span id="cb69-525"><a href="#cb69-525"></a><span class="kw">def</span> fib_m_helper(n, computed):</span>
+<span id="cb69-526"><a href="#cb69-526"></a>    <span class="cf">if</span> n <span class="kw">in</span> computed:</span>
+<span id="cb69-527"><a href="#cb69-527"></a>        <span class="cf">return</span> computed[n]</span>
+<span id="cb69-528"><a href="#cb69-528"></a>    computed[n] <span class="op">=</span> fib_m_helper(n <span class="op">-</span> <span class="dv">1</span>, computed) <span class="op">+</span> fib_m_helper(n <span class="op">-</span> <span class="dv">2</span>, computed)</span>
+<span id="cb69-529"><a href="#cb69-529"></a>    <span class="cf">return</span> computed[n]</span>
+<span id="cb69-530"><a href="#cb69-530"></a></span>
+<span id="cb69-531"><a href="#cb69-531"></a><span class="kw">def</span> fib_m(n):</span>
+<span id="cb69-532"><a href="#cb69-532"></a>    <span class="cf">return</span> fib_m_helper(n, {<span class="dv">0</span>: <span class="dv">0</span>, <span class="dv">1</span>: <span class="dv">1</span>})</span>
+<span id="cb69-533"><a href="#cb69-533"></a><span class="in">```</span></span>
+<span id="cb69-534"><a href="#cb69-534"></a></span>
+<span id="cb69-535"><a href="#cb69-535"></a>Hãy chắc chắn <span class="in">`fib`</span> và <span class="in">`fib_m`</span> tương đương nhau:</span>
+<span id="cb69-536"><a href="#cb69-536"></a></span>
+<span id="cb69-539"><a href="#cb69-539"></a><span class="in">```{python}</span></span>
+<span id="cb69-540"><a href="#cb69-540"></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20</span>):</span>
+<span id="cb69-541"><a href="#cb69-541"></a>    <span class="cf">assert</span> fib(n) <span class="op">==</span> fib_m(n)</span>
+<span id="cb69-542"><a href="#cb69-542"></a><span class="in">```</span></span>
+<span id="cb69-543"><a href="#cb69-543"></a></span>
+<span id="cb69-544"><a href="#cb69-544"></a>Đo lường thời gian chạy:</span>
+<span id="cb69-545"><a href="#cb69-545"></a></span>
+<span id="cb69-548"><a href="#cb69-548"></a><span class="in">```{python}</span></span>
+<span id="cb69-549"><a href="#cb69-549"></a><span class="im">import</span> time</span>
+<span id="cb69-550"><a href="#cb69-550"></a></span>
+<span id="cb69-551"><a href="#cb69-551"></a>start <span class="op">=</span> time.time()</span>
+<span id="cb69-552"><a href="#cb69-552"></a>fib(<span class="dv">30</span>)</span>
+<span id="cb69-553"><a href="#cb69-553"></a><span class="bu">print</span>(<span class="ss">f'Without memoization, it takes </span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start<span class="sc">:7f}</span><span class="ss"> seconds.'</span>)</span>
+<span id="cb69-554"><a href="#cb69-554"></a></span>
+<span id="cb69-555"><a href="#cb69-555"></a>start <span class="op">=</span> time.time()</span>
+<span id="cb69-556"><a href="#cb69-556"></a>fib_m(<span class="dv">30</span>)</span>
+<span id="cb69-557"><a href="#cb69-557"></a><span class="bu">print</span>(<span class="ss">f'With memoization, it takes </span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start<span class="sc">:.7f}</span><span class="ss"> seconds.'</span>)</span>
+<span id="cb69-558"><a href="#cb69-558"></a><span class="in">```</span></span>
+<span id="cb69-559"><a href="#cb69-559"></a></span>
 <span id="cb69-560"><a href="#cb69-560"></a>Using decorator, define <span class="in">`timeit`</span>:</span>
-<span id="cb69-563"><a href="#cb69-563"></a><span class="in">```{python}</span></span>
-<span id="cb69-564"><a href="#cb69-564"></a><span class="kw">def</span> timeit(fn): </span>
-<span id="cb69-565"><a href="#cb69-565"></a>    <span class="co"># *args and **kwargs are to support positional and named arguments of fn</span></span>
-<span id="cb69-566"><a href="#cb69-566"></a>    <span class="kw">def</span> get_time(<span class="op">*</span>args, <span class="op">**</span>kwargs): </span>
-<span id="cb69-567"><a href="#cb69-567"></a>        start <span class="op">=</span> time.time() </span>
-<span id="cb69-568"><a href="#cb69-568"></a>        output <span class="op">=</span> fn(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span>
-<span id="cb69-569"><a href="#cb69-569"></a>        <span class="bu">print</span>(<span class="ss">f"Time taken in </span><span class="sc">{</span>fn<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start<span class="sc">:.7f}</span><span class="ss">"</span>)</span>
-<span id="cb69-570"><a href="#cb69-570"></a>        <span class="cf">return</span> output  <span class="co"># make sure that the decorator returns the output of fn</span></span>
-<span id="cb69-571"><a href="#cb69-571"></a>    <span class="cf">return</span> get_time </span>
-<span id="cb69-572"><a href="#cb69-572"></a><span class="in">```</span></span>
-<span id="cb69-573"><a href="#cb69-573"></a>Sau đó thêm <span class="in">`@timeit`</span> tới function:</span>
-<span id="cb69-576"><a href="#cb69-576"></a><span class="in">```{python}</span></span>
-<span id="cb69-577"><a href="#cb69-577"></a><span class="at">@timeit</span></span>
-<span id="cb69-578"><a href="#cb69-578"></a><span class="kw">def</span> fib(n):</span>
-<span id="cb69-579"><a href="#cb69-579"></a>    <span class="cf">return</span> fib_helper(n)</span>
-<span id="cb69-580"><a href="#cb69-580"></a></span>
-<span id="cb69-581"><a href="#cb69-581"></a><span class="at">@timeit</span></span>
-<span id="cb69-582"><a href="#cb69-582"></a><span class="kw">def</span> fib_m(n):</span>
-<span id="cb69-583"><a href="#cb69-583"></a>    <span class="cf">return</span> fib_m_helper(n, {<span class="dv">0</span>: <span class="dv">0</span>, <span class="dv">1</span>: <span class="dv">1</span>})</span>
-<span id="cb69-584"><a href="#cb69-584"></a></span>
-<span id="cb69-585"><a href="#cb69-585"></a>fib(<span class="dv">30</span>)</span>
-<span id="cb69-586"><a href="#cb69-586"></a>fib_m(<span class="dv">30</span>)</span>
-<span id="cb69-587"><a href="#cb69-587"></a><span class="in">```</span></span>
-<span id="cb69-588"><a href="#cb69-588"></a><span class="fu"># 8. Caching with `@functools.lru_cache`</span></span>
-<span id="cb69-589"><a href="#cb69-589"></a></span>
-<span id="cb69-590"><a href="#cb69-590"></a>------------------------------------------------------------------------</span>
+<span id="cb69-561"><a href="#cb69-561"></a></span>
+<span id="cb69-564"><a href="#cb69-564"></a><span class="in">```{python}</span></span>
+<span id="cb69-565"><a href="#cb69-565"></a><span class="kw">def</span> timeit(fn): </span>
+<span id="cb69-566"><a href="#cb69-566"></a>    <span class="co"># *args and **kwargs are to support positional and named arguments of fn</span></span>
+<span id="cb69-567"><a href="#cb69-567"></a>    <span class="kw">def</span> get_time(<span class="op">*</span>args, <span class="op">**</span>kwargs): </span>
+<span id="cb69-568"><a href="#cb69-568"></a>        start <span class="op">=</span> time.time() </span>
+<span id="cb69-569"><a href="#cb69-569"></a>        output <span class="op">=</span> fn(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span>
+<span id="cb69-570"><a href="#cb69-570"></a>        <span class="bu">print</span>(<span class="ss">f"Time taken in </span><span class="sc">{</span>fn<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start<span class="sc">:.7f}</span><span class="ss">"</span>)</span>
+<span id="cb69-571"><a href="#cb69-571"></a>        <span class="cf">return</span> output  <span class="co"># make sure that the decorator returns the output of fn</span></span>
+<span id="cb69-572"><a href="#cb69-572"></a>    <span class="cf">return</span> get_time </span>
+<span id="cb69-573"><a href="#cb69-573"></a><span class="in">```</span></span>
+<span id="cb69-574"><a href="#cb69-574"></a></span>
+<span id="cb69-575"><a href="#cb69-575"></a>Sau đó thêm <span class="in">`@timeit`</span> tới function:</span>
+<span id="cb69-576"><a href="#cb69-576"></a></span>
+<span id="cb69-579"><a href="#cb69-579"></a><span class="in">```{python}</span></span>
+<span id="cb69-580"><a href="#cb69-580"></a><span class="at">@timeit</span></span>
+<span id="cb69-581"><a href="#cb69-581"></a><span class="kw">def</span> fib(n):</span>
+<span id="cb69-582"><a href="#cb69-582"></a>    <span class="cf">return</span> fib_helper(n)</span>
+<span id="cb69-583"><a href="#cb69-583"></a></span>
+<span id="cb69-584"><a href="#cb69-584"></a><span class="at">@timeit</span></span>
+<span id="cb69-585"><a href="#cb69-585"></a><span class="kw">def</span> fib_m(n):</span>
+<span id="cb69-586"><a href="#cb69-586"></a>    <span class="cf">return</span> fib_m_helper(n, {<span class="dv">0</span>: <span class="dv">0</span>, <span class="dv">1</span>: <span class="dv">1</span>})</span>
+<span id="cb69-587"><a href="#cb69-587"></a></span>
+<span id="cb69-588"><a href="#cb69-588"></a>fib(<span class="dv">30</span>)</span>
+<span id="cb69-589"><a href="#cb69-589"></a>fib_m(<span class="dv">30</span>)</span>
+<span id="cb69-590"><a href="#cb69-590"></a><span class="in">```</span></span>
 <span id="cb69-591"><a href="#cb69-591"></a></span>
-<span id="cb69-592"><a href="#cb69-592"></a>🚀Nguyên văn chị Huyền:</span>
+<span id="cb69-592"><a href="#cb69-592"></a><span class="fu"># 8. Caching with `@functools.lru_cache`</span></span>
 <span id="cb69-593"><a href="#cb69-593"></a></span>
-<span id="cb69-594"><a href="#cb69-594"></a><span class="at">&gt; Memoization is a form of cache: we cache the previously calculated Fibonacci numbers so that we don't have to calculate them again.</span></span>
+<span id="cb69-594"><a href="#cb69-594"></a>------------------------------------------------------------------------</span>
 <span id="cb69-595"><a href="#cb69-595"></a></span>
-<span id="cb69-598"><a href="#cb69-598"></a><span class="in">```{python}</span></span>
-<span id="cb69-599"><a href="#cb69-599"></a><span class="im">import</span> functools</span>
-<span id="cb69-600"><a href="#cb69-600"></a></span>
-<span id="cb69-601"><a href="#cb69-601"></a><span class="at">@functools.lru_cache</span>()</span>
-<span id="cb69-602"><a href="#cb69-602"></a><span class="kw">def</span> fib_helper(n):</span>
-<span id="cb69-603"><a href="#cb69-603"></a>    <span class="cf">if</span> n <span class="op">&lt;</span> <span class="dv">2</span>:</span>
-<span id="cb69-604"><a href="#cb69-604"></a>        <span class="cf">return</span> n</span>
-<span id="cb69-605"><a href="#cb69-605"></a>    <span class="cf">return</span> fib_helper(n <span class="op">-</span> <span class="dv">1</span>) <span class="op">+</span> fib_helper(n <span class="op">-</span> <span class="dv">2</span>)</span>
-<span id="cb69-606"><a href="#cb69-606"></a></span>
-<span id="cb69-607"><a href="#cb69-607"></a><span class="at">@timeit</span></span>
-<span id="cb69-608"><a href="#cb69-608"></a><span class="kw">def</span> fib(n):</span>
-<span id="cb69-609"><a href="#cb69-609"></a>    <span class="co">""" fib is a wrapper function so that later we can change its behavior</span></span>
-<span id="cb69-610"><a href="#cb69-610"></a><span class="co">    at the top level without affecting the behavior at every recursion step.</span></span>
-<span id="cb69-611"><a href="#cb69-611"></a><span class="co">    """</span></span>
-<span id="cb69-612"><a href="#cb69-612"></a>    <span class="cf">return</span> fib_helper(n)</span>
-<span id="cb69-613"><a href="#cb69-613"></a></span>
-<span id="cb69-614"><a href="#cb69-614"></a>fib(<span class="dv">50</span>)</span>
-<span id="cb69-615"><a href="#cb69-615"></a>fib_m(<span class="dv">50</span>)</span>
-<span id="cb69-616"><a href="#cb69-616"></a><span class="in">```</span></span>
-<span id="cb69-617"><a href="#cb69-617"></a><span class="in">`lru`</span> stands for "least recently used". For more information on cache, see <span class="co">[</span><span class="ot">here</span><span class="co">](https://docs.python.org/3/library/functools.html)</span>.</span>
-<span id="cb69-618"><a href="#cb69-618"></a></span>
-<span id="cb69-619"><a href="#cb69-619"></a><span class="fu"># Reference</span></span>
-<span id="cb69-620"><a href="#cb69-620"></a></span>
-<span id="cb69-621"><a href="#cb69-621"></a>------------------------------------------------------------------------</span>
-<span id="cb69-622"><a href="#cb69-622"></a></span>
-<span id="cb69-623"><a href="#cb69-623"></a>Source: <span class="ot">&lt;https://github.com/chiphuyen/python-is-cool/tree/master&gt;</span></span>
+<span id="cb69-596"><a href="#cb69-596"></a>🚀Nguyên văn chị Huyền:</span>
+<span id="cb69-597"><a href="#cb69-597"></a></span>
+<span id="cb69-598"><a href="#cb69-598"></a><span class="at">&gt; Memoization is a form of cache: we cache the previously calculated Fibonacci numbers so that we don't have to calculate them again.</span></span>
+<span id="cb69-599"><a href="#cb69-599"></a></span>
+<span id="cb69-602"><a href="#cb69-602"></a><span class="in">```{python}</span></span>
+<span id="cb69-603"><a href="#cb69-603"></a><span class="im">import</span> functools</span>
+<span id="cb69-604"><a href="#cb69-604"></a></span>
+<span id="cb69-605"><a href="#cb69-605"></a><span class="at">@functools.lru_cache</span>()</span>
+<span id="cb69-606"><a href="#cb69-606"></a><span class="kw">def</span> fib_helper(n):</span>
+<span id="cb69-607"><a href="#cb69-607"></a>    <span class="cf">if</span> n <span class="op">&lt;</span> <span class="dv">2</span>:</span>
+<span id="cb69-608"><a href="#cb69-608"></a>        <span class="cf">return</span> n</span>
+<span id="cb69-609"><a href="#cb69-609"></a>    <span class="cf">return</span> fib_helper(n <span class="op">-</span> <span class="dv">1</span>) <span class="op">+</span> fib_helper(n <span class="op">-</span> <span class="dv">2</span>)</span>
+<span id="cb69-610"><a href="#cb69-610"></a></span>
+<span id="cb69-611"><a href="#cb69-611"></a><span class="at">@timeit</span></span>
+<span id="cb69-612"><a href="#cb69-612"></a><span class="kw">def</span> fib(n):</span>
+<span id="cb69-613"><a href="#cb69-613"></a>    <span class="co">""" fib is a wrapper function so that later we can change its behavior</span></span>
+<span id="cb69-614"><a href="#cb69-614"></a><span class="co">    at the top level without affecting the behavior at every recursion step.</span></span>
+<span id="cb69-615"><a href="#cb69-615"></a><span class="co">    """</span></span>
+<span id="cb69-616"><a href="#cb69-616"></a>    <span class="cf">return</span> fib_helper(n)</span>
+<span id="cb69-617"><a href="#cb69-617"></a></span>
+<span id="cb69-618"><a href="#cb69-618"></a>fib(<span class="dv">50</span>)</span>
+<span id="cb69-619"><a href="#cb69-619"></a>fib_m(<span class="dv">50</span>)</span>
+<span id="cb69-620"><a href="#cb69-620"></a><span class="in">```</span></span>
+<span id="cb69-621"><a href="#cb69-621"></a></span>
+<span id="cb69-622"><a href="#cb69-622"></a><span class="in">`lru`</span> stands for "least recently used". For more information on cache, see <span class="co">[</span><span class="ot">here</span><span class="co">](https://docs.python.org/3/library/functools.html)</span>.</span>
+<span id="cb69-623"><a href="#cb69-623"></a></span>
+<span id="cb69-624"><a href="#cb69-624"></a><span class="fu"># Reference</span></span>
+<span id="cb69-625"><a href="#cb69-625"></a></span>
+<span id="cb69-626"><a href="#cb69-626"></a>------------------------------------------------------------------------</span>
+<span id="cb69-627"><a href="#cb69-627"></a></span>
+<span id="cb69-628"><a href="#cb69-628"></a>Source: <span class="ot">&lt;https://github.com/chiphuyen/python-is-cool/tree/master&gt;</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
