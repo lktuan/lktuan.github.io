@@ -10,7 +10,1204 @@
 <atom:link href="https://lktuan.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>I am a Risk Modeler 🚀</description>
 <generator>quarto-1.4.554</generator>
-<lastBuildDate>Sun, 03 Nov 2024 17:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 14 Nov 2024 17:00:00 GMT</lastBuildDate>
+<item>
+  <title>NN-Z2H Lesson 2: The spelled-out intro to language modeling - building makemore</title>
+  <dc:creator>Tuan Le Khac</dc:creator>
+  <link>https://lktuan.github.io/blog/2024-11-15-nn-z2h-p2/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><code>makemore</code> on github: <a href="https://github.com/karpathy/makemore" class="uri">https://github.com/karpathy/makemore</a></p>
+<section id="part-1-intro" class="level1">
+<h1>PART 1: intro</h1>
+<blockquote class="blockquote">
+<p><code>makemore</code> takes one text file as input, where each line is assumed to be one training thing, and generates more things like it. Under the hood, it is an autoregressive character-level language model, with a wide choice of models from bigrams all the way to a Transformer (exactly as seen in GPT).</p>
+</blockquote>
+<section id="reading-and-exploring-the-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="reading-and-exploring-the-dataset">reading and exploring the dataset</h2>
+<div id="75e7430e" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pandas <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pd</span>
+<span id="cb1-2"></span>
+<span id="cb1-3">url <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://raw.githubusercontent.com/karpathy/makemore/refs/heads/master/names.txt"</span></span>
+<span id="cb1-4">words <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.read_csv(url, header<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>).iloc[:, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>].tolist()</span>
+<span id="cb1-5"></span>
+<span id="cb1-6"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(words[:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>])</span>
+<span id="cb1-7"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(words))</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>['emma', 'olivia', 'ava', 'isabella', 'sophia', 'charlotte', 'mia', 'amelia', 'harper', 'evelyn']
+32033</code></pre>
+</div>
+</div>
+<div id="1c9c1268" class="cell" data-execution_count="2">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"No of chars for the shortest word: "</span>, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">min</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(w) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> w <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> words))</span>
+<span id="cb3-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"No of chars for the longest word: "</span>, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">max</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(w) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> w <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> words))</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>No of chars for the shortest word:  2
+No of chars for the longest word:  15</code></pre>
+</div>
+</div>
+<p>By looking into (1) the order of characters in individual word, and (2) that pattern for the whole dataset of 32k words, we will try to infer which character is likely to follow a character or chain of characters.</p>
+<p>We will first building a <code>bigrams</code> languague model - which only works will 2 characters at a time - look at the current character and try to predict the next one. We are just following this local structure!</p>
+<p>It’s just a simple (and weak) model but a good way to start.</p>
+</section>
+<section id="exploring-the-bigrams-in-the-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="exploring-the-bigrams-in-the-dataset">exploring the <code>bigrams</code> in the dataset</h2>
+<div id="fbcbb7c5" class="cell" data-execution_count="3">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> w <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> words[:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>]:</span>
+<span id="cb5-2">  chs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'&lt;S&gt;'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">list</span>(w) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'&lt;E&gt;'</span>] <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># special start and ending token, `list()` will turn all character in word to list</span></span>
+<span id="cb5-3">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> ch1, ch2 <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">zip</span>(chs, chs[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>:]):</span>
+<span id="cb5-4">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(ch1, ch2)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;S&gt; e
+e m
+m m
+m a
+a &lt;E&gt;
+&lt;S&gt; o
+o l
+l i
+i v
+v i
+i a
+a &lt;E&gt;
+&lt;S&gt; a
+a v
+v a
+a &lt;E&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="counting-bigrams-in-a-python-dictionary" class="level2">
+<h2 class="anchored" data-anchor-id="counting-bigrams-in-a-python-dictionary">counting <code>bigrams</code> in a python dictionary</h2>
+<p>In order to learn statistics about what character is more likely to follow another character, the simplest way is <code>counting</code>.</p>
+<div id="4c4403b9" class="cell" data-execution_count="4">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1">b <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> {} <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># dict to store all pair of character</span></span>
+<span id="cb7-2"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> w <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> words[:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>]: <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># do it for first five words</span></span>
+<span id="cb7-3">  chs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'&lt;S&gt;'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">list</span>(w) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'&lt;E&gt;'</span>]</span>
+<span id="cb7-4">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> ch1, ch2 <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">zip</span>(chs, chs[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>:]):</span>
+<span id="cb7-5">    bigram <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (ch1, ch2)</span>
+<span id="cb7-6">    b[bigram] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> b.get(bigram, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span></span>
+<span id="cb7-7">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># print(ch1, ch2)</span></span></code></pre></div>
+</details>
+</div>
+<div id="73f40327" class="cell" data-execution_count="5">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sorted</span>(b.items(), key <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">lambda</span> kv: <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>kv[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>])</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>[(('a', '&lt;E&gt;'), 5),
+ (('i', 'a'), 2),
+ (('&lt;S&gt;', 'e'), 1),
+ (('e', 'm'), 1),
+ (('m', 'm'), 1),
+ (('m', 'a'), 1),
+ (('&lt;S&gt;', 'o'), 1),
+ (('o', 'l'), 1),
+ (('l', 'i'), 1),
+ (('i', 'v'), 1),
+ (('v', 'i'), 1),
+ (('&lt;S&gt;', 'a'), 1),
+ (('a', 'v'), 1),
+ (('v', 'a'), 1),
+ (('&lt;S&gt;', 'i'), 1),
+ (('i', 's'), 1),
+ (('s', 'a'), 1),
+ (('a', 'b'), 1),
+ (('b', 'e'), 1),
+ (('e', 'l'), 1),
+ (('l', 'l'), 1),
+ (('l', 'a'), 1),
+ (('&lt;S&gt;', 's'), 1),
+ (('s', 'o'), 1),
+ (('o', 'p'), 1),
+ (('p', 'h'), 1),
+ (('h', 'i'), 1)]</code></pre>
+</div>
+</div>
+</section>
+<section id="counting-bigrams-in-a-2d-torch-tensor-training-the-model" class="level2">
+<h2 class="anchored" data-anchor-id="counting-bigrams-in-a-2d-torch-tensor-training-the-model">counting <code>bigrams</code> in a 2D <code>torch</code> tensor (“training the model”)</h2>
+<p>Instead of using Python dictionary, we will use <code>torch</code> 2D array to store this information.</p>
+<div id="d61549c5" class="cell" data-execution_count="6">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> torch</span></code></pre></div>
+</details>
+</div>
+<div id="7d15b292" class="cell" data-execution_count="7">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1">a <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.zeros((<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>), dtype<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>torch.int32)</span>
+<span id="cb11-2">a</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>tensor([[0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0]], dtype=torch.int32)</code></pre>
+</div>
+</div>
+<p>How can we access/assign a value in torch array:</p>
+<div id="719a4f09" class="cell" data-execution_count="8">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1">a[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span></span>
+<span id="cb13-2">a</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>tensor([[ 0,  0,  0,  0,  0],
+        [10, 10, 10, 10, 10],
+        [10, 10, 10, 10, 10]], dtype=torch.int32)</code></pre>
+</div>
+</div>
+<p>Now the english alphabet contain 26 characters, we will need to capture the <code>&lt;S&gt;</code> and <code>&lt;E&gt;</code> also. So it would be 28 x 28 array.</p>
+<div id="6aee8c06" class="cell" data-execution_count="9">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1">N <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.zeros((<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">28</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">28</span>), dtype<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>torch.int32)</span></code></pre></div>
+</details>
+</div>
+<p>This will collect all the characters used in our dataset (join all words to a massive string and pass it to a <code>set()</code>, which will remove duplicate). With such a large dataset, all the english characters were used.</p>
+<div id="5655e022" class="cell" data-execution_count="10">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1">chars <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sorted</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">list</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">set</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">''</span>.join(words))))</span>
+<span id="cb16-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(chars) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 26 </span></span>
+<span id="cb16-3"></span>
+<span id="cb16-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># with index</span></span>
+<span id="cb16-5">stoi <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> {s:i <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> i,s <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">enumerate</span>(chars)}</span>
+<span id="cb16-6">stoi[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'&lt;S&gt;'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">26</span></span>
+<span id="cb16-7">stoi[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'&lt;E&gt;'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">27</span></span>
+<span id="cb16-8">stoi</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>{'a': 0,
+ 'b': 1,
+ 'c': 2,
+ 'd': 3,
+ 'e': 4,
+ 'f': 5,
+ 'g': 6,
+ 'h': 7,
+ 'i': 8,
+ 'j': 9,
+ 'k': 10,
+ 'l': 11,
+ 'm': 12,
+ 'n': 13,
+ 'o': 14,
+ 'p': 15,
+ 'q': 16,
+ 'r': 17,
+ 's': 18,
+ 't': 19,
+ 'u': 20,
+ 'v': 21,
+ 'w': 22,
+ 'x': 23,
+ 'y': 24,
+ 'z': 25,
+ '&lt;S&gt;': 26,
+ '&lt;E&gt;': 27}</code></pre>
+</div>
+</div>
+<div id="d62afaa5" class="cell" data-execution_count="11">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> w <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> words:</span>
+<span id="cb18-2">  chs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'&lt;S&gt;'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">list</span>(w) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'&lt;E&gt;'</span>]</span>
+<span id="cb18-3">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> ch1, ch2 <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">zip</span>(chs, chs[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>:]):</span>
+<span id="cb18-4">    ix1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> stoi[ch1]</span>
+<span id="cb18-5">    ix2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> stoi[ch2]</span>
+<span id="cb18-6">    N[ix1, ix2] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span></span></code></pre></div>
+</details>
+</div>
+</section>
+<section id="visualizing-the-bigram-tensor" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-the-bigram-tensor">visualizing the <code>bigram</code> tensor</h2>
+<div id="5dfbd631" class="cell" data-execution_count="12">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1">itos <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> {i:s <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> s, i <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> stoi.items()}</span></code></pre></div>
+</details>
+</div>
+<div id="caf296a0" class="cell" data-execution_count="13">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> matplotlib.pyplot <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> plt</span>
+<span id="cb20-2"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%</span>matplotlib inline</span>
+<span id="cb20-3"></span>
+<span id="cb20-4">plt.figure(figsize<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>))</span>
+<span id="cb20-5">plt.imshow(N, cmap<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Blues'</span>)</span>
+<span id="cb20-6"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">28</span>):</span>
+<span id="cb20-7">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> j <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">28</span>):</span>
+<span id="cb20-8">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># plot character strings with number of time</span></span>
+<span id="cb20-9">    chstr <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> itos[i] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> itos[j]</span>
+<span id="cb20-10">    plt.text(j, i, chstr, ha<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"center"</span>, va<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bottom"</span>, color<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"gray"</span>)</span>
+<span id="cb20-11">    plt.text(j, i, N[i, j].item(), ha<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"center"</span>, va<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"top"</span>, color<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"gray"</span>)</span>
+<span id="cb20-12">plt.axis(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'off'</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-11-15-nn-z2h-p2/index_files/figure-html/cell-14-output-1.png" width="1212" height="1202" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="deleting-spurious-s-and-e-tokens-in-favor-of-a-single-.-token" class="level2">
+<h2 class="anchored" data-anchor-id="deleting-spurious-s-and-e-tokens-in-favor-of-a-single-.-token">deleting spurious (S) and (E) tokens in favor of a single <code>.</code> token</h2>
+<p><code>&lt;S&gt;</code>, and <code>&lt;E&gt;</code> look a bit annoying. let’s replace them by simple <code>.</code>.</p>
+<div id="cb78c5b4" class="cell" data-execution_count="14">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1">N <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.zeros((<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">27</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">27</span>), dtype<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>torch.int32)</span>
+<span id="cb21-2">stoi <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> {s:i<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> i,s <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">enumerate</span>(chars)}</span>
+<span id="cb21-3">stoi[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'.'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span></span>
+<span id="cb21-4">itos <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> {i:s <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> s, i <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> stoi.items()}</span>
+<span id="cb21-5"></span>
+<span id="cb21-6"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> w <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> words:</span>
+<span id="cb21-7">  chs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'.'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">list</span>(w) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'.'</span>]</span>
+<span id="cb21-8">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> ch1, ch2 <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">zip</span>(chs, chs[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>:]):</span>
+<span id="cb21-9">    ix1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> stoi[ch1]</span>
+<span id="cb21-10">    ix2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> stoi[ch2]</span>
+<span id="cb21-11">    N[ix1, ix2] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span></span></code></pre></div>
+</details>
+</div>
+<div id="39624d5f" class="cell" data-execution_count="15">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> matplotlib.pyplot <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> plt</span>
+<span id="cb22-2"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%</span>matplotlib inline</span>
+<span id="cb22-3"></span>
+<span id="cb22-4">plt.figure(figsize<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>))</span>
+<span id="cb22-5">plt.imshow(N, cmap<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Blues'</span>)</span>
+<span id="cb22-6"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">27</span>):</span>
+<span id="cb22-7">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> j <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">27</span>):</span>
+<span id="cb22-8">        chstr <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> itos[i] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> itos[j]</span>
+<span id="cb22-9">        plt.text(j, i, chstr, ha<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"center"</span>, va<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bottom"</span>, color<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'gray'</span>)</span>
+<span id="cb22-10">        plt.text(j, i, N[i, j].item(), ha<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"center"</span>, va<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"top"</span>, color<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'gray'</span>)</span>
+<span id="cb22-11">plt.axis(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'off'</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-11-15-nn-z2h-p2/index_files/figure-html/cell-16-output-1.png" width="1202" height="1202" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="sampling-from-the-model" class="level2">
+<h2 class="anchored" data-anchor-id="sampling-from-the-model">sampling from the model</h2>
+<p>Taking the first column of the array.</p>
+<div id="29f2085d" class="cell" data-execution_count="16">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1">N[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>tensor([   0, 4410, 1306, 1542, 1690, 1531,  417,  669,  874,  591, 2422, 2963,
+        1572, 2538, 1146,  394,  515,   92, 1639, 2055, 1308,   78,  376,  307,
+         134,  535,  929], dtype=torch.int32)</code></pre>
+</div>
+</div>
+<p>Column-wise probability.</p>
+<div id="0a06b07e" class="cell" data-execution_count="17">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1">p <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> N[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>].<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>()</span>
+<span id="cb25-2">p <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> p <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> p.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>()</span>
+<span id="cb25-3">p</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>tensor([0.0000, 0.1377, 0.0408, 0.0481, 0.0528, 0.0478, 0.0130, 0.0209, 0.0273,
+        0.0184, 0.0756, 0.0925, 0.0491, 0.0792, 0.0358, 0.0123, 0.0161, 0.0029,
+        0.0512, 0.0642, 0.0408, 0.0024, 0.0117, 0.0096, 0.0042, 0.0167, 0.0290])</code></pre>
+</div>
+</div>
+<p>Creating random number with Pytorch generator at a state.</p>
+<div id="03cc22be" class="cell" data-execution_count="18">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1">g <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.Generator().manual_seed(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2147483647</span>)</span>
+<span id="cb27-2">p_test <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.rand(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g)</span>
+<span id="cb27-3">p_test <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> p_test <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> p_test.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>()</span></code></pre></div>
+</details>
+</div>
+<div id="89b531d0" class="cell" data-execution_count="19">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1">torch.multinomial(p_test, num_samples<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>, replacement<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>, generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<pre><code>tensor([1, 1, 2, 0, 0, 2, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 2, 0, 0,
+        1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1,
+        0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
+        0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 1, 0,
+        0, 1, 1, 1])</code></pre>
+</div>
+</div>
+<p>Now back to our data, generate a tensor with 1 value from the <code>p</code> vector, it should return <code>m</code> ~ index 13 as it’s the most common charactor.</p>
+<div id="9c286e5d" class="cell" data-execution_count="20">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1">g <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.Generator().manual_seed(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2147483647</span>)</span>
+<span id="cb30-2">ix <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.multinomial(p, num_samples<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, replacement<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>, generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g).item()</span>
+<span id="cb30-3">itos[ix]</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>'j'</code></pre>
+</div>
+</div>
+<p>Let’s automate it:</p>
+<div id="05b5f4ff" class="cell" data-execution_count="21">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1">g <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.Generator().manual_seed(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">214748367</span>)</span>
+<span id="cb32-2"></span>
+<span id="cb32-3">ix <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span></span>
+<span id="cb32-4"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">while</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>:</span>
+<span id="cb32-5">  p <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> N[ix].<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>()</span>
+<span id="cb32-6">  p <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> p <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> p.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>()</span>
+<span id="cb32-7">  ix <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.multinomial(p, num_samples<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, replacement<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>, generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g).item()</span>
+<span id="cb32-8">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(itos[ix])</span>
+<span id="cb32-9">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> ix <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>:</span>
+<span id="cb32-10">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">break</span></span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>v
+i
+a
+r
+i
+l
+a
+n
+d
+a
+y
+a
+r
+.</code></pre>
+</div>
+</div>
+<p>And more, joining the last result to single word, and make new 10 names:</p>
+<div id="d68ace06" class="cell" data-execution_count="22">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1">g <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.Generator().manual_seed(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2147483647</span>)</span>
+<span id="cb34-2"></span>
+<span id="cb34-3"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>):</span>
+<span id="cb34-4">  </span>
+<span id="cb34-5">  out <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> []</span>
+<span id="cb34-6">  ix <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span></span>
+<span id="cb34-7">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">while</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>:</span>
+<span id="cb34-8">    p <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> N[ix].<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>()</span>
+<span id="cb34-9">    p <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> p <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> p.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>()</span>
+<span id="cb34-10"></span>
+<span id="cb34-11">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># p = torch.ones(27) / 27.0</span></span>
+<span id="cb34-12">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the result look terrible, but compare to an un-trained model for eg p - uncomment to code above, they are still like names.</span></span>
+<span id="cb34-13">    ix <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.multinomial(p, num_samples<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, replacement<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>, generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g).item()</span>
+<span id="cb34-14">    out.append(itos[ix])</span>
+<span id="cb34-15">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> ix <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>:</span>
+<span id="cb34-16">      <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">break</span></span>
+<span id="cb34-17">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">''</span>.join(out))</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>junide.
+janasah.
+p.
+cony.
+a.
+nn.
+kohin.
+tolian.
+juee.
+ksahnaauranilevias.</code></pre>
+</div>
+</div>
+</section>
+<section id="efficiency-vectorized-normalization-of-the-rows-tensor-broadcasting" class="level2">
+<h2 class="anchored" data-anchor-id="efficiency-vectorized-normalization-of-the-rows-tensor-broadcasting">efficiency! vectorized normalization of the rows, tensor broadcasting</h2>
+<p>We just fetching a row of <code>N</code> from the counts matrix, and then always do the same things: converting to float, dividing. That’s not efficient! We now will optimize this:</p>
+<div id="8d603884" class="cell" data-execution_count="23">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1">P <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> N.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>()</span>
+<span id="cb36-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># param 1 helps summing horizontally, by rows</span></span>
+<span id="cb36-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># keepdim keeps the dimension the output is still 2D array with 1 column for each row, not a vertical vector entirely</span></span>
+<span id="cb36-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># tensor already support to broadcast the row sum allowing this dividing (keepdim helped not to mess the broadcast)</span></span>
+<span id="cb36-5">P <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/=</span> P.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, keepdim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb36-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># inplace operator instead of P = P / P.sum(1, keepdim=True), take care of memory!</span></span></code></pre></div>
+</details>
+</div>
+<div id="f9bc2b00" class="cell" data-execution_count="24">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1">g <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.Generator().manual_seed(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2147483647</span>)</span>
+<span id="cb37-2"></span>
+<span id="cb37-3"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>):</span>
+<span id="cb37-4">  </span>
+<span id="cb37-5">  out <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> []</span>
+<span id="cb37-6">  ix <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span></span>
+<span id="cb37-7">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">while</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>:</span>
+<span id="cb37-8">    p <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> P[ix]</span>
+<span id="cb37-9">    ix <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.multinomial(p, num_samples<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, replacement<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>, generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g).item()</span>
+<span id="cb37-10">    out.append(itos[ix])</span>
+<span id="cb37-11">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> ix <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>:</span>
+<span id="cb37-12">      <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">break</span></span>
+<span id="cb37-13">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">''</span>.join(out))</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>junide.
+janasah.
+p.
+cony.
+a.
+nn.
+kohin.
+tolian.
+juee.
+ksahnaauranilevias.</code></pre>
+</div>
+</div>
+</section>
+<section id="loss-function-the-negative-log-likelihood-of-the-data-under-our-model" class="level2">
+<h2 class="anchored" data-anchor-id="loss-function-the-negative-log-likelihood-of-the-data-under-our-model">loss function (the negative log likelihood of the data under our model)</h2>
+</section>
+<section id="model-smoothing-with-fake-counts" class="level2">
+<h2 class="anchored" data-anchor-id="model-smoothing-with-fake-counts">model smoothing with fake counts</h2>
+</section>
+</section>
+<section id="part-2-the-neural-network-approach-intro" class="level1">
+<h1>PART 2: the neural network approach: intro</h1>
+<section id="creating-the-bigram-dataset-for-the-neural-net" class="level2">
+<h2 class="anchored" data-anchor-id="creating-the-bigram-dataset-for-the-neural-net">creating the bigram dataset for the neural net</h2>
+</section>
+<section id="feeding-integers-into-neural-nets-one-hot-encodings" class="level2">
+<h2 class="anchored" data-anchor-id="feeding-integers-into-neural-nets-one-hot-encodings">feeding integers into neural nets? one-hot encodings</h2>
+</section>
+<section id="the-neural-net-one-linear-layer-of-neurons-implemented-with-matrix-multiplication" class="level2">
+<h2 class="anchored" data-anchor-id="the-neural-net-one-linear-layer-of-neurons-implemented-with-matrix-multiplication">the “neural net”: one linear layer of neurons implemented with matrix multiplication</h2>
+</section>
+<section id="transforming-neural-net-outputs-into-probabilities-the-softmax" class="level2">
+<h2 class="anchored" data-anchor-id="transforming-neural-net-outputs-into-probabilities-the-softmax">transforming neural net outputs into probabilities: the softmax</h2>
+</section>
+<section id="summary-preview-to-next-steps-reference-to-micrograd" class="level2">
+<h2 class="anchored" data-anchor-id="summary-preview-to-next-steps-reference-to-micrograd">summary, preview to next steps, reference to micrograd</h2>
+</section>
+<section id="vectorized-loss" class="level2">
+<h2 class="anchored" data-anchor-id="vectorized-loss">vectorized loss</h2>
+</section>
+<section id="putting-everything-together" class="level2">
+<h2 class="anchored" data-anchor-id="putting-everything-together">putting everything together</h2>
+</section>
+<section id="note-1-one-hot-encoding-really-just-selects-a-row-of-the-next-linear-layers-weight-matrix" class="level2">
+<h2 class="anchored" data-anchor-id="note-1-one-hot-encoding-really-just-selects-a-row-of-the-next-linear-layers-weight-matrix">note 1: one-hot encoding really just selects a row of the next Linear layer’s weight matrix</h2>
+</section>
+<section id="note-2-model-smoothing-as-regularization-loss" class="level2">
+<h2 class="anchored" data-anchor-id="note-2-model-smoothing-as-regularization-loss">note 2: model smoothing as regularization loss</h2>
+</section>
+<section id="sampling-from-the-neural-net" class="level2">
+<h2 class="anchored" data-anchor-id="sampling-from-the-neural-net">sampling from the neural net</h2>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">conclusion</h2>
+</section>
+</section>
+<section id="resources" class="level1">
+<h1>resources</h1>
+<ol type="1">
+<li>YouTube video lecture: <a href="https://www.youtube.com/watch?v=PaCmpygFfXo" class="uri">https://www.youtube.com/watch?v=PaCmpygFfXo</a></li>
+<li>Jupyter notebook files: <a href="https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part1_bigrams.ipynb" class="uri">https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part1_bigrams.ipynb</a></li>
+<li><code>makemore</code> Github repo: <a href="https://github.com/karpathy/makemore" class="uri">https://github.com/karpathy/makemore</a></li>
+</ol>
+
+
+<!-- -->
+
+</section>
+
+ ]]></description>
+  <category>til</category>
+  <category>python</category>
+  <category>andrej karpathy</category>
+  <category>nn-z2h</category>
+  <category>bigram</category>
+  <category>neural networks</category>
+  <guid>https://lktuan.github.io/blog/2024-11-15-nn-z2h-p2/</guid>
+  <pubDate>Thu, 14 Nov 2024 17:00:00 GMT</pubDate>
+  <media:content url="https://lktuan.github.io/blog/2024-11-15-nn-z2h-p2/andrej_new.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Data Science Project with Mamba, Python, and VS Code on Window</title>
   <dc:creator>Tuan Le Khac</dc:creator>
@@ -20889,1787 +22086,6 @@ font-style: inherit;">'blue'</span>)</span>
   <guid>https://lktuan.github.io/blog/2024-05-22-swd-p2-improve-table/</guid>
   <pubDate>Tue, 21 May 2024 17:00:00 GMT</pubDate>
   <media:content url="https://lktuan.github.io/blog/2024-05-22-swd-p2-improve-table/SWD-Cover-FULL-R5-MED.png" medium="image" type="image/png" height="180" width="144"/>
-</item>
-<item>
-  <title>Python is cool ❄</title>
-  <dc:creator>Tuan Le Khac</dc:creator>
-  <link>https://lktuan.github.io/blog/2024-05-21-python-is-cool/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="motivation" class="level1">
-<h1>1. Motivation</h1>
-<hr>
-<p>Đây là một bài thực hành theo một <a href="https://github.com/chiphuyen/python-is-cool/tree/master">post</a> bởi chị <a href="https://huyenchip.com/">Chip Huyen</a> về một số features đặc biệt của Python. Là một DA không sử dụng Python quá nhiều, chỉ một số feature dưới đây là mình đã từng <em>nghe</em> qua. Hi vọng bài thực hành sẽ giúp mình hứng thú với Python hơn!</p>
-<div>
-
-</div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://lktuan.github.io/blog/2024-05-21-python-is-cool/python.jpg" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption>Dong Nai Cultural Nature Reserve, a python lying along the stream waiting for the prey. Photo credit to <a href="https://www.instagram.com/vietnamphotos_herping/">PhucNguyenPhotos</a></figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="lambda-map-filter-reduce" class="level1">
-<h1>2. Lambda, map, filter, &amp; reduce</h1>
-<hr>
-<p>Lambda cho phép người dùng định nghĩa in-line functions. Việc sử dụng <code>lambda()</code> rất thuận tiện khi gọi lại (callback ~ một function được thực thi sau khi một function khác được thực thi; một cách lưu trữ function) hoặc khi đầu ra của một function là đối số cho một function khác.</p>
-<p>Hai hàm <code>square_fn</code> và <code>square_ld</code> dưới đây là một:</p>
-<div id="74aad070" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> square_fn(x):</span>
-<span id="cb1-2">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> x <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> x</span>
-<span id="cb1-3"></span>
-<span id="cb1-4">square_ld <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">lambda</span> x : x <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> x</span>
-<span id="cb1-5"></span>
-<span id="cb1-6"><span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>):</span>
-<span id="cb1-7">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">assert</span> square_fn(i) <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> square_ld(i)</span></code></pre></div>
-</div>
-<p><code>lambda</code> rất hữu ích khi sử dụng cùng với các function khác như <code>map</code>, <code>filter</code>, và <code>reduce</code> (mình rất hay sử dụng pattern này trên Excel 😂). <code>map(fn, interable)</code> sẽ apply hàm <code>fn</code> cho tất cả các phần tử trong <code>iterable</code> (như list, set, dict, tuple, string), trả về map object.</p>
-<div id="c4478da0" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1">nums <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1001</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">37500</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">40</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">27</span>]</span>
-<span id="cb2-2">nums_squared <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [num <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> num <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> num <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> nums]</span>
-<span id="cb2-3"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(nums_squared)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[0.1111111111111111, 0.08163265306122448, 0.0007125340444444445, 2.194787379972565]</code></pre>
-</div>
-</div>
-<p>Dùng <code>map</code> và một hàm callback, cho ra kết quả tương đương:</p>
-<div id="f16d0683" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1">nums_squared_1 <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">map</span>(square_fn, nums)</span>
-<span id="cb4-2">nums_squared_2 <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">map</span>(<span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">lambda</span> x: x<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span>x, nums)</span>
-<span id="cb4-3"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">list</span>(nums_squared_1)) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># list to list the elements of map object</span></span>
-<span id="cb4-4"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">list</span>(nums_squared_2))</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[0.1111111111111111, 0.08163265306122448, 0.0007125340444444445, 2.194787379972565]
-[0.1111111111111111, 0.08163265306122448, 0.0007125340444444445, 2.194787379972565]</code></pre>
-</div>
-</div>
-<p>Có thể dùng <code>map</code> với nhiều hơn 1 iterable. Ví dụ muốn tính MSE cho một hồi quy tuyến tính đơn giản <code>f(x) = ax + b</code> với ground tru <code>labels</code>, hai phương pháp sau tương đương:</p>
-<div id="c4c61582" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1">a, b <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.5</span></span>
-<span id="cb6-2">xs <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>]</span>
-<span id="cb6-3">labels <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [<span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">6.4</span>, <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">8.9</span>, <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10.9</span>, <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">15.3</span>]</span>
-<span id="cb6-4"></span>
-<span id="cb6-5"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Phương pháp 1, loop</span></span>
-<span id="cb6-6">errors <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> []</span>
-<span id="cb6-7"><span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> i,x <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">enumerate</span>(xs):</span>
-<span id="cb6-8">    errors.append( (a <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> x <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> b <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> labels[i])<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">**</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span> )</span>
-<span id="cb6-9">result_1 <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">sum</span>(errors)<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">**</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>) <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">len</span>(xs)</span>
-<span id="cb6-10"></span>
-<span id="cb6-11"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Phương pháp 2, map</span></span>
-<span id="cb6-12">diff <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">map</span>(<span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">lambda</span> x, y: (a <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> x <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> b <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> y) <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">**</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>, xs, labels) </span>
-<span id="cb6-13">result_2 <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">sum</span>(diff)<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">**</span><span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">.5</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">len</span>(xs)</span>
-<span id="cb6-14"></span>
-<span id="cb6-15"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(result_1, result_2)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>0.35089172119045514 0.35089172119045514</code></pre>
-</div>
-</div>
-<p><code>filter(fn, iterable)</code> giống như <code>map</code>, tuy nhiên <code>fn</code> là một hàm trả về giá trị boolean true/false, và <code>filter</code> sẽ trả về các phần tử của <code>iterable</code> khi <code>fn</code> trả về true.</p>
-<div id="38a8eaee" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1">bad_preds <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">filter</span>(<span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">lambda</span> x: x <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.5</span>, errors)</span>
-<span id="cb8-2"></span>
-<span id="cb8-3"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">list</span>(bad_preds))</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[0.8100000000000006, 0.6400000000000011]</code></pre>
-</div>
-</div>
-<p><code>reduce(fn, iterable, initializer)</code> được dùng khi ta muốn áp dụng một toán lên tất cả thành phần trong danh sách. Ví dụ muốn tính kết quả nhân của toàn bộ phần tử:</p>
-<div id="1957cfc0" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1">product <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span></span>
-<span id="cb10-2"><span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> num <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> nums:</span>
-<span id="cb10-3">    product <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*=</span> num</span>
-<span id="cb10-4"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(product)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>0.0037662551440329215</code></pre>
-</div>
-</div>
-<p>Sử dụng <code>reduce</code>:</p>
-<div id="85c74c39" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">from</span> functools <span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">reduce</span></span>
-<span id="cb12-2"></span>
-<span id="cb12-3">product <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">reduce</span>(<span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">lambda</span> x, y: x <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> y, nums)</span>
-<span id="cb12-4"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(product)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>0.0037662551440329215</code></pre>
-</div>
-</div>
-<section id="hiệu-suất-hàm-lambda" class="level3">
-<h3 class="anchored" data-anchor-id="hiệu-suất-hàm-lambda">Hiệu suất hàm Lambda</h3>
-<p>Lambda được thiết kế để sử dụng một lần. Mỗi lần được gọi, hàm <code>lambda x: dosomething(x)</code> đều được tạo lại, và do đó ảnh hưởng tới hiệu suất.</p>
-<p>Khi hàm lambda được định nghĩa trước <code>fn = lambda x: dosomething(x)</code>, hiệu suất của nó vẫn chậm hơn <code>def</code>, tuy nhiên không <a href="https://stackoverflow.com/questions/26540885/lambda-is-slower-than-function-call-in-python-why">đáng kể</a>.</p>
-<p>🚀Nguyên văn chị Chip:</p>
-<blockquote class="blockquote">
-<p>Even though I find lambdas cool, I personally recommend using named functions when you can for the sake of clarity.</p>
-</blockquote>
-</section>
-</section>
-<section id="list-manipulation" class="level1">
-<h1>3. List manipulation</h1>
-<hr>
-<section id="unpacking" class="level2">
-<h2 class="anchored" data-anchor-id="unpacking">3.1. Unpacking</h2>
-<p>Chúng ta có thể “giải nén” một list như thế này:</p>
-<div id="fd8c4857" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1">elems <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>]</span>
-<span id="cb14-2">a,b,c,d <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> elems</span>
-<span id="cb14-3"></span>
-<span id="cb14-4"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(a,b,c,d)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>1 2 3 4</code></pre>
-</div>
-</div>
-<p>Cũng có thể làm như thế này:</p>
-<div id="9917a429" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1">a, <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span>new_elems, d <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> elems <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># remember the char * for extended unpacking</span></span>
-<span id="cb16-2"></span>
-<span id="cb16-3"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(a)</span>
-<span id="cb16-4"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(new_elems)</span>
-<span id="cb16-5"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(b)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>1
-[2, 3]
-2</code></pre>
-</div>
-</div>
-</section>
-<section id="slicing" class="level2">
-<h2 class="anchored" data-anchor-id="slicing">3.2. Slicing</h2>
-<p>Chúng ta có thể reverse/đảo ngược một list với <code>[::-1]</code></p>
-<div id="eb2bab26" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1">elem <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">list</span>(<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>))</span>
-<span id="cb18-2"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(elem)</span>
-<span id="cb18-3"></span>
-<span id="cb18-4"></span>
-<span id="cb18-5"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(elem[::<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>])</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-[9, 8, 7, 6, 5, 4, 3, 2, 1, 0]</code></pre>
-</div>
-</div>
-<p>Cú pháp <code>[x:y:z]</code> có nghĩa là lấy <strong><em>mỗi</em></strong> phần tử thứ <code>z</code> từ index <code>x</code> tới index <code>y</code>. Khi <code>z</code> âm, tương đương với việc lấy theo thứ tự ngược lại. <code>x</code> để trống chỉ việc lấy từ phần tử đầu tiên, <code>y</code> để rỗng chỉ việc lấy tới phần tử cuối cùng.</p>
-<div id="30a31a45" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1">evens <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> elem[::<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>]</span>
-<span id="cb20-2"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(evens)</span>
-<span id="cb20-3"></span>
-<span id="cb20-4">reversed_evens <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> elem[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>::<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>]</span>
-<span id="cb20-5"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(reversed_evens)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[0, 2, 4, 6, 8]
-[2, 0]</code></pre>
-</div>
-</div>
-<p>Cũng có thể dùng slicing để xóa các phần tử như thế này:</p>
-<div id="d74f7e13" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">del</span> elems[::<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>]</span>
-<span id="cb22-2"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(elems)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[2, 4]</code></pre>
-</div>
-</div>
-</section>
-<section id="insertion" class="level2">
-<h2 class="anchored" data-anchor-id="insertion">3.3. Insertion</h2>
-<p>Chúng ta có thể thay đổi giá trị một phần tử trong một list như sau:</p>
-<div id="09af6787" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1">elems <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">list</span>(<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>))</span>
-<span id="cb24-2"></span>
-<span id="cb24-3">elems[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>] <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span></span>
-<span id="cb24-4"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(elems)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[0, 100, 2, 3, 4, 5, 6, 7, 8, 9]</code></pre>
-</div>
-</div>
-<p>Cũng có thể thay thế một giá trị bằng nhiều giá trị:</p>
-<div id="31f00e3c" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1">elems <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">list</span>(<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>))</span>
-<span id="cb26-2">elems[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>:<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>] <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">20</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">30</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">40</span>]</span>
-<span id="cb26-3"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(elems)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[0, 20, 30, 40, 2, 3, 4, 5, 6, 7, 8, 9]</code></pre>
-</div>
-</div>
-<p>Nếu chúng ta muốn thêm 3 giá trị <code>0.3, 0.4, 0.5</code> vào giữa phần tử thứ 0 và 1 của list này, thì:</p>
-<div id="1970cbe1" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1">elems <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">list</span>(<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>))</span>
-<span id="cb28-2">elems[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>:<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>] <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [<span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">.3</span>, <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">.4</span>, <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">.5</span>]</span>
-<span id="cb28-3"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(elems)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[0, 0.3, 0.4, 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9]</code></pre>
-</div>
-</div>
-</section>
-<section id="flattening" class="level2">
-<h2 class="anchored" data-anchor-id="flattening">3.4. Flattening</h2>
-<p>Chúng ta có thể flatten một list sử dung <code>sum(0)</code>:</p>
-<div id="e45b4ca7" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1">list_of_lists <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>], [<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>], [<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">6</span>]]</span>
-<span id="cb30-2"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">sum</span>(list_of_lists, [])</span></code></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="16">
-<pre><code>[1, 2, 3, 4, 5, 6]</code></pre>
-</div>
-</div>
-<p>Cũng có thể sử dụng recursive lambda (another beauty of lambda)</p>
-<div id="6a0fecdc" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1">nested_lists <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>], [[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>], [<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">6</span>], [[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">8</span>], [<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">9</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>], [[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">11</span>, [<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">12</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">13</span>]]]]]]</span>
-<span id="cb32-2">flatten <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">lambda</span> x: [y <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> x <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> y <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> flatten(i)] <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">if</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">type</span>(x) <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">is</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">list</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">else</span> [x]</span>
-<span id="cb32-3"></span>
-<span id="cb32-4"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(flatten(nested_lists))</span>
-<span id="cb32-5"></span>
-<span id="cb32-6"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># This line of code is from</span></span>
-<span id="cb32-7"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># https://github.com/sahands/python-by-example/blob/master/python-by-example.rst#flattening-lists</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]</code></pre>
-</div>
-</div>
-</section>
-<section id="list-vs-generator" class="level2">
-<h2 class="anchored" data-anchor-id="list-vs-generator">3.5. List vs Generator</h2>
-<p>🚀Generator là cái gì vậy? Trích <a href="https://manhhomienbienthuy.github.io/2016/01/05/python-iterator-generator.html">bài viết</a>:</p>
-<blockquote class="blockquote">
-<p>Từ generator được sử dụng cho cả hàm (hàm generator là hàm đã nói ở trên) và kết quả mà hàm đó sinh ra (đối tượng được hàm generator sinh ra cũng được gọi là generator). Vì vậy đôi khi việc này gây khó hiểu một chút. Hãy xem ví dụ về việc tạo n-grams từ một danh sách tokens dưới đây để hiểu sự khác biệt giữa list và generator:</p>
-</blockquote>
-<div id="16c78c8d" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1">tokens <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'i'</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'want'</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'to'</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'go'</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'to'</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'school'</span>]</span>
-<span id="cb34-2"></span>
-<span id="cb34-3"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> ngrams(tokens, n):</span>
-<span id="cb34-4">    length <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">len</span>(tokens)</span>
-<span id="cb34-5">    grams <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> []</span>
-<span id="cb34-6">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">range</span>(length <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> n <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>):</span>
-<span id="cb34-7">        grams.append(tokens[i:i<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span>n])</span>
-<span id="cb34-8">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> grams</span>
-<span id="cb34-9"></span>
-<span id="cb34-10"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(ngrams(tokens, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>))</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[['i', 'want', 'to'], ['want', 'to', 'go'], ['to', 'go', 'to'], ['go', 'to', 'school']]</code></pre>
-</div>
-</div>
-<p>Trong ví dụ này, chúng ta phải lưu toàn bộ n-grams một lúc. Nếu có <code>m</code> tokens, memory requirement là <code>O(nm)</code> - sẽ là vấn đề nếu <code>m</code> lớn. Thay vào đó, chúng ta có thể sử dụng generator để tạo n-grams tiếp theo khi được yêu cầu. Đây gọi là lazy evaluation. Chúng ta có thể tạo một hàm <code>ngrams</code> trả về một generator sử dụng keyword <code>yield</code>, lúc này memory requirement là <code>O(n+m)</code>.</p>
-<div id="0ef8bb7f" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> ngrams(tokens, n):</span>
-<span id="cb36-2">    length <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">len</span>(tokens)</span>
-<span id="cb36-3">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">range</span>(length <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> n <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>):</span>
-<span id="cb36-4">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">yield</span> tokens[i:i<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span>n]</span>
-<span id="cb36-5"></span>
-<span id="cb36-6">ngrams_generator <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> ngrams(tokens, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>)</span>
-<span id="cb36-7"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(ngrams_generator)</span>
-<span id="cb36-8"></span>
-<span id="cb36-9"><span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> ngram <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> ngrams_generator:</span>
-<span id="cb36-10">    <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(ngram)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;generator object ngrams at 0x00000239753BDB70&gt;
-['i', 'want', 'to']
-['want', 'to', 'go']
-['to', 'go', 'to']
-['go', 'to', 'school']</code></pre>
-</div>
-</div>
-<p>Một cách khác để tạo n-grams là slice để lấy các sub-list <code>[0, 1, 2, ...,-n]</code>, <code>[1, 2, 3, ...,-n+1]</code>, <code>[2, 3, 4, ...,-n+2]</code>,… <code>[n-1, n, ...,-1]</code>, sau đó <code>zip</code> chúng lại:</p>
-<div id="20bef29e" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> ngrams(tokens, n):</span>
-<span id="cb38-2">    length <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">len</span>(tokens)</span>
-<span id="cb38-3">    slices <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> (tokens[i:length<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span>n<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span>i<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>] <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">range</span>(n))</span>
-<span id="cb38-4">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">zip</span>(<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span>slices)</span>
-<span id="cb38-5"></span>
-<span id="cb38-6">ngrams_generator <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> ngrams(tokens, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>)</span>
-<span id="cb38-7"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(ngrams_generator)</span>
-<span id="cb38-8"></span>
-<span id="cb38-9"></span>
-<span id="cb38-10"><span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> ngram <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> ngrams_generator:</span>
-<span id="cb38-11">    <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(ngram)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;zip object at 0x00000239753EE840&gt;
-('i', 'want', 'to')
-('want', 'to', 'go')
-('to', 'go', 'to')
-('go', 'to', 'school')</code></pre>
-</div>
-</div>
-<p>Lưu ý chúng ta sử dụng <code>(tokens[...] for i in range(n))</code>, chứ không phải <code>[tokens[...] for i in range(n)]</code>. <code>[]</code> trả về một list, <code>()</code> trả về generator. # 4. Classes &amp; magic methods</p>
-<hr>
-<p>Trong Python, magic methods được prefixed và suffixed bởi double underscore <code>__</code> (aka dunder). Magic method được biết đến rộng rãi nhất là <code>__init__</code>.</p>
-<div id="556e4b3e" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">class</span> Node:</span>
-<span id="cb40-2">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">""" A struct to denote the node of a binary tree.</span></span>
-<span id="cb40-3"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    It contains a value and pointers to left and right children.</span></span>
-<span id="cb40-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    """</span></span>
-<span id="cb40-5">    <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>, value, left<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">None</span>, right<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">None</span>):</span>
-<span id="cb40-6">        <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.value <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> value</span>
-<span id="cb40-7">        <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.left <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> left</span>
-<span id="cb40-8">        <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.right <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> right</span></code></pre></div>
-</div>
-<p>In ra object, tuy nhiên nhìn không tường minh lắm!</p>
-<div id="e88cfb75" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1">root <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> Node(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>)</span>
-<span id="cb41-2"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(root) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># &lt;__main__.Node object at 0x1069c4518&gt;</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;__main__.Node object at 0x00000239753ED910&gt;</code></pre>
-</div>
-</div>
-<p>Chúng ta mong muốn khi in ra một Node, giá trị của nó cũng như giá trị của các Node con (nếu có) cũng sẽ được in ra. Chúng ta dùng <code>__repr__</code>:</p>
-<div id="0e51d9b7" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">class</span> Node:</span>
-<span id="cb43-2">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">""" A struct to denote the node of a binary tree.</span></span>
-<span id="cb43-3"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    It contains a value and pointers to left and right children.</span></span>
-<span id="cb43-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    """</span></span>
-<span id="cb43-5">    <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>, value, left<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">None</span>, right<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">None</span>):</span>
-<span id="cb43-6">        <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.value <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> value</span>
-<span id="cb43-7">        <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.left <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> left</span>
-<span id="cb43-8">        <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.right <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> right</span>
-<span id="cb43-9"></span>
-<span id="cb43-10">    <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">__repr__</span>(<span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>):</span>
-<span id="cb43-11">        strings <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [<span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">f'value: </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">.</span>value<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'</span>]</span>
-<span id="cb43-12">        strings.append(<span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">f'left: </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">.</span>left<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">.</span>value<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">if</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.left <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">else</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'left: None'</span>)</span>
-<span id="cb43-13">        strings.append(<span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">f'right: </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">.</span>right<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">.</span>value<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">if</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.right <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">else</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'right: None'</span>)</span>
-<span id="cb43-14">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">', '</span>.join(strings)</span>
-<span id="cb43-15"></span>
-<span id="cb43-16">left <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> Node(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>)</span>
-<span id="cb43-17">root <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> Node(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>, left)</span>
-<span id="cb43-18"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(root) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># value: 5, left: 4, right: None</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>value: 5, left: 4, right: None</code></pre>
-</div>
-</div>
-<p>Chúng ta cũng muốn hai Node có thể được so sánh được với nhau, vì thế tạo ra các magic method để implement các operator: <code>==</code> với <code>__eq__</code>, <code>&gt;</code> với <code>__lt__</code>, ‘&gt;=’ với <code>__ge__</code>:</p>
-<div id="708d1089" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">class</span> Node:</span>
-<span id="cb45-2">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">""" A struct to denote the node of a binary tree.</span></span>
-<span id="cb45-3"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    It contains a value and pointers to left and right children.</span></span>
-<span id="cb45-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    """</span></span>
-<span id="cb45-5">    <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>, value, left<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">None</span>, right<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">None</span>):</span>
-<span id="cb45-6">        <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.value <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> value</span>
-<span id="cb45-7">        <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.left <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> left</span>
-<span id="cb45-8">        <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.right <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> right</span>
-<span id="cb45-9"></span>
-<span id="cb45-10">    <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">__eq__</span>(<span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>, other):</span>
-<span id="cb45-11">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.value <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> other.value</span>
-<span id="cb45-12"></span>
-<span id="cb45-13">    <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">__lt__</span>(<span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>, other):</span>
-<span id="cb45-14">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.value <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span> other.value</span>
-<span id="cb45-15"></span>
-<span id="cb45-16">    <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">__ge__</span>(<span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>, other):</span>
-<span id="cb45-17">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.value <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;=</span> other.value</span>
-<span id="cb45-18"></span>
-<span id="cb45-19"></span>
-<span id="cb45-20">left <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> Node(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>)</span>
-<span id="cb45-21">root <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> Node(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>, left)</span>
-<span id="cb45-22"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(left <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> root) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># False</span></span>
-<span id="cb45-23"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(left <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span> root) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># True</span></span>
-<span id="cb45-24"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(left <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;=</span> root) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># False</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>False
-True
-False</code></pre>
-</div>
-</div>
-<p>Xem <a href="https://www.tutorialsteacher.com/python/magic-methods-in-python">ở đây</a>, hoặc <a href="https://docs.python.org/3/reference/datamodel.html#special-method-names">ở đây</a> danh sách đầy đủ các magic method mà Python hỗ trợ.</p>
-<p>Một số magic method khác cần chú ý <code>__len__</code>, <code>__str__</code>, <code>__iter__</code>, and <code>__slots__</code> (tham khảo <a href="https://stackoverflow.com/questions/472000/usage-of-slots/28059785#28059785">đây</a>)</p>
-</section>
-</section>
-<section id="local-namespace-objects-attributes" class="level1">
-<h1>5. Local namespace, object’s attributes</h1>
-<hr>
-<p>Hàm <code>locals()</code> trả về danh sách các biến nằm trong local namespace:</p>
-<div id="aff88a01" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb47-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">class</span> Model1:</span>
-<span id="cb47-2">    <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>, hidden_size<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>, num_layers<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, learning_rate<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3e-4</span>):</span>
-<span id="cb47-3">        <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">locals</span>())</span>
-<span id="cb47-4">        <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.hidden_size <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> hidden_size</span>
-<span id="cb47-5">        <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.num_layers <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> num_layers</span>
-<span id="cb47-6">        <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.learning_rate <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> learning_rate</span>
-<span id="cb47-7"></span>
-<span id="cb47-8">model1 <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> Model1()</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>{'self': &lt;__main__.Model1 object at 0x00000239754180D0&gt;, 'hidden_size': 100, 'num_layers': 3, 'learning_rate': 0.0003}</code></pre>
-</div>
-</div>
-<p>Các attributes của 1 object cũng được lưu hết trong <code>__dict__</code>:</p>
-<div id="5542bde4" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb49-1"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(model1.__dict__)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>{'hidden_size': 100, 'num_layers': 3, 'learning_rate': 0.0003}</code></pre>
-</div>
-</div>
-<p>Khi có quá nhiều arguments, việc assign nó trong <code>__init__</code> trở nên phiền hà, chúng ta có thể làm như sau:</p>
-<div id="07a2503d" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb51" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb51-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">class</span> Model2:</span>
-<span id="cb51-2">    <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>, hidden_size<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>, num_layers<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, learning_rate<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3e-4</span>):</span>
-<span id="cb51-3">        params <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">locals</span>()</span>
-<span id="cb51-4">        <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">del</span> params[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'self'</span>]</span>
-<span id="cb51-5">        <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.__dict__ <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> params</span>
-<span id="cb51-6"></span>
-<span id="cb51-7">model2 <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> Model2()</span>
-<span id="cb51-8"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(model2.__dict__)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>{'hidden_size': 100, 'num_layers': 3, 'learning_rate': 0.0003}</code></pre>
-</div>
-</div>
-<p>Thậm chí rất tiện khi làm việc với <code>*kwargs</code>:</p>
-<div id="9c52d834" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb53" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb53-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">class</span> Model3:</span>
-<span id="cb53-2">    <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>, <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">**</span>kwargs):</span>
-<span id="cb53-3">        <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">self</span>.__dict__ <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> kwargs</span>
-<span id="cb53-4"></span>
-<span id="cb53-5">model3 <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> Model3(hidden_size<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>, num_layers<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, learning_rate<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3e-4</span>)</span>
-<span id="cb53-6"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(model3.__dict__)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>{'hidden_size': 100, 'num_layers': 3, 'learning_rate': 0.0003}</code></pre>
-</div>
-</div>
-<p>Đọc thêm về <code>*args</code> và <code>*kwargs</code> ở <a href="https://manhhomienbienthuy.github.io/2019/09/20/python-args-kwargs.html">đây</a>.</p>
-</section>
-<section id="wild-import" class="level1">
-<h1>6. Wild Import</h1>
-<hr>
-<p>Chúng ta thường <code>import</code> tất cả như thế này:</p>
-<div class="code-with-filename">
-<div class="code-with-filename-file">
-<pre><strong>file.py</strong></pre>
-</div>
-<div class="sourceCode" id="cb55" data-filename="file.py" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb55-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| eval: false</span></span>
-<span id="cb55-2"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">from</span> parts <span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span></span></code></pre></div>
-</div>
-<p>Sẽ là vô trách nhiệm khi chúng ta import toàn bộ module, ví dụ nếu <code>parts.py</code> có cấu trúc như thế này:</p>
-<div class="code-with-filename">
-<div class="code-with-filename-file">
-<pre><strong>parts.py</strong></pre>
-</div>
-<div class="sourceCode" id="cb56" data-filename="parts.py" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb56-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| eval: false</span></span>
-<span id="cb56-2"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> numpy </span>
-<span id="cb56-3"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> tensorflow </span>
-<span id="cb56-4"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">class</span> Encoder: </span>
-<span id="cb56-5">    ... </span>
-<span id="cb56-6"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">class</span> Decoder: </span>
-<span id="cb56-7">    ... </span>
-<span id="cb56-8"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">class</span> Loss: </span>
-<span id="cb56-9">    ... </span>
-<span id="cb56-10"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> helper(<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span>args, <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">**</span>kwargs): </span>
-<span id="cb56-11">    ...</span>
-<span id="cb56-12"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> utils(<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span>args, <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">**</span>kwargs): </span>
-<span id="cb56-13">    ... </span></code></pre></div>
-</div>
-<p>Vì <code>parts.py</code> không định nghĩa <code>__all__</code>, nên <code>file.py</code> sẽ import tất cả Encoder, Decoder, Loss, helper, untils cùng với numpy và tensorFlow. Nếu chỉ muốn import Encoder, Decoder, Loss, chúng ta nên làm như sau:</p>
-<div class="code-with-filename">
-<div class="code-with-filename-file">
-<pre><strong>parts.py</strong></pre>
-</div>
-<div class="sourceCode" id="cb57" data-filename="parts.py" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb57-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| eval: false</span></span>
-<span id="cb57-2">__all__ <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'Encoder'</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'Decoder'</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'Loss'</span>] </span>
-<span id="cb57-3"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> numpy </span>
-<span id="cb57-4"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> tensorflow </span>
-<span id="cb57-5"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">class</span> Encoder: </span>
-<span id="cb57-6">    ... </span></code></pre></div>
-</div>
-<p>Chúng ta có thể dùng <code>__all__</code> để tìm hiểu thành phần một module.</p>
-</section>
-<section id="decorator-to-time-your-functions" class="level1">
-<h1>7. Decorator to time your functions</h1>
-<hr>
-<p>Chúng ta thường muốn đo lường thời gian chạy của 1 function. Các tự nhiên thường dùng là đặt <code>time.time()</code> ở hai điểm đầu và cuối giữa các lệnh.</p>
-<p>Ví dụ, với hàm tìm số Fibbonacci thứ n, với hai cách (1 cách sử dụng memoization).</p>
-<div id="16d27344" class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="cb58" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb58-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> fib_helper(n):</span>
-<span id="cb58-2">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">if</span> n <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>:</span>
-<span id="cb58-3">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> n</span>
-<span id="cb58-4">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> fib_helper(n <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>) <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> fib_helper(n <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>)</span>
-<span id="cb58-5"></span>
-<span id="cb58-6"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> fib(n):</span>
-<span id="cb58-7">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">""" fib is a wrapper function so that later we can change its behavior</span></span>
-<span id="cb58-8"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    at the top level without affecting the behavior at every recursion step.</span></span>
-<span id="cb58-9"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    """</span></span>
-<span id="cb58-10">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> fib_helper(n)</span>
-<span id="cb58-11"></span>
-<span id="cb58-12"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> fib_m_helper(n, computed):</span>
-<span id="cb58-13">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">if</span> n <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> computed:</span>
-<span id="cb58-14">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> computed[n]</span>
-<span id="cb58-15">    computed[n] <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> fib_m_helper(n <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, computed) <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> fib_m_helper(n <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>, computed)</span>
-<span id="cb58-16">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> computed[n]</span>
-<span id="cb58-17"></span>
-<span id="cb58-18"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> fib_m(n):</span>
-<span id="cb58-19">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> fib_m_helper(n, {<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>: <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>: <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>})</span></code></pre></div>
-</div>
-<p>Hãy chắc chắn <code>fib</code> và <code>fib_m</code> tương đương nhau:</p>
-<div id="39b0b7a0" class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="cb59" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb59-1"><span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> n <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">20</span>):</span>
-<span id="cb59-2">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">assert</span> fib(n) <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> fib_m(n)</span></code></pre></div>
-</div>
-<p>Đo lường thời gian chạy:</p>
-<div id="1ed51064" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb60" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb60-1"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> time</span>
-<span id="cb60-2"></span>
-<span id="cb60-3">start <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> time.time()</span>
-<span id="cb60-4">fib(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">30</span>)</span>
-<span id="cb60-5"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">f'Without memoization, it takes </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>time<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">.</span>time() <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> start<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:7f}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;"> seconds.'</span>)</span>
-<span id="cb60-6"></span>
-<span id="cb60-7">start <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> time.time()</span>
-<span id="cb60-8">fib_m(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">30</span>)</span>
-<span id="cb60-9"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">f'With memoization, it takes </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>time<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">.</span>time() <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> start<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:.7f}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;"> seconds.'</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Without memoization, it takes 0.133619 seconds.
-With memoization, it takes 0.0000000 seconds.</code></pre>
-</div>
-</div>
-<p>Using decorator, define <code>timeit</code>:</p>
-<div id="9b085ae7" class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="cb62" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb62-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> timeit(fn): </span>
-<span id="cb62-2">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># *args and **kwargs are to support positional and named arguments of fn</span></span>
-<span id="cb62-3">    <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> get_time(<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span>args, <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">**</span>kwargs): </span>
-<span id="cb62-4">        start <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> time.time() </span>
-<span id="cb62-5">        output <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> fn(<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span>args, <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">**</span>kwargs)</span>
-<span id="cb62-6">        <span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">f"Time taken in </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>fn<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">.</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">__name__</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">: </span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>time<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">.</span>time() <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> start<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:.7f}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span>)</span>
-<span id="cb62-7">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> output  <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># make sure that the decorator returns the output of fn</span></span>
-<span id="cb62-8">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> get_time </span></code></pre></div>
-</div>
-<p>Sau đó thêm <code>@timeit</code> tới function:</p>
-<div id="4c9cce44" class="cell" data-execution_count="33">
-<div class="sourceCode cell-code" id="cb63" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb63-1"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">@timeit</span></span>
-<span id="cb63-2"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> fib(n):</span>
-<span id="cb63-3">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> fib_helper(n)</span>
-<span id="cb63-4"></span>
-<span id="cb63-5"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">@timeit</span></span>
-<span id="cb63-6"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> fib_m(n):</span>
-<span id="cb63-7">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> fib_m_helper(n, {<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>: <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>: <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>})</span>
-<span id="cb63-8"></span>
-<span id="cb63-9">fib(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">30</span>)</span>
-<span id="cb63-10">fib_m(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">30</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Time taken in fib: 0.1192429
-Time taken in fib_m: 0.0000000</code></pre>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="33">
-<pre><code>832040</code></pre>
-</div>
-</div>
-</section>
-<section id="caching-with-functools.lru_cache" class="level1">
-<h1>8. Caching with <code>@functools.lru_cache</code></h1>
-<hr>
-<p>🚀Nguyên văn chị Huyền:</p>
-<blockquote class="blockquote">
-<p>Memoization is a form of cache: we cache the previously calculated Fibonacci numbers so that we don’t have to calculate them again.</p>
-</blockquote>
-<div id="5c69b429" class="cell" data-execution_count="34">
-<div class="sourceCode cell-code" id="cb66" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb66-1"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> functools</span>
-<span id="cb66-2"></span>
-<span id="cb66-3"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">@functools.lru_cache</span>()</span>
-<span id="cb66-4"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> fib_helper(n):</span>
-<span id="cb66-5">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">if</span> n <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>:</span>
-<span id="cb66-6">        <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> n</span>
-<span id="cb66-7">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> fib_helper(n <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>) <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> fib_helper(n <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>)</span>
-<span id="cb66-8"></span>
-<span id="cb66-9"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">@timeit</span></span>
-<span id="cb66-10"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">def</span> fib(n):</span>
-<span id="cb66-11">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">""" fib is a wrapper function so that later we can change its behavior</span></span>
-<span id="cb66-12"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    at the top level without affecting the behavior at every recursion step.</span></span>
-<span id="cb66-13"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">    """</span></span>
-<span id="cb66-14">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> fib_helper(n)</span>
-<span id="cb66-15"></span>
-<span id="cb66-16">fib(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">50</span>)</span>
-<span id="cb66-17">fib_m(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">50</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Time taken in fib: 0.0000000
-Time taken in fib_m: 0.0000000</code></pre>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="34">
-<pre><code>12586269025</code></pre>
-</div>
-</div>
-<p><code>lru</code> stands for “least recently used”. For more information on cache, see <a href="https://docs.python.org/3/library/functools.html">here</a>.</p>
-</section>
-<section id="reference" class="level1">
-<h1>Reference</h1>
-<hr>
-<p>Source: <a href="https://github.com/chiphuyen/python-is-cool/tree/master" class="uri">https://github.com/chiphuyen/python-is-cool/tree/master</a></p>
-
-
-<!-- -->
-
-</section>
-
- ]]></description>
-  <category>python</category>
-  <category>lambda</category>
-  <guid>https://lktuan.github.io/blog/2024-05-21-python-is-cool/</guid>
-  <pubDate>Mon, 20 May 2024 17:00:00 GMT</pubDate>
-  <media:content url="https://lktuan.github.io/blog/2024-05-21-python-is-cool/python.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>

@@ -182,7 +182,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="quarto-title-block"><div><h1 class="title">NN-Z2H Lesson 2: The spelled-out intro to language modeling - building makemore</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
                   <div>
         <div class="description">
-          backpropagation, from neuron to neural network, from micro grad to pytorch, and more
+          implement a bigram character-level language model, focus on (1) introducing torch, and (2) the overall framework of language modeling that includes model training, sampling, and the evaluation of a loss
         </div>
       </div>
                           <div class="quarto-categories">
@@ -190,7 +190,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
                 <div class="quarto-category">python</div>
                 <div class="quarto-category">andrej karpathy</div>
                 <div class="quarto-category">nn-z2h</div>
-                <div class="quarto-category">backpropagation</div>
+                <div class="quarto-category">bigram</div>
                 <div class="quarto-category">neural networks</div>
               </div>
                   </div>
@@ -216,7 +216,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">November 15, 2024</p>
+        <p class="date-modified">November 17, 2024</p>
       </div>
     </div>
       
@@ -277,7 +277,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </blockquote>
 <section id="reading-and-exploring-the-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="reading-and-exploring-the-dataset">reading and exploring the dataset</h2>
-<div id="7b9845eb" class="cell" data-execution_count="1">
+<div id="75e7430e" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -293,7 +293,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 32033</code></pre>
 </div>
 </div>
-<div id="8bb21a68" class="cell" data-execution_count="2">
+<div id="1c9c1268" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="bu">print</span>(<span class="st">"No of chars for the shortest word: "</span>, <span class="bu">min</span>(<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> words))</span>
@@ -310,7 +310,7 @@ No of chars for the longest word:  15</code></pre>
 </section>
 <section id="exploring-the-bigrams-in-the-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="exploring-the-bigrams-in-the-dataset">exploring the <code>bigrams</code> in the dataset</h2>
-<div id="a3b1add9" class="cell" data-execution_count="3">
+<div id="fbcbb7c5" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">3</span>]:</span>
@@ -341,7 +341,7 @@ a &lt;E&gt;</code></pre>
 <section id="counting-bigrams-in-a-python-dictionary" class="level2">
 <h2 class="anchored" data-anchor-id="counting-bigrams-in-a-python-dictionary">counting <code>bigrams</code> in a python dictionary</h2>
 <p>In order to learn statistics about what character is more likely to follow another character, the simplest way is <code>counting</code>.</p>
-<div id="9a9f7b91" class="cell" data-execution_count="4">
+<div id="4c4403b9" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>b <span class="op">=</span> {} <span class="co"># dict to store all pair of character</span></span>
@@ -353,13 +353,15 @@ a &lt;E&gt;</code></pre>
 <span id="cb7-7"><a href="#cb7-7"></a>    <span class="co"># print(ch1, ch2)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="e7a09aff" class="cell" data-execution_count="5">
+<div id="73f40327" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="bu">sorted</span>(b.items(), key <span class="op">=</span> <span class="kw">lambda</span> kv: kv[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="bu">sorted</span>(b.items(), key <span class="op">=</span> <span class="kw">lambda</span> kv: <span class="op">-</span>kv[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="5">
-<pre><code>[(('&lt;S&gt;', 'e'), 1),
+<pre><code>[(('a', '&lt;E&gt;'), 5),
+ (('i', 'a'), 2),
+ (('&lt;S&gt;', 'e'), 1),
  (('e', 'm'), 1),
  (('m', 'm'), 1),
  (('m', 'a'), 1),
@@ -383,22 +385,20 @@ a &lt;E&gt;</code></pre>
  (('s', 'o'), 1),
  (('o', 'p'), 1),
  (('p', 'h'), 1),
- (('h', 'i'), 1),
- (('i', 'a'), 2),
- (('a', '&lt;E&gt;'), 5)]</code></pre>
+ (('h', 'i'), 1)]</code></pre>
 </div>
 </div>
 </section>
 <section id="counting-bigrams-in-a-2d-torch-tensor-training-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="counting-bigrams-in-a-2d-torch-tensor-training-the-model">counting <code>bigrams</code> in a 2D <code>torch</code> tensor (“training the model”)</h2>
-<p>Instead of <code>list()</code>, we will use <code>torch</code> 2D array to store this information.</p>
-<div id="074d0999" class="cell" data-execution_count="6">
+<p>Instead of using Python dictionary, we will use <code>torch</code> 2D array to store this information.</p>
+<div id="d61549c5" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="im">import</span> torch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="922b6fd0" class="cell" data-execution_count="7">
+<div id="7d15b292" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>a <span class="op">=</span> torch.zeros((<span class="dv">3</span>,<span class="dv">5</span>), dtype<span class="op">=</span>torch.int32)</span>
@@ -410,8 +410,8 @@ a &lt;E&gt;</code></pre>
         [0, 0, 0, 0, 0]], dtype=torch.int32)</code></pre>
 </div>
 </div>
-<p>How can we access/assign a value in torch array</p>
-<div id="a3f9a0ad" class="cell" data-execution_count="8">
+<p>How can we access/assign a value in torch array:</p>
+<div id="719a4f09" class="cell" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>a[<span class="dv">1</span>:<span class="dv">3</span>] <span class="op">=</span> <span class="dv">10</span></span>
@@ -424,24 +424,318 @@ a &lt;E&gt;</code></pre>
 </div>
 </div>
 <p>Now the english alphabet contain 26 characters, we will need to capture the <code>&lt;S&gt;</code> and <code>&lt;E&gt;</code> also. So it would be 28 x 28 array.</p>
-<div id="5ce215e3" class="cell" data-execution_count="9">
+<div id="6aee8c06" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>N <span class="op">=</span> torch.zeros((<span class="dv">28</span>,<span class="dv">28</span>), dtype<span class="op">=</span>torch.int32)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<p>This will collect all the characters used in our dataset (join all words to a massive string and pass it to a <code>set()</code>, which will remove duplicate). With such a large dataset, all the english characters were used.</p>
+<div id="5655e022" class="cell" data-execution_count="10">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>chars <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">list</span>(<span class="bu">set</span>(<span class="st">''</span>.join(words))))</span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="bu">len</span>(chars) <span class="co"># 26 </span></span>
+<span id="cb16-3"><a href="#cb16-3"></a></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="co"># with index</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a>stoi <span class="op">=</span> {s:i <span class="cf">for</span> i,s <span class="kw">in</span> <span class="bu">enumerate</span>(chars)}</span>
+<span id="cb16-6"><a href="#cb16-6"></a>stoi[<span class="st">'&lt;S&gt;'</span>] <span class="op">=</span> <span class="dv">26</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a>stoi[<span class="st">'&lt;E&gt;'</span>] <span class="op">=</span> <span class="dv">27</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a>stoi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>{'a': 0,
+ 'b': 1,
+ 'c': 2,
+ 'd': 3,
+ 'e': 4,
+ 'f': 5,
+ 'g': 6,
+ 'h': 7,
+ 'i': 8,
+ 'j': 9,
+ 'k': 10,
+ 'l': 11,
+ 'm': 12,
+ 'n': 13,
+ 'o': 14,
+ 'p': 15,
+ 'q': 16,
+ 'r': 17,
+ 's': 18,
+ 't': 19,
+ 'u': 20,
+ 'v': 21,
+ 'w': 22,
+ 'x': 23,
+ 'y': 24,
+ 'z': 25,
+ '&lt;S&gt;': 26,
+ '&lt;E&gt;': 27}</code></pre>
+</div>
+</div>
+<div id="d62afaa5" class="cell" data-execution_count="11">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="cf">for</span> w <span class="kw">in</span> words:</span>
+<span id="cb18-2"><a href="#cb18-2"></a>  chs <span class="op">=</span> [<span class="st">'&lt;S&gt;'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'&lt;E&gt;'</span>]</span>
+<span id="cb18-3"><a href="#cb18-3"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb18-4"><a href="#cb18-4"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
+<span id="cb18-5"><a href="#cb18-5"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
+<span id="cb18-6"><a href="#cb18-6"></a>    N[ix1, ix2] <span class="op">+=</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section>
 <section id="visualizing-the-bigram-tensor" class="level2">
 <h2 class="anchored" data-anchor-id="visualizing-the-bigram-tensor">visualizing the <code>bigram</code> tensor</h2>
+<div id="5dfbd631" class="cell" data-execution_count="12">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>itos <span class="op">=</span> {i:s <span class="cf">for</span> s, i <span class="kw">in</span> stoi.items()}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="caf296a0" class="cell" data-execution_count="13">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="op">%</span>matplotlib inline</span>
+<span id="cb20-3"><a href="#cb20-3"></a></span>
+<span id="cb20-4"><a href="#cb20-4"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">16</span>,<span class="dv">16</span>))</span>
+<span id="cb20-5"><a href="#cb20-5"></a>plt.imshow(N, cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
+<span id="cb20-6"><a href="#cb20-6"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">28</span>):</span>
+<span id="cb20-7"><a href="#cb20-7"></a>  <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">28</span>):</span>
+<span id="cb20-8"><a href="#cb20-8"></a>    <span class="co"># plot character strings with number of time</span></span>
+<span id="cb20-9"><a href="#cb20-9"></a>    chstr <span class="op">=</span> itos[i] <span class="op">+</span> itos[j]</span>
+<span id="cb20-10"><a href="#cb20-10"></a>    plt.text(j, i, chstr, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, color<span class="op">=</span><span class="st">"gray"</span>)</span>
+<span id="cb20-11"><a href="#cb20-11"></a>    plt.text(j, i, N[i, j].item(), ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>, color<span class="op">=</span><span class="st">"gray"</span>)</span>
+<span id="cb20-12"><a href="#cb20-12"></a>plt.axis(<span class="st">'off'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-14-output-1.png" width="1212" height="1202" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="deleting-spurious-s-and-e-tokens-in-favor-of-a-single-.-token" class="level2">
 <h2 class="anchored" data-anchor-id="deleting-spurious-s-and-e-tokens-in-favor-of-a-single-.-token">deleting spurious (S) and (E) tokens in favor of a single <code>.</code> token</h2>
+<p><code>&lt;S&gt;</code>, and <code>&lt;E&gt;</code> look a bit annoying. let’s replace them by simple <code>.</code>.</p>
+<div id="cb78c5b4" class="cell" data-execution_count="14">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>N <span class="op">=</span> torch.zeros((<span class="dv">27</span>,<span class="dv">27</span>), dtype<span class="op">=</span>torch.int32)</span>
+<span id="cb21-2"><a href="#cb21-2"></a>stoi <span class="op">=</span> {s:i<span class="op">+</span><span class="dv">1</span> <span class="cf">for</span> i,s <span class="kw">in</span> <span class="bu">enumerate</span>(chars)}</span>
+<span id="cb21-3"><a href="#cb21-3"></a>stoi[<span class="st">'.'</span>] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb21-4"><a href="#cb21-4"></a>itos <span class="op">=</span> {i:s <span class="cf">for</span> s, i <span class="kw">in</span> stoi.items()}</span>
+<span id="cb21-5"><a href="#cb21-5"></a></span>
+<span id="cb21-6"><a href="#cb21-6"></a><span class="cf">for</span> w <span class="kw">in</span> words:</span>
+<span id="cb21-7"><a href="#cb21-7"></a>  chs <span class="op">=</span> [<span class="st">'.'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'.'</span>]</span>
+<span id="cb21-8"><a href="#cb21-8"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb21-9"><a href="#cb21-9"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
+<span id="cb21-10"><a href="#cb21-10"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
+<span id="cb21-11"><a href="#cb21-11"></a>    N[ix1, ix2] <span class="op">+=</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="39624d5f" class="cell" data-execution_count="15">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="op">%</span>matplotlib inline</span>
+<span id="cb22-3"><a href="#cb22-3"></a></span>
+<span id="cb22-4"><a href="#cb22-4"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">16</span>,<span class="dv">16</span>))</span>
+<span id="cb22-5"><a href="#cb22-5"></a>plt.imshow(N, cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
+<span id="cb22-6"><a href="#cb22-6"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">27</span>):</span>
+<span id="cb22-7"><a href="#cb22-7"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">27</span>):</span>
+<span id="cb22-8"><a href="#cb22-8"></a>        chstr <span class="op">=</span> itos[i] <span class="op">+</span> itos[j]</span>
+<span id="cb22-9"><a href="#cb22-9"></a>        plt.text(j, i, chstr, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb22-10"><a href="#cb22-10"></a>        plt.text(j, i, N[i, j].item(), ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb22-11"><a href="#cb22-11"></a>plt.axis(<span class="st">'off'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-16-output-1.png" width="1202" height="1202" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="sampling-from-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="sampling-from-the-model">sampling from the model</h2>
+<p>Taking the first column of the array.</p>
+<div id="29f2085d" class="cell" data-execution_count="16">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>N[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>tensor([   0, 4410, 1306, 1542, 1690, 1531,  417,  669,  874,  591, 2422, 2963,
+        1572, 2538, 1146,  394,  515,   92, 1639, 2055, 1308,   78,  376,  307,
+         134,  535,  929], dtype=torch.int32)</code></pre>
+</div>
+</div>
+<p>Column-wise probability.</p>
+<div id="0a06b07e" class="cell" data-execution_count="17">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a>p <span class="op">=</span> N[<span class="dv">0</span>].<span class="bu">float</span>()</span>
+<span id="cb25-2"><a href="#cb25-2"></a>p <span class="op">=</span> p <span class="op">/</span> p.<span class="bu">sum</span>()</span>
+<span id="cb25-3"><a href="#cb25-3"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>tensor([0.0000, 0.1377, 0.0408, 0.0481, 0.0528, 0.0478, 0.0130, 0.0209, 0.0273,
+        0.0184, 0.0756, 0.0925, 0.0491, 0.0792, 0.0358, 0.0123, 0.0161, 0.0029,
+        0.0512, 0.0642, 0.0408, 0.0024, 0.0117, 0.0096, 0.0042, 0.0167, 0.0290])</code></pre>
+</div>
+</div>
+<p>Creating random number with Pytorch generator at a state.</p>
+<div id="03cc22be" class="cell" data-execution_count="18">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
+<span id="cb27-2"><a href="#cb27-2"></a>p_test <span class="op">=</span> torch.rand(<span class="dv">3</span>, generator<span class="op">=</span>g)</span>
+<span id="cb27-3"><a href="#cb27-3"></a>p_test <span class="op">=</span> p_test <span class="op">/</span> p_test.<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="89b531d0" class="cell" data-execution_count="19">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a>torch.multinomial(p_test, num_samples<span class="op">=</span><span class="dv">100</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<pre><code>tensor([1, 1, 2, 0, 0, 2, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 2, 0, 0,
+        1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1,
+        0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
+        0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 1, 0,
+        0, 1, 1, 1])</code></pre>
+</div>
+</div>
+<p>Now back to our data, generate a tensor with 1 value from the <code>p</code> vector, it should return <code>m</code> ~ index 13 as it’s the most common charactor.</p>
+<div id="9c286e5d" class="cell" data-execution_count="20">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
+<span id="cb30-2"><a href="#cb30-2"></a>ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
+<span id="cb30-3"><a href="#cb30-3"></a>itos[ix]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>'j'</code></pre>
+</div>
+</div>
+<p>Let’s automate it:</p>
+<div id="05b5f4ff" class="cell" data-execution_count="21">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">214748367</span>)</span>
+<span id="cb32-2"><a href="#cb32-2"></a></span>
+<span id="cb32-3"><a href="#cb32-3"></a>ix <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb32-4"><a href="#cb32-4"></a><span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb32-5"><a href="#cb32-5"></a>  p <span class="op">=</span> N[ix].<span class="bu">float</span>()</span>
+<span id="cb32-6"><a href="#cb32-6"></a>  p <span class="op">=</span> p <span class="op">/</span> p.<span class="bu">sum</span>()</span>
+<span id="cb32-7"><a href="#cb32-7"></a>  ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
+<span id="cb32-8"><a href="#cb32-8"></a>  <span class="bu">print</span>(itos[ix])</span>
+<span id="cb32-9"><a href="#cb32-9"></a>  <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb32-10"><a href="#cb32-10"></a>    <span class="cf">break</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>v
+i
+a
+r
+i
+l
+a
+n
+d
+a
+y
+a
+r
+.</code></pre>
+</div>
+</div>
+<p>And more, joining the last result to single word, and make new 10 names:</p>
+<div id="d68ace06" class="cell" data-execution_count="22">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
+<span id="cb34-2"><a href="#cb34-2"></a></span>
+<span id="cb34-3"><a href="#cb34-3"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb34-4"><a href="#cb34-4"></a>  </span>
+<span id="cb34-5"><a href="#cb34-5"></a>  out <span class="op">=</span> []</span>
+<span id="cb34-6"><a href="#cb34-6"></a>  ix <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb34-7"><a href="#cb34-7"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb34-8"><a href="#cb34-8"></a>    p <span class="op">=</span> N[ix].<span class="bu">float</span>()</span>
+<span id="cb34-9"><a href="#cb34-9"></a>    p <span class="op">=</span> p <span class="op">/</span> p.<span class="bu">sum</span>()</span>
+<span id="cb34-10"><a href="#cb34-10"></a></span>
+<span id="cb34-11"><a href="#cb34-11"></a>    <span class="co"># p = torch.ones(27) / 27.0</span></span>
+<span id="cb34-12"><a href="#cb34-12"></a>    <span class="co"># the result look terrible, but compare to an un-trained model for eg p - uncomment to code above, they are still like names.</span></span>
+<span id="cb34-13"><a href="#cb34-13"></a>    ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
+<span id="cb34-14"><a href="#cb34-14"></a>    out.append(itos[ix])</span>
+<span id="cb34-15"><a href="#cb34-15"></a>    <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb34-16"><a href="#cb34-16"></a>      <span class="cf">break</span></span>
+<span id="cb34-17"><a href="#cb34-17"></a>  <span class="bu">print</span>(<span class="st">''</span>.join(out))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>junide.
+janasah.
+p.
+cony.
+a.
+nn.
+kohin.
+tolian.
+juee.
+ksahnaauranilevias.</code></pre>
+</div>
+</div>
 </section>
 <section id="efficiency-vectorized-normalization-of-the-rows-tensor-broadcasting" class="level2">
 <h2 class="anchored" data-anchor-id="efficiency-vectorized-normalization-of-the-rows-tensor-broadcasting">efficiency! vectorized normalization of the rows, tensor broadcasting</h2>
+<p>We just fetching a row of <code>N</code> from the counts matrix, and then always do the same things: converting to float, dividing. That’s not efficient! We now will optimize this:</p>
+<div id="8d603884" class="cell" data-execution_count="23">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a>P <span class="op">=</span> N.<span class="bu">float</span>()</span>
+<span id="cb36-2"><a href="#cb36-2"></a><span class="co"># param 1 helps summing horizontally, by rows</span></span>
+<span id="cb36-3"><a href="#cb36-3"></a><span class="co"># keepdim keeps the dimension the output is still 2D array with 1 column for each row, not a vertical vector entirely</span></span>
+<span id="cb36-4"><a href="#cb36-4"></a><span class="co"># tensor already support to broadcast the row sum allowing this dividing (keepdim helped not to mess the broadcast)</span></span>
+<span id="cb36-5"><a href="#cb36-5"></a>P <span class="op">/=</span> P.<span class="bu">sum</span>(<span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb36-6"><a href="#cb36-6"></a><span class="co"># inplace operator instead of P = P / P.sum(1, keepdim=True), take care of memory!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="f9bc2b00" class="cell" data-execution_count="24">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
+<span id="cb37-2"><a href="#cb37-2"></a></span>
+<span id="cb37-3"><a href="#cb37-3"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb37-4"><a href="#cb37-4"></a>  </span>
+<span id="cb37-5"><a href="#cb37-5"></a>  out <span class="op">=</span> []</span>
+<span id="cb37-6"><a href="#cb37-6"></a>  ix <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb37-7"><a href="#cb37-7"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb37-8"><a href="#cb37-8"></a>    p <span class="op">=</span> P[ix]</span>
+<span id="cb37-9"><a href="#cb37-9"></a>    ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
+<span id="cb37-10"><a href="#cb37-10"></a>    out.append(itos[ix])</span>
+<span id="cb37-11"><a href="#cb37-11"></a>    <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb37-12"><a href="#cb37-12"></a>      <span class="cf">break</span></span>
+<span id="cb37-13"><a href="#cb37-13"></a>  <span class="bu">print</span>(<span class="st">''</span>.join(out))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>junide.
+janasah.
+p.
+cony.
+a.
+nn.
+kohin.
+tolian.
+juee.
+ksahnaauranilevias.</code></pre>
+</div>
+</div>
 </section>
 <section id="loss-function-the-negative-log-likelihood-of-the-data-under-our-model" class="level2">
 <h2 class="anchored" data-anchor-id="loss-function-the-negative-log-likelihood-of-the-data-under-our-model">loss function (the negative log likelihood of the data under our model)</h2>
@@ -488,6 +782,11 @@ a &lt;E&gt;</code></pre>
 </section>
 <section id="resources" class="level1">
 <h1>resources</h1>
+<ol type="1">
+<li>YouTube video lecture: <a href="https://www.youtube.com/watch?v=PaCmpygFfXo" class="uri">https://www.youtube.com/watch?v=PaCmpygFfXo</a></li>
+<li>Jupyter notebook files: <a href="https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part1_bigrams.ipynb" class="uri">https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part1_bigrams.ipynb</a></li>
+<li><code>makemore</code> Github repo: <a href="https://github.com/karpathy/makemore" class="uri">https://github.com/karpathy/makemore</a></li>
+</ol>
 
 
 <!-- -->
@@ -994,150 +1293,318 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb16" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb16-1"><a href="#cb16-1"></a><span class="co">---</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a><span class="an">title:</span><span class="co"> "NN-Z2H Lesson 2: The spelled-out intro to language modeling - building makemore"</span></span>
-<span id="cb16-3"><a href="#cb16-3"></a><span class="an">description:</span><span class="co"> "backpropagation, from neuron to neural network, from micro grad to pytorch, and more"</span></span>
-<span id="cb16-4"><a href="#cb16-4"></a><span class="an">author:</span></span>
-<span id="cb16-5"><a href="#cb16-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
-<span id="cb16-6"><a href="#cb16-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
-<span id="cb16-7"><a href="#cb16-7"></a><span class="an">categories:</span><span class="co"> [til, python, andrej karpathy, nn-z2h, backpropagation, neural networks] </span></span>
-<span id="cb16-8"><a href="#cb16-8"></a><span class="an">date:</span><span class="co"> 11-15-2024</span></span>
-<span id="cb16-9"><a href="#cb16-9"></a><span class="an">date-modified:</span><span class="co"> 11-15-2024</span></span>
-<span id="cb16-10"><a href="#cb16-10"></a><span class="an">image:</span><span class="co"> puppy.jpg</span></span>
-<span id="cb16-11"><a href="#cb16-11"></a><span class="an">draft:</span><span class="co"> true</span></span>
-<span id="cb16-12"><a href="#cb16-12"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
-<span id="cb16-13"><a href="#cb16-13"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
-<span id="cb16-14"><a href="#cb16-14"></a><span class="an">editor:</span><span class="co"> visual</span></span>
-<span id="cb16-15"><a href="#cb16-15"></a><span class="an">format:</span></span>
-<span id="cb16-16"><a href="#cb16-16"></a><span class="co">  html:</span></span>
-<span id="cb16-17"><a href="#cb16-17"></a><span class="co">    code-overflow: wrap</span></span>
-<span id="cb16-18"><a href="#cb16-18"></a><span class="co">    code-tools: true</span></span>
-<span id="cb16-19"><a href="#cb16-19"></a><span class="co">    code-fold: show</span></span>
-<span id="cb16-20"><a href="#cb16-20"></a><span class="co">    code-annotations: hover</span></span>
-<span id="cb16-21"><a href="#cb16-21"></a><span class="co">---</span></span>
-<span id="cb16-22"><a href="#cb16-22"></a></span>
-<span id="cb16-23"><a href="#cb16-23"></a><span class="in">`makemore`</span> on github: <span class="ot">&lt;https://github.com/karpathy/makemore&gt;</span></span>
-<span id="cb16-24"><a href="#cb16-24"></a></span>
-<span id="cb16-25"><a href="#cb16-25"></a><span class="fu"># PART 1: intro</span></span>
-<span id="cb16-26"><a href="#cb16-26"></a></span>
-<span id="cb16-27"><a href="#cb16-27"></a><span class="at">&gt; </span><span class="in">`makemore`</span><span class="at"> takes one text file as input, where each line is assumed to be one training thing, and generates more things like it. Under the hood, it is an autoregressive character-level language model, with a wide choice of models from bigrams all the way to a Transformer (exactly as seen in GPT).</span></span>
-<span id="cb16-28"><a href="#cb16-28"></a></span>
-<span id="cb16-29"><a href="#cb16-29"></a><span class="fu">## reading and exploring the dataset</span></span>
-<span id="cb16-30"><a href="#cb16-30"></a></span>
-<span id="cb16-33"><a href="#cb16-33"></a><span class="in">```{python}</span></span>
-<span id="cb16-34"><a href="#cb16-34"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb16-35"><a href="#cb16-35"></a></span>
-<span id="cb16-36"><a href="#cb16-36"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/karpathy/makemore/refs/heads/master/names.txt"</span></span>
-<span id="cb16-37"><a href="#cb16-37"></a>words <span class="op">=</span> pd.read_csv(url, header<span class="op">=</span><span class="va">None</span>).iloc[:, <span class="dv">0</span>].tolist()</span>
-<span id="cb16-38"><a href="#cb16-38"></a></span>
-<span id="cb16-39"><a href="#cb16-39"></a><span class="bu">print</span>(words[:<span class="dv">10</span>])</span>
-<span id="cb16-40"><a href="#cb16-40"></a><span class="bu">print</span>(<span class="bu">len</span>(words))</span>
-<span id="cb16-41"><a href="#cb16-41"></a><span class="in">```</span></span>
-<span id="cb16-42"><a href="#cb16-42"></a></span>
-<span id="cb16-45"><a href="#cb16-45"></a><span class="in">```{python}</span></span>
-<span id="cb16-46"><a href="#cb16-46"></a><span class="bu">print</span>(<span class="st">"No of chars for the shortest word: "</span>, <span class="bu">min</span>(<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> words))</span>
-<span id="cb16-47"><a href="#cb16-47"></a><span class="bu">print</span>(<span class="st">"No of chars for the longest word: "</span>, <span class="bu">max</span>(<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> words))</span>
-<span id="cb16-48"><a href="#cb16-48"></a><span class="in">```</span></span>
-<span id="cb16-49"><a href="#cb16-49"></a></span>
-<span id="cb16-50"><a href="#cb16-50"></a>By looking into (1) the order of characters in individual word, and (2) that pattern for the whole dataset of 32k words, we will try to infer which character is likely to follow a character or chain of characters.</span>
-<span id="cb16-51"><a href="#cb16-51"></a></span>
-<span id="cb16-52"><a href="#cb16-52"></a>We will first building a <span class="in">`bigrams`</span> languague model - which only works will 2 characters at a time - look at the current character and try to predict the next one. We are just following this local structure!</span>
-<span id="cb16-53"><a href="#cb16-53"></a></span>
-<span id="cb16-54"><a href="#cb16-54"></a>It's just a simple (and weak) model but a good way to start.</span>
-<span id="cb16-55"><a href="#cb16-55"></a></span>
-<span id="cb16-56"><a href="#cb16-56"></a><span class="fu">## exploring the `bigrams` in the dataset</span></span>
-<span id="cb16-57"><a href="#cb16-57"></a></span>
-<span id="cb16-60"><a href="#cb16-60"></a><span class="in">```{python}</span></span>
-<span id="cb16-61"><a href="#cb16-61"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">3</span>]:</span>
-<span id="cb16-62"><a href="#cb16-62"></a>  chs <span class="op">=</span> [<span class="st">'&lt;S&gt;'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'&lt;E&gt;'</span>] <span class="co"># special start and ending token, `list()` will turn all character in word to list</span></span>
-<span id="cb16-63"><a href="#cb16-63"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
-<span id="cb16-64"><a href="#cb16-64"></a>    <span class="bu">print</span>(ch1, ch2)</span>
-<span id="cb16-65"><a href="#cb16-65"></a><span class="in">```</span></span>
-<span id="cb16-66"><a href="#cb16-66"></a></span>
-<span id="cb16-67"><a href="#cb16-67"></a><span class="fu">## counting `bigrams` in a python dictionary</span></span>
-<span id="cb16-68"><a href="#cb16-68"></a></span>
-<span id="cb16-69"><a href="#cb16-69"></a>In order to learn statistics about what character is more likely to follow another character, the simplest way is <span class="in">`counting`</span>.</span>
-<span id="cb16-70"><a href="#cb16-70"></a></span>
-<span id="cb16-73"><a href="#cb16-73"></a><span class="in">```{python}</span></span>
-<span id="cb16-74"><a href="#cb16-74"></a>b <span class="op">=</span> {} <span class="co"># dict to store all pair of character</span></span>
-<span id="cb16-75"><a href="#cb16-75"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">5</span>]: <span class="co"># do it for first five words</span></span>
-<span id="cb16-76"><a href="#cb16-76"></a>  chs <span class="op">=</span> [<span class="st">'&lt;S&gt;'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'&lt;E&gt;'</span>]</span>
-<span id="cb16-77"><a href="#cb16-77"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
-<span id="cb16-78"><a href="#cb16-78"></a>    bigram <span class="op">=</span> (ch1, ch2)</span>
-<span id="cb16-79"><a href="#cb16-79"></a>    b[bigram] <span class="op">=</span> b.get(bigram, <span class="dv">0</span>) <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb16-80"><a href="#cb16-80"></a>    <span class="co"># print(ch1, ch2)</span></span>
-<span id="cb16-81"><a href="#cb16-81"></a><span class="in">```</span></span>
-<span id="cb16-82"><a href="#cb16-82"></a></span>
-<span id="cb16-85"><a href="#cb16-85"></a><span class="in">```{python}</span></span>
-<span id="cb16-86"><a href="#cb16-86"></a><span class="bu">sorted</span>(b.items(), key <span class="op">=</span> <span class="kw">lambda</span> kv: kv[<span class="dv">1</span>])</span>
-<span id="cb16-87"><a href="#cb16-87"></a><span class="in">```</span></span>
-<span id="cb16-88"><a href="#cb16-88"></a></span>
-<span id="cb16-89"><a href="#cb16-89"></a><span class="fu">## counting `bigrams` in a 2D `torch` tensor ("training the model")</span></span>
-<span id="cb16-90"><a href="#cb16-90"></a></span>
-<span id="cb16-91"><a href="#cb16-91"></a>Instead of <span class="in">`list()`</span>, we will use <span class="in">`torch`</span> 2D array to store this information.</span>
-<span id="cb16-92"><a href="#cb16-92"></a></span>
-<span id="cb16-95"><a href="#cb16-95"></a><span class="in">```{python}</span></span>
-<span id="cb16-96"><a href="#cb16-96"></a><span class="im">import</span> torch</span>
-<span id="cb16-97"><a href="#cb16-97"></a><span class="in">```</span></span>
-<span id="cb16-98"><a href="#cb16-98"></a></span>
-<span id="cb16-101"><a href="#cb16-101"></a><span class="in">```{python}</span></span>
-<span id="cb16-102"><a href="#cb16-102"></a>a <span class="op">=</span> torch.zeros((<span class="dv">3</span>,<span class="dv">5</span>), dtype<span class="op">=</span>torch.int32)</span>
-<span id="cb16-103"><a href="#cb16-103"></a>a</span>
-<span id="cb16-104"><a href="#cb16-104"></a><span class="in">```</span></span>
-<span id="cb16-105"><a href="#cb16-105"></a></span>
-<span id="cb16-106"><a href="#cb16-106"></a>How can we access/assign a value in torch array</span>
-<span id="cb16-107"><a href="#cb16-107"></a></span>
-<span id="cb16-110"><a href="#cb16-110"></a><span class="in">```{python}</span></span>
-<span id="cb16-111"><a href="#cb16-111"></a>a[<span class="dv">1</span>:<span class="dv">3</span>] <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb16-112"><a href="#cb16-112"></a>a</span>
-<span id="cb16-113"><a href="#cb16-113"></a><span class="in">```</span></span>
-<span id="cb16-114"><a href="#cb16-114"></a></span>
-<span id="cb16-115"><a href="#cb16-115"></a>Now the english alphabet contain 26 characters, we will need to capture the <span class="in">`&lt;S&gt;`</span> and <span class="in">`&lt;E&gt;`</span> also. So it would be 28 x 28 array.</span>
-<span id="cb16-116"><a href="#cb16-116"></a></span>
-<span id="cb16-119"><a href="#cb16-119"></a><span class="in">```{python}</span></span>
-<span id="cb16-120"><a href="#cb16-120"></a>N <span class="op">=</span> torch.zeros((<span class="dv">28</span>,<span class="dv">28</span>), dtype<span class="op">=</span>torch.int32)</span>
-<span id="cb16-121"><a href="#cb16-121"></a><span class="in">```</span></span>
-<span id="cb16-122"><a href="#cb16-122"></a></span>
-<span id="cb16-125"><a href="#cb16-125"></a><span class="in">```{python}</span></span>
-<span id="cb16-126"><a href="#cb16-126"></a><span class="in">```</span></span>
-<span id="cb16-127"><a href="#cb16-127"></a></span>
-<span id="cb16-128"><a href="#cb16-128"></a><span class="fu">## visualizing the `bigram` tensor</span></span>
-<span id="cb16-129"><a href="#cb16-129"></a></span>
-<span id="cb16-130"><a href="#cb16-130"></a><span class="fu">## deleting spurious (S) and (E) tokens in favor of a single `.` token</span></span>
-<span id="cb16-131"><a href="#cb16-131"></a></span>
-<span id="cb16-132"><a href="#cb16-132"></a><span class="fu">## sampling from the model</span></span>
-<span id="cb16-133"><a href="#cb16-133"></a></span>
-<span id="cb16-134"><a href="#cb16-134"></a><span class="fu">## efficiency! vectorized normalization of the rows, tensor broadcasting</span></span>
-<span id="cb16-135"><a href="#cb16-135"></a></span>
-<span id="cb16-136"><a href="#cb16-136"></a><span class="fu">## loss function (the negative log likelihood of the data under our model)</span></span>
-<span id="cb16-137"><a href="#cb16-137"></a></span>
-<span id="cb16-138"><a href="#cb16-138"></a><span class="fu">## model smoothing with fake counts</span></span>
-<span id="cb16-139"><a href="#cb16-139"></a></span>
-<span id="cb16-140"><a href="#cb16-140"></a><span class="fu"># PART 2: the neural network approach: intro</span></span>
-<span id="cb16-141"><a href="#cb16-141"></a></span>
-<span id="cb16-142"><a href="#cb16-142"></a><span class="fu">## creating the bigram dataset for the neural net</span></span>
-<span id="cb16-143"><a href="#cb16-143"></a></span>
-<span id="cb16-144"><a href="#cb16-144"></a><span class="fu">## feeding integers into neural nets? one-hot encodings</span></span>
-<span id="cb16-145"><a href="#cb16-145"></a></span>
-<span id="cb16-146"><a href="#cb16-146"></a><span class="fu">## the "neural net": one linear layer of neurons implemented with matrix multiplication</span></span>
-<span id="cb16-147"><a href="#cb16-147"></a></span>
-<span id="cb16-148"><a href="#cb16-148"></a><span class="fu">## transforming neural net outputs into probabilities: the softmax</span></span>
-<span id="cb16-149"><a href="#cb16-149"></a></span>
-<span id="cb16-150"><a href="#cb16-150"></a><span class="fu">## summary, preview to next steps, reference to micrograd</span></span>
-<span id="cb16-151"><a href="#cb16-151"></a></span>
-<span id="cb16-152"><a href="#cb16-152"></a><span class="fu">## vectorized loss</span></span>
-<span id="cb16-153"><a href="#cb16-153"></a></span>
-<span id="cb16-154"><a href="#cb16-154"></a><span class="fu">## putting everything together</span></span>
-<span id="cb16-155"><a href="#cb16-155"></a></span>
-<span id="cb16-156"><a href="#cb16-156"></a><span class="fu">## note 1: one-hot encoding really just selects a row of the next Linear layer's weight matrix</span></span>
-<span id="cb16-157"><a href="#cb16-157"></a></span>
-<span id="cb16-158"><a href="#cb16-158"></a><span class="fu">## note 2: model smoothing as regularization loss</span></span>
-<span id="cb16-159"><a href="#cb16-159"></a></span>
-<span id="cb16-160"><a href="#cb16-160"></a><span class="fu">## sampling from the neural net</span></span>
-<span id="cb16-161"><a href="#cb16-161"></a></span>
-<span id="cb16-162"><a href="#cb16-162"></a><span class="fu">## conclusion</span></span>
-<span id="cb16-163"><a href="#cb16-163"></a></span>
-<span id="cb16-164"><a href="#cb16-164"></a><span class="fu"># resources</span></span>
+<div class="sourceCode" id="cb39" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb39-1"><a href="#cb39-1"></a><span class="co">---</span></span>
+<span id="cb39-2"><a href="#cb39-2"></a><span class="an">title:</span><span class="co"> "NN-Z2H Lesson 2: The spelled-out intro to language modeling - building makemore"</span></span>
+<span id="cb39-3"><a href="#cb39-3"></a><span class="an">description:</span><span class="co"> "implement a bigram character-level language model, focus on (1) introducing torch, and (2) the overall framework of language modeling that includes model training, sampling, and the evaluation of a loss"</span></span>
+<span id="cb39-4"><a href="#cb39-4"></a><span class="an">author:</span></span>
+<span id="cb39-5"><a href="#cb39-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
+<span id="cb39-6"><a href="#cb39-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
+<span id="cb39-7"><a href="#cb39-7"></a><span class="an">categories:</span><span class="co"> [til, python, andrej karpathy, nn-z2h, bigram, neural networks] </span></span>
+<span id="cb39-8"><a href="#cb39-8"></a><span class="an">date:</span><span class="co"> 11-15-2024</span></span>
+<span id="cb39-9"><a href="#cb39-9"></a><span class="an">date-modified:</span><span class="co"> 11-17-2024</span></span>
+<span id="cb39-10"><a href="#cb39-10"></a><span class="an">image:</span><span class="co"> andrej_new.jpg</span></span>
+<span id="cb39-11"><a href="#cb39-11"></a><span class="an">draft:</span><span class="co"> false</span></span>
+<span id="cb39-12"><a href="#cb39-12"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
+<span id="cb39-13"><a href="#cb39-13"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
+<span id="cb39-14"><a href="#cb39-14"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb39-15"><a href="#cb39-15"></a><span class="an">format:</span></span>
+<span id="cb39-16"><a href="#cb39-16"></a><span class="co">  html:</span></span>
+<span id="cb39-17"><a href="#cb39-17"></a><span class="co">    code-overflow: wrap</span></span>
+<span id="cb39-18"><a href="#cb39-18"></a><span class="co">    code-tools: true</span></span>
+<span id="cb39-19"><a href="#cb39-19"></a><span class="co">    code-fold: show</span></span>
+<span id="cb39-20"><a href="#cb39-20"></a><span class="co">    code-annotations: hover</span></span>
+<span id="cb39-21"><a href="#cb39-21"></a><span class="co">---</span></span>
+<span id="cb39-22"><a href="#cb39-22"></a></span>
+<span id="cb39-23"><a href="#cb39-23"></a><span class="in">`makemore`</span> on github: <span class="ot">&lt;https://github.com/karpathy/makemore&gt;</span></span>
+<span id="cb39-24"><a href="#cb39-24"></a></span>
+<span id="cb39-25"><a href="#cb39-25"></a><span class="fu"># PART 1: intro</span></span>
+<span id="cb39-26"><a href="#cb39-26"></a></span>
+<span id="cb39-27"><a href="#cb39-27"></a><span class="at">&gt; </span><span class="in">`makemore`</span><span class="at"> takes one text file as input, where each line is assumed to be one training thing, and generates more things like it. Under the hood, it is an autoregressive character-level language model, with a wide choice of models from bigrams all the way to a Transformer (exactly as seen in GPT).</span></span>
+<span id="cb39-28"><a href="#cb39-28"></a></span>
+<span id="cb39-29"><a href="#cb39-29"></a><span class="fu">## reading and exploring the dataset</span></span>
+<span id="cb39-30"><a href="#cb39-30"></a></span>
+<span id="cb39-33"><a href="#cb39-33"></a><span class="in">```{python}</span></span>
+<span id="cb39-34"><a href="#cb39-34"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb39-35"><a href="#cb39-35"></a></span>
+<span id="cb39-36"><a href="#cb39-36"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/karpathy/makemore/refs/heads/master/names.txt"</span></span>
+<span id="cb39-37"><a href="#cb39-37"></a>words <span class="op">=</span> pd.read_csv(url, header<span class="op">=</span><span class="va">None</span>).iloc[:, <span class="dv">0</span>].tolist()</span>
+<span id="cb39-38"><a href="#cb39-38"></a></span>
+<span id="cb39-39"><a href="#cb39-39"></a><span class="bu">print</span>(words[:<span class="dv">10</span>])</span>
+<span id="cb39-40"><a href="#cb39-40"></a><span class="bu">print</span>(<span class="bu">len</span>(words))</span>
+<span id="cb39-41"><a href="#cb39-41"></a><span class="in">```</span></span>
+<span id="cb39-42"><a href="#cb39-42"></a></span>
+<span id="cb39-45"><a href="#cb39-45"></a><span class="in">```{python}</span></span>
+<span id="cb39-46"><a href="#cb39-46"></a><span class="bu">print</span>(<span class="st">"No of chars for the shortest word: "</span>, <span class="bu">min</span>(<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> words))</span>
+<span id="cb39-47"><a href="#cb39-47"></a><span class="bu">print</span>(<span class="st">"No of chars for the longest word: "</span>, <span class="bu">max</span>(<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> words))</span>
+<span id="cb39-48"><a href="#cb39-48"></a><span class="in">```</span></span>
+<span id="cb39-49"><a href="#cb39-49"></a></span>
+<span id="cb39-50"><a href="#cb39-50"></a>By looking into (1) the order of characters in individual word, and (2) that pattern for the whole dataset of 32k words, we will try to infer which character is likely to follow a character or chain of characters.</span>
+<span id="cb39-51"><a href="#cb39-51"></a></span>
+<span id="cb39-52"><a href="#cb39-52"></a>We will first building a <span class="in">`bigrams`</span> languague model - which only works will 2 characters at a time - look at the current character and try to predict the next one. We are just following this local structure!</span>
+<span id="cb39-53"><a href="#cb39-53"></a></span>
+<span id="cb39-54"><a href="#cb39-54"></a>It's just a simple (and weak) model but a good way to start.</span>
+<span id="cb39-55"><a href="#cb39-55"></a></span>
+<span id="cb39-56"><a href="#cb39-56"></a><span class="fu">## exploring the `bigrams` in the dataset</span></span>
+<span id="cb39-57"><a href="#cb39-57"></a></span>
+<span id="cb39-60"><a href="#cb39-60"></a><span class="in">```{python}</span></span>
+<span id="cb39-61"><a href="#cb39-61"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">3</span>]:</span>
+<span id="cb39-62"><a href="#cb39-62"></a>  chs <span class="op">=</span> [<span class="st">'&lt;S&gt;'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'&lt;E&gt;'</span>] <span class="co"># special start and ending token, `list()` will turn all character in word to list</span></span>
+<span id="cb39-63"><a href="#cb39-63"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb39-64"><a href="#cb39-64"></a>    <span class="bu">print</span>(ch1, ch2)</span>
+<span id="cb39-65"><a href="#cb39-65"></a><span class="in">```</span></span>
+<span id="cb39-66"><a href="#cb39-66"></a></span>
+<span id="cb39-67"><a href="#cb39-67"></a><span class="fu">## counting `bigrams` in a python dictionary</span></span>
+<span id="cb39-68"><a href="#cb39-68"></a></span>
+<span id="cb39-69"><a href="#cb39-69"></a>In order to learn statistics about what character is more likely to follow another character, the simplest way is <span class="in">`counting`</span>.</span>
+<span id="cb39-70"><a href="#cb39-70"></a></span>
+<span id="cb39-73"><a href="#cb39-73"></a><span class="in">```{python}</span></span>
+<span id="cb39-74"><a href="#cb39-74"></a>b <span class="op">=</span> {} <span class="co"># dict to store all pair of character</span></span>
+<span id="cb39-75"><a href="#cb39-75"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">5</span>]: <span class="co"># do it for first five words</span></span>
+<span id="cb39-76"><a href="#cb39-76"></a>  chs <span class="op">=</span> [<span class="st">'&lt;S&gt;'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'&lt;E&gt;'</span>]</span>
+<span id="cb39-77"><a href="#cb39-77"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb39-78"><a href="#cb39-78"></a>    bigram <span class="op">=</span> (ch1, ch2)</span>
+<span id="cb39-79"><a href="#cb39-79"></a>    b[bigram] <span class="op">=</span> b.get(bigram, <span class="dv">0</span>) <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb39-80"><a href="#cb39-80"></a>    <span class="co"># print(ch1, ch2)</span></span>
+<span id="cb39-81"><a href="#cb39-81"></a><span class="in">```</span></span>
+<span id="cb39-82"><a href="#cb39-82"></a></span>
+<span id="cb39-85"><a href="#cb39-85"></a><span class="in">```{python}</span></span>
+<span id="cb39-86"><a href="#cb39-86"></a><span class="bu">sorted</span>(b.items(), key <span class="op">=</span> <span class="kw">lambda</span> kv: <span class="op">-</span>kv[<span class="dv">1</span>])</span>
+<span id="cb39-87"><a href="#cb39-87"></a><span class="in">```</span></span>
+<span id="cb39-88"><a href="#cb39-88"></a></span>
+<span id="cb39-89"><a href="#cb39-89"></a><span class="fu">## counting `bigrams` in a 2D `torch` tensor ("training the model")</span></span>
+<span id="cb39-90"><a href="#cb39-90"></a></span>
+<span id="cb39-91"><a href="#cb39-91"></a>Instead of using Python dictionary, we will use <span class="in">`torch`</span> 2D array to store this information.</span>
+<span id="cb39-92"><a href="#cb39-92"></a></span>
+<span id="cb39-95"><a href="#cb39-95"></a><span class="in">```{python}</span></span>
+<span id="cb39-96"><a href="#cb39-96"></a><span class="im">import</span> torch</span>
+<span id="cb39-97"><a href="#cb39-97"></a><span class="in">```</span></span>
+<span id="cb39-98"><a href="#cb39-98"></a></span>
+<span id="cb39-101"><a href="#cb39-101"></a><span class="in">```{python}</span></span>
+<span id="cb39-102"><a href="#cb39-102"></a>a <span class="op">=</span> torch.zeros((<span class="dv">3</span>,<span class="dv">5</span>), dtype<span class="op">=</span>torch.int32)</span>
+<span id="cb39-103"><a href="#cb39-103"></a>a</span>
+<span id="cb39-104"><a href="#cb39-104"></a><span class="in">```</span></span>
+<span id="cb39-105"><a href="#cb39-105"></a></span>
+<span id="cb39-106"><a href="#cb39-106"></a>How can we access/assign a value in torch array:</span>
+<span id="cb39-107"><a href="#cb39-107"></a></span>
+<span id="cb39-110"><a href="#cb39-110"></a><span class="in">```{python}</span></span>
+<span id="cb39-111"><a href="#cb39-111"></a>a[<span class="dv">1</span>:<span class="dv">3</span>] <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb39-112"><a href="#cb39-112"></a>a</span>
+<span id="cb39-113"><a href="#cb39-113"></a><span class="in">```</span></span>
+<span id="cb39-114"><a href="#cb39-114"></a></span>
+<span id="cb39-115"><a href="#cb39-115"></a>Now the english alphabet contain 26 characters, we will need to capture the <span class="in">`&lt;S&gt;`</span> and <span class="in">`&lt;E&gt;`</span> also. So it would be 28 x 28 array.</span>
+<span id="cb39-116"><a href="#cb39-116"></a></span>
+<span id="cb39-119"><a href="#cb39-119"></a><span class="in">```{python}</span></span>
+<span id="cb39-120"><a href="#cb39-120"></a>N <span class="op">=</span> torch.zeros((<span class="dv">28</span>,<span class="dv">28</span>), dtype<span class="op">=</span>torch.int32)</span>
+<span id="cb39-121"><a href="#cb39-121"></a><span class="in">```</span></span>
+<span id="cb39-122"><a href="#cb39-122"></a></span>
+<span id="cb39-123"><a href="#cb39-123"></a>This will collect all the characters used in our dataset (join all words to a massive string and pass it to a <span class="in">`set()`</span>, which will remove duplicate). With such a large dataset, all the english characters were used.</span>
+<span id="cb39-126"><a href="#cb39-126"></a><span class="in">```{python}</span></span>
+<span id="cb39-127"><a href="#cb39-127"></a>chars <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">list</span>(<span class="bu">set</span>(<span class="st">''</span>.join(words))))</span>
+<span id="cb39-128"><a href="#cb39-128"></a><span class="bu">len</span>(chars) <span class="co"># 26 </span></span>
+<span id="cb39-129"><a href="#cb39-129"></a></span>
+<span id="cb39-130"><a href="#cb39-130"></a><span class="co"># with index</span></span>
+<span id="cb39-131"><a href="#cb39-131"></a>stoi <span class="op">=</span> {s:i <span class="cf">for</span> i,s <span class="kw">in</span> <span class="bu">enumerate</span>(chars)}</span>
+<span id="cb39-132"><a href="#cb39-132"></a>stoi[<span class="st">'&lt;S&gt;'</span>] <span class="op">=</span> <span class="dv">26</span></span>
+<span id="cb39-133"><a href="#cb39-133"></a>stoi[<span class="st">'&lt;E&gt;'</span>] <span class="op">=</span> <span class="dv">27</span></span>
+<span id="cb39-134"><a href="#cb39-134"></a>stoi</span>
+<span id="cb39-135"><a href="#cb39-135"></a><span class="in">```</span></span>
+<span id="cb39-136"><a href="#cb39-136"></a></span>
+<span id="cb39-139"><a href="#cb39-139"></a><span class="in">```{python}</span></span>
+<span id="cb39-140"><a href="#cb39-140"></a><span class="cf">for</span> w <span class="kw">in</span> words:</span>
+<span id="cb39-141"><a href="#cb39-141"></a>  chs <span class="op">=</span> [<span class="st">'&lt;S&gt;'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'&lt;E&gt;'</span>]</span>
+<span id="cb39-142"><a href="#cb39-142"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb39-143"><a href="#cb39-143"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
+<span id="cb39-144"><a href="#cb39-144"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
+<span id="cb39-145"><a href="#cb39-145"></a>    N[ix1, ix2] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb39-146"><a href="#cb39-146"></a><span class="in">```</span></span>
+<span id="cb39-147"><a href="#cb39-147"></a></span>
+<span id="cb39-148"><a href="#cb39-148"></a><span class="fu">## visualizing the `bigram` tensor</span></span>
+<span id="cb39-149"><a href="#cb39-149"></a></span>
+<span id="cb39-152"><a href="#cb39-152"></a><span class="in">```{python}</span></span>
+<span id="cb39-153"><a href="#cb39-153"></a>itos <span class="op">=</span> {i:s <span class="cf">for</span> s, i <span class="kw">in</span> stoi.items()}</span>
+<span id="cb39-154"><a href="#cb39-154"></a><span class="in">```</span></span>
+<span id="cb39-155"><a href="#cb39-155"></a></span>
+<span id="cb39-158"><a href="#cb39-158"></a><span class="in">```{python}</span></span>
+<span id="cb39-159"><a href="#cb39-159"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb39-160"><a href="#cb39-160"></a><span class="op">%</span>matplotlib inline</span>
+<span id="cb39-161"><a href="#cb39-161"></a></span>
+<span id="cb39-162"><a href="#cb39-162"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">16</span>,<span class="dv">16</span>))</span>
+<span id="cb39-163"><a href="#cb39-163"></a>plt.imshow(N, cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
+<span id="cb39-164"><a href="#cb39-164"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">28</span>):</span>
+<span id="cb39-165"><a href="#cb39-165"></a>  <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">28</span>):</span>
+<span id="cb39-166"><a href="#cb39-166"></a>    <span class="co"># plot character strings with number of time</span></span>
+<span id="cb39-167"><a href="#cb39-167"></a>    chstr <span class="op">=</span> itos[i] <span class="op">+</span> itos[j]</span>
+<span id="cb39-168"><a href="#cb39-168"></a>    plt.text(j, i, chstr, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, color<span class="op">=</span><span class="st">"gray"</span>)</span>
+<span id="cb39-169"><a href="#cb39-169"></a>    plt.text(j, i, N[i, j].item(), ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>, color<span class="op">=</span><span class="st">"gray"</span>)</span>
+<span id="cb39-170"><a href="#cb39-170"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb39-171"><a href="#cb39-171"></a><span class="in">```</span></span>
+<span id="cb39-172"><a href="#cb39-172"></a></span>
+<span id="cb39-173"><a href="#cb39-173"></a><span class="fu">## deleting spurious (S) and (E) tokens in favor of a single `.` token</span></span>
+<span id="cb39-174"><a href="#cb39-174"></a></span>
+<span id="cb39-175"><a href="#cb39-175"></a><span class="in">`&lt;S&gt;`</span>, and <span class="in">`&lt;E&gt;`</span> look a bit annoying. let's replace them by simple <span class="in">`.`</span>.</span>
+<span id="cb39-176"><a href="#cb39-176"></a></span>
+<span id="cb39-179"><a href="#cb39-179"></a><span class="in">```{python}</span></span>
+<span id="cb39-180"><a href="#cb39-180"></a>N <span class="op">=</span> torch.zeros((<span class="dv">27</span>,<span class="dv">27</span>), dtype<span class="op">=</span>torch.int32)</span>
+<span id="cb39-181"><a href="#cb39-181"></a>stoi <span class="op">=</span> {s:i<span class="op">+</span><span class="dv">1</span> <span class="cf">for</span> i,s <span class="kw">in</span> <span class="bu">enumerate</span>(chars)}</span>
+<span id="cb39-182"><a href="#cb39-182"></a>stoi[<span class="st">'.'</span>] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb39-183"><a href="#cb39-183"></a>itos <span class="op">=</span> {i:s <span class="cf">for</span> s, i <span class="kw">in</span> stoi.items()}</span>
+<span id="cb39-184"><a href="#cb39-184"></a></span>
+<span id="cb39-185"><a href="#cb39-185"></a><span class="cf">for</span> w <span class="kw">in</span> words:</span>
+<span id="cb39-186"><a href="#cb39-186"></a>  chs <span class="op">=</span> [<span class="st">'.'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'.'</span>]</span>
+<span id="cb39-187"><a href="#cb39-187"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb39-188"><a href="#cb39-188"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
+<span id="cb39-189"><a href="#cb39-189"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
+<span id="cb39-190"><a href="#cb39-190"></a>    N[ix1, ix2] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb39-191"><a href="#cb39-191"></a><span class="in">```</span></span>
+<span id="cb39-192"><a href="#cb39-192"></a></span>
+<span id="cb39-195"><a href="#cb39-195"></a><span class="in">```{python}</span></span>
+<span id="cb39-196"><a href="#cb39-196"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb39-197"><a href="#cb39-197"></a><span class="op">%</span>matplotlib inline</span>
+<span id="cb39-198"><a href="#cb39-198"></a></span>
+<span id="cb39-199"><a href="#cb39-199"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">16</span>,<span class="dv">16</span>))</span>
+<span id="cb39-200"><a href="#cb39-200"></a>plt.imshow(N, cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
+<span id="cb39-201"><a href="#cb39-201"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">27</span>):</span>
+<span id="cb39-202"><a href="#cb39-202"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">27</span>):</span>
+<span id="cb39-203"><a href="#cb39-203"></a>        chstr <span class="op">=</span> itos[i] <span class="op">+</span> itos[j]</span>
+<span id="cb39-204"><a href="#cb39-204"></a>        plt.text(j, i, chstr, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb39-205"><a href="#cb39-205"></a>        plt.text(j, i, N[i, j].item(), ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb39-206"><a href="#cb39-206"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb39-207"><a href="#cb39-207"></a><span class="in">```</span></span>
+<span id="cb39-208"><a href="#cb39-208"></a></span>
+<span id="cb39-209"><a href="#cb39-209"></a><span class="fu">## sampling from the model</span></span>
+<span id="cb39-210"><a href="#cb39-210"></a></span>
+<span id="cb39-211"><a href="#cb39-211"></a>Taking the first column of the array.</span>
+<span id="cb39-214"><a href="#cb39-214"></a><span class="in">```{python}</span></span>
+<span id="cb39-215"><a href="#cb39-215"></a>N[<span class="dv">0</span>]</span>
+<span id="cb39-216"><a href="#cb39-216"></a><span class="in">```</span></span>
+<span id="cb39-217"><a href="#cb39-217"></a></span>
+<span id="cb39-218"><a href="#cb39-218"></a>Column-wise probability.</span>
+<span id="cb39-219"><a href="#cb39-219"></a></span>
+<span id="cb39-222"><a href="#cb39-222"></a><span class="in">```{python}</span></span>
+<span id="cb39-223"><a href="#cb39-223"></a>p <span class="op">=</span> N[<span class="dv">0</span>].<span class="bu">float</span>()</span>
+<span id="cb39-224"><a href="#cb39-224"></a>p <span class="op">=</span> p <span class="op">/</span> p.<span class="bu">sum</span>()</span>
+<span id="cb39-225"><a href="#cb39-225"></a>p</span>
+<span id="cb39-226"><a href="#cb39-226"></a><span class="in">```</span></span>
+<span id="cb39-227"><a href="#cb39-227"></a></span>
+<span id="cb39-228"><a href="#cb39-228"></a>Creating random number with Pytorch generator at a state.</span>
+<span id="cb39-229"><a href="#cb39-229"></a></span>
+<span id="cb39-232"><a href="#cb39-232"></a><span class="in">```{python}</span></span>
+<span id="cb39-233"><a href="#cb39-233"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
+<span id="cb39-234"><a href="#cb39-234"></a>p_test <span class="op">=</span> torch.rand(<span class="dv">3</span>, generator<span class="op">=</span>g)</span>
+<span id="cb39-235"><a href="#cb39-235"></a>p_test <span class="op">=</span> p_test <span class="op">/</span> p_test.<span class="bu">sum</span>()</span>
+<span id="cb39-236"><a href="#cb39-236"></a><span class="in">```</span></span>
+<span id="cb39-237"><a href="#cb39-237"></a></span>
+<span id="cb39-240"><a href="#cb39-240"></a><span class="in">```{python}</span></span>
+<span id="cb39-241"><a href="#cb39-241"></a>torch.multinomial(p_test, num_samples<span class="op">=</span><span class="dv">100</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g)</span>
+<span id="cb39-242"><a href="#cb39-242"></a><span class="in">```</span></span>
+<span id="cb39-243"><a href="#cb39-243"></a></span>
+<span id="cb39-244"><a href="#cb39-244"></a>Now back to our data, generate a tensor with 1 value from the <span class="in">`p`</span> vector, it should return <span class="in">`m`</span> ~ index 13 as it's the most common charactor.</span>
+<span id="cb39-245"><a href="#cb39-245"></a></span>
+<span id="cb39-248"><a href="#cb39-248"></a><span class="in">```{python}</span></span>
+<span id="cb39-249"><a href="#cb39-249"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
+<span id="cb39-250"><a href="#cb39-250"></a>ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
+<span id="cb39-251"><a href="#cb39-251"></a>itos[ix]</span>
+<span id="cb39-252"><a href="#cb39-252"></a><span class="in">```</span></span>
+<span id="cb39-253"><a href="#cb39-253"></a></span>
+<span id="cb39-254"><a href="#cb39-254"></a>Let's automate it:</span>
+<span id="cb39-255"><a href="#cb39-255"></a></span>
+<span id="cb39-258"><a href="#cb39-258"></a><span class="in">```{python}</span></span>
+<span id="cb39-259"><a href="#cb39-259"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">214748367</span>)</span>
+<span id="cb39-260"><a href="#cb39-260"></a></span>
+<span id="cb39-261"><a href="#cb39-261"></a>ix <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb39-262"><a href="#cb39-262"></a><span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb39-263"><a href="#cb39-263"></a>  p <span class="op">=</span> N[ix].<span class="bu">float</span>()</span>
+<span id="cb39-264"><a href="#cb39-264"></a>  p <span class="op">=</span> p <span class="op">/</span> p.<span class="bu">sum</span>()</span>
+<span id="cb39-265"><a href="#cb39-265"></a>  ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
+<span id="cb39-266"><a href="#cb39-266"></a>  <span class="bu">print</span>(itos[ix])</span>
+<span id="cb39-267"><a href="#cb39-267"></a>  <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb39-268"><a href="#cb39-268"></a>    <span class="cf">break</span></span>
+<span id="cb39-269"><a href="#cb39-269"></a><span class="in">```</span></span>
+<span id="cb39-270"><a href="#cb39-270"></a></span>
+<span id="cb39-271"><a href="#cb39-271"></a>And more, joining the last result to single word, and make new 10 names:</span>
+<span id="cb39-272"><a href="#cb39-272"></a></span>
+<span id="cb39-275"><a href="#cb39-275"></a><span class="in">```{python}</span></span>
+<span id="cb39-276"><a href="#cb39-276"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
+<span id="cb39-277"><a href="#cb39-277"></a></span>
+<span id="cb39-278"><a href="#cb39-278"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb39-279"><a href="#cb39-279"></a>  </span>
+<span id="cb39-280"><a href="#cb39-280"></a>  out <span class="op">=</span> []</span>
+<span id="cb39-281"><a href="#cb39-281"></a>  ix <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb39-282"><a href="#cb39-282"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb39-283"><a href="#cb39-283"></a>    p <span class="op">=</span> N[ix].<span class="bu">float</span>()</span>
+<span id="cb39-284"><a href="#cb39-284"></a>    p <span class="op">=</span> p <span class="op">/</span> p.<span class="bu">sum</span>()</span>
+<span id="cb39-285"><a href="#cb39-285"></a></span>
+<span id="cb39-286"><a href="#cb39-286"></a>    <span class="co"># p = torch.ones(27) / 27.0</span></span>
+<span id="cb39-287"><a href="#cb39-287"></a>    <span class="co"># the result look terrible, but compare to an un-trained model for eg p - uncomment to code above, they are still like names.</span></span>
+<span id="cb39-288"><a href="#cb39-288"></a>    ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
+<span id="cb39-289"><a href="#cb39-289"></a>    out.append(itos[ix])</span>
+<span id="cb39-290"><a href="#cb39-290"></a>    <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb39-291"><a href="#cb39-291"></a>      <span class="cf">break</span></span>
+<span id="cb39-292"><a href="#cb39-292"></a>  <span class="bu">print</span>(<span class="st">''</span>.join(out))</span>
+<span id="cb39-293"><a href="#cb39-293"></a><span class="in">```</span></span>
+<span id="cb39-294"><a href="#cb39-294"></a></span>
+<span id="cb39-295"><a href="#cb39-295"></a><span class="fu">## efficiency! vectorized normalization of the rows, tensor broadcasting</span></span>
+<span id="cb39-296"><a href="#cb39-296"></a></span>
+<span id="cb39-297"><a href="#cb39-297"></a>We just fetching a row of <span class="in">`N`</span> from the counts matrix, and then always do the same things: converting to float, dividing. That's not efficient! We now will optimize this:</span>
+<span id="cb39-298"><a href="#cb39-298"></a></span>
+<span id="cb39-301"><a href="#cb39-301"></a><span class="in">```{python}</span></span>
+<span id="cb39-302"><a href="#cb39-302"></a>P <span class="op">=</span> N.<span class="bu">float</span>()</span>
+<span id="cb39-303"><a href="#cb39-303"></a><span class="co"># param 1 helps summing horizontally, by rows</span></span>
+<span id="cb39-304"><a href="#cb39-304"></a><span class="co"># keepdim keeps the dimension the output is still 2D array with 1 column for each row, not a vertical vector entirely</span></span>
+<span id="cb39-305"><a href="#cb39-305"></a><span class="co"># tensor already support to broadcast the row sum allowing this dividing (keepdim helped not to mess the broadcast)</span></span>
+<span id="cb39-306"><a href="#cb39-306"></a>P <span class="op">/=</span> P.<span class="bu">sum</span>(<span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb39-307"><a href="#cb39-307"></a><span class="co"># inplace operator instead of P = P / P.sum(1, keepdim=True), take care of memory!</span></span>
+<span id="cb39-308"><a href="#cb39-308"></a><span class="in">```</span></span>
+<span id="cb39-309"><a href="#cb39-309"></a></span>
+<span id="cb39-312"><a href="#cb39-312"></a><span class="in">```{python}</span></span>
+<span id="cb39-313"><a href="#cb39-313"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
+<span id="cb39-314"><a href="#cb39-314"></a></span>
+<span id="cb39-315"><a href="#cb39-315"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb39-316"><a href="#cb39-316"></a>  </span>
+<span id="cb39-317"><a href="#cb39-317"></a>  out <span class="op">=</span> []</span>
+<span id="cb39-318"><a href="#cb39-318"></a>  ix <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb39-319"><a href="#cb39-319"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb39-320"><a href="#cb39-320"></a>    p <span class="op">=</span> P[ix]</span>
+<span id="cb39-321"><a href="#cb39-321"></a>    ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
+<span id="cb39-322"><a href="#cb39-322"></a>    out.append(itos[ix])</span>
+<span id="cb39-323"><a href="#cb39-323"></a>    <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb39-324"><a href="#cb39-324"></a>      <span class="cf">break</span></span>
+<span id="cb39-325"><a href="#cb39-325"></a>  <span class="bu">print</span>(<span class="st">''</span>.join(out))</span>
+<span id="cb39-326"><a href="#cb39-326"></a><span class="in">```</span></span>
+<span id="cb39-327"><a href="#cb39-327"></a></span>
+<span id="cb39-328"><a href="#cb39-328"></a><span class="fu">## loss function (the negative log likelihood of the data under our model)</span></span>
+<span id="cb39-329"><a href="#cb39-329"></a></span>
+<span id="cb39-330"><a href="#cb39-330"></a><span class="fu">## model smoothing with fake counts</span></span>
+<span id="cb39-331"><a href="#cb39-331"></a></span>
+<span id="cb39-332"><a href="#cb39-332"></a><span class="fu"># PART 2: the neural network approach: intro</span></span>
+<span id="cb39-333"><a href="#cb39-333"></a></span>
+<span id="cb39-334"><a href="#cb39-334"></a><span class="fu">## creating the bigram dataset for the neural net</span></span>
+<span id="cb39-335"><a href="#cb39-335"></a></span>
+<span id="cb39-336"><a href="#cb39-336"></a><span class="fu">## feeding integers into neural nets? one-hot encodings</span></span>
+<span id="cb39-337"><a href="#cb39-337"></a></span>
+<span id="cb39-338"><a href="#cb39-338"></a><span class="fu">## the "neural net": one linear layer of neurons implemented with matrix multiplication</span></span>
+<span id="cb39-339"><a href="#cb39-339"></a></span>
+<span id="cb39-340"><a href="#cb39-340"></a><span class="fu">## transforming neural net outputs into probabilities: the softmax</span></span>
+<span id="cb39-341"><a href="#cb39-341"></a></span>
+<span id="cb39-342"><a href="#cb39-342"></a><span class="fu">## summary, preview to next steps, reference to micrograd</span></span>
+<span id="cb39-343"><a href="#cb39-343"></a></span>
+<span id="cb39-344"><a href="#cb39-344"></a><span class="fu">## vectorized loss</span></span>
+<span id="cb39-345"><a href="#cb39-345"></a></span>
+<span id="cb39-346"><a href="#cb39-346"></a><span class="fu">## putting everything together</span></span>
+<span id="cb39-347"><a href="#cb39-347"></a></span>
+<span id="cb39-348"><a href="#cb39-348"></a><span class="fu">## note 1: one-hot encoding really just selects a row of the next Linear layer's weight matrix</span></span>
+<span id="cb39-349"><a href="#cb39-349"></a></span>
+<span id="cb39-350"><a href="#cb39-350"></a><span class="fu">## note 2: model smoothing as regularization loss</span></span>
+<span id="cb39-351"><a href="#cb39-351"></a></span>
+<span id="cb39-352"><a href="#cb39-352"></a><span class="fu">## sampling from the neural net</span></span>
+<span id="cb39-353"><a href="#cb39-353"></a></span>
+<span id="cb39-354"><a href="#cb39-354"></a><span class="fu">## conclusion</span></span>
+<span id="cb39-355"><a href="#cb39-355"></a></span>
+<span id="cb39-356"><a href="#cb39-356"></a><span class="fu"># resources</span></span>
+<span id="cb39-357"><a href="#cb39-357"></a></span>
+<span id="cb39-358"><a href="#cb39-358"></a><span class="ss">1. </span>YouTube video lecture: <span class="ot">&lt;https://www.youtube.com/watch?v=PaCmpygFfXo&gt;</span></span>
+<span id="cb39-359"><a href="#cb39-359"></a><span class="ss">2. </span>Jupyter notebook files: <span class="ot">&lt;https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part1_bigrams.ipynb&gt;</span></span>
+<span id="cb39-360"><a href="#cb39-360"></a><span class="ss">3. </span><span class="in">`makemore`</span> Github repo: <span class="ot">&lt;https://github.com/karpathy/makemore&gt;</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
