@@ -6,7 +6,7 @@ author:
     url: https://lktuan.github.io/
 categories: [til, python, andrej karpathy, nn-z2h, bigram, neural networks] 
 date: 11-15-2024
-date-modified: 11-17-2024
+date-modified: 11-18-2024
 image: andrej_new.jpg
 draft: false
 css: html/styles.scss
@@ -19,8 +19,6 @@ format:
     code-fold: show
     code-annotations: hover
 ---
-
-`makemore` on github: <https://github.com/karpathy/makemore>
 
 # PART 1: intro
 
@@ -103,6 +101,7 @@ N = torch.zeros((28,28), dtype=torch.int32)
 ```
 
 This will collect all the characters used in our dataset (join all words to a massive string and pass it to a `set()`, which will remove duplicate). With such a large dataset, all the english characters were used.
+
 ```{python}
 chars = sorted(list(set(''.join(words))))
 len(chars) # 26 
@@ -179,6 +178,7 @@ plt.axis('off')
 ## sampling from the model
 
 Taking the first column of the array.
+
 ```{python}
 N[0]
 ```
@@ -203,7 +203,7 @@ p_test = p_test / p_test.sum()
 torch.multinomial(p_test, num_samples=100, replacement=True, generator=g)
 ```
 
-Now back to our data, generate a tensor with 1 value from the `p` vector, it should return `m` ~ index 13 as it's the most common charactor.
+Now back to our data, generate a tensor with 1 value from the `p` vector.
 
 ```{python}
 g = torch.Generator().manual_seed(2147483647)
@@ -214,7 +214,7 @@ itos[ix]
 Let's automate it:
 
 ```{python}
-g = torch.Generator().manual_seed(214748367)
+g = torch.Generator().manual_seed(2147483647)
 
 ix = 0
 while True:
@@ -279,34 +279,358 @@ for i in range(10):
 
 ## loss function (the negative log likelihood of the data under our model)
 
+We've just trained and sampled from the model, iteratively sampled the next character and fed it in each time and got the next one. Now we need to somehow measure the quality of the model.
+
+How good is it in predicting? Gimme a number!
+
+```{python}
+# showing bigram for the first 3 words, along with the probability inferred by our model (`P`)
+# the higher the prob, the better of prediction
+# since a fair (under no data) probability of occuring a character is roughly 1/27 ~ 4%, any prob higher than 4% should be good
+# we need to combine all the prob to a single 1 number, measuring how good is our model?
+# since multiplying all the prob resulting a very very small number, we will approach by the log likelihood function
+# the log likelihood is just the sum of log of individual multiplier
+
+log_likelihood = 0.0
+for w in words[:3]:
+  chs = ['.'] + list(w) + ['.']
+  for ch1, ch2 in zip(chs, chs[1:]):
+    ix1 = stoi[ch1]
+    ix2 = stoi[ch2]
+    prob = P[ix1, ix2]
+    log_prob = torch.log(prob)
+    log_likelihood += log_prob
+    print(f'{ch1}{ch2}: {prob:.4f} {log_prob:.4f}')
+
+print(f'{log_likelihood=}') # print both the variable name and its value, for the first 3 words
+```
+
+If all the probs equal to 1, the logs will be 0. If they close to 0, the logs will be more negative. We want to use this as a loss function, meaning lower the better, so we will invert it:
+
+```{python}
+neg_log_likelihood = 0.0
+n = 0
+for w in words:
+  chs = ['.'] + list(w) + ['.']
+  for ch1, ch2 in zip(chs, chs[1:]):
+    ix1 = stoi[ch1]
+    ix2 = stoi[ch2]
+    prob = P[ix1, ix2]
+    log_prob = torch.log(prob)
+    neg_log_likelihood += -log_prob
+    n += 1
+
+print(f'{neg_log_likelihood=}')
+print(f'{neg_log_likelihood/n}')
+```
+
+Finally we insert a count and calculate the "normalized" (or average) negative log likelihood. The lower of this number, the better model we have.
+
+You can test with your name:
+
+```{python}
+neg_log_likelihood = 0.0
+n = 0
+for w in ['tuan']:
+  chs = ['.'] + list(w) + ['.']
+  for ch1, ch2 in zip(chs, chs[1:]):
+    ix1 = stoi[ch1]
+    ix2 = stoi[ch2]
+    prob = P[ix1, ix2]
+    log_prob = torch.log(prob)
+    neg_log_likelihood += -log_prob
+    n += 1
+    print(f'{ch1}{ch2}: {prob:.4f} {log_prob:.4f}')
+print(f'{neg_log_likelihood=}')
+print(f'{neg_log_likelihood/n}')
+```
+
+`tu` is not common in our dataset.
+
 ## model smoothing with fake counts
 
-# PART 2: the neural network approach: intro
+For a pair of bigram that does not exist in the dataset, for eg `jq`, the prob will be zero and log likelihood will be infinity. We can kind of smooth our model by adding constant "fake counts" to the model:
 
-## creating the bigram dataset for the neural net
+```{python}
+#| eval: false
+P = (N+1).float()
+```
+
+`1` is decent number, the more you added, you'll have a more uniformed distribution, the less, the more peaked distribution you have.
+
+# PART 2: the neural network approach - intro
+
+Now we will try to cast the problem of bigram character level of language modeling into the **neural network framework**. We first understand how to feed it in with 1 point dataset - only the first word `emma`:
+
+## creating the `bigram` dataset for the neural net
+
+```{python}
+# creating training set of bigram(x, y)
+xs, ys = [], []
+
+for w in words[:1]:
+  chs = ['.'] + list(w) + ['.']
+  for ch1, ch2 in zip(chs, chs[1:]):
+    ix1 = stoi[ch1]
+    ix2 = stoi[ch2]
+    xs.append(ix1)
+    ys.append(ix2)
+
+xs = torch.tensor(xs) # both .tensor() and .Tensor() work!
+ys = torch.tensor(ys)
+# https://stackoverflow.com/questions/51911749/what-is-the-difference-between-torch-tensor-and-torch-tensor
+# .tensor() infers dtype as int64 while .Tensor() infers dtype as float32, in this case
+```
+
+The input and output tensor for the first word will be look like this:
+
+```{md}
+> print(ch1,ch2)
+. e
+e m
+m m
+m a
+a .
+> xs
+tensor([ 0,  5, 13, 13,  1])
+> ys
+tensor([ 5, 13, 13,  1,  0])
+```
 
 ## feeding integers into neural nets? one-hot encodings
 
+```{python}
+import torch.nn.functional as F
+
+xenc = F.one_hot(xs, num_classes=27).float() # remember to cast integer to float, which can be fed to neural nets
+xenc
+```
+
+```{python}
+xenc.shape
+```
+
+```{python}
+plt.imshow(xenc, cmap="Blues")
+```
+
 ## the "neural net": one linear layer of neurons implemented with matrix multiplication
+
+```{python}
+W = torch.randn((27, 1)) # fulfill a tensor with random number followed normal distribution, 1 is indicating 1 single neuron
+xenc @ W # @ is matrix mult operator in PyTorch
+# (5, 27) @ (27, 1) will result (5, 1) matrix
+# no bias is added for now
+```
+
+This is 1 neuron only, now we want to evaluate all 27 characters using only 5 inputs from the first word, we'll make 27 neurons:
+
+```{python}
+W = torch.randn((27, 27))
+xenc @ W 
+# (5, 27) @ (27, 27) will result (5, 27) matrix
+# no bias is added for now
+```
 
 ## transforming neural net outputs into probabilities: the softmax
 
-## summary, preview to next steps, reference to micrograd
+So far we have fed 5 inputs to 27 neurons for 27 characters in **the first layer** of the neural net. We notice that the output number ranges from negative to positive while we want "how likely of the next characters". It would be counts, or probs, hence we exponentiate the logits, then dividing row-wise total to get the prob of each character.
+
+This is call the softmax!
+
+```{python}
+logits = xenc @ W # log-counts
+counts = logits.exp() # equivalent N
+probs = counts / counts.sum(1, keepdims=True)
+probs
+```
+
+## summary, preview to next steps, reference to `micrograd`
+
+```{python}
+#| eval: false
+# randomly initialize 27 neurons' weights. each neuron receives 27 inputs
+g = torch.Generator().manual_seed(2147483647) # to make sure we all have same random
+W = torch.randn((27, 27), generator=g)
+xenc = F.one_hot(xs, num_classes=27).float() # input to the network: one-hot encoding
+logits = xenc @ W # predict log-counts
+counts = logits.exp() # counts, equivalent to N
+probs = counts / counts.sum(1, keepdims=True) # probabilities for next character
+# btw: the last 2 lines here are together called a 'softmax'
+```
+
+```{python}
+probs.shape
+```
+
+Below is detail explaination for each example from our 5-datapoint dataset.
+
+```{python}
+nlls = torch.zeros(5)
+for i in range(5):
+  # i-th bigram:
+  x = xs[i].item() # input character index
+  y = ys[i].item() # label character index
+  print('--------')
+  print(f'bigram example {i+1}: {itos[x]}{itos[y]} (indexes {x},{y})')
+  print('input to the neural net:', x)
+  print('output probabilities from the neural net:', probs[i])
+  print('label (actual next character):', y)
+  p = probs[i, y]
+  print('probability assigned by the net to the the correct character:', p.item())
+  logp = torch.log(p)
+  print('log likelihood:', logp.item())
+  nll = -logp
+  print('negative log likelihood:', nll.item())
+  nlls[i] = nll
+
+print('=========')
+print('average negative log likelihood, i.e. loss =', nlls.mean().item())
+```
 
 ## vectorized loss
 
+```{python}
+loss = - probs[torch.arange(5), ys].log().mean()
+loss
+```
+
+## backward and update, in PyTorch
+
+```{python}
+#| eval: false
+# backward pass
+W.grad = None # set to zero the gradient
+loss.backward()
+# this can not yet run for now, PyTorch require the specification of require_grad
+```
+
+```{python}
+#| eval: false
+W.data += -0.1 * W.grad
+```
+
 ## putting everything together
+
+```{python}
+# create the dataset
+xs, ys = [], []
+for w in words:
+  chs = ['.'] + list(w) + ['.']
+  for ch1, ch2 in zip(chs, chs[1:]):
+    ix1 = stoi[ch1]
+    ix2 = stoi[ch2]
+    xs.append(ix1)
+    ys.append(ix2)
+xs = torch.tensor(xs)
+ys = torch.tensor(ys)
+num = xs.nelement()
+print('number of examples: ', num)
+
+# initialize the 'network'
+g = torch.Generator().manual_seed(2147483647)
+W = torch.randn((27, 27), generator=g, requires_grad=True)
+```
+
+```{python}
+# gradient descent
+for k in range(1): # after run 100 times, shorten the notebook
+  
+  # forward pass
+  xenc = F.one_hot(xs, num_classes=27).float() # input to the network: one-hot encoding
+  logits = xenc @ W # predict log-counts
+  counts = logits.exp() # counts, equivalent to N
+  probs = counts / counts.sum(1, keepdims=True) # probabilities for next character
+  loss = -probs[torch.arange(num), ys].log().mean() + 0.01*(W**2).mean() # regularization loss
+  print(loss.item())
+  
+  # backward pass
+  W.grad = None # set to zero the gradient
+  loss.backward()
+  
+  # update
+  W.data += -50 * W.grad
+```
+
+Looking back to the backprogation in the [lesson 1](https://lktuan.github.io/blog/2024-06-17-nn-z2h-p1/#doing-gradient-descent-optimization-manually-training-the-network), everything look similar here:
+
+| Part          | This neural nets for bigram language modeling                                | Neural nets introduced in the lesson 1                                                        |
+|------------------|----------------------------|--------------------------|
+| Forward pass  | `probs` , use negative log likelihood as loss function, doing classification | `ypred` , use MSE for loss function, doing regression                                         |
+| Backward pass | Same, offered by Torch.                                                      | Set grad of params to be zeros and do backpropagation.                                        |
+| Update loss   | Same                                                                         | Update the parameters, change the parameters following opposite direction to reduce the loss. |
 
 ## note 1: one-hot encoding really just selects a row of the next Linear layer's weight matrix
 
+Look at the below code, `xenc @ W` is (5, 27) \@ (27, 27) that will result (5, 27) matrix. Each `ix` row of that 5-rows result matrix should be the selection of corresponding character rows in the `W`.
+
+```{python}
+#| eval: false
+logits = xenc @ W # predict log-counts
+counts = logits.exp() # counts, equivalent to N
+probs = counts / counts.sum(1, keepdims=True) # probabilities for next character
+```
+
+So in this gradient-based framework, we start with a random array of parameters. By optimizing the loss function we will get the same result with the bigram approach (`W` and `N` are almost the same, it's log count here why is count in bigram). That's why we obtained the same loss!
+
+The neural networks offer more flexibility!
+
 ## note 2: model smoothing as regularization loss
+
+Same with smoothing technique when we've doing the bigram model, gradient-based framework have an equivalent way for smoothing. We will try to incentivize `W` to be near zero. We augment to loss function by adding this: `0.01*(W**2).mean()`.
+
+```{python}
+#| eval: false
+loss = -probs[torch.arange(num), ys].log().mean() + 0.01*(W**2).mean()
+```
 
 ## sampling from the neural net
 
+```{python}
+# finally, sample from the 'neural net' model
+g = torch.Generator().manual_seed(2147483647)
+
+for i in range(5):
+  
+  out = []
+  ix = 0
+  while True:
+    
+    # ----------
+    # BEFORE:
+    # p = P[ix]
+    # ----------
+    # NOW:
+    xenc = F.one_hot(torch.tensor([ix]), num_classes=27).float()
+    logits = xenc @ W # predict log-counts
+    counts = logits.exp() # counts, equivalent to N
+    p = counts / counts.sum(1, keepdims=True) # probabilities for next character
+    # ----------
+    
+    ix = torch.multinomial(p, num_samples=1, replacement=True, generator=g).item()
+    out.append(itos[ix])
+    if ix == 0:
+      break
+  print(''.join(out))
+```
+
 ## conclusion
+
+What we've gone through:
+
++ introduced bigrams language model? how we can train, sample, and evaluate the model;
++ we modeled by 2 different ways: 
+  - 1st: counted out the freq of bigram and normalized it;
+  - 2nd: used a negative log likelihood loss as a guide to optimizing the counts matrix/array in a gradient-based framework;
+  - we obtained the same result!
++ gradient-based framework is more flexible. We've just modeled the simplest/dumpiest language model. In next lessons, we will complexify it.
+
+We are on the way out to **transformer**!
+
+Thank you, Andrej!
 
 # resources
 
-1. YouTube video lecture: <https://www.youtube.com/watch?v=PaCmpygFfXo>
-2. Jupyter notebook files: <https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part1_bigrams.ipynb>
-3. `makemore` Github repo: <https://github.com/karpathy/makemore>
+1.  YouTube video lecture: <https://www.youtube.com/watch?v=PaCmpygFfXo>
+2.  Jupyter notebook files: <https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part1_bigrams.ipynb>
+3.  `makemore` Github repo: <https://github.com/karpathy/makemore>

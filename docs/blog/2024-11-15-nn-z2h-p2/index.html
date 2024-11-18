@@ -216,7 +216,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">November 17, 2024</p>
+        <p class="date-modified">November 18, 2024</p>
       </div>
     </div>
       
@@ -244,14 +244,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#loss-function-the-negative-log-likelihood-of-the-data-under-our-model" id="toc-loss-function-the-negative-log-likelihood-of-the-data-under-our-model" class="nav-link" data-scroll-target="#loss-function-the-negative-log-likelihood-of-the-data-under-our-model">loss function (the negative log likelihood of the data under our model)</a></li>
   <li><a href="#model-smoothing-with-fake-counts" id="toc-model-smoothing-with-fake-counts" class="nav-link" data-scroll-target="#model-smoothing-with-fake-counts">model smoothing with fake counts</a></li>
   </ul></li>
-  <li><a href="#part-2-the-neural-network-approach-intro" id="toc-part-2-the-neural-network-approach-intro" class="nav-link" data-scroll-target="#part-2-the-neural-network-approach-intro">PART 2: the neural network approach: intro</a>
+  <li><a href="#part-2-the-neural-network-approach---intro" id="toc-part-2-the-neural-network-approach---intro" class="nav-link" data-scroll-target="#part-2-the-neural-network-approach---intro">PART 2: the neural network approach - intro</a>
   <ul class="collapse">
-  <li><a href="#creating-the-bigram-dataset-for-the-neural-net" id="toc-creating-the-bigram-dataset-for-the-neural-net" class="nav-link" data-scroll-target="#creating-the-bigram-dataset-for-the-neural-net">creating the bigram dataset for the neural net</a></li>
+  <li><a href="#creating-the-bigram-dataset-for-the-neural-net" id="toc-creating-the-bigram-dataset-for-the-neural-net" class="nav-link" data-scroll-target="#creating-the-bigram-dataset-for-the-neural-net">creating the <code>bigram</code> dataset for the neural net</a></li>
   <li><a href="#feeding-integers-into-neural-nets-one-hot-encodings" id="toc-feeding-integers-into-neural-nets-one-hot-encodings" class="nav-link" data-scroll-target="#feeding-integers-into-neural-nets-one-hot-encodings">feeding integers into neural nets? one-hot encodings</a></li>
   <li><a href="#the-neural-net-one-linear-layer-of-neurons-implemented-with-matrix-multiplication" id="toc-the-neural-net-one-linear-layer-of-neurons-implemented-with-matrix-multiplication" class="nav-link" data-scroll-target="#the-neural-net-one-linear-layer-of-neurons-implemented-with-matrix-multiplication">the “neural net”: one linear layer of neurons implemented with matrix multiplication</a></li>
   <li><a href="#transforming-neural-net-outputs-into-probabilities-the-softmax" id="toc-transforming-neural-net-outputs-into-probabilities-the-softmax" class="nav-link" data-scroll-target="#transforming-neural-net-outputs-into-probabilities-the-softmax">transforming neural net outputs into probabilities: the softmax</a></li>
-  <li><a href="#summary-preview-to-next-steps-reference-to-micrograd" id="toc-summary-preview-to-next-steps-reference-to-micrograd" class="nav-link" data-scroll-target="#summary-preview-to-next-steps-reference-to-micrograd">summary, preview to next steps, reference to micrograd</a></li>
+  <li><a href="#summary-preview-to-next-steps-reference-to-micrograd" id="toc-summary-preview-to-next-steps-reference-to-micrograd" class="nav-link" data-scroll-target="#summary-preview-to-next-steps-reference-to-micrograd">summary, preview to next steps, reference to <code>micrograd</code></a></li>
   <li><a href="#vectorized-loss" id="toc-vectorized-loss" class="nav-link" data-scroll-target="#vectorized-loss">vectorized loss</a></li>
+  <li><a href="#backward-and-update-in-pytorch" id="toc-backward-and-update-in-pytorch" class="nav-link" data-scroll-target="#backward-and-update-in-pytorch">backward and update, in PyTorch</a></li>
   <li><a href="#putting-everything-together" id="toc-putting-everything-together" class="nav-link" data-scroll-target="#putting-everything-together">putting everything together</a></li>
   <li><a href="#note-1-one-hot-encoding-really-just-selects-a-row-of-the-next-linear-layers-weight-matrix" id="toc-note-1-one-hot-encoding-really-just-selects-a-row-of-the-next-linear-layers-weight-matrix" class="nav-link" data-scroll-target="#note-1-one-hot-encoding-really-just-selects-a-row-of-the-next-linear-layers-weight-matrix">note 1: one-hot encoding really just selects a row of the next Linear layer’s weight matrix</a></li>
   <li><a href="#note-2-model-smoothing-as-regularization-loss" id="toc-note-2-model-smoothing-as-regularization-loss" class="nav-link" data-scroll-target="#note-2-model-smoothing-as-regularization-loss">note 2: model smoothing as regularization loss</a></li>
@@ -269,7 +270,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<p><code>makemore</code> on github: <a href="https://github.com/karpathy/makemore" class="uri">https://github.com/karpathy/makemore</a></p>
 <section id="part-1-intro" class="level1">
 <h1>PART 1: intro</h1>
 <blockquote class="blockquote">
@@ -277,7 +277,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </blockquote>
 <section id="reading-and-exploring-the-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="reading-and-exploring-the-dataset">reading and exploring the dataset</h2>
-<div id="75e7430e" class="cell" data-execution_count="1">
+<div id="936b7088" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -293,7 +293,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 32033</code></pre>
 </div>
 </div>
-<div id="1c9c1268" class="cell" data-execution_count="2">
+<div id="23871225" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="bu">print</span>(<span class="st">"No of chars for the shortest word: "</span>, <span class="bu">min</span>(<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> words))</span>
@@ -310,7 +310,7 @@ No of chars for the longest word:  15</code></pre>
 </section>
 <section id="exploring-the-bigrams-in-the-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="exploring-the-bigrams-in-the-dataset">exploring the <code>bigrams</code> in the dataset</h2>
-<div id="fbcbb7c5" class="cell" data-execution_count="3">
+<div id="17fd4bf0" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">3</span>]:</span>
@@ -341,7 +341,7 @@ a &lt;E&gt;</code></pre>
 <section id="counting-bigrams-in-a-python-dictionary" class="level2">
 <h2 class="anchored" data-anchor-id="counting-bigrams-in-a-python-dictionary">counting <code>bigrams</code> in a python dictionary</h2>
 <p>In order to learn statistics about what character is more likely to follow another character, the simplest way is <code>counting</code>.</p>
-<div id="4c4403b9" class="cell" data-execution_count="4">
+<div id="a9c6d5a1" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>b <span class="op">=</span> {} <span class="co"># dict to store all pair of character</span></span>
@@ -353,7 +353,7 @@ a &lt;E&gt;</code></pre>
 <span id="cb7-7"><a href="#cb7-7"></a>    <span class="co"># print(ch1, ch2)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="73f40327" class="cell" data-execution_count="5">
+<div id="2f80ad3c" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="bu">sorted</span>(b.items(), key <span class="op">=</span> <span class="kw">lambda</span> kv: <span class="op">-</span>kv[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -392,13 +392,13 @@ a &lt;E&gt;</code></pre>
 <section id="counting-bigrams-in-a-2d-torch-tensor-training-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="counting-bigrams-in-a-2d-torch-tensor-training-the-model">counting <code>bigrams</code> in a 2D <code>torch</code> tensor (“training the model”)</h2>
 <p>Instead of using Python dictionary, we will use <code>torch</code> 2D array to store this information.</p>
-<div id="d61549c5" class="cell" data-execution_count="6">
+<div id="7d3b9d8a" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="im">import</span> torch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="7d15b292" class="cell" data-execution_count="7">
+<div id="44ef3e50" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>a <span class="op">=</span> torch.zeros((<span class="dv">3</span>,<span class="dv">5</span>), dtype<span class="op">=</span>torch.int32)</span>
@@ -411,7 +411,7 @@ a &lt;E&gt;</code></pre>
 </div>
 </div>
 <p>How can we access/assign a value in torch array:</p>
-<div id="719a4f09" class="cell" data-execution_count="8">
+<div id="d54f0175" class="cell" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>a[<span class="dv">1</span>:<span class="dv">3</span>] <span class="op">=</span> <span class="dv">10</span></span>
@@ -424,14 +424,14 @@ a &lt;E&gt;</code></pre>
 </div>
 </div>
 <p>Now the english alphabet contain 26 characters, we will need to capture the <code>&lt;S&gt;</code> and <code>&lt;E&gt;</code> also. So it would be 28 x 28 array.</p>
-<div id="6aee8c06" class="cell" data-execution_count="9">
+<div id="f8938c8c" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>N <span class="op">=</span> torch.zeros((<span class="dv">28</span>,<span class="dv">28</span>), dtype<span class="op">=</span>torch.int32)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>This will collect all the characters used in our dataset (join all words to a massive string and pass it to a <code>set()</code>, which will remove duplicate). With such a large dataset, all the english characters were used.</p>
-<div id="5655e022" class="cell" data-execution_count="10">
+<div id="2f29cb33" class="cell" data-execution_count="10">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>chars <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">list</span>(<span class="bu">set</span>(<span class="st">''</span>.join(words))))</span>
@@ -474,7 +474,7 @@ a &lt;E&gt;</code></pre>
  '&lt;E&gt;': 27}</code></pre>
 </div>
 </div>
-<div id="d62afaa5" class="cell" data-execution_count="11">
+<div id="4d15ed50" class="cell" data-execution_count="11">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="cf">for</span> w <span class="kw">in</span> words:</span>
@@ -488,13 +488,13 @@ a &lt;E&gt;</code></pre>
 </section>
 <section id="visualizing-the-bigram-tensor" class="level2">
 <h2 class="anchored" data-anchor-id="visualizing-the-bigram-tensor">visualizing the <code>bigram</code> tensor</h2>
-<div id="5dfbd631" class="cell" data-execution_count="12">
+<div id="ea429945" class="cell" data-execution_count="12">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>itos <span class="op">=</span> {i:s <span class="cf">for</span> s, i <span class="kw">in</span> stoi.items()}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="caf296a0" class="cell" data-execution_count="13">
+<div id="38700d68" class="cell" data-execution_count="13">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -522,7 +522,7 @@ a &lt;E&gt;</code></pre>
 <section id="deleting-spurious-s-and-e-tokens-in-favor-of-a-single-.-token" class="level2">
 <h2 class="anchored" data-anchor-id="deleting-spurious-s-and-e-tokens-in-favor-of-a-single-.-token">deleting spurious (S) and (E) tokens in favor of a single <code>.</code> token</h2>
 <p><code>&lt;S&gt;</code>, and <code>&lt;E&gt;</code> look a bit annoying. let’s replace them by simple <code>.</code>.</p>
-<div id="cb78c5b4" class="cell" data-execution_count="14">
+<div id="cbb59442" class="cell" data-execution_count="14">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>N <span class="op">=</span> torch.zeros((<span class="dv">27</span>,<span class="dv">27</span>), dtype<span class="op">=</span>torch.int32)</span>
@@ -538,7 +538,7 @@ a &lt;E&gt;</code></pre>
 <span id="cb21-11"><a href="#cb21-11"></a>    N[ix1, ix2] <span class="op">+=</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="39624d5f" class="cell" data-execution_count="15">
+<div id="41d28228" class="cell" data-execution_count="15">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -565,7 +565,7 @@ a &lt;E&gt;</code></pre>
 <section id="sampling-from-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="sampling-from-the-model">sampling from the model</h2>
 <p>Taking the first column of the array.</p>
-<div id="29f2085d" class="cell" data-execution_count="16">
+<div id="d9893d97" class="cell" data-execution_count="16">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>N[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -577,7 +577,7 @@ a &lt;E&gt;</code></pre>
 </div>
 </div>
 <p>Column-wise probability.</p>
-<div id="0a06b07e" class="cell" data-execution_count="17">
+<div id="3adedd07" class="cell" data-execution_count="17">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a>p <span class="op">=</span> N[<span class="dv">0</span>].<span class="bu">float</span>()</span>
@@ -591,7 +591,7 @@ a &lt;E&gt;</code></pre>
 </div>
 </div>
 <p>Creating random number with Pytorch generator at a state.</p>
-<div id="03cc22be" class="cell" data-execution_count="18">
+<div id="dea7f4ff" class="cell" data-execution_count="18">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
@@ -599,7 +599,7 @@ a &lt;E&gt;</code></pre>
 <span id="cb27-3"><a href="#cb27-3"></a>p_test <span class="op">=</span> p_test <span class="op">/</span> p_test.<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="89b531d0" class="cell" data-execution_count="19">
+<div id="976b3183" class="cell" data-execution_count="19">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a>torch.multinomial(p_test, num_samples<span class="op">=</span><span class="dv">100</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -612,8 +612,8 @@ a &lt;E&gt;</code></pre>
         0, 1, 1, 1])</code></pre>
 </div>
 </div>
-<p>Now back to our data, generate a tensor with 1 value from the <code>p</code> vector, it should return <code>m</code> ~ index 13 as it’s the most common charactor.</p>
-<div id="9c286e5d" class="cell" data-execution_count="20">
+<p>Now back to our data, generate a tensor with 1 value from the <code>p</code> vector.</p>
+<div id="6949d9f9" class="cell" data-execution_count="20">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
@@ -625,10 +625,10 @@ a &lt;E&gt;</code></pre>
 </div>
 </div>
 <p>Let’s automate it:</p>
-<div id="05b5f4ff" class="cell" data-execution_count="21">
+<div id="f558b5e5" class="cell" data-execution_count="21">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">214748367</span>)</span>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
 <span id="cb32-2"><a href="#cb32-2"></a></span>
 <span id="cb32-3"><a href="#cb32-3"></a>ix <span class="op">=</span> <span class="dv">0</span></span>
 <span id="cb32-4"><a href="#cb32-4"></a><span class="cf">while</span> <span class="va">True</span>:</span>
@@ -640,24 +640,17 @@ a &lt;E&gt;</code></pre>
 <span id="cb32-10"><a href="#cb32-10"></a>    <span class="cf">break</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>v
-i
-a
-r
-i
-l
-a
+<pre><code>j
+u
 n
+i
 d
-a
-y
-a
-r
+e
 .</code></pre>
 </div>
 </div>
 <p>And more, joining the last result to single word, and make new 10 names:</p>
-<div id="d68ace06" class="cell" data-execution_count="22">
+<div id="a763aa93" class="cell" data-execution_count="22">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
@@ -695,7 +688,7 @@ ksahnaauranilevias.</code></pre>
 <section id="efficiency-vectorized-normalization-of-the-rows-tensor-broadcasting" class="level2">
 <h2 class="anchored" data-anchor-id="efficiency-vectorized-normalization-of-the-rows-tensor-broadcasting">efficiency! vectorized normalization of the rows, tensor broadcasting</h2>
 <p>We just fetching a row of <code>N</code> from the counts matrix, and then always do the same things: converting to float, dividing. That’s not efficient! We now will optimize this:</p>
-<div id="8d603884" class="cell" data-execution_count="23">
+<div id="180466fb" class="cell" data-execution_count="23">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a>P <span class="op">=</span> N.<span class="bu">float</span>()</span>
@@ -706,7 +699,7 @@ ksahnaauranilevias.</code></pre>
 <span id="cb36-6"><a href="#cb36-6"></a><span class="co"># inplace operator instead of P = P / P.sum(1, keepdim=True), take care of memory!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="f9bc2b00" class="cell" data-execution_count="24">
+<div id="8e0d5d73" class="cell" data-execution_count="24">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
@@ -739,45 +732,584 @@ ksahnaauranilevias.</code></pre>
 </section>
 <section id="loss-function-the-negative-log-likelihood-of-the-data-under-our-model" class="level2">
 <h2 class="anchored" data-anchor-id="loss-function-the-negative-log-likelihood-of-the-data-under-our-model">loss function (the negative log likelihood of the data under our model)</h2>
+<p>We’ve just trained and sampled from the model, iteratively sampled the next character and fed it in each time and got the next one. Now we need to somehow measure the quality of the model.</p>
+<p>How good is it in predicting? Gimme a number!</p>
+<div id="c2895b20" class="cell" data-execution_count="25">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1"></a><span class="co"># showing bigram for the first 3 words, along with the probability inferred by our model (`P`)</span></span>
+<span id="cb39-2"><a href="#cb39-2"></a><span class="co"># the higher the prob, the better of prediction</span></span>
+<span id="cb39-3"><a href="#cb39-3"></a><span class="co"># since a fair (under no data) probability of occuring a character is roughly 1/27 ~ 4%, any prob higher than 4% should be good</span></span>
+<span id="cb39-4"><a href="#cb39-4"></a><span class="co"># we need to combine all the prob to a single 1 number, measuring how good is our model?</span></span>
+<span id="cb39-5"><a href="#cb39-5"></a><span class="co"># since multiplying all the prob resulting a very very small number, we will approach by the log likelihood function</span></span>
+<span id="cb39-6"><a href="#cb39-6"></a><span class="co"># the log likelihood is just the sum of log of individual multiplier</span></span>
+<span id="cb39-7"><a href="#cb39-7"></a></span>
+<span id="cb39-8"><a href="#cb39-8"></a>log_likelihood <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb39-9"><a href="#cb39-9"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">3</span>]:</span>
+<span id="cb39-10"><a href="#cb39-10"></a>  chs <span class="op">=</span> [<span class="st">'.'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'.'</span>]</span>
+<span id="cb39-11"><a href="#cb39-11"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb39-12"><a href="#cb39-12"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
+<span id="cb39-13"><a href="#cb39-13"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
+<span id="cb39-14"><a href="#cb39-14"></a>    prob <span class="op">=</span> P[ix1, ix2]</span>
+<span id="cb39-15"><a href="#cb39-15"></a>    log_prob <span class="op">=</span> torch.log(prob)</span>
+<span id="cb39-16"><a href="#cb39-16"></a>    log_likelihood <span class="op">+=</span> log_prob</span>
+<span id="cb39-17"><a href="#cb39-17"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>ch1<span class="sc">}{</span>ch2<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>prob<span class="sc">:.4f}</span><span class="ss"> </span><span class="sc">{</span>log_prob<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb39-18"><a href="#cb39-18"></a></span>
+<span id="cb39-19"><a href="#cb39-19"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>log_likelihood<span class="op">=</span><span class="sc">}</span><span class="ss">'</span>) <span class="co"># print both the variable name and its value, for the first 3 words</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>.e: 0.0478 -3.0408
+em: 0.0377 -3.2793
+mm: 0.0253 -3.6772
+ma: 0.3899 -0.9418
+a.: 0.1960 -1.6299
+.o: 0.0123 -4.3982
+ol: 0.0780 -2.5508
+li: 0.1777 -1.7278
+iv: 0.0152 -4.1867
+vi: 0.3541 -1.0383
+ia: 0.1381 -1.9796
+a.: 0.1960 -1.6299
+.a: 0.1377 -1.9829
+av: 0.0246 -3.7045
+va: 0.2495 -1.3882
+a.: 0.1960 -1.6299
+log_likelihood=tensor(-38.7856)</code></pre>
+</div>
+</div>
+<p>If all the probs equal to 1, the logs will be 0. If they close to 0, the logs will be more negative. We want to use this as a loss function, meaning lower the better, so we will invert it:</p>
+<div id="006ad1db" class="cell" data-execution_count="26">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1"></a>neg_log_likelihood <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb41-2"><a href="#cb41-2"></a>n <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb41-3"><a href="#cb41-3"></a><span class="cf">for</span> w <span class="kw">in</span> words:</span>
+<span id="cb41-4"><a href="#cb41-4"></a>  chs <span class="op">=</span> [<span class="st">'.'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'.'</span>]</span>
+<span id="cb41-5"><a href="#cb41-5"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb41-6"><a href="#cb41-6"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
+<span id="cb41-7"><a href="#cb41-7"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
+<span id="cb41-8"><a href="#cb41-8"></a>    prob <span class="op">=</span> P[ix1, ix2]</span>
+<span id="cb41-9"><a href="#cb41-9"></a>    log_prob <span class="op">=</span> torch.log(prob)</span>
+<span id="cb41-10"><a href="#cb41-10"></a>    neg_log_likelihood <span class="op">+=</span> <span class="op">-</span>log_prob</span>
+<span id="cb41-11"><a href="#cb41-11"></a>    n <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb41-12"><a href="#cb41-12"></a></span>
+<span id="cb41-13"><a href="#cb41-13"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>neg_log_likelihood<span class="op">=</span><span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb41-14"><a href="#cb41-14"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>neg_log_likelihood<span class="op">/</span>n<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>neg_log_likelihood=tensor(559891.7500)
+2.454094171524048</code></pre>
+</div>
+</div>
+<p>Finally we insert a count and calculate the “normalized” (or average) negative log likelihood. The lower of this number, the better model we have.</p>
+<p>You can test with your name:</p>
+<div id="f6838cce" class="cell" data-execution_count="27">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1"></a>neg_log_likelihood <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb43-2"><a href="#cb43-2"></a>n <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb43-3"><a href="#cb43-3"></a><span class="cf">for</span> w <span class="kw">in</span> [<span class="st">'tuan'</span>]:</span>
+<span id="cb43-4"><a href="#cb43-4"></a>  chs <span class="op">=</span> [<span class="st">'.'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'.'</span>]</span>
+<span id="cb43-5"><a href="#cb43-5"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb43-6"><a href="#cb43-6"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
+<span id="cb43-7"><a href="#cb43-7"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
+<span id="cb43-8"><a href="#cb43-8"></a>    prob <span class="op">=</span> P[ix1, ix2]</span>
+<span id="cb43-9"><a href="#cb43-9"></a>    log_prob <span class="op">=</span> torch.log(prob)</span>
+<span id="cb43-10"><a href="#cb43-10"></a>    neg_log_likelihood <span class="op">+=</span> <span class="op">-</span>log_prob</span>
+<span id="cb43-11"><a href="#cb43-11"></a>    n <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb43-12"><a href="#cb43-12"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>ch1<span class="sc">}{</span>ch2<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>prob<span class="sc">:.4f}</span><span class="ss"> </span><span class="sc">{</span>log_prob<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb43-13"><a href="#cb43-13"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>neg_log_likelihood<span class="op">=</span><span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb43-14"><a href="#cb43-14"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>neg_log_likelihood<span class="op">/</span>n<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>.t: 0.0408 -3.1983
+tu: 0.0140 -4.2684
+ua: 0.0520 -2.9566
+an: 0.1605 -1.8296
+n.: 0.3690 -0.9969
+neg_log_likelihood=tensor(13.2498)
+2.649962902069092</code></pre>
+</div>
+</div>
+<p><code>tu</code> is not common in our dataset.</p>
 </section>
 <section id="model-smoothing-with-fake-counts" class="level2">
 <h2 class="anchored" data-anchor-id="model-smoothing-with-fake-counts">model smoothing with fake counts</h2>
+<p>For a pair of bigram that does not exist in the dataset, for eg <code>jq</code>, the prob will be zero and log likelihood will be infinity. We can kind of smooth our model by adding constant “fake counts” to the model:</p>
+<div id="98adb194" class="cell" data-execution_count="28">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1"></a>P <span class="op">=</span> (N<span class="op">+</span><span class="dv">1</span>).<span class="bu">float</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><code>1</code> is decent number, the more you added, you’ll have a more uniformed distribution, the less, the more peaked distribution you have.</p>
 </section>
 </section>
-<section id="part-2-the-neural-network-approach-intro" class="level1">
-<h1>PART 2: the neural network approach: intro</h1>
+<section id="part-2-the-neural-network-approach---intro" class="level1">
+<h1>PART 2: the neural network approach - intro</h1>
+<p>Now we will try to cast the problem of bigram character level of language modeling into the <strong>neural network framework</strong>. We first understand how to feed it in with 1 point dataset - only the first word <code>emma</code>:</p>
 <section id="creating-the-bigram-dataset-for-the-neural-net" class="level2">
-<h2 class="anchored" data-anchor-id="creating-the-bigram-dataset-for-the-neural-net">creating the bigram dataset for the neural net</h2>
+<h2 class="anchored" data-anchor-id="creating-the-bigram-dataset-for-the-neural-net">creating the <code>bigram</code> dataset for the neural net</h2>
+<div id="e3336c64" class="cell" data-execution_count="29">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1"></a><span class="co"># creating training set of bigram(x, y)</span></span>
+<span id="cb46-2"><a href="#cb46-2"></a>xs, ys <span class="op">=</span> [], []</span>
+<span id="cb46-3"><a href="#cb46-3"></a></span>
+<span id="cb46-4"><a href="#cb46-4"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">1</span>]:</span>
+<span id="cb46-5"><a href="#cb46-5"></a>  chs <span class="op">=</span> [<span class="st">'.'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'.'</span>]</span>
+<span id="cb46-6"><a href="#cb46-6"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb46-7"><a href="#cb46-7"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
+<span id="cb46-8"><a href="#cb46-8"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
+<span id="cb46-9"><a href="#cb46-9"></a>    xs.append(ix1)</span>
+<span id="cb46-10"><a href="#cb46-10"></a>    ys.append(ix2)</span>
+<span id="cb46-11"><a href="#cb46-11"></a></span>
+<span id="cb46-12"><a href="#cb46-12"></a>xs <span class="op">=</span> torch.tensor(xs) <span class="co"># both .tensor() and .Tensor() work!</span></span>
+<span id="cb46-13"><a href="#cb46-13"></a>ys <span class="op">=</span> torch.tensor(ys)</span>
+<span id="cb46-14"><a href="#cb46-14"></a><span class="co"># https://stackoverflow.com/questions/51911749/what-is-the-difference-between-torch-tensor-and-torch-tensor</span></span>
+<span id="cb46-15"><a href="#cb46-15"></a><span class="co"># .tensor() infers dtype as int64 while .Tensor() infers dtype as float32, in this case</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The input and output tensor for the first word will be look like this:</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode numberSource {md} number-lines code-with-copy"><code class="sourceCode"><span id="cb47-1"><a href="#cb47-1"></a>&gt; print(ch1,ch2)</span>
+<span id="cb47-2"><a href="#cb47-2"></a>. e</span>
+<span id="cb47-3"><a href="#cb47-3"></a>e m</span>
+<span id="cb47-4"><a href="#cb47-4"></a>m m</span>
+<span id="cb47-5"><a href="#cb47-5"></a>m a</span>
+<span id="cb47-6"><a href="#cb47-6"></a>a .</span>
+<span id="cb47-7"><a href="#cb47-7"></a>&gt; xs</span>
+<span id="cb47-8"><a href="#cb47-8"></a>tensor([ 0,  5, 13, 13,  1])</span>
+<span id="cb47-9"><a href="#cb47-9"></a>&gt; ys</span>
+<span id="cb47-10"><a href="#cb47-10"></a>tensor([ 5, 13, 13,  1,  0])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="feeding-integers-into-neural-nets-one-hot-encodings" class="level2">
 <h2 class="anchored" data-anchor-id="feeding-integers-into-neural-nets-one-hot-encodings">feeding integers into neural nets? one-hot encodings</h2>
+<div id="6aa56822" class="cell" data-execution_count="30">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb48-2"><a href="#cb48-2"></a></span>
+<span id="cb48-3"><a href="#cb48-3"></a>xenc <span class="op">=</span> F.one_hot(xs, num_classes<span class="op">=</span><span class="dv">27</span>).<span class="bu">float</span>() <span class="co"># remember to cast integer to float, which can be fed to neural nets</span></span>
+<span id="cb48-4"><a href="#cb48-4"></a>xenc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<pre><code>tensor([[1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+         0., 0., 0., 0., 0., 0., 0., 0., 0.],
+        [0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+         0., 0., 0., 0., 0., 0., 0., 0., 0.],
+        [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0.,
+         0., 0., 0., 0., 0., 0., 0., 0., 0.],
+        [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0.,
+         0., 0., 0., 0., 0., 0., 0., 0., 0.],
+        [0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+         0., 0., 0., 0., 0., 0., 0., 0., 0.]])</code></pre>
+</div>
+</div>
+<div id="a253d638" class="cell" data-execution_count="31">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1"></a>xenc.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="30">
+<pre><code>torch.Size([5, 27])</code></pre>
+</div>
+</div>
+<div id="004fd063" class="cell" data-execution_count="32">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1"></a>plt.imshow(xenc, cmap<span class="op">=</span><span class="st">"Blues"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-33-output-1.png" width="558" height="138" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="the-neural-net-one-linear-layer-of-neurons-implemented-with-matrix-multiplication" class="level2">
 <h2 class="anchored" data-anchor-id="the-neural-net-one-linear-layer-of-neurons-implemented-with-matrix-multiplication">the “neural net”: one linear layer of neurons implemented with matrix multiplication</h2>
+<div id="c07440e5" class="cell" data-execution_count="33">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1"></a>W <span class="op">=</span> torch.randn((<span class="dv">27</span>, <span class="dv">1</span>)) <span class="co"># fulfill a tensor with random number followed normal distribution, 1 is indicating 1 single neuron</span></span>
+<span id="cb53-2"><a href="#cb53-2"></a>xenc <span class="op">@</span> W <span class="co"># @ is matrix mult operator in PyTorch</span></span>
+<span id="cb53-3"><a href="#cb53-3"></a><span class="co"># (5, 27) @ (27, 1) will result (5, 1) matrix</span></span>
+<span id="cb53-4"><a href="#cb53-4"></a><span class="co"># no bias is added for now</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="32">
+<pre><code>tensor([[-0.1372],
+        [-0.0767],
+        [ 0.6870],
+        [ 0.6870],
+        [ 0.3392]])</code></pre>
+</div>
+</div>
+<p>This is 1 neuron only, now we want to evaluate all 27 characters using only 5 inputs from the first word, we’ll make 27 neurons:</p>
+<div id="1ab9a922" class="cell" data-execution_count="34">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1"></a>W <span class="op">=</span> torch.randn((<span class="dv">27</span>, <span class="dv">27</span>))</span>
+<span id="cb55-2"><a href="#cb55-2"></a>xenc <span class="op">@</span> W </span>
+<span id="cb55-3"><a href="#cb55-3"></a><span class="co"># (5, 27) @ (27, 27) will result (5, 27) matrix</span></span>
+<span id="cb55-4"><a href="#cb55-4"></a><span class="co"># no bias is added for now</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="33">
+<pre><code>tensor([[ 0.7494, -0.2477, -1.2280, -2.7519, -0.6157,  0.2656, -0.6952,  0.7831,
+         -0.4775,  1.0757,  0.1590, -0.0310, -1.4368,  0.4128,  0.9717, -1.0103,
+         -1.3642,  0.0521,  0.8756, -2.0024, -0.9869,  0.2663, -0.6371,  0.1481,
+          0.4792,  1.2633, -0.1569],
+        [ 0.1455, -1.3386,  0.0495,  1.1875,  0.8763,  2.5532, -0.0053, -0.3445,
+         -0.5703, -0.0283,  0.7640, -1.0907,  0.0775, -0.7307,  0.2062,  0.1142,
+          0.6908,  0.2859, -0.4611, -1.7844,  0.0426, -0.8950, -0.7704,  0.4302,
+         -0.7126, -0.0987, -1.4552],
+        [-1.1880, -0.1986,  0.1949, -0.7648,  0.4196,  1.6074,  0.9203, -0.5887,
+         -0.0142, -0.7953, -0.4078, -1.3868,  0.2872,  1.0760, -0.3337, -0.6953,
+          1.1707, -0.5003,  0.3965,  0.5376,  0.8702, -1.3238, -0.1581,  0.0221,
+         -1.0727,  0.7151, -0.7207],
+        [-1.1880, -0.1986,  0.1949, -0.7648,  0.4196,  1.6074,  0.9203, -0.5887,
+         -0.0142, -0.7953, -0.4078, -1.3868,  0.2872,  1.0760, -0.3337, -0.6953,
+          1.1707, -0.5003,  0.3965,  0.5376,  0.8702, -1.3238, -0.1581,  0.0221,
+         -1.0727,  0.7151, -0.7207],
+        [ 0.6334,  0.2138, -0.3920,  1.5557, -0.5269, -0.9584, -2.4717, -1.2640,
+          0.5826,  1.5015, -2.8808,  1.0082, -0.5664, -1.4110,  1.6645,  0.2560,
+          0.6246, -1.0635,  1.1962,  0.7312, -0.2904,  0.4419,  1.9918, -1.8253,
+         -1.1975,  0.9361, -0.4943]])</code></pre>
+</div>
+</div>
 </section>
 <section id="transforming-neural-net-outputs-into-probabilities-the-softmax" class="level2">
 <h2 class="anchored" data-anchor-id="transforming-neural-net-outputs-into-probabilities-the-softmax">transforming neural net outputs into probabilities: the softmax</h2>
+<p>So far we have fed 5 inputs to 27 neurons for 27 characters in <strong>the first layer</strong> of the neural net. We notice that the output number ranges from negative to positive while we want “how likely of the next characters”. It would be counts, or probs, hence we exponentiate the logits, then dividing row-wise total to get the prob of each character.</p>
+<p>This is call the softmax!</p>
+<div id="a6c7ff91" class="cell" data-execution_count="35">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1"></a>logits <span class="op">=</span> xenc <span class="op">@</span> W <span class="co"># log-counts</span></span>
+<span id="cb57-2"><a href="#cb57-2"></a>counts <span class="op">=</span> logits.exp() <span class="co"># equivalent N</span></span>
+<span id="cb57-3"><a href="#cb57-3"></a>probs <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb57-4"><a href="#cb57-4"></a>probs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="34">
+<pre><code>tensor([[0.0673, 0.0248, 0.0093, 0.0020, 0.0172, 0.0415, 0.0159, 0.0696, 0.0197,
+         0.0932, 0.0373, 0.0308, 0.0076, 0.0480, 0.0840, 0.0116, 0.0081, 0.0335,
+         0.0763, 0.0043, 0.0119, 0.0415, 0.0168, 0.0369, 0.0513, 0.1125, 0.0272],
+        [0.0290, 0.0066, 0.0264, 0.0823, 0.0603, 0.3225, 0.0250, 0.0178, 0.0142,
+         0.0244, 0.0539, 0.0084, 0.0271, 0.0121, 0.0308, 0.0281, 0.0501, 0.0334,
+         0.0158, 0.0042, 0.0262, 0.0103, 0.0116, 0.0386, 0.0123, 0.0227, 0.0059],
+        [0.0088, 0.0237, 0.0351, 0.0134, 0.0439, 0.1440, 0.0724, 0.0160, 0.0285,
+         0.0130, 0.0192, 0.0072, 0.0385, 0.0847, 0.0207, 0.0144, 0.0931, 0.0175,
+         0.0429, 0.0494, 0.0689, 0.0077, 0.0246, 0.0295, 0.0099, 0.0590, 0.0140],
+        [0.0088, 0.0237, 0.0351, 0.0134, 0.0439, 0.1440, 0.0724, 0.0160, 0.0285,
+         0.0130, 0.0192, 0.0072, 0.0385, 0.0847, 0.0207, 0.0144, 0.0931, 0.0175,
+         0.0429, 0.0494, 0.0689, 0.0077, 0.0246, 0.0295, 0.0099, 0.0590, 0.0140],
+        [0.0399, 0.0262, 0.0143, 0.1004, 0.0125, 0.0081, 0.0018, 0.0060, 0.0379,
+         0.0951, 0.0012, 0.0581, 0.0120, 0.0052, 0.1119, 0.0274, 0.0396, 0.0073,
+         0.0701, 0.0440, 0.0158, 0.0330, 0.1553, 0.0034, 0.0064, 0.0540, 0.0129]])</code></pre>
+</div>
+</div>
 </section>
 <section id="summary-preview-to-next-steps-reference-to-micrograd" class="level2">
-<h2 class="anchored" data-anchor-id="summary-preview-to-next-steps-reference-to-micrograd">summary, preview to next steps, reference to micrograd</h2>
+<h2 class="anchored" data-anchor-id="summary-preview-to-next-steps-reference-to-micrograd">summary, preview to next steps, reference to <code>micrograd</code></h2>
+<div id="910c85e5" class="cell" data-execution_count="36">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1"></a><span class="co"># randomly initialize 27 neurons' weights. each neuron receives 27 inputs</span></span>
+<span id="cb59-2"><a href="#cb59-2"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>) <span class="co"># to make sure we all have same random</span></span>
+<span id="cb59-3"><a href="#cb59-3"></a>W <span class="op">=</span> torch.randn((<span class="dv">27</span>, <span class="dv">27</span>), generator<span class="op">=</span>g)</span>
+<span id="cb59-4"><a href="#cb59-4"></a>xenc <span class="op">=</span> F.one_hot(xs, num_classes<span class="op">=</span><span class="dv">27</span>).<span class="bu">float</span>() <span class="co"># input to the network: one-hot encoding</span></span>
+<span id="cb59-5"><a href="#cb59-5"></a>logits <span class="op">=</span> xenc <span class="op">@</span> W <span class="co"># predict log-counts</span></span>
+<span id="cb59-6"><a href="#cb59-6"></a>counts <span class="op">=</span> logits.exp() <span class="co"># counts, equivalent to N</span></span>
+<span id="cb59-7"><a href="#cb59-7"></a>probs <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>) <span class="co"># probabilities for next character</span></span>
+<span id="cb59-8"><a href="#cb59-8"></a><span class="co"># btw: the last 2 lines here are together called a 'softmax'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="78aefada" class="cell" data-execution_count="37">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1"></a>probs.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="35">
+<pre><code>torch.Size([5, 27])</code></pre>
+</div>
+</div>
+<p>Below is detail explaination for each example from our 5-datapoint dataset.</p>
+<div id="c75eb8af" class="cell" data-execution_count="38">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1"></a>nlls <span class="op">=</span> torch.zeros(<span class="dv">5</span>)</span>
+<span id="cb62-2"><a href="#cb62-2"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb62-3"><a href="#cb62-3"></a>  <span class="co"># i-th bigram:</span></span>
+<span id="cb62-4"><a href="#cb62-4"></a>  x <span class="op">=</span> xs[i].item() <span class="co"># input character index</span></span>
+<span id="cb62-5"><a href="#cb62-5"></a>  y <span class="op">=</span> ys[i].item() <span class="co"># label character index</span></span>
+<span id="cb62-6"><a href="#cb62-6"></a>  <span class="bu">print</span>(<span class="st">'--------'</span>)</span>
+<span id="cb62-7"><a href="#cb62-7"></a>  <span class="bu">print</span>(<span class="ss">f'bigram example </span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>itos[x]<span class="sc">}{</span>itos[y]<span class="sc">}</span><span class="ss"> (indexes </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss">,</span><span class="sc">{</span>y<span class="sc">}</span><span class="ss">)'</span>)</span>
+<span id="cb62-8"><a href="#cb62-8"></a>  <span class="bu">print</span>(<span class="st">'input to the neural net:'</span>, x)</span>
+<span id="cb62-9"><a href="#cb62-9"></a>  <span class="bu">print</span>(<span class="st">'output probabilities from the neural net:'</span>, probs[i])</span>
+<span id="cb62-10"><a href="#cb62-10"></a>  <span class="bu">print</span>(<span class="st">'label (actual next character):'</span>, y)</span>
+<span id="cb62-11"><a href="#cb62-11"></a>  p <span class="op">=</span> probs[i, y]</span>
+<span id="cb62-12"><a href="#cb62-12"></a>  <span class="bu">print</span>(<span class="st">'probability assigned by the net to the the correct character:'</span>, p.item())</span>
+<span id="cb62-13"><a href="#cb62-13"></a>  logp <span class="op">=</span> torch.log(p)</span>
+<span id="cb62-14"><a href="#cb62-14"></a>  <span class="bu">print</span>(<span class="st">'log likelihood:'</span>, logp.item())</span>
+<span id="cb62-15"><a href="#cb62-15"></a>  nll <span class="op">=</span> <span class="op">-</span>logp</span>
+<span id="cb62-16"><a href="#cb62-16"></a>  <span class="bu">print</span>(<span class="st">'negative log likelihood:'</span>, nll.item())</span>
+<span id="cb62-17"><a href="#cb62-17"></a>  nlls[i] <span class="op">=</span> nll</span>
+<span id="cb62-18"><a href="#cb62-18"></a></span>
+<span id="cb62-19"><a href="#cb62-19"></a><span class="bu">print</span>(<span class="st">'========='</span>)</span>
+<span id="cb62-20"><a href="#cb62-20"></a><span class="bu">print</span>(<span class="st">'average negative log likelihood, i.e. loss ='</span>, nlls.mean().item())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>--------
+bigram example 1: .e (indexes 0,5)
+input to the neural net: 0
+output probabilities from the neural net: tensor([0.0673, 0.0248, 0.0093, 0.0020, 0.0172, 0.0415, 0.0159, 0.0696, 0.0197,
+        0.0932, 0.0373, 0.0308, 0.0076, 0.0480, 0.0840, 0.0116, 0.0081, 0.0335,
+        0.0763, 0.0043, 0.0119, 0.0415, 0.0168, 0.0369, 0.0513, 0.1125, 0.0272])
+label (actual next character): 5
+probability assigned by the net to the the correct character: 0.04146900027990341
+log likelihood: -3.1828091144561768
+negative log likelihood: 3.1828091144561768
+--------
+bigram example 2: em (indexes 5,13)
+input to the neural net: 5
+output probabilities from the neural net: tensor([0.0290, 0.0066, 0.0264, 0.0823, 0.0603, 0.3225, 0.0250, 0.0178, 0.0142,
+        0.0244, 0.0539, 0.0084, 0.0271, 0.0121, 0.0308, 0.0281, 0.0501, 0.0334,
+        0.0158, 0.0042, 0.0262, 0.0103, 0.0116, 0.0386, 0.0123, 0.0227, 0.0059])
+label (actual next character): 13
+probability assigned by the net to the the correct character: 0.012087138369679451
+log likelihood: -4.415613174438477
+negative log likelihood: 4.415613174438477
+--------
+bigram example 3: mm (indexes 13,13)
+input to the neural net: 13
+output probabilities from the neural net: tensor([0.0088, 0.0237, 0.0351, 0.0134, 0.0439, 0.1440, 0.0724, 0.0160, 0.0285,
+        0.0130, 0.0192, 0.0072, 0.0385, 0.0847, 0.0207, 0.0144, 0.0931, 0.0175,
+        0.0429, 0.0494, 0.0689, 0.0077, 0.0246, 0.0295, 0.0099, 0.0590, 0.0140])
+label (actual next character): 13
+probability assigned by the net to the the correct character: 0.08465039730072021
+log likelihood: -2.4692254066467285
+negative log likelihood: 2.4692254066467285
+--------
+bigram example 4: ma (indexes 13,1)
+input to the neural net: 13
+output probabilities from the neural net: tensor([0.0088, 0.0237, 0.0351, 0.0134, 0.0439, 0.1440, 0.0724, 0.0160, 0.0285,
+        0.0130, 0.0192, 0.0072, 0.0385, 0.0847, 0.0207, 0.0144, 0.0931, 0.0175,
+        0.0429, 0.0494, 0.0689, 0.0077, 0.0246, 0.0295, 0.0099, 0.0590, 0.0140])
+label (actual next character): 1
+probability assigned by the net to the the correct character: 0.023665325716137886
+log likelihood: -3.743744373321533
+negative log likelihood: 3.743744373321533
+--------
+bigram example 5: a. (indexes 1,0)
+input to the neural net: 1
+output probabilities from the neural net: tensor([0.0399, 0.0262, 0.0143, 0.1004, 0.0125, 0.0081, 0.0018, 0.0060, 0.0379,
+        0.0951, 0.0012, 0.0581, 0.0120, 0.0052, 0.1119, 0.0274, 0.0396, 0.0073,
+        0.0701, 0.0440, 0.0158, 0.0330, 0.1553, 0.0034, 0.0064, 0.0540, 0.0129])
+label (actual next character): 0
+probability assigned by the net to the the correct character: 0.03992076218128204
+log likelihood: -3.2208588123321533
+negative log likelihood: 3.2208588123321533
+=========
+average negative log likelihood, i.e. loss = 3.406449794769287</code></pre>
+</div>
+</div>
 </section>
 <section id="vectorized-loss" class="level2">
 <h2 class="anchored" data-anchor-id="vectorized-loss">vectorized loss</h2>
+<div id="be0ef12d" class="cell" data-execution_count="39">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1"></a>loss <span class="op">=</span> <span class="op">-</span> probs[torch.arange(<span class="dv">5</span>), ys].log().mean()</span>
+<span id="cb64-2"><a href="#cb64-2"></a>loss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<pre><code>tensor(3.4064)</code></pre>
+</div>
+</div>
+</section>
+<section id="backward-and-update-in-pytorch" class="level2">
+<h2 class="anchored" data-anchor-id="backward-and-update-in-pytorch">backward and update, in PyTorch</h2>
+<div id="4dc832f7" class="cell" data-execution_count="40">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1"></a><span class="co"># backward pass</span></span>
+<span id="cb66-2"><a href="#cb66-2"></a>W.grad <span class="op">=</span> <span class="va">None</span> <span class="co"># set to zero the gradient</span></span>
+<span id="cb66-3"><a href="#cb66-3"></a>loss.backward()</span>
+<span id="cb66-4"><a href="#cb66-4"></a><span class="co"># this can not yet run for now, PyTorch require the specification of require_grad</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="7c4ff3a6" class="cell" data-execution_count="41">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1"></a>W.data <span class="op">+=</span> <span class="op">-</span><span class="fl">0.1</span> <span class="op">*</span> W.grad</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section>
 <section id="putting-everything-together" class="level2">
 <h2 class="anchored" data-anchor-id="putting-everything-together">putting everything together</h2>
+<div id="71b21186" class="cell" data-execution_count="42">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1"></a><span class="co"># create the dataset</span></span>
+<span id="cb68-2"><a href="#cb68-2"></a>xs, ys <span class="op">=</span> [], []</span>
+<span id="cb68-3"><a href="#cb68-3"></a><span class="cf">for</span> w <span class="kw">in</span> words:</span>
+<span id="cb68-4"><a href="#cb68-4"></a>  chs <span class="op">=</span> [<span class="st">'.'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'.'</span>]</span>
+<span id="cb68-5"><a href="#cb68-5"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb68-6"><a href="#cb68-6"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
+<span id="cb68-7"><a href="#cb68-7"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
+<span id="cb68-8"><a href="#cb68-8"></a>    xs.append(ix1)</span>
+<span id="cb68-9"><a href="#cb68-9"></a>    ys.append(ix2)</span>
+<span id="cb68-10"><a href="#cb68-10"></a>xs <span class="op">=</span> torch.tensor(xs)</span>
+<span id="cb68-11"><a href="#cb68-11"></a>ys <span class="op">=</span> torch.tensor(ys)</span>
+<span id="cb68-12"><a href="#cb68-12"></a>num <span class="op">=</span> xs.nelement()</span>
+<span id="cb68-13"><a href="#cb68-13"></a><span class="bu">print</span>(<span class="st">'number of examples: '</span>, num)</span>
+<span id="cb68-14"><a href="#cb68-14"></a></span>
+<span id="cb68-15"><a href="#cb68-15"></a><span class="co"># initialize the 'network'</span></span>
+<span id="cb68-16"><a href="#cb68-16"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
+<span id="cb68-17"><a href="#cb68-17"></a>W <span class="op">=</span> torch.randn((<span class="dv">27</span>, <span class="dv">27</span>), generator<span class="op">=</span>g, requires_grad<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>number of examples:  228146</code></pre>
+</div>
+</div>
+<div id="aadf9748" class="cell" data-execution_count="43">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1"></a><span class="co"># gradient descent</span></span>
+<span id="cb70-2"><a href="#cb70-2"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>): <span class="co"># after run 100 times, shorten the notebook</span></span>
+<span id="cb70-3"><a href="#cb70-3"></a>  </span>
+<span id="cb70-4"><a href="#cb70-4"></a>  <span class="co"># forward pass</span></span>
+<span id="cb70-5"><a href="#cb70-5"></a>  xenc <span class="op">=</span> F.one_hot(xs, num_classes<span class="op">=</span><span class="dv">27</span>).<span class="bu">float</span>() <span class="co"># input to the network: one-hot encoding</span></span>
+<span id="cb70-6"><a href="#cb70-6"></a>  logits <span class="op">=</span> xenc <span class="op">@</span> W <span class="co"># predict log-counts</span></span>
+<span id="cb70-7"><a href="#cb70-7"></a>  counts <span class="op">=</span> logits.exp() <span class="co"># counts, equivalent to N</span></span>
+<span id="cb70-8"><a href="#cb70-8"></a>  probs <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>) <span class="co"># probabilities for next character</span></span>
+<span id="cb70-9"><a href="#cb70-9"></a>  loss <span class="op">=</span> <span class="op">-</span>probs[torch.arange(num), ys].log().mean() <span class="op">+</span> <span class="fl">0.01</span><span class="op">*</span>(W<span class="op">**</span><span class="dv">2</span>).mean() <span class="co"># regularization loss</span></span>
+<span id="cb70-10"><a href="#cb70-10"></a>  <span class="bu">print</span>(loss.item())</span>
+<span id="cb70-11"><a href="#cb70-11"></a>  </span>
+<span id="cb70-12"><a href="#cb70-12"></a>  <span class="co"># backward pass</span></span>
+<span id="cb70-13"><a href="#cb70-13"></a>  W.grad <span class="op">=</span> <span class="va">None</span> <span class="co"># set to zero the gradient</span></span>
+<span id="cb70-14"><a href="#cb70-14"></a>  loss.backward()</span>
+<span id="cb70-15"><a href="#cb70-15"></a>  </span>
+<span id="cb70-16"><a href="#cb70-16"></a>  <span class="co"># update</span></span>
+<span id="cb70-17"><a href="#cb70-17"></a>  W.data <span class="op">+=</span> <span class="op">-</span><span class="dv">50</span> <span class="op">*</span> W.grad</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>3.768618583679199</code></pre>
+</div>
+</div>
+<p>Looking back to the backprogation in the <a href="https://lktuan.github.io/blog/2024-06-17-nn-z2h-p1/#doing-gradient-descent-optimization-manually-training-the-network">lesson 1</a>, everything look similar here:</p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 38%">
+<col style="width: 36%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Part</th>
+<th>This neural nets for bigram language modeling</th>
+<th>Neural nets introduced in the lesson 1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Forward pass</td>
+<td><code>probs</code> , use negative log likelihood as loss function, doing classification</td>
+<td><code>ypred</code> , use MSE for loss function, doing regression</td>
+</tr>
+<tr class="even">
+<td>Backward pass</td>
+<td>Same, offered by Torch.</td>
+<td>Set grad of params to be zeros and do backpropagation.</td>
+</tr>
+<tr class="odd">
+<td>Update loss</td>
+<td>Same</td>
+<td>Update the parameters, change the parameters following opposite direction to reduce the loss.</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="note-1-one-hot-encoding-really-just-selects-a-row-of-the-next-linear-layers-weight-matrix" class="level2">
 <h2 class="anchored" data-anchor-id="note-1-one-hot-encoding-really-just-selects-a-row-of-the-next-linear-layers-weight-matrix">note 1: one-hot encoding really just selects a row of the next Linear layer’s weight matrix</h2>
+<p>Look at the below code, <code>xenc @ W</code> is (5, 27) @ (27, 27) that will result (5, 27) matrix. Each <code>ix</code> row of that 5-rows result matrix should be the selection of corresponding character rows in the <code>W</code>.</p>
+<div id="2f1a4028" class="cell" data-execution_count="44">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1"></a>logits <span class="op">=</span> xenc <span class="op">@</span> W <span class="co"># predict log-counts</span></span>
+<span id="cb72-2"><a href="#cb72-2"></a>counts <span class="op">=</span> logits.exp() <span class="co"># counts, equivalent to N</span></span>
+<span id="cb72-3"><a href="#cb72-3"></a>probs <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>) <span class="co"># probabilities for next character</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>So in this gradient-based framework, we start with a random array of parameters. By optimizing the loss function we will get the same result with the bigram approach (<code>W</code> and <code>N</code> are almost the same, it’s log count here why is count in bigram). That’s why we obtained the same loss!</p>
+<p>The neural networks offer more flexibility!</p>
 </section>
 <section id="note-2-model-smoothing-as-regularization-loss" class="level2">
 <h2 class="anchored" data-anchor-id="note-2-model-smoothing-as-regularization-loss">note 2: model smoothing as regularization loss</h2>
+<p>Same with smoothing technique when we’ve doing the bigram model, gradient-based framework have an equivalent way for smoothing. We will try to incentivize <code>W</code> to be near zero. We augment to loss function by adding this: <code>0.01*(W**2).mean()</code>.</p>
+<div id="b2cb8eec" class="cell" data-execution_count="45">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1"></a>loss <span class="op">=</span> <span class="op">-</span>probs[torch.arange(num), ys].log().mean() <span class="op">+</span> <span class="fl">0.01</span><span class="op">*</span>(W<span class="op">**</span><span class="dv">2</span>).mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section>
 <section id="sampling-from-the-neural-net" class="level2">
 <h2 class="anchored" data-anchor-id="sampling-from-the-neural-net">sampling from the neural net</h2>
+<div id="a5c29695" class="cell" data-execution_count="46">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1"></a><span class="co"># finally, sample from the 'neural net' model</span></span>
+<span id="cb74-2"><a href="#cb74-2"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
+<span id="cb74-3"><a href="#cb74-3"></a></span>
+<span id="cb74-4"><a href="#cb74-4"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb74-5"><a href="#cb74-5"></a>  </span>
+<span id="cb74-6"><a href="#cb74-6"></a>  out <span class="op">=</span> []</span>
+<span id="cb74-7"><a href="#cb74-7"></a>  ix <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb74-8"><a href="#cb74-8"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb74-9"><a href="#cb74-9"></a>    </span>
+<span id="cb74-10"><a href="#cb74-10"></a>    <span class="co"># ----------</span></span>
+<span id="cb74-11"><a href="#cb74-11"></a>    <span class="co"># BEFORE:</span></span>
+<span id="cb74-12"><a href="#cb74-12"></a>    <span class="co"># p = P[ix]</span></span>
+<span id="cb74-13"><a href="#cb74-13"></a>    <span class="co"># ----------</span></span>
+<span id="cb74-14"><a href="#cb74-14"></a>    <span class="co"># NOW:</span></span>
+<span id="cb74-15"><a href="#cb74-15"></a>    xenc <span class="op">=</span> F.one_hot(torch.tensor([ix]), num_classes<span class="op">=</span><span class="dv">27</span>).<span class="bu">float</span>()</span>
+<span id="cb74-16"><a href="#cb74-16"></a>    logits <span class="op">=</span> xenc <span class="op">@</span> W <span class="co"># predict log-counts</span></span>
+<span id="cb74-17"><a href="#cb74-17"></a>    counts <span class="op">=</span> logits.exp() <span class="co"># counts, equivalent to N</span></span>
+<span id="cb74-18"><a href="#cb74-18"></a>    p <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>) <span class="co"># probabilities for next character</span></span>
+<span id="cb74-19"><a href="#cb74-19"></a>    <span class="co"># ----------</span></span>
+<span id="cb74-20"><a href="#cb74-20"></a>    </span>
+<span id="cb74-21"><a href="#cb74-21"></a>    ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
+<span id="cb74-22"><a href="#cb74-22"></a>    out.append(itos[ix])</span>
+<span id="cb74-23"><a href="#cb74-23"></a>    <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb74-24"><a href="#cb74-24"></a>      <span class="cf">break</span></span>
+<span id="cb74-25"><a href="#cb74-25"></a>  <span class="bu">print</span>(<span class="st">''</span>.join(out))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>juwjdjdjancqydjufhqyywecnw.
+.
+oiin.
+toziasz.
+twt.</code></pre>
+</div>
+</div>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">conclusion</h2>
+<p>What we’ve gone through:</p>
+<ul>
+<li>introduced bigrams language model? how we can train, sample, and evaluate the model;</li>
+<li>we modeled by 2 different ways:
+<ul>
+<li>1st: counted out the freq of bigram and normalized it;</li>
+<li>2nd: used a negative log likelihood loss as a guide to optimizing the counts matrix/array in a gradient-based framework;</li>
+<li>we obtained the same result!</li>
+</ul></li>
+<li>gradient-based framework is more flexible. We’ve just modeled the simplest/dumpiest language model. In next lessons, we will complexify it.</li>
+</ul>
+<p>We are on the way out to <strong>transformer</strong>!</p>
+<p>Thank you, Andrej!</p>
 </section>
 </section>
 <section id="resources" class="level1">
@@ -1293,318 +1825,642 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb39" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb39-1"><a href="#cb39-1"></a><span class="co">---</span></span>
-<span id="cb39-2"><a href="#cb39-2"></a><span class="an">title:</span><span class="co"> "NN-Z2H Lesson 2: The spelled-out intro to language modeling - building makemore"</span></span>
-<span id="cb39-3"><a href="#cb39-3"></a><span class="an">description:</span><span class="co"> "implement a bigram character-level language model, focus on (1) introducing torch, and (2) the overall framework of language modeling that includes model training, sampling, and the evaluation of a loss"</span></span>
-<span id="cb39-4"><a href="#cb39-4"></a><span class="an">author:</span></span>
-<span id="cb39-5"><a href="#cb39-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
-<span id="cb39-6"><a href="#cb39-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
-<span id="cb39-7"><a href="#cb39-7"></a><span class="an">categories:</span><span class="co"> [til, python, andrej karpathy, nn-z2h, bigram, neural networks] </span></span>
-<span id="cb39-8"><a href="#cb39-8"></a><span class="an">date:</span><span class="co"> 11-15-2024</span></span>
-<span id="cb39-9"><a href="#cb39-9"></a><span class="an">date-modified:</span><span class="co"> 11-17-2024</span></span>
-<span id="cb39-10"><a href="#cb39-10"></a><span class="an">image:</span><span class="co"> andrej_new.jpg</span></span>
-<span id="cb39-11"><a href="#cb39-11"></a><span class="an">draft:</span><span class="co"> false</span></span>
-<span id="cb39-12"><a href="#cb39-12"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
-<span id="cb39-13"><a href="#cb39-13"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
-<span id="cb39-14"><a href="#cb39-14"></a><span class="an">editor:</span><span class="co"> visual</span></span>
-<span id="cb39-15"><a href="#cb39-15"></a><span class="an">format:</span></span>
-<span id="cb39-16"><a href="#cb39-16"></a><span class="co">  html:</span></span>
-<span id="cb39-17"><a href="#cb39-17"></a><span class="co">    code-overflow: wrap</span></span>
-<span id="cb39-18"><a href="#cb39-18"></a><span class="co">    code-tools: true</span></span>
-<span id="cb39-19"><a href="#cb39-19"></a><span class="co">    code-fold: show</span></span>
-<span id="cb39-20"><a href="#cb39-20"></a><span class="co">    code-annotations: hover</span></span>
-<span id="cb39-21"><a href="#cb39-21"></a><span class="co">---</span></span>
-<span id="cb39-22"><a href="#cb39-22"></a></span>
-<span id="cb39-23"><a href="#cb39-23"></a><span class="in">`makemore`</span> on github: <span class="ot">&lt;https://github.com/karpathy/makemore&gt;</span></span>
-<span id="cb39-24"><a href="#cb39-24"></a></span>
-<span id="cb39-25"><a href="#cb39-25"></a><span class="fu"># PART 1: intro</span></span>
-<span id="cb39-26"><a href="#cb39-26"></a></span>
-<span id="cb39-27"><a href="#cb39-27"></a><span class="at">&gt; </span><span class="in">`makemore`</span><span class="at"> takes one text file as input, where each line is assumed to be one training thing, and generates more things like it. Under the hood, it is an autoregressive character-level language model, with a wide choice of models from bigrams all the way to a Transformer (exactly as seen in GPT).</span></span>
-<span id="cb39-28"><a href="#cb39-28"></a></span>
-<span id="cb39-29"><a href="#cb39-29"></a><span class="fu">## reading and exploring the dataset</span></span>
-<span id="cb39-30"><a href="#cb39-30"></a></span>
-<span id="cb39-33"><a href="#cb39-33"></a><span class="in">```{python}</span></span>
-<span id="cb39-34"><a href="#cb39-34"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb39-35"><a href="#cb39-35"></a></span>
-<span id="cb39-36"><a href="#cb39-36"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/karpathy/makemore/refs/heads/master/names.txt"</span></span>
-<span id="cb39-37"><a href="#cb39-37"></a>words <span class="op">=</span> pd.read_csv(url, header<span class="op">=</span><span class="va">None</span>).iloc[:, <span class="dv">0</span>].tolist()</span>
-<span id="cb39-38"><a href="#cb39-38"></a></span>
-<span id="cb39-39"><a href="#cb39-39"></a><span class="bu">print</span>(words[:<span class="dv">10</span>])</span>
-<span id="cb39-40"><a href="#cb39-40"></a><span class="bu">print</span>(<span class="bu">len</span>(words))</span>
-<span id="cb39-41"><a href="#cb39-41"></a><span class="in">```</span></span>
-<span id="cb39-42"><a href="#cb39-42"></a></span>
-<span id="cb39-45"><a href="#cb39-45"></a><span class="in">```{python}</span></span>
-<span id="cb39-46"><a href="#cb39-46"></a><span class="bu">print</span>(<span class="st">"No of chars for the shortest word: "</span>, <span class="bu">min</span>(<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> words))</span>
-<span id="cb39-47"><a href="#cb39-47"></a><span class="bu">print</span>(<span class="st">"No of chars for the longest word: "</span>, <span class="bu">max</span>(<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> words))</span>
-<span id="cb39-48"><a href="#cb39-48"></a><span class="in">```</span></span>
-<span id="cb39-49"><a href="#cb39-49"></a></span>
-<span id="cb39-50"><a href="#cb39-50"></a>By looking into (1) the order of characters in individual word, and (2) that pattern for the whole dataset of 32k words, we will try to infer which character is likely to follow a character or chain of characters.</span>
-<span id="cb39-51"><a href="#cb39-51"></a></span>
-<span id="cb39-52"><a href="#cb39-52"></a>We will first building a <span class="in">`bigrams`</span> languague model - which only works will 2 characters at a time - look at the current character and try to predict the next one. We are just following this local structure!</span>
-<span id="cb39-53"><a href="#cb39-53"></a></span>
-<span id="cb39-54"><a href="#cb39-54"></a>It's just a simple (and weak) model but a good way to start.</span>
-<span id="cb39-55"><a href="#cb39-55"></a></span>
-<span id="cb39-56"><a href="#cb39-56"></a><span class="fu">## exploring the `bigrams` in the dataset</span></span>
-<span id="cb39-57"><a href="#cb39-57"></a></span>
-<span id="cb39-60"><a href="#cb39-60"></a><span class="in">```{python}</span></span>
-<span id="cb39-61"><a href="#cb39-61"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">3</span>]:</span>
-<span id="cb39-62"><a href="#cb39-62"></a>  chs <span class="op">=</span> [<span class="st">'&lt;S&gt;'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'&lt;E&gt;'</span>] <span class="co"># special start and ending token, `list()` will turn all character in word to list</span></span>
-<span id="cb39-63"><a href="#cb39-63"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
-<span id="cb39-64"><a href="#cb39-64"></a>    <span class="bu">print</span>(ch1, ch2)</span>
-<span id="cb39-65"><a href="#cb39-65"></a><span class="in">```</span></span>
-<span id="cb39-66"><a href="#cb39-66"></a></span>
-<span id="cb39-67"><a href="#cb39-67"></a><span class="fu">## counting `bigrams` in a python dictionary</span></span>
-<span id="cb39-68"><a href="#cb39-68"></a></span>
-<span id="cb39-69"><a href="#cb39-69"></a>In order to learn statistics about what character is more likely to follow another character, the simplest way is <span class="in">`counting`</span>.</span>
-<span id="cb39-70"><a href="#cb39-70"></a></span>
-<span id="cb39-73"><a href="#cb39-73"></a><span class="in">```{python}</span></span>
-<span id="cb39-74"><a href="#cb39-74"></a>b <span class="op">=</span> {} <span class="co"># dict to store all pair of character</span></span>
-<span id="cb39-75"><a href="#cb39-75"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">5</span>]: <span class="co"># do it for first five words</span></span>
-<span id="cb39-76"><a href="#cb39-76"></a>  chs <span class="op">=</span> [<span class="st">'&lt;S&gt;'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'&lt;E&gt;'</span>]</span>
-<span id="cb39-77"><a href="#cb39-77"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
-<span id="cb39-78"><a href="#cb39-78"></a>    bigram <span class="op">=</span> (ch1, ch2)</span>
-<span id="cb39-79"><a href="#cb39-79"></a>    b[bigram] <span class="op">=</span> b.get(bigram, <span class="dv">0</span>) <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb39-80"><a href="#cb39-80"></a>    <span class="co"># print(ch1, ch2)</span></span>
-<span id="cb39-81"><a href="#cb39-81"></a><span class="in">```</span></span>
-<span id="cb39-82"><a href="#cb39-82"></a></span>
-<span id="cb39-85"><a href="#cb39-85"></a><span class="in">```{python}</span></span>
-<span id="cb39-86"><a href="#cb39-86"></a><span class="bu">sorted</span>(b.items(), key <span class="op">=</span> <span class="kw">lambda</span> kv: <span class="op">-</span>kv[<span class="dv">1</span>])</span>
-<span id="cb39-87"><a href="#cb39-87"></a><span class="in">```</span></span>
-<span id="cb39-88"><a href="#cb39-88"></a></span>
-<span id="cb39-89"><a href="#cb39-89"></a><span class="fu">## counting `bigrams` in a 2D `torch` tensor ("training the model")</span></span>
-<span id="cb39-90"><a href="#cb39-90"></a></span>
-<span id="cb39-91"><a href="#cb39-91"></a>Instead of using Python dictionary, we will use <span class="in">`torch`</span> 2D array to store this information.</span>
-<span id="cb39-92"><a href="#cb39-92"></a></span>
-<span id="cb39-95"><a href="#cb39-95"></a><span class="in">```{python}</span></span>
-<span id="cb39-96"><a href="#cb39-96"></a><span class="im">import</span> torch</span>
-<span id="cb39-97"><a href="#cb39-97"></a><span class="in">```</span></span>
-<span id="cb39-98"><a href="#cb39-98"></a></span>
-<span id="cb39-101"><a href="#cb39-101"></a><span class="in">```{python}</span></span>
-<span id="cb39-102"><a href="#cb39-102"></a>a <span class="op">=</span> torch.zeros((<span class="dv">3</span>,<span class="dv">5</span>), dtype<span class="op">=</span>torch.int32)</span>
-<span id="cb39-103"><a href="#cb39-103"></a>a</span>
-<span id="cb39-104"><a href="#cb39-104"></a><span class="in">```</span></span>
-<span id="cb39-105"><a href="#cb39-105"></a></span>
-<span id="cb39-106"><a href="#cb39-106"></a>How can we access/assign a value in torch array:</span>
-<span id="cb39-107"><a href="#cb39-107"></a></span>
-<span id="cb39-110"><a href="#cb39-110"></a><span class="in">```{python}</span></span>
-<span id="cb39-111"><a href="#cb39-111"></a>a[<span class="dv">1</span>:<span class="dv">3</span>] <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb39-112"><a href="#cb39-112"></a>a</span>
-<span id="cb39-113"><a href="#cb39-113"></a><span class="in">```</span></span>
-<span id="cb39-114"><a href="#cb39-114"></a></span>
-<span id="cb39-115"><a href="#cb39-115"></a>Now the english alphabet contain 26 characters, we will need to capture the <span class="in">`&lt;S&gt;`</span> and <span class="in">`&lt;E&gt;`</span> also. So it would be 28 x 28 array.</span>
-<span id="cb39-116"><a href="#cb39-116"></a></span>
-<span id="cb39-119"><a href="#cb39-119"></a><span class="in">```{python}</span></span>
-<span id="cb39-120"><a href="#cb39-120"></a>N <span class="op">=</span> torch.zeros((<span class="dv">28</span>,<span class="dv">28</span>), dtype<span class="op">=</span>torch.int32)</span>
-<span id="cb39-121"><a href="#cb39-121"></a><span class="in">```</span></span>
-<span id="cb39-122"><a href="#cb39-122"></a></span>
-<span id="cb39-123"><a href="#cb39-123"></a>This will collect all the characters used in our dataset (join all words to a massive string and pass it to a <span class="in">`set()`</span>, which will remove duplicate). With such a large dataset, all the english characters were used.</span>
-<span id="cb39-126"><a href="#cb39-126"></a><span class="in">```{python}</span></span>
-<span id="cb39-127"><a href="#cb39-127"></a>chars <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">list</span>(<span class="bu">set</span>(<span class="st">''</span>.join(words))))</span>
-<span id="cb39-128"><a href="#cb39-128"></a><span class="bu">len</span>(chars) <span class="co"># 26 </span></span>
-<span id="cb39-129"><a href="#cb39-129"></a></span>
-<span id="cb39-130"><a href="#cb39-130"></a><span class="co"># with index</span></span>
-<span id="cb39-131"><a href="#cb39-131"></a>stoi <span class="op">=</span> {s:i <span class="cf">for</span> i,s <span class="kw">in</span> <span class="bu">enumerate</span>(chars)}</span>
-<span id="cb39-132"><a href="#cb39-132"></a>stoi[<span class="st">'&lt;S&gt;'</span>] <span class="op">=</span> <span class="dv">26</span></span>
-<span id="cb39-133"><a href="#cb39-133"></a>stoi[<span class="st">'&lt;E&gt;'</span>] <span class="op">=</span> <span class="dv">27</span></span>
-<span id="cb39-134"><a href="#cb39-134"></a>stoi</span>
-<span id="cb39-135"><a href="#cb39-135"></a><span class="in">```</span></span>
-<span id="cb39-136"><a href="#cb39-136"></a></span>
-<span id="cb39-139"><a href="#cb39-139"></a><span class="in">```{python}</span></span>
-<span id="cb39-140"><a href="#cb39-140"></a><span class="cf">for</span> w <span class="kw">in</span> words:</span>
-<span id="cb39-141"><a href="#cb39-141"></a>  chs <span class="op">=</span> [<span class="st">'&lt;S&gt;'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'&lt;E&gt;'</span>]</span>
-<span id="cb39-142"><a href="#cb39-142"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
-<span id="cb39-143"><a href="#cb39-143"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
-<span id="cb39-144"><a href="#cb39-144"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
-<span id="cb39-145"><a href="#cb39-145"></a>    N[ix1, ix2] <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb39-146"><a href="#cb39-146"></a><span class="in">```</span></span>
-<span id="cb39-147"><a href="#cb39-147"></a></span>
-<span id="cb39-148"><a href="#cb39-148"></a><span class="fu">## visualizing the `bigram` tensor</span></span>
-<span id="cb39-149"><a href="#cb39-149"></a></span>
-<span id="cb39-152"><a href="#cb39-152"></a><span class="in">```{python}</span></span>
-<span id="cb39-153"><a href="#cb39-153"></a>itos <span class="op">=</span> {i:s <span class="cf">for</span> s, i <span class="kw">in</span> stoi.items()}</span>
-<span id="cb39-154"><a href="#cb39-154"></a><span class="in">```</span></span>
-<span id="cb39-155"><a href="#cb39-155"></a></span>
-<span id="cb39-158"><a href="#cb39-158"></a><span class="in">```{python}</span></span>
-<span id="cb39-159"><a href="#cb39-159"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb39-160"><a href="#cb39-160"></a><span class="op">%</span>matplotlib inline</span>
-<span id="cb39-161"><a href="#cb39-161"></a></span>
-<span id="cb39-162"><a href="#cb39-162"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">16</span>,<span class="dv">16</span>))</span>
-<span id="cb39-163"><a href="#cb39-163"></a>plt.imshow(N, cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
-<span id="cb39-164"><a href="#cb39-164"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">28</span>):</span>
-<span id="cb39-165"><a href="#cb39-165"></a>  <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">28</span>):</span>
-<span id="cb39-166"><a href="#cb39-166"></a>    <span class="co"># plot character strings with number of time</span></span>
-<span id="cb39-167"><a href="#cb39-167"></a>    chstr <span class="op">=</span> itos[i] <span class="op">+</span> itos[j]</span>
-<span id="cb39-168"><a href="#cb39-168"></a>    plt.text(j, i, chstr, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, color<span class="op">=</span><span class="st">"gray"</span>)</span>
-<span id="cb39-169"><a href="#cb39-169"></a>    plt.text(j, i, N[i, j].item(), ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>, color<span class="op">=</span><span class="st">"gray"</span>)</span>
-<span id="cb39-170"><a href="#cb39-170"></a>plt.axis(<span class="st">'off'</span>)</span>
-<span id="cb39-171"><a href="#cb39-171"></a><span class="in">```</span></span>
-<span id="cb39-172"><a href="#cb39-172"></a></span>
-<span id="cb39-173"><a href="#cb39-173"></a><span class="fu">## deleting spurious (S) and (E) tokens in favor of a single `.` token</span></span>
-<span id="cb39-174"><a href="#cb39-174"></a></span>
-<span id="cb39-175"><a href="#cb39-175"></a><span class="in">`&lt;S&gt;`</span>, and <span class="in">`&lt;E&gt;`</span> look a bit annoying. let's replace them by simple <span class="in">`.`</span>.</span>
-<span id="cb39-176"><a href="#cb39-176"></a></span>
-<span id="cb39-179"><a href="#cb39-179"></a><span class="in">```{python}</span></span>
-<span id="cb39-180"><a href="#cb39-180"></a>N <span class="op">=</span> torch.zeros((<span class="dv">27</span>,<span class="dv">27</span>), dtype<span class="op">=</span>torch.int32)</span>
-<span id="cb39-181"><a href="#cb39-181"></a>stoi <span class="op">=</span> {s:i<span class="op">+</span><span class="dv">1</span> <span class="cf">for</span> i,s <span class="kw">in</span> <span class="bu">enumerate</span>(chars)}</span>
-<span id="cb39-182"><a href="#cb39-182"></a>stoi[<span class="st">'.'</span>] <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb39-183"><a href="#cb39-183"></a>itos <span class="op">=</span> {i:s <span class="cf">for</span> s, i <span class="kw">in</span> stoi.items()}</span>
-<span id="cb39-184"><a href="#cb39-184"></a></span>
-<span id="cb39-185"><a href="#cb39-185"></a><span class="cf">for</span> w <span class="kw">in</span> words:</span>
-<span id="cb39-186"><a href="#cb39-186"></a>  chs <span class="op">=</span> [<span class="st">'.'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'.'</span>]</span>
-<span id="cb39-187"><a href="#cb39-187"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
-<span id="cb39-188"><a href="#cb39-188"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
-<span id="cb39-189"><a href="#cb39-189"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
-<span id="cb39-190"><a href="#cb39-190"></a>    N[ix1, ix2] <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb39-191"><a href="#cb39-191"></a><span class="in">```</span></span>
-<span id="cb39-192"><a href="#cb39-192"></a></span>
-<span id="cb39-195"><a href="#cb39-195"></a><span class="in">```{python}</span></span>
-<span id="cb39-196"><a href="#cb39-196"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb39-197"><a href="#cb39-197"></a><span class="op">%</span>matplotlib inline</span>
-<span id="cb39-198"><a href="#cb39-198"></a></span>
-<span id="cb39-199"><a href="#cb39-199"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">16</span>,<span class="dv">16</span>))</span>
-<span id="cb39-200"><a href="#cb39-200"></a>plt.imshow(N, cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
-<span id="cb39-201"><a href="#cb39-201"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">27</span>):</span>
-<span id="cb39-202"><a href="#cb39-202"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">27</span>):</span>
-<span id="cb39-203"><a href="#cb39-203"></a>        chstr <span class="op">=</span> itos[i] <span class="op">+</span> itos[j]</span>
-<span id="cb39-204"><a href="#cb39-204"></a>        plt.text(j, i, chstr, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
-<span id="cb39-205"><a href="#cb39-205"></a>        plt.text(j, i, N[i, j].item(), ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
-<span id="cb39-206"><a href="#cb39-206"></a>plt.axis(<span class="st">'off'</span>)</span>
-<span id="cb39-207"><a href="#cb39-207"></a><span class="in">```</span></span>
-<span id="cb39-208"><a href="#cb39-208"></a></span>
-<span id="cb39-209"><a href="#cb39-209"></a><span class="fu">## sampling from the model</span></span>
-<span id="cb39-210"><a href="#cb39-210"></a></span>
-<span id="cb39-211"><a href="#cb39-211"></a>Taking the first column of the array.</span>
-<span id="cb39-214"><a href="#cb39-214"></a><span class="in">```{python}</span></span>
-<span id="cb39-215"><a href="#cb39-215"></a>N[<span class="dv">0</span>]</span>
-<span id="cb39-216"><a href="#cb39-216"></a><span class="in">```</span></span>
-<span id="cb39-217"><a href="#cb39-217"></a></span>
-<span id="cb39-218"><a href="#cb39-218"></a>Column-wise probability.</span>
-<span id="cb39-219"><a href="#cb39-219"></a></span>
-<span id="cb39-222"><a href="#cb39-222"></a><span class="in">```{python}</span></span>
-<span id="cb39-223"><a href="#cb39-223"></a>p <span class="op">=</span> N[<span class="dv">0</span>].<span class="bu">float</span>()</span>
-<span id="cb39-224"><a href="#cb39-224"></a>p <span class="op">=</span> p <span class="op">/</span> p.<span class="bu">sum</span>()</span>
-<span id="cb39-225"><a href="#cb39-225"></a>p</span>
-<span id="cb39-226"><a href="#cb39-226"></a><span class="in">```</span></span>
-<span id="cb39-227"><a href="#cb39-227"></a></span>
-<span id="cb39-228"><a href="#cb39-228"></a>Creating random number with Pytorch generator at a state.</span>
-<span id="cb39-229"><a href="#cb39-229"></a></span>
-<span id="cb39-232"><a href="#cb39-232"></a><span class="in">```{python}</span></span>
-<span id="cb39-233"><a href="#cb39-233"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
-<span id="cb39-234"><a href="#cb39-234"></a>p_test <span class="op">=</span> torch.rand(<span class="dv">3</span>, generator<span class="op">=</span>g)</span>
-<span id="cb39-235"><a href="#cb39-235"></a>p_test <span class="op">=</span> p_test <span class="op">/</span> p_test.<span class="bu">sum</span>()</span>
-<span id="cb39-236"><a href="#cb39-236"></a><span class="in">```</span></span>
-<span id="cb39-237"><a href="#cb39-237"></a></span>
-<span id="cb39-240"><a href="#cb39-240"></a><span class="in">```{python}</span></span>
-<span id="cb39-241"><a href="#cb39-241"></a>torch.multinomial(p_test, num_samples<span class="op">=</span><span class="dv">100</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g)</span>
-<span id="cb39-242"><a href="#cb39-242"></a><span class="in">```</span></span>
-<span id="cb39-243"><a href="#cb39-243"></a></span>
-<span id="cb39-244"><a href="#cb39-244"></a>Now back to our data, generate a tensor with 1 value from the <span class="in">`p`</span> vector, it should return <span class="in">`m`</span> ~ index 13 as it's the most common charactor.</span>
-<span id="cb39-245"><a href="#cb39-245"></a></span>
-<span id="cb39-248"><a href="#cb39-248"></a><span class="in">```{python}</span></span>
-<span id="cb39-249"><a href="#cb39-249"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
-<span id="cb39-250"><a href="#cb39-250"></a>ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
-<span id="cb39-251"><a href="#cb39-251"></a>itos[ix]</span>
-<span id="cb39-252"><a href="#cb39-252"></a><span class="in">```</span></span>
-<span id="cb39-253"><a href="#cb39-253"></a></span>
-<span id="cb39-254"><a href="#cb39-254"></a>Let's automate it:</span>
-<span id="cb39-255"><a href="#cb39-255"></a></span>
-<span id="cb39-258"><a href="#cb39-258"></a><span class="in">```{python}</span></span>
-<span id="cb39-259"><a href="#cb39-259"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">214748367</span>)</span>
-<span id="cb39-260"><a href="#cb39-260"></a></span>
-<span id="cb39-261"><a href="#cb39-261"></a>ix <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb39-262"><a href="#cb39-262"></a><span class="cf">while</span> <span class="va">True</span>:</span>
-<span id="cb39-263"><a href="#cb39-263"></a>  p <span class="op">=</span> N[ix].<span class="bu">float</span>()</span>
-<span id="cb39-264"><a href="#cb39-264"></a>  p <span class="op">=</span> p <span class="op">/</span> p.<span class="bu">sum</span>()</span>
-<span id="cb39-265"><a href="#cb39-265"></a>  ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
-<span id="cb39-266"><a href="#cb39-266"></a>  <span class="bu">print</span>(itos[ix])</span>
-<span id="cb39-267"><a href="#cb39-267"></a>  <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb39-268"><a href="#cb39-268"></a>    <span class="cf">break</span></span>
-<span id="cb39-269"><a href="#cb39-269"></a><span class="in">```</span></span>
-<span id="cb39-270"><a href="#cb39-270"></a></span>
-<span id="cb39-271"><a href="#cb39-271"></a>And more, joining the last result to single word, and make new 10 names:</span>
-<span id="cb39-272"><a href="#cb39-272"></a></span>
-<span id="cb39-275"><a href="#cb39-275"></a><span class="in">```{python}</span></span>
-<span id="cb39-276"><a href="#cb39-276"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
-<span id="cb39-277"><a href="#cb39-277"></a></span>
-<span id="cb39-278"><a href="#cb39-278"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
-<span id="cb39-279"><a href="#cb39-279"></a>  </span>
-<span id="cb39-280"><a href="#cb39-280"></a>  out <span class="op">=</span> []</span>
-<span id="cb39-281"><a href="#cb39-281"></a>  ix <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb39-282"><a href="#cb39-282"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
-<span id="cb39-283"><a href="#cb39-283"></a>    p <span class="op">=</span> N[ix].<span class="bu">float</span>()</span>
-<span id="cb39-284"><a href="#cb39-284"></a>    p <span class="op">=</span> p <span class="op">/</span> p.<span class="bu">sum</span>()</span>
-<span id="cb39-285"><a href="#cb39-285"></a></span>
-<span id="cb39-286"><a href="#cb39-286"></a>    <span class="co"># p = torch.ones(27) / 27.0</span></span>
-<span id="cb39-287"><a href="#cb39-287"></a>    <span class="co"># the result look terrible, but compare to an un-trained model for eg p - uncomment to code above, they are still like names.</span></span>
-<span id="cb39-288"><a href="#cb39-288"></a>    ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
-<span id="cb39-289"><a href="#cb39-289"></a>    out.append(itos[ix])</span>
-<span id="cb39-290"><a href="#cb39-290"></a>    <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb39-291"><a href="#cb39-291"></a>      <span class="cf">break</span></span>
-<span id="cb39-292"><a href="#cb39-292"></a>  <span class="bu">print</span>(<span class="st">''</span>.join(out))</span>
-<span id="cb39-293"><a href="#cb39-293"></a><span class="in">```</span></span>
-<span id="cb39-294"><a href="#cb39-294"></a></span>
-<span id="cb39-295"><a href="#cb39-295"></a><span class="fu">## efficiency! vectorized normalization of the rows, tensor broadcasting</span></span>
-<span id="cb39-296"><a href="#cb39-296"></a></span>
-<span id="cb39-297"><a href="#cb39-297"></a>We just fetching a row of <span class="in">`N`</span> from the counts matrix, and then always do the same things: converting to float, dividing. That's not efficient! We now will optimize this:</span>
-<span id="cb39-298"><a href="#cb39-298"></a></span>
-<span id="cb39-301"><a href="#cb39-301"></a><span class="in">```{python}</span></span>
-<span id="cb39-302"><a href="#cb39-302"></a>P <span class="op">=</span> N.<span class="bu">float</span>()</span>
-<span id="cb39-303"><a href="#cb39-303"></a><span class="co"># param 1 helps summing horizontally, by rows</span></span>
-<span id="cb39-304"><a href="#cb39-304"></a><span class="co"># keepdim keeps the dimension the output is still 2D array with 1 column for each row, not a vertical vector entirely</span></span>
-<span id="cb39-305"><a href="#cb39-305"></a><span class="co"># tensor already support to broadcast the row sum allowing this dividing (keepdim helped not to mess the broadcast)</span></span>
-<span id="cb39-306"><a href="#cb39-306"></a>P <span class="op">/=</span> P.<span class="bu">sum</span>(<span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb39-307"><a href="#cb39-307"></a><span class="co"># inplace operator instead of P = P / P.sum(1, keepdim=True), take care of memory!</span></span>
-<span id="cb39-308"><a href="#cb39-308"></a><span class="in">```</span></span>
-<span id="cb39-309"><a href="#cb39-309"></a></span>
-<span id="cb39-312"><a href="#cb39-312"></a><span class="in">```{python}</span></span>
-<span id="cb39-313"><a href="#cb39-313"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
-<span id="cb39-314"><a href="#cb39-314"></a></span>
-<span id="cb39-315"><a href="#cb39-315"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
-<span id="cb39-316"><a href="#cb39-316"></a>  </span>
-<span id="cb39-317"><a href="#cb39-317"></a>  out <span class="op">=</span> []</span>
-<span id="cb39-318"><a href="#cb39-318"></a>  ix <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb39-319"><a href="#cb39-319"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
-<span id="cb39-320"><a href="#cb39-320"></a>    p <span class="op">=</span> P[ix]</span>
-<span id="cb39-321"><a href="#cb39-321"></a>    ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
-<span id="cb39-322"><a href="#cb39-322"></a>    out.append(itos[ix])</span>
-<span id="cb39-323"><a href="#cb39-323"></a>    <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb39-324"><a href="#cb39-324"></a>      <span class="cf">break</span></span>
-<span id="cb39-325"><a href="#cb39-325"></a>  <span class="bu">print</span>(<span class="st">''</span>.join(out))</span>
-<span id="cb39-326"><a href="#cb39-326"></a><span class="in">```</span></span>
-<span id="cb39-327"><a href="#cb39-327"></a></span>
-<span id="cb39-328"><a href="#cb39-328"></a><span class="fu">## loss function (the negative log likelihood of the data under our model)</span></span>
-<span id="cb39-329"><a href="#cb39-329"></a></span>
-<span id="cb39-330"><a href="#cb39-330"></a><span class="fu">## model smoothing with fake counts</span></span>
-<span id="cb39-331"><a href="#cb39-331"></a></span>
-<span id="cb39-332"><a href="#cb39-332"></a><span class="fu"># PART 2: the neural network approach: intro</span></span>
-<span id="cb39-333"><a href="#cb39-333"></a></span>
-<span id="cb39-334"><a href="#cb39-334"></a><span class="fu">## creating the bigram dataset for the neural net</span></span>
-<span id="cb39-335"><a href="#cb39-335"></a></span>
-<span id="cb39-336"><a href="#cb39-336"></a><span class="fu">## feeding integers into neural nets? one-hot encodings</span></span>
-<span id="cb39-337"><a href="#cb39-337"></a></span>
-<span id="cb39-338"><a href="#cb39-338"></a><span class="fu">## the "neural net": one linear layer of neurons implemented with matrix multiplication</span></span>
-<span id="cb39-339"><a href="#cb39-339"></a></span>
-<span id="cb39-340"><a href="#cb39-340"></a><span class="fu">## transforming neural net outputs into probabilities: the softmax</span></span>
-<span id="cb39-341"><a href="#cb39-341"></a></span>
-<span id="cb39-342"><a href="#cb39-342"></a><span class="fu">## summary, preview to next steps, reference to micrograd</span></span>
-<span id="cb39-343"><a href="#cb39-343"></a></span>
-<span id="cb39-344"><a href="#cb39-344"></a><span class="fu">## vectorized loss</span></span>
-<span id="cb39-345"><a href="#cb39-345"></a></span>
-<span id="cb39-346"><a href="#cb39-346"></a><span class="fu">## putting everything together</span></span>
-<span id="cb39-347"><a href="#cb39-347"></a></span>
-<span id="cb39-348"><a href="#cb39-348"></a><span class="fu">## note 1: one-hot encoding really just selects a row of the next Linear layer's weight matrix</span></span>
-<span id="cb39-349"><a href="#cb39-349"></a></span>
-<span id="cb39-350"><a href="#cb39-350"></a><span class="fu">## note 2: model smoothing as regularization loss</span></span>
-<span id="cb39-351"><a href="#cb39-351"></a></span>
-<span id="cb39-352"><a href="#cb39-352"></a><span class="fu">## sampling from the neural net</span></span>
-<span id="cb39-353"><a href="#cb39-353"></a></span>
-<span id="cb39-354"><a href="#cb39-354"></a><span class="fu">## conclusion</span></span>
-<span id="cb39-355"><a href="#cb39-355"></a></span>
-<span id="cb39-356"><a href="#cb39-356"></a><span class="fu"># resources</span></span>
-<span id="cb39-357"><a href="#cb39-357"></a></span>
-<span id="cb39-358"><a href="#cb39-358"></a><span class="ss">1. </span>YouTube video lecture: <span class="ot">&lt;https://www.youtube.com/watch?v=PaCmpygFfXo&gt;</span></span>
-<span id="cb39-359"><a href="#cb39-359"></a><span class="ss">2. </span>Jupyter notebook files: <span class="ot">&lt;https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part1_bigrams.ipynb&gt;</span></span>
-<span id="cb39-360"><a href="#cb39-360"></a><span class="ss">3. </span><span class="in">`makemore`</span> Github repo: <span class="ot">&lt;https://github.com/karpathy/makemore&gt;</span></span>
+<div class="sourceCode" id="cb76" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb76-1"><a href="#cb76-1"></a><span class="co">---</span></span>
+<span id="cb76-2"><a href="#cb76-2"></a><span class="an">title:</span><span class="co"> "NN-Z2H Lesson 2: The spelled-out intro to language modeling - building makemore"</span></span>
+<span id="cb76-3"><a href="#cb76-3"></a><span class="an">description:</span><span class="co"> "implement a bigram character-level language model, focus on (1) introducing torch, and (2) the overall framework of language modeling that includes model training, sampling, and the evaluation of a loss"</span></span>
+<span id="cb76-4"><a href="#cb76-4"></a><span class="an">author:</span></span>
+<span id="cb76-5"><a href="#cb76-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
+<span id="cb76-6"><a href="#cb76-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
+<span id="cb76-7"><a href="#cb76-7"></a><span class="an">categories:</span><span class="co"> [til, python, andrej karpathy, nn-z2h, bigram, neural networks] </span></span>
+<span id="cb76-8"><a href="#cb76-8"></a><span class="an">date:</span><span class="co"> 11-15-2024</span></span>
+<span id="cb76-9"><a href="#cb76-9"></a><span class="an">date-modified:</span><span class="co"> 11-18-2024</span></span>
+<span id="cb76-10"><a href="#cb76-10"></a><span class="an">image:</span><span class="co"> andrej_new.jpg</span></span>
+<span id="cb76-11"><a href="#cb76-11"></a><span class="an">draft:</span><span class="co"> false</span></span>
+<span id="cb76-12"><a href="#cb76-12"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
+<span id="cb76-13"><a href="#cb76-13"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
+<span id="cb76-14"><a href="#cb76-14"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb76-15"><a href="#cb76-15"></a><span class="an">format:</span></span>
+<span id="cb76-16"><a href="#cb76-16"></a><span class="co">  html:</span></span>
+<span id="cb76-17"><a href="#cb76-17"></a><span class="co">    code-overflow: wrap</span></span>
+<span id="cb76-18"><a href="#cb76-18"></a><span class="co">    code-tools: true</span></span>
+<span id="cb76-19"><a href="#cb76-19"></a><span class="co">    code-fold: show</span></span>
+<span id="cb76-20"><a href="#cb76-20"></a><span class="co">    code-annotations: hover</span></span>
+<span id="cb76-21"><a href="#cb76-21"></a><span class="co">---</span></span>
+<span id="cb76-22"><a href="#cb76-22"></a></span>
+<span id="cb76-23"><a href="#cb76-23"></a><span class="fu"># PART 1: intro</span></span>
+<span id="cb76-24"><a href="#cb76-24"></a></span>
+<span id="cb76-25"><a href="#cb76-25"></a><span class="at">&gt; </span><span class="in">`makemore`</span><span class="at"> takes one text file as input, where each line is assumed to be one training thing, and generates more things like it. Under the hood, it is an autoregressive character-level language model, with a wide choice of models from bigrams all the way to a Transformer (exactly as seen in GPT).</span></span>
+<span id="cb76-26"><a href="#cb76-26"></a></span>
+<span id="cb76-27"><a href="#cb76-27"></a><span class="fu">## reading and exploring the dataset</span></span>
+<span id="cb76-28"><a href="#cb76-28"></a></span>
+<span id="cb76-31"><a href="#cb76-31"></a><span class="in">```{python}</span></span>
+<span id="cb76-32"><a href="#cb76-32"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb76-33"><a href="#cb76-33"></a></span>
+<span id="cb76-34"><a href="#cb76-34"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/karpathy/makemore/refs/heads/master/names.txt"</span></span>
+<span id="cb76-35"><a href="#cb76-35"></a>words <span class="op">=</span> pd.read_csv(url, header<span class="op">=</span><span class="va">None</span>).iloc[:, <span class="dv">0</span>].tolist()</span>
+<span id="cb76-36"><a href="#cb76-36"></a></span>
+<span id="cb76-37"><a href="#cb76-37"></a><span class="bu">print</span>(words[:<span class="dv">10</span>])</span>
+<span id="cb76-38"><a href="#cb76-38"></a><span class="bu">print</span>(<span class="bu">len</span>(words))</span>
+<span id="cb76-39"><a href="#cb76-39"></a><span class="in">```</span></span>
+<span id="cb76-40"><a href="#cb76-40"></a></span>
+<span id="cb76-43"><a href="#cb76-43"></a><span class="in">```{python}</span></span>
+<span id="cb76-44"><a href="#cb76-44"></a><span class="bu">print</span>(<span class="st">"No of chars for the shortest word: "</span>, <span class="bu">min</span>(<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> words))</span>
+<span id="cb76-45"><a href="#cb76-45"></a><span class="bu">print</span>(<span class="st">"No of chars for the longest word: "</span>, <span class="bu">max</span>(<span class="bu">len</span>(w) <span class="cf">for</span> w <span class="kw">in</span> words))</span>
+<span id="cb76-46"><a href="#cb76-46"></a><span class="in">```</span></span>
+<span id="cb76-47"><a href="#cb76-47"></a></span>
+<span id="cb76-48"><a href="#cb76-48"></a>By looking into (1) the order of characters in individual word, and (2) that pattern for the whole dataset of 32k words, we will try to infer which character is likely to follow a character or chain of characters.</span>
+<span id="cb76-49"><a href="#cb76-49"></a></span>
+<span id="cb76-50"><a href="#cb76-50"></a>We will first building a <span class="in">`bigrams`</span> languague model - which only works will 2 characters at a time - look at the current character and try to predict the next one. We are just following this local structure!</span>
+<span id="cb76-51"><a href="#cb76-51"></a></span>
+<span id="cb76-52"><a href="#cb76-52"></a>It's just a simple (and weak) model but a good way to start.</span>
+<span id="cb76-53"><a href="#cb76-53"></a></span>
+<span id="cb76-54"><a href="#cb76-54"></a><span class="fu">## exploring the `bigrams` in the dataset</span></span>
+<span id="cb76-55"><a href="#cb76-55"></a></span>
+<span id="cb76-58"><a href="#cb76-58"></a><span class="in">```{python}</span></span>
+<span id="cb76-59"><a href="#cb76-59"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">3</span>]:</span>
+<span id="cb76-60"><a href="#cb76-60"></a>  chs <span class="op">=</span> [<span class="st">'&lt;S&gt;'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'&lt;E&gt;'</span>] <span class="co"># special start and ending token, `list()` will turn all character in word to list</span></span>
+<span id="cb76-61"><a href="#cb76-61"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb76-62"><a href="#cb76-62"></a>    <span class="bu">print</span>(ch1, ch2)</span>
+<span id="cb76-63"><a href="#cb76-63"></a><span class="in">```</span></span>
+<span id="cb76-64"><a href="#cb76-64"></a></span>
+<span id="cb76-65"><a href="#cb76-65"></a><span class="fu">## counting `bigrams` in a python dictionary</span></span>
+<span id="cb76-66"><a href="#cb76-66"></a></span>
+<span id="cb76-67"><a href="#cb76-67"></a>In order to learn statistics about what character is more likely to follow another character, the simplest way is <span class="in">`counting`</span>.</span>
+<span id="cb76-68"><a href="#cb76-68"></a></span>
+<span id="cb76-71"><a href="#cb76-71"></a><span class="in">```{python}</span></span>
+<span id="cb76-72"><a href="#cb76-72"></a>b <span class="op">=</span> {} <span class="co"># dict to store all pair of character</span></span>
+<span id="cb76-73"><a href="#cb76-73"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">5</span>]: <span class="co"># do it for first five words</span></span>
+<span id="cb76-74"><a href="#cb76-74"></a>  chs <span class="op">=</span> [<span class="st">'&lt;S&gt;'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'&lt;E&gt;'</span>]</span>
+<span id="cb76-75"><a href="#cb76-75"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb76-76"><a href="#cb76-76"></a>    bigram <span class="op">=</span> (ch1, ch2)</span>
+<span id="cb76-77"><a href="#cb76-77"></a>    b[bigram] <span class="op">=</span> b.get(bigram, <span class="dv">0</span>) <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb76-78"><a href="#cb76-78"></a>    <span class="co"># print(ch1, ch2)</span></span>
+<span id="cb76-79"><a href="#cb76-79"></a><span class="in">```</span></span>
+<span id="cb76-80"><a href="#cb76-80"></a></span>
+<span id="cb76-83"><a href="#cb76-83"></a><span class="in">```{python}</span></span>
+<span id="cb76-84"><a href="#cb76-84"></a><span class="bu">sorted</span>(b.items(), key <span class="op">=</span> <span class="kw">lambda</span> kv: <span class="op">-</span>kv[<span class="dv">1</span>])</span>
+<span id="cb76-85"><a href="#cb76-85"></a><span class="in">```</span></span>
+<span id="cb76-86"><a href="#cb76-86"></a></span>
+<span id="cb76-87"><a href="#cb76-87"></a><span class="fu">## counting `bigrams` in a 2D `torch` tensor ("training the model")</span></span>
+<span id="cb76-88"><a href="#cb76-88"></a></span>
+<span id="cb76-89"><a href="#cb76-89"></a>Instead of using Python dictionary, we will use <span class="in">`torch`</span> 2D array to store this information.</span>
+<span id="cb76-90"><a href="#cb76-90"></a></span>
+<span id="cb76-93"><a href="#cb76-93"></a><span class="in">```{python}</span></span>
+<span id="cb76-94"><a href="#cb76-94"></a><span class="im">import</span> torch</span>
+<span id="cb76-95"><a href="#cb76-95"></a><span class="in">```</span></span>
+<span id="cb76-96"><a href="#cb76-96"></a></span>
+<span id="cb76-99"><a href="#cb76-99"></a><span class="in">```{python}</span></span>
+<span id="cb76-100"><a href="#cb76-100"></a>a <span class="op">=</span> torch.zeros((<span class="dv">3</span>,<span class="dv">5</span>), dtype<span class="op">=</span>torch.int32)</span>
+<span id="cb76-101"><a href="#cb76-101"></a>a</span>
+<span id="cb76-102"><a href="#cb76-102"></a><span class="in">```</span></span>
+<span id="cb76-103"><a href="#cb76-103"></a></span>
+<span id="cb76-104"><a href="#cb76-104"></a>How can we access/assign a value in torch array:</span>
+<span id="cb76-105"><a href="#cb76-105"></a></span>
+<span id="cb76-108"><a href="#cb76-108"></a><span class="in">```{python}</span></span>
+<span id="cb76-109"><a href="#cb76-109"></a>a[<span class="dv">1</span>:<span class="dv">3</span>] <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb76-110"><a href="#cb76-110"></a>a</span>
+<span id="cb76-111"><a href="#cb76-111"></a><span class="in">```</span></span>
+<span id="cb76-112"><a href="#cb76-112"></a></span>
+<span id="cb76-113"><a href="#cb76-113"></a>Now the english alphabet contain 26 characters, we will need to capture the <span class="in">`&lt;S&gt;`</span> and <span class="in">`&lt;E&gt;`</span> also. So it would be 28 x 28 array.</span>
+<span id="cb76-114"><a href="#cb76-114"></a></span>
+<span id="cb76-117"><a href="#cb76-117"></a><span class="in">```{python}</span></span>
+<span id="cb76-118"><a href="#cb76-118"></a>N <span class="op">=</span> torch.zeros((<span class="dv">28</span>,<span class="dv">28</span>), dtype<span class="op">=</span>torch.int32)</span>
+<span id="cb76-119"><a href="#cb76-119"></a><span class="in">```</span></span>
+<span id="cb76-120"><a href="#cb76-120"></a></span>
+<span id="cb76-121"><a href="#cb76-121"></a>This will collect all the characters used in our dataset (join all words to a massive string and pass it to a <span class="in">`set()`</span>, which will remove duplicate). With such a large dataset, all the english characters were used.</span>
+<span id="cb76-122"><a href="#cb76-122"></a></span>
+<span id="cb76-125"><a href="#cb76-125"></a><span class="in">```{python}</span></span>
+<span id="cb76-126"><a href="#cb76-126"></a>chars <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">list</span>(<span class="bu">set</span>(<span class="st">''</span>.join(words))))</span>
+<span id="cb76-127"><a href="#cb76-127"></a><span class="bu">len</span>(chars) <span class="co"># 26 </span></span>
+<span id="cb76-128"><a href="#cb76-128"></a></span>
+<span id="cb76-129"><a href="#cb76-129"></a><span class="co"># with index</span></span>
+<span id="cb76-130"><a href="#cb76-130"></a>stoi <span class="op">=</span> {s:i <span class="cf">for</span> i,s <span class="kw">in</span> <span class="bu">enumerate</span>(chars)}</span>
+<span id="cb76-131"><a href="#cb76-131"></a>stoi[<span class="st">'&lt;S&gt;'</span>] <span class="op">=</span> <span class="dv">26</span></span>
+<span id="cb76-132"><a href="#cb76-132"></a>stoi[<span class="st">'&lt;E&gt;'</span>] <span class="op">=</span> <span class="dv">27</span></span>
+<span id="cb76-133"><a href="#cb76-133"></a>stoi</span>
+<span id="cb76-134"><a href="#cb76-134"></a><span class="in">```</span></span>
+<span id="cb76-135"><a href="#cb76-135"></a></span>
+<span id="cb76-138"><a href="#cb76-138"></a><span class="in">```{python}</span></span>
+<span id="cb76-139"><a href="#cb76-139"></a><span class="cf">for</span> w <span class="kw">in</span> words:</span>
+<span id="cb76-140"><a href="#cb76-140"></a>  chs <span class="op">=</span> [<span class="st">'&lt;S&gt;'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'&lt;E&gt;'</span>]</span>
+<span id="cb76-141"><a href="#cb76-141"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb76-142"><a href="#cb76-142"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
+<span id="cb76-143"><a href="#cb76-143"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
+<span id="cb76-144"><a href="#cb76-144"></a>    N[ix1, ix2] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb76-145"><a href="#cb76-145"></a><span class="in">```</span></span>
+<span id="cb76-146"><a href="#cb76-146"></a></span>
+<span id="cb76-147"><a href="#cb76-147"></a><span class="fu">## visualizing the `bigram` tensor</span></span>
+<span id="cb76-148"><a href="#cb76-148"></a></span>
+<span id="cb76-151"><a href="#cb76-151"></a><span class="in">```{python}</span></span>
+<span id="cb76-152"><a href="#cb76-152"></a>itos <span class="op">=</span> {i:s <span class="cf">for</span> s, i <span class="kw">in</span> stoi.items()}</span>
+<span id="cb76-153"><a href="#cb76-153"></a><span class="in">```</span></span>
+<span id="cb76-154"><a href="#cb76-154"></a></span>
+<span id="cb76-157"><a href="#cb76-157"></a><span class="in">```{python}</span></span>
+<span id="cb76-158"><a href="#cb76-158"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb76-159"><a href="#cb76-159"></a><span class="op">%</span>matplotlib inline</span>
+<span id="cb76-160"><a href="#cb76-160"></a></span>
+<span id="cb76-161"><a href="#cb76-161"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">16</span>,<span class="dv">16</span>))</span>
+<span id="cb76-162"><a href="#cb76-162"></a>plt.imshow(N, cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
+<span id="cb76-163"><a href="#cb76-163"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">28</span>):</span>
+<span id="cb76-164"><a href="#cb76-164"></a>  <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">28</span>):</span>
+<span id="cb76-165"><a href="#cb76-165"></a>    <span class="co"># plot character strings with number of time</span></span>
+<span id="cb76-166"><a href="#cb76-166"></a>    chstr <span class="op">=</span> itos[i] <span class="op">+</span> itos[j]</span>
+<span id="cb76-167"><a href="#cb76-167"></a>    plt.text(j, i, chstr, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, color<span class="op">=</span><span class="st">"gray"</span>)</span>
+<span id="cb76-168"><a href="#cb76-168"></a>    plt.text(j, i, N[i, j].item(), ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>, color<span class="op">=</span><span class="st">"gray"</span>)</span>
+<span id="cb76-169"><a href="#cb76-169"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb76-170"><a href="#cb76-170"></a><span class="in">```</span></span>
+<span id="cb76-171"><a href="#cb76-171"></a></span>
+<span id="cb76-172"><a href="#cb76-172"></a><span class="fu">## deleting spurious (S) and (E) tokens in favor of a single `.` token</span></span>
+<span id="cb76-173"><a href="#cb76-173"></a></span>
+<span id="cb76-174"><a href="#cb76-174"></a><span class="in">`&lt;S&gt;`</span>, and <span class="in">`&lt;E&gt;`</span> look a bit annoying. let's replace them by simple <span class="in">`.`</span>.</span>
+<span id="cb76-175"><a href="#cb76-175"></a></span>
+<span id="cb76-178"><a href="#cb76-178"></a><span class="in">```{python}</span></span>
+<span id="cb76-179"><a href="#cb76-179"></a>N <span class="op">=</span> torch.zeros((<span class="dv">27</span>,<span class="dv">27</span>), dtype<span class="op">=</span>torch.int32)</span>
+<span id="cb76-180"><a href="#cb76-180"></a>stoi <span class="op">=</span> {s:i<span class="op">+</span><span class="dv">1</span> <span class="cf">for</span> i,s <span class="kw">in</span> <span class="bu">enumerate</span>(chars)}</span>
+<span id="cb76-181"><a href="#cb76-181"></a>stoi[<span class="st">'.'</span>] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb76-182"><a href="#cb76-182"></a>itos <span class="op">=</span> {i:s <span class="cf">for</span> s, i <span class="kw">in</span> stoi.items()}</span>
+<span id="cb76-183"><a href="#cb76-183"></a></span>
+<span id="cb76-184"><a href="#cb76-184"></a><span class="cf">for</span> w <span class="kw">in</span> words:</span>
+<span id="cb76-185"><a href="#cb76-185"></a>  chs <span class="op">=</span> [<span class="st">'.'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'.'</span>]</span>
+<span id="cb76-186"><a href="#cb76-186"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb76-187"><a href="#cb76-187"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
+<span id="cb76-188"><a href="#cb76-188"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
+<span id="cb76-189"><a href="#cb76-189"></a>    N[ix1, ix2] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb76-190"><a href="#cb76-190"></a><span class="in">```</span></span>
+<span id="cb76-191"><a href="#cb76-191"></a></span>
+<span id="cb76-194"><a href="#cb76-194"></a><span class="in">```{python}</span></span>
+<span id="cb76-195"><a href="#cb76-195"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb76-196"><a href="#cb76-196"></a><span class="op">%</span>matplotlib inline</span>
+<span id="cb76-197"><a href="#cb76-197"></a></span>
+<span id="cb76-198"><a href="#cb76-198"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">16</span>,<span class="dv">16</span>))</span>
+<span id="cb76-199"><a href="#cb76-199"></a>plt.imshow(N, cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
+<span id="cb76-200"><a href="#cb76-200"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">27</span>):</span>
+<span id="cb76-201"><a href="#cb76-201"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">27</span>):</span>
+<span id="cb76-202"><a href="#cb76-202"></a>        chstr <span class="op">=</span> itos[i] <span class="op">+</span> itos[j]</span>
+<span id="cb76-203"><a href="#cb76-203"></a>        plt.text(j, i, chstr, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb76-204"><a href="#cb76-204"></a>        plt.text(j, i, N[i, j].item(), ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb76-205"><a href="#cb76-205"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb76-206"><a href="#cb76-206"></a><span class="in">```</span></span>
+<span id="cb76-207"><a href="#cb76-207"></a></span>
+<span id="cb76-208"><a href="#cb76-208"></a><span class="fu">## sampling from the model</span></span>
+<span id="cb76-209"><a href="#cb76-209"></a></span>
+<span id="cb76-210"><a href="#cb76-210"></a>Taking the first column of the array.</span>
+<span id="cb76-211"><a href="#cb76-211"></a></span>
+<span id="cb76-214"><a href="#cb76-214"></a><span class="in">```{python}</span></span>
+<span id="cb76-215"><a href="#cb76-215"></a>N[<span class="dv">0</span>]</span>
+<span id="cb76-216"><a href="#cb76-216"></a><span class="in">```</span></span>
+<span id="cb76-217"><a href="#cb76-217"></a></span>
+<span id="cb76-218"><a href="#cb76-218"></a>Column-wise probability.</span>
+<span id="cb76-219"><a href="#cb76-219"></a></span>
+<span id="cb76-222"><a href="#cb76-222"></a><span class="in">```{python}</span></span>
+<span id="cb76-223"><a href="#cb76-223"></a>p <span class="op">=</span> N[<span class="dv">0</span>].<span class="bu">float</span>()</span>
+<span id="cb76-224"><a href="#cb76-224"></a>p <span class="op">=</span> p <span class="op">/</span> p.<span class="bu">sum</span>()</span>
+<span id="cb76-225"><a href="#cb76-225"></a>p</span>
+<span id="cb76-226"><a href="#cb76-226"></a><span class="in">```</span></span>
+<span id="cb76-227"><a href="#cb76-227"></a></span>
+<span id="cb76-228"><a href="#cb76-228"></a>Creating random number with Pytorch generator at a state.</span>
+<span id="cb76-229"><a href="#cb76-229"></a></span>
+<span id="cb76-232"><a href="#cb76-232"></a><span class="in">```{python}</span></span>
+<span id="cb76-233"><a href="#cb76-233"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
+<span id="cb76-234"><a href="#cb76-234"></a>p_test <span class="op">=</span> torch.rand(<span class="dv">3</span>, generator<span class="op">=</span>g)</span>
+<span id="cb76-235"><a href="#cb76-235"></a>p_test <span class="op">=</span> p_test <span class="op">/</span> p_test.<span class="bu">sum</span>()</span>
+<span id="cb76-236"><a href="#cb76-236"></a><span class="in">```</span></span>
+<span id="cb76-237"><a href="#cb76-237"></a></span>
+<span id="cb76-240"><a href="#cb76-240"></a><span class="in">```{python}</span></span>
+<span id="cb76-241"><a href="#cb76-241"></a>torch.multinomial(p_test, num_samples<span class="op">=</span><span class="dv">100</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g)</span>
+<span id="cb76-242"><a href="#cb76-242"></a><span class="in">```</span></span>
+<span id="cb76-243"><a href="#cb76-243"></a></span>
+<span id="cb76-244"><a href="#cb76-244"></a>Now back to our data, generate a tensor with 1 value from the <span class="in">`p`</span> vector.</span>
+<span id="cb76-245"><a href="#cb76-245"></a></span>
+<span id="cb76-248"><a href="#cb76-248"></a><span class="in">```{python}</span></span>
+<span id="cb76-249"><a href="#cb76-249"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
+<span id="cb76-250"><a href="#cb76-250"></a>ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
+<span id="cb76-251"><a href="#cb76-251"></a>itos[ix]</span>
+<span id="cb76-252"><a href="#cb76-252"></a><span class="in">```</span></span>
+<span id="cb76-253"><a href="#cb76-253"></a></span>
+<span id="cb76-254"><a href="#cb76-254"></a>Let's automate it:</span>
+<span id="cb76-255"><a href="#cb76-255"></a></span>
+<span id="cb76-258"><a href="#cb76-258"></a><span class="in">```{python}</span></span>
+<span id="cb76-259"><a href="#cb76-259"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
+<span id="cb76-260"><a href="#cb76-260"></a></span>
+<span id="cb76-261"><a href="#cb76-261"></a>ix <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb76-262"><a href="#cb76-262"></a><span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb76-263"><a href="#cb76-263"></a>  p <span class="op">=</span> N[ix].<span class="bu">float</span>()</span>
+<span id="cb76-264"><a href="#cb76-264"></a>  p <span class="op">=</span> p <span class="op">/</span> p.<span class="bu">sum</span>()</span>
+<span id="cb76-265"><a href="#cb76-265"></a>  ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
+<span id="cb76-266"><a href="#cb76-266"></a>  <span class="bu">print</span>(itos[ix])</span>
+<span id="cb76-267"><a href="#cb76-267"></a>  <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb76-268"><a href="#cb76-268"></a>    <span class="cf">break</span></span>
+<span id="cb76-269"><a href="#cb76-269"></a><span class="in">```</span></span>
+<span id="cb76-270"><a href="#cb76-270"></a></span>
+<span id="cb76-271"><a href="#cb76-271"></a>And more, joining the last result to single word, and make new 10 names:</span>
+<span id="cb76-272"><a href="#cb76-272"></a></span>
+<span id="cb76-275"><a href="#cb76-275"></a><span class="in">```{python}</span></span>
+<span id="cb76-276"><a href="#cb76-276"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
+<span id="cb76-277"><a href="#cb76-277"></a></span>
+<span id="cb76-278"><a href="#cb76-278"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb76-279"><a href="#cb76-279"></a>  </span>
+<span id="cb76-280"><a href="#cb76-280"></a>  out <span class="op">=</span> []</span>
+<span id="cb76-281"><a href="#cb76-281"></a>  ix <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb76-282"><a href="#cb76-282"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb76-283"><a href="#cb76-283"></a>    p <span class="op">=</span> N[ix].<span class="bu">float</span>()</span>
+<span id="cb76-284"><a href="#cb76-284"></a>    p <span class="op">=</span> p <span class="op">/</span> p.<span class="bu">sum</span>()</span>
+<span id="cb76-285"><a href="#cb76-285"></a></span>
+<span id="cb76-286"><a href="#cb76-286"></a>    <span class="co"># p = torch.ones(27) / 27.0</span></span>
+<span id="cb76-287"><a href="#cb76-287"></a>    <span class="co"># the result look terrible, but compare to an un-trained model for eg p - uncomment to code above, they are still like names.</span></span>
+<span id="cb76-288"><a href="#cb76-288"></a>    ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
+<span id="cb76-289"><a href="#cb76-289"></a>    out.append(itos[ix])</span>
+<span id="cb76-290"><a href="#cb76-290"></a>    <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb76-291"><a href="#cb76-291"></a>      <span class="cf">break</span></span>
+<span id="cb76-292"><a href="#cb76-292"></a>  <span class="bu">print</span>(<span class="st">''</span>.join(out))</span>
+<span id="cb76-293"><a href="#cb76-293"></a><span class="in">```</span></span>
+<span id="cb76-294"><a href="#cb76-294"></a></span>
+<span id="cb76-295"><a href="#cb76-295"></a><span class="fu">## efficiency! vectorized normalization of the rows, tensor broadcasting</span></span>
+<span id="cb76-296"><a href="#cb76-296"></a></span>
+<span id="cb76-297"><a href="#cb76-297"></a>We just fetching a row of <span class="in">`N`</span> from the counts matrix, and then always do the same things: converting to float, dividing. That's not efficient! We now will optimize this:</span>
+<span id="cb76-298"><a href="#cb76-298"></a></span>
+<span id="cb76-301"><a href="#cb76-301"></a><span class="in">```{python}</span></span>
+<span id="cb76-302"><a href="#cb76-302"></a>P <span class="op">=</span> N.<span class="bu">float</span>()</span>
+<span id="cb76-303"><a href="#cb76-303"></a><span class="co"># param 1 helps summing horizontally, by rows</span></span>
+<span id="cb76-304"><a href="#cb76-304"></a><span class="co"># keepdim keeps the dimension the output is still 2D array with 1 column for each row, not a vertical vector entirely</span></span>
+<span id="cb76-305"><a href="#cb76-305"></a><span class="co"># tensor already support to broadcast the row sum allowing this dividing (keepdim helped not to mess the broadcast)</span></span>
+<span id="cb76-306"><a href="#cb76-306"></a>P <span class="op">/=</span> P.<span class="bu">sum</span>(<span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb76-307"><a href="#cb76-307"></a><span class="co"># inplace operator instead of P = P / P.sum(1, keepdim=True), take care of memory!</span></span>
+<span id="cb76-308"><a href="#cb76-308"></a><span class="in">```</span></span>
+<span id="cb76-309"><a href="#cb76-309"></a></span>
+<span id="cb76-312"><a href="#cb76-312"></a><span class="in">```{python}</span></span>
+<span id="cb76-313"><a href="#cb76-313"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
+<span id="cb76-314"><a href="#cb76-314"></a></span>
+<span id="cb76-315"><a href="#cb76-315"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb76-316"><a href="#cb76-316"></a>  </span>
+<span id="cb76-317"><a href="#cb76-317"></a>  out <span class="op">=</span> []</span>
+<span id="cb76-318"><a href="#cb76-318"></a>  ix <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb76-319"><a href="#cb76-319"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb76-320"><a href="#cb76-320"></a>    p <span class="op">=</span> P[ix]</span>
+<span id="cb76-321"><a href="#cb76-321"></a>    ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
+<span id="cb76-322"><a href="#cb76-322"></a>    out.append(itos[ix])</span>
+<span id="cb76-323"><a href="#cb76-323"></a>    <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb76-324"><a href="#cb76-324"></a>      <span class="cf">break</span></span>
+<span id="cb76-325"><a href="#cb76-325"></a>  <span class="bu">print</span>(<span class="st">''</span>.join(out))</span>
+<span id="cb76-326"><a href="#cb76-326"></a><span class="in">```</span></span>
+<span id="cb76-327"><a href="#cb76-327"></a></span>
+<span id="cb76-328"><a href="#cb76-328"></a><span class="fu">## loss function (the negative log likelihood of the data under our model)</span></span>
+<span id="cb76-329"><a href="#cb76-329"></a></span>
+<span id="cb76-330"><a href="#cb76-330"></a>We've just trained and sampled from the model, iteratively sampled the next character and fed it in each time and got the next one. Now we need to somehow measure the quality of the model.</span>
+<span id="cb76-331"><a href="#cb76-331"></a></span>
+<span id="cb76-332"><a href="#cb76-332"></a>How good is it in predicting? Gimme a number!</span>
+<span id="cb76-333"><a href="#cb76-333"></a></span>
+<span id="cb76-336"><a href="#cb76-336"></a><span class="in">```{python}</span></span>
+<span id="cb76-337"><a href="#cb76-337"></a><span class="co"># showing bigram for the first 3 words, along with the probability inferred by our model (`P`)</span></span>
+<span id="cb76-338"><a href="#cb76-338"></a><span class="co"># the higher the prob, the better of prediction</span></span>
+<span id="cb76-339"><a href="#cb76-339"></a><span class="co"># since a fair (under no data) probability of occuring a character is roughly 1/27 ~ 4%, any prob higher than 4% should be good</span></span>
+<span id="cb76-340"><a href="#cb76-340"></a><span class="co"># we need to combine all the prob to a single 1 number, measuring how good is our model?</span></span>
+<span id="cb76-341"><a href="#cb76-341"></a><span class="co"># since multiplying all the prob resulting a very very small number, we will approach by the log likelihood function</span></span>
+<span id="cb76-342"><a href="#cb76-342"></a><span class="co"># the log likelihood is just the sum of log of individual multiplier</span></span>
+<span id="cb76-343"><a href="#cb76-343"></a></span>
+<span id="cb76-344"><a href="#cb76-344"></a>log_likelihood <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb76-345"><a href="#cb76-345"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">3</span>]:</span>
+<span id="cb76-346"><a href="#cb76-346"></a>  chs <span class="op">=</span> [<span class="st">'.'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'.'</span>]</span>
+<span id="cb76-347"><a href="#cb76-347"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb76-348"><a href="#cb76-348"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
+<span id="cb76-349"><a href="#cb76-349"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
+<span id="cb76-350"><a href="#cb76-350"></a>    prob <span class="op">=</span> P[ix1, ix2]</span>
+<span id="cb76-351"><a href="#cb76-351"></a>    log_prob <span class="op">=</span> torch.log(prob)</span>
+<span id="cb76-352"><a href="#cb76-352"></a>    log_likelihood <span class="op">+=</span> log_prob</span>
+<span id="cb76-353"><a href="#cb76-353"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>ch1<span class="sc">}{</span>ch2<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>prob<span class="sc">:.4f}</span><span class="ss"> </span><span class="sc">{</span>log_prob<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb76-354"><a href="#cb76-354"></a></span>
+<span id="cb76-355"><a href="#cb76-355"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>log_likelihood<span class="op">=</span><span class="sc">}</span><span class="ss">'</span>) <span class="co"># print both the variable name and its value, for the first 3 words</span></span>
+<span id="cb76-356"><a href="#cb76-356"></a><span class="in">```</span></span>
+<span id="cb76-357"><a href="#cb76-357"></a></span>
+<span id="cb76-358"><a href="#cb76-358"></a>If all the probs equal to 1, the logs will be 0. If they close to 0, the logs will be more negative. We want to use this as a loss function, meaning lower the better, so we will invert it:</span>
+<span id="cb76-359"><a href="#cb76-359"></a></span>
+<span id="cb76-362"><a href="#cb76-362"></a><span class="in">```{python}</span></span>
+<span id="cb76-363"><a href="#cb76-363"></a>neg_log_likelihood <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb76-364"><a href="#cb76-364"></a>n <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb76-365"><a href="#cb76-365"></a><span class="cf">for</span> w <span class="kw">in</span> words:</span>
+<span id="cb76-366"><a href="#cb76-366"></a>  chs <span class="op">=</span> [<span class="st">'.'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'.'</span>]</span>
+<span id="cb76-367"><a href="#cb76-367"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb76-368"><a href="#cb76-368"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
+<span id="cb76-369"><a href="#cb76-369"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
+<span id="cb76-370"><a href="#cb76-370"></a>    prob <span class="op">=</span> P[ix1, ix2]</span>
+<span id="cb76-371"><a href="#cb76-371"></a>    log_prob <span class="op">=</span> torch.log(prob)</span>
+<span id="cb76-372"><a href="#cb76-372"></a>    neg_log_likelihood <span class="op">+=</span> <span class="op">-</span>log_prob</span>
+<span id="cb76-373"><a href="#cb76-373"></a>    n <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb76-374"><a href="#cb76-374"></a></span>
+<span id="cb76-375"><a href="#cb76-375"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>neg_log_likelihood<span class="op">=</span><span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb76-376"><a href="#cb76-376"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>neg_log_likelihood<span class="op">/</span>n<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb76-377"><a href="#cb76-377"></a><span class="in">```</span></span>
+<span id="cb76-378"><a href="#cb76-378"></a></span>
+<span id="cb76-379"><a href="#cb76-379"></a>Finally we insert a count and calculate the "normalized" (or average) negative log likelihood. The lower of this number, the better model we have.</span>
+<span id="cb76-380"><a href="#cb76-380"></a></span>
+<span id="cb76-381"><a href="#cb76-381"></a>You can test with your name:</span>
+<span id="cb76-382"><a href="#cb76-382"></a></span>
+<span id="cb76-385"><a href="#cb76-385"></a><span class="in">```{python}</span></span>
+<span id="cb76-386"><a href="#cb76-386"></a>neg_log_likelihood <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb76-387"><a href="#cb76-387"></a>n <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb76-388"><a href="#cb76-388"></a><span class="cf">for</span> w <span class="kw">in</span> [<span class="st">'tuan'</span>]:</span>
+<span id="cb76-389"><a href="#cb76-389"></a>  chs <span class="op">=</span> [<span class="st">'.'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'.'</span>]</span>
+<span id="cb76-390"><a href="#cb76-390"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb76-391"><a href="#cb76-391"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
+<span id="cb76-392"><a href="#cb76-392"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
+<span id="cb76-393"><a href="#cb76-393"></a>    prob <span class="op">=</span> P[ix1, ix2]</span>
+<span id="cb76-394"><a href="#cb76-394"></a>    log_prob <span class="op">=</span> torch.log(prob)</span>
+<span id="cb76-395"><a href="#cb76-395"></a>    neg_log_likelihood <span class="op">+=</span> <span class="op">-</span>log_prob</span>
+<span id="cb76-396"><a href="#cb76-396"></a>    n <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb76-397"><a href="#cb76-397"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>ch1<span class="sc">}{</span>ch2<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>prob<span class="sc">:.4f}</span><span class="ss"> </span><span class="sc">{</span>log_prob<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb76-398"><a href="#cb76-398"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>neg_log_likelihood<span class="op">=</span><span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb76-399"><a href="#cb76-399"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>neg_log_likelihood<span class="op">/</span>n<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb76-400"><a href="#cb76-400"></a><span class="in">```</span></span>
+<span id="cb76-401"><a href="#cb76-401"></a></span>
+<span id="cb76-402"><a href="#cb76-402"></a><span class="in">`tu`</span> is not common in our dataset.</span>
+<span id="cb76-403"><a href="#cb76-403"></a></span>
+<span id="cb76-404"><a href="#cb76-404"></a><span class="fu">## model smoothing with fake counts</span></span>
+<span id="cb76-405"><a href="#cb76-405"></a></span>
+<span id="cb76-406"><a href="#cb76-406"></a>For a pair of bigram that does not exist in the dataset, for eg <span class="in">`jq`</span>, the prob will be zero and log likelihood will be infinity. We can kind of smooth our model by adding constant "fake counts" to the model:</span>
+<span id="cb76-407"><a href="#cb76-407"></a></span>
+<span id="cb76-410"><a href="#cb76-410"></a><span class="in">```{python}</span></span>
+<span id="cb76-411"><a href="#cb76-411"></a><span class="co">#| eval: false</span></span>
+<span id="cb76-412"><a href="#cb76-412"></a>P <span class="op">=</span> (N<span class="op">+</span><span class="dv">1</span>).<span class="bu">float</span>()</span>
+<span id="cb76-413"><a href="#cb76-413"></a><span class="in">```</span></span>
+<span id="cb76-414"><a href="#cb76-414"></a></span>
+<span id="cb76-415"><a href="#cb76-415"></a><span class="in">`1`</span> is decent number, the more you added, you'll have a more uniformed distribution, the less, the more peaked distribution you have.</span>
+<span id="cb76-416"><a href="#cb76-416"></a></span>
+<span id="cb76-417"><a href="#cb76-417"></a><span class="fu"># PART 2: the neural network approach - intro</span></span>
+<span id="cb76-418"><a href="#cb76-418"></a></span>
+<span id="cb76-419"><a href="#cb76-419"></a>Now we will try to cast the problem of bigram character level of language modeling into the **neural network framework**. We first understand how to feed it in with 1 point dataset - only the first word <span class="in">`emma`</span>:</span>
+<span id="cb76-420"><a href="#cb76-420"></a></span>
+<span id="cb76-421"><a href="#cb76-421"></a><span class="fu">## creating the `bigram` dataset for the neural net</span></span>
+<span id="cb76-422"><a href="#cb76-422"></a></span>
+<span id="cb76-425"><a href="#cb76-425"></a><span class="in">```{python}</span></span>
+<span id="cb76-426"><a href="#cb76-426"></a><span class="co"># creating training set of bigram(x, y)</span></span>
+<span id="cb76-427"><a href="#cb76-427"></a>xs, ys <span class="op">=</span> [], []</span>
+<span id="cb76-428"><a href="#cb76-428"></a></span>
+<span id="cb76-429"><a href="#cb76-429"></a><span class="cf">for</span> w <span class="kw">in</span> words[:<span class="dv">1</span>]:</span>
+<span id="cb76-430"><a href="#cb76-430"></a>  chs <span class="op">=</span> [<span class="st">'.'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'.'</span>]</span>
+<span id="cb76-431"><a href="#cb76-431"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb76-432"><a href="#cb76-432"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
+<span id="cb76-433"><a href="#cb76-433"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
+<span id="cb76-434"><a href="#cb76-434"></a>    xs.append(ix1)</span>
+<span id="cb76-435"><a href="#cb76-435"></a>    ys.append(ix2)</span>
+<span id="cb76-436"><a href="#cb76-436"></a></span>
+<span id="cb76-437"><a href="#cb76-437"></a>xs <span class="op">=</span> torch.tensor(xs) <span class="co"># both .tensor() and .Tensor() work!</span></span>
+<span id="cb76-438"><a href="#cb76-438"></a>ys <span class="op">=</span> torch.tensor(ys)</span>
+<span id="cb76-439"><a href="#cb76-439"></a><span class="co"># https://stackoverflow.com/questions/51911749/what-is-the-difference-between-torch-tensor-and-torch-tensor</span></span>
+<span id="cb76-440"><a href="#cb76-440"></a><span class="co"># .tensor() infers dtype as int64 while .Tensor() infers dtype as float32, in this case</span></span>
+<span id="cb76-441"><a href="#cb76-441"></a><span class="in">```</span></span>
+<span id="cb76-442"><a href="#cb76-442"></a></span>
+<span id="cb76-443"><a href="#cb76-443"></a>The input and output tensor for the first word will be look like this:</span>
+<span id="cb76-444"><a href="#cb76-444"></a></span>
+<span id="cb76-447"><a href="#cb76-447"></a><span class="in">```{md}</span></span>
+<span id="cb76-448"><a href="#cb76-448"></a><span class="at">&gt; print(ch1,ch2)</span></span>
+<span id="cb76-449"><a href="#cb76-449"></a><span class="at">. e</span></span>
+<span id="cb76-450"><a href="#cb76-450"></a><span class="at">e m</span></span>
+<span id="cb76-451"><a href="#cb76-451"></a><span class="at">m m</span></span>
+<span id="cb76-452"><a href="#cb76-452"></a><span class="at">m a</span></span>
+<span id="cb76-453"><a href="#cb76-453"></a><span class="at">a .</span></span>
+<span id="cb76-454"><a href="#cb76-454"></a><span class="at">&gt; xs</span></span>
+<span id="cb76-455"><a href="#cb76-455"></a><span class="at">tensor(</span><span class="co">[</span><span class="ot"> 0,  5, 13, 13,  1</span><span class="co">]</span><span class="at">)</span></span>
+<span id="cb76-456"><a href="#cb76-456"></a><span class="at">&gt; ys</span></span>
+<span id="cb76-457"><a href="#cb76-457"></a><span class="at">tensor(</span><span class="co">[</span><span class="ot"> 5, 13, 13,  1,  0</span><span class="co">]</span><span class="at">)</span></span>
+<span id="cb76-458"><a href="#cb76-458"></a><span class="in">```</span></span>
+<span id="cb76-459"><a href="#cb76-459"></a></span>
+<span id="cb76-460"><a href="#cb76-460"></a><span class="in">## feeding integers into neural nets? one-hot encodings</span></span>
+<span id="cb76-461"><a href="#cb76-461"></a></span>
+<span id="cb76-464"><a href="#cb76-464"></a><span class="in">```{python}</span></span>
+<span id="cb76-465"><a href="#cb76-465"></a><span class="in">import torch.nn.functional as F</span></span>
+<span id="cb76-466"><a href="#cb76-466"></a></span>
+<span id="cb76-467"><a href="#cb76-467"></a><span class="in">xenc = F.one_hot(xs, num_classes=27).float() # remember to cast integer to float, which can be fed to neural nets</span></span>
+<span id="cb76-468"><a href="#cb76-468"></a><span class="in">xenc</span></span>
+<span id="cb76-469"><a href="#cb76-469"></a><span class="in">```</span></span>
+<span id="cb76-470"><a href="#cb76-470"></a></span>
+<span id="cb76-473"><a href="#cb76-473"></a><span class="in">```{python}</span></span>
+<span id="cb76-474"><a href="#cb76-474"></a>xenc.shape</span>
+<span id="cb76-475"><a href="#cb76-475"></a><span class="in">```</span></span>
+<span id="cb76-476"><a href="#cb76-476"></a></span>
+<span id="cb76-479"><a href="#cb76-479"></a><span class="in">```{python}</span></span>
+<span id="cb76-480"><a href="#cb76-480"></a>plt.imshow(xenc, cmap<span class="op">=</span><span class="st">"Blues"</span>)</span>
+<span id="cb76-481"><a href="#cb76-481"></a><span class="in">```</span></span>
+<span id="cb76-482"><a href="#cb76-482"></a></span>
+<span id="cb76-483"><a href="#cb76-483"></a><span class="fu">## the "neural net": one linear layer of neurons implemented with matrix multiplication</span></span>
+<span id="cb76-484"><a href="#cb76-484"></a></span>
+<span id="cb76-487"><a href="#cb76-487"></a><span class="in">```{python}</span></span>
+<span id="cb76-488"><a href="#cb76-488"></a>W <span class="op">=</span> torch.randn((<span class="dv">27</span>, <span class="dv">1</span>)) <span class="co"># fulfill a tensor with random number followed normal distribution, 1 is indicating 1 single neuron</span></span>
+<span id="cb76-489"><a href="#cb76-489"></a>xenc <span class="op">@</span> W <span class="co"># @ is matrix mult operator in PyTorch</span></span>
+<span id="cb76-490"><a href="#cb76-490"></a><span class="co"># (5, 27) @ (27, 1) will result (5, 1) matrix</span></span>
+<span id="cb76-491"><a href="#cb76-491"></a><span class="co"># no bias is added for now</span></span>
+<span id="cb76-492"><a href="#cb76-492"></a><span class="in">```</span></span>
+<span id="cb76-493"><a href="#cb76-493"></a></span>
+<span id="cb76-494"><a href="#cb76-494"></a>This is 1 neuron only, now we want to evaluate all 27 characters using only 5 inputs from the first word, we'll make 27 neurons:</span>
+<span id="cb76-495"><a href="#cb76-495"></a></span>
+<span id="cb76-498"><a href="#cb76-498"></a><span class="in">```{python}</span></span>
+<span id="cb76-499"><a href="#cb76-499"></a>W <span class="op">=</span> torch.randn((<span class="dv">27</span>, <span class="dv">27</span>))</span>
+<span id="cb76-500"><a href="#cb76-500"></a>xenc <span class="op">@</span> W </span>
+<span id="cb76-501"><a href="#cb76-501"></a><span class="co"># (5, 27) @ (27, 27) will result (5, 27) matrix</span></span>
+<span id="cb76-502"><a href="#cb76-502"></a><span class="co"># no bias is added for now</span></span>
+<span id="cb76-503"><a href="#cb76-503"></a><span class="in">```</span></span>
+<span id="cb76-504"><a href="#cb76-504"></a></span>
+<span id="cb76-505"><a href="#cb76-505"></a><span class="fu">## transforming neural net outputs into probabilities: the softmax</span></span>
+<span id="cb76-506"><a href="#cb76-506"></a></span>
+<span id="cb76-507"><a href="#cb76-507"></a>So far we have fed 5 inputs to 27 neurons for 27 characters in **the first layer** of the neural net. We notice that the output number ranges from negative to positive while we want "how likely of the next characters". It would be counts, or probs, hence we exponentiate the logits, then dividing row-wise total to get the prob of each character.</span>
+<span id="cb76-508"><a href="#cb76-508"></a></span>
+<span id="cb76-509"><a href="#cb76-509"></a>This is call the softmax!</span>
+<span id="cb76-510"><a href="#cb76-510"></a></span>
+<span id="cb76-513"><a href="#cb76-513"></a><span class="in">```{python}</span></span>
+<span id="cb76-514"><a href="#cb76-514"></a>logits <span class="op">=</span> xenc <span class="op">@</span> W <span class="co"># log-counts</span></span>
+<span id="cb76-515"><a href="#cb76-515"></a>counts <span class="op">=</span> logits.exp() <span class="co"># equivalent N</span></span>
+<span id="cb76-516"><a href="#cb76-516"></a>probs <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb76-517"><a href="#cb76-517"></a>probs</span>
+<span id="cb76-518"><a href="#cb76-518"></a><span class="in">```</span></span>
+<span id="cb76-519"><a href="#cb76-519"></a></span>
+<span id="cb76-520"><a href="#cb76-520"></a><span class="fu">## summary, preview to next steps, reference to `micrograd`</span></span>
+<span id="cb76-521"><a href="#cb76-521"></a></span>
+<span id="cb76-524"><a href="#cb76-524"></a><span class="in">```{python}</span></span>
+<span id="cb76-525"><a href="#cb76-525"></a><span class="co">#| eval: false</span></span>
+<span id="cb76-526"><a href="#cb76-526"></a><span class="co"># randomly initialize 27 neurons' weights. each neuron receives 27 inputs</span></span>
+<span id="cb76-527"><a href="#cb76-527"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>) <span class="co"># to make sure we all have same random</span></span>
+<span id="cb76-528"><a href="#cb76-528"></a>W <span class="op">=</span> torch.randn((<span class="dv">27</span>, <span class="dv">27</span>), generator<span class="op">=</span>g)</span>
+<span id="cb76-529"><a href="#cb76-529"></a>xenc <span class="op">=</span> F.one_hot(xs, num_classes<span class="op">=</span><span class="dv">27</span>).<span class="bu">float</span>() <span class="co"># input to the network: one-hot encoding</span></span>
+<span id="cb76-530"><a href="#cb76-530"></a>logits <span class="op">=</span> xenc <span class="op">@</span> W <span class="co"># predict log-counts</span></span>
+<span id="cb76-531"><a href="#cb76-531"></a>counts <span class="op">=</span> logits.exp() <span class="co"># counts, equivalent to N</span></span>
+<span id="cb76-532"><a href="#cb76-532"></a>probs <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>) <span class="co"># probabilities for next character</span></span>
+<span id="cb76-533"><a href="#cb76-533"></a><span class="co"># btw: the last 2 lines here are together called a 'softmax'</span></span>
+<span id="cb76-534"><a href="#cb76-534"></a><span class="in">```</span></span>
+<span id="cb76-535"><a href="#cb76-535"></a></span>
+<span id="cb76-538"><a href="#cb76-538"></a><span class="in">```{python}</span></span>
+<span id="cb76-539"><a href="#cb76-539"></a>probs.shape</span>
+<span id="cb76-540"><a href="#cb76-540"></a><span class="in">```</span></span>
+<span id="cb76-541"><a href="#cb76-541"></a></span>
+<span id="cb76-542"><a href="#cb76-542"></a>Below is detail explaination for each example from our 5-datapoint dataset.</span>
+<span id="cb76-543"><a href="#cb76-543"></a></span>
+<span id="cb76-546"><a href="#cb76-546"></a><span class="in">```{python}</span></span>
+<span id="cb76-547"><a href="#cb76-547"></a>nlls <span class="op">=</span> torch.zeros(<span class="dv">5</span>)</span>
+<span id="cb76-548"><a href="#cb76-548"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb76-549"><a href="#cb76-549"></a>  <span class="co"># i-th bigram:</span></span>
+<span id="cb76-550"><a href="#cb76-550"></a>  x <span class="op">=</span> xs[i].item() <span class="co"># input character index</span></span>
+<span id="cb76-551"><a href="#cb76-551"></a>  y <span class="op">=</span> ys[i].item() <span class="co"># label character index</span></span>
+<span id="cb76-552"><a href="#cb76-552"></a>  <span class="bu">print</span>(<span class="st">'--------'</span>)</span>
+<span id="cb76-553"><a href="#cb76-553"></a>  <span class="bu">print</span>(<span class="ss">f'bigram example </span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>itos[x]<span class="sc">}{</span>itos[y]<span class="sc">}</span><span class="ss"> (indexes </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss">,</span><span class="sc">{</span>y<span class="sc">}</span><span class="ss">)'</span>)</span>
+<span id="cb76-554"><a href="#cb76-554"></a>  <span class="bu">print</span>(<span class="st">'input to the neural net:'</span>, x)</span>
+<span id="cb76-555"><a href="#cb76-555"></a>  <span class="bu">print</span>(<span class="st">'output probabilities from the neural net:'</span>, probs[i])</span>
+<span id="cb76-556"><a href="#cb76-556"></a>  <span class="bu">print</span>(<span class="st">'label (actual next character):'</span>, y)</span>
+<span id="cb76-557"><a href="#cb76-557"></a>  p <span class="op">=</span> probs[i, y]</span>
+<span id="cb76-558"><a href="#cb76-558"></a>  <span class="bu">print</span>(<span class="st">'probability assigned by the net to the the correct character:'</span>, p.item())</span>
+<span id="cb76-559"><a href="#cb76-559"></a>  logp <span class="op">=</span> torch.log(p)</span>
+<span id="cb76-560"><a href="#cb76-560"></a>  <span class="bu">print</span>(<span class="st">'log likelihood:'</span>, logp.item())</span>
+<span id="cb76-561"><a href="#cb76-561"></a>  nll <span class="op">=</span> <span class="op">-</span>logp</span>
+<span id="cb76-562"><a href="#cb76-562"></a>  <span class="bu">print</span>(<span class="st">'negative log likelihood:'</span>, nll.item())</span>
+<span id="cb76-563"><a href="#cb76-563"></a>  nlls[i] <span class="op">=</span> nll</span>
+<span id="cb76-564"><a href="#cb76-564"></a></span>
+<span id="cb76-565"><a href="#cb76-565"></a><span class="bu">print</span>(<span class="st">'========='</span>)</span>
+<span id="cb76-566"><a href="#cb76-566"></a><span class="bu">print</span>(<span class="st">'average negative log likelihood, i.e. loss ='</span>, nlls.mean().item())</span>
+<span id="cb76-567"><a href="#cb76-567"></a><span class="in">```</span></span>
+<span id="cb76-568"><a href="#cb76-568"></a></span>
+<span id="cb76-569"><a href="#cb76-569"></a><span class="fu">## vectorized loss</span></span>
+<span id="cb76-570"><a href="#cb76-570"></a></span>
+<span id="cb76-573"><a href="#cb76-573"></a><span class="in">```{python}</span></span>
+<span id="cb76-574"><a href="#cb76-574"></a>loss <span class="op">=</span> <span class="op">-</span> probs[torch.arange(<span class="dv">5</span>), ys].log().mean()</span>
+<span id="cb76-575"><a href="#cb76-575"></a>loss</span>
+<span id="cb76-576"><a href="#cb76-576"></a><span class="in">```</span></span>
+<span id="cb76-577"><a href="#cb76-577"></a></span>
+<span id="cb76-578"><a href="#cb76-578"></a><span class="fu">## backward and update, in PyTorch</span></span>
+<span id="cb76-579"><a href="#cb76-579"></a></span>
+<span id="cb76-582"><a href="#cb76-582"></a><span class="in">```{python}</span></span>
+<span id="cb76-583"><a href="#cb76-583"></a><span class="co">#| eval: false</span></span>
+<span id="cb76-584"><a href="#cb76-584"></a><span class="co"># backward pass</span></span>
+<span id="cb76-585"><a href="#cb76-585"></a>W.grad <span class="op">=</span> <span class="va">None</span> <span class="co"># set to zero the gradient</span></span>
+<span id="cb76-586"><a href="#cb76-586"></a>loss.backward()</span>
+<span id="cb76-587"><a href="#cb76-587"></a><span class="co"># this can not yet run for now, PyTorch require the specification of require_grad</span></span>
+<span id="cb76-588"><a href="#cb76-588"></a><span class="in">```</span></span>
+<span id="cb76-589"><a href="#cb76-589"></a></span>
+<span id="cb76-592"><a href="#cb76-592"></a><span class="in">```{python}</span></span>
+<span id="cb76-593"><a href="#cb76-593"></a><span class="co">#| eval: false</span></span>
+<span id="cb76-594"><a href="#cb76-594"></a>W.data <span class="op">+=</span> <span class="op">-</span><span class="fl">0.1</span> <span class="op">*</span> W.grad</span>
+<span id="cb76-595"><a href="#cb76-595"></a><span class="in">```</span></span>
+<span id="cb76-596"><a href="#cb76-596"></a></span>
+<span id="cb76-597"><a href="#cb76-597"></a><span class="fu">## putting everything together</span></span>
+<span id="cb76-598"><a href="#cb76-598"></a></span>
+<span id="cb76-601"><a href="#cb76-601"></a><span class="in">```{python}</span></span>
+<span id="cb76-602"><a href="#cb76-602"></a><span class="co"># create the dataset</span></span>
+<span id="cb76-603"><a href="#cb76-603"></a>xs, ys <span class="op">=</span> [], []</span>
+<span id="cb76-604"><a href="#cb76-604"></a><span class="cf">for</span> w <span class="kw">in</span> words:</span>
+<span id="cb76-605"><a href="#cb76-605"></a>  chs <span class="op">=</span> [<span class="st">'.'</span>] <span class="op">+</span> <span class="bu">list</span>(w) <span class="op">+</span> [<span class="st">'.'</span>]</span>
+<span id="cb76-606"><a href="#cb76-606"></a>  <span class="cf">for</span> ch1, ch2 <span class="kw">in</span> <span class="bu">zip</span>(chs, chs[<span class="dv">1</span>:]):</span>
+<span id="cb76-607"><a href="#cb76-607"></a>    ix1 <span class="op">=</span> stoi[ch1]</span>
+<span id="cb76-608"><a href="#cb76-608"></a>    ix2 <span class="op">=</span> stoi[ch2]</span>
+<span id="cb76-609"><a href="#cb76-609"></a>    xs.append(ix1)</span>
+<span id="cb76-610"><a href="#cb76-610"></a>    ys.append(ix2)</span>
+<span id="cb76-611"><a href="#cb76-611"></a>xs <span class="op">=</span> torch.tensor(xs)</span>
+<span id="cb76-612"><a href="#cb76-612"></a>ys <span class="op">=</span> torch.tensor(ys)</span>
+<span id="cb76-613"><a href="#cb76-613"></a>num <span class="op">=</span> xs.nelement()</span>
+<span id="cb76-614"><a href="#cb76-614"></a><span class="bu">print</span>(<span class="st">'number of examples: '</span>, num)</span>
+<span id="cb76-615"><a href="#cb76-615"></a></span>
+<span id="cb76-616"><a href="#cb76-616"></a><span class="co"># initialize the 'network'</span></span>
+<span id="cb76-617"><a href="#cb76-617"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
+<span id="cb76-618"><a href="#cb76-618"></a>W <span class="op">=</span> torch.randn((<span class="dv">27</span>, <span class="dv">27</span>), generator<span class="op">=</span>g, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb76-619"><a href="#cb76-619"></a><span class="in">```</span></span>
+<span id="cb76-620"><a href="#cb76-620"></a></span>
+<span id="cb76-623"><a href="#cb76-623"></a><span class="in">```{python}</span></span>
+<span id="cb76-624"><a href="#cb76-624"></a><span class="co"># gradient descent</span></span>
+<span id="cb76-625"><a href="#cb76-625"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>): <span class="co"># after run 100 times, shorten the notebook</span></span>
+<span id="cb76-626"><a href="#cb76-626"></a>  </span>
+<span id="cb76-627"><a href="#cb76-627"></a>  <span class="co"># forward pass</span></span>
+<span id="cb76-628"><a href="#cb76-628"></a>  xenc <span class="op">=</span> F.one_hot(xs, num_classes<span class="op">=</span><span class="dv">27</span>).<span class="bu">float</span>() <span class="co"># input to the network: one-hot encoding</span></span>
+<span id="cb76-629"><a href="#cb76-629"></a>  logits <span class="op">=</span> xenc <span class="op">@</span> W <span class="co"># predict log-counts</span></span>
+<span id="cb76-630"><a href="#cb76-630"></a>  counts <span class="op">=</span> logits.exp() <span class="co"># counts, equivalent to N</span></span>
+<span id="cb76-631"><a href="#cb76-631"></a>  probs <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>) <span class="co"># probabilities for next character</span></span>
+<span id="cb76-632"><a href="#cb76-632"></a>  loss <span class="op">=</span> <span class="op">-</span>probs[torch.arange(num), ys].log().mean() <span class="op">+</span> <span class="fl">0.01</span><span class="op">*</span>(W<span class="op">**</span><span class="dv">2</span>).mean() <span class="co"># regularization loss</span></span>
+<span id="cb76-633"><a href="#cb76-633"></a>  <span class="bu">print</span>(loss.item())</span>
+<span id="cb76-634"><a href="#cb76-634"></a>  </span>
+<span id="cb76-635"><a href="#cb76-635"></a>  <span class="co"># backward pass</span></span>
+<span id="cb76-636"><a href="#cb76-636"></a>  W.grad <span class="op">=</span> <span class="va">None</span> <span class="co"># set to zero the gradient</span></span>
+<span id="cb76-637"><a href="#cb76-637"></a>  loss.backward()</span>
+<span id="cb76-638"><a href="#cb76-638"></a>  </span>
+<span id="cb76-639"><a href="#cb76-639"></a>  <span class="co"># update</span></span>
+<span id="cb76-640"><a href="#cb76-640"></a>  W.data <span class="op">+=</span> <span class="op">-</span><span class="dv">50</span> <span class="op">*</span> W.grad</span>
+<span id="cb76-641"><a href="#cb76-641"></a><span class="in">```</span></span>
+<span id="cb76-642"><a href="#cb76-642"></a></span>
+<span id="cb76-643"><a href="#cb76-643"></a>Looking back to the backprogation in the <span class="co">[</span><span class="ot">lesson 1</span><span class="co">](https://lktuan.github.io/blog/2024-06-17-nn-z2h-p1/#doing-gradient-descent-optimization-manually-training-the-network)</span>, everything look similar here:</span>
+<span id="cb76-644"><a href="#cb76-644"></a></span>
+<span id="cb76-645"><a href="#cb76-645"></a>| Part          | This neural nets for bigram language modeling                                | Neural nets introduced in the lesson 1                                                        |</span>
+<span id="cb76-646"><a href="#cb76-646"></a>|------------------|----------------------------|--------------------------|</span>
+<span id="cb76-647"><a href="#cb76-647"></a>| Forward pass  | <span class="in">`probs`</span> , use negative log likelihood as loss function, doing classification | <span class="in">`ypred`</span> , use MSE for loss function, doing regression                                         |</span>
+<span id="cb76-648"><a href="#cb76-648"></a>| Backward pass | Same, offered by Torch.                                                      | Set grad of params to be zeros and do backpropagation.                                        |</span>
+<span id="cb76-649"><a href="#cb76-649"></a>| Update loss   | Same                                                                         | Update the parameters, change the parameters following opposite direction to reduce the loss. |</span>
+<span id="cb76-650"><a href="#cb76-650"></a></span>
+<span id="cb76-651"><a href="#cb76-651"></a><span class="fu">## note 1: one-hot encoding really just selects a row of the next Linear layer's weight matrix</span></span>
+<span id="cb76-652"><a href="#cb76-652"></a></span>
+<span id="cb76-653"><a href="#cb76-653"></a>Look at the below code, <span class="in">`xenc @ W`</span> is (5, 27) \@ (27, 27) that will result (5, 27) matrix. Each <span class="in">`ix`</span> row of that 5-rows result matrix should be the selection of corresponding character rows in the <span class="in">`W`</span>.</span>
+<span id="cb76-654"><a href="#cb76-654"></a></span>
+<span id="cb76-657"><a href="#cb76-657"></a><span class="in">```{python}</span></span>
+<span id="cb76-658"><a href="#cb76-658"></a><span class="co">#| eval: false</span></span>
+<span id="cb76-659"><a href="#cb76-659"></a>logits <span class="op">=</span> xenc <span class="op">@</span> W <span class="co"># predict log-counts</span></span>
+<span id="cb76-660"><a href="#cb76-660"></a>counts <span class="op">=</span> logits.exp() <span class="co"># counts, equivalent to N</span></span>
+<span id="cb76-661"><a href="#cb76-661"></a>probs <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>) <span class="co"># probabilities for next character</span></span>
+<span id="cb76-662"><a href="#cb76-662"></a><span class="in">```</span></span>
+<span id="cb76-663"><a href="#cb76-663"></a></span>
+<span id="cb76-664"><a href="#cb76-664"></a>So in this gradient-based framework, we start with a random array of parameters. By optimizing the loss function we will get the same result with the bigram approach (<span class="in">`W`</span> and <span class="in">`N`</span> are almost the same, it's log count here why is count in bigram). That's why we obtained the same loss!</span>
+<span id="cb76-665"><a href="#cb76-665"></a></span>
+<span id="cb76-666"><a href="#cb76-666"></a>The neural networks offer more flexibility!</span>
+<span id="cb76-667"><a href="#cb76-667"></a></span>
+<span id="cb76-668"><a href="#cb76-668"></a><span class="fu">## note 2: model smoothing as regularization loss</span></span>
+<span id="cb76-669"><a href="#cb76-669"></a></span>
+<span id="cb76-670"><a href="#cb76-670"></a>Same with smoothing technique when we've doing the bigram model, gradient-based framework have an equivalent way for smoothing. We will try to incentivize <span class="in">`W`</span> to be near zero. We augment to loss function by adding this: <span class="in">`0.01*(W**2).mean()`</span>.</span>
+<span id="cb76-671"><a href="#cb76-671"></a></span>
+<span id="cb76-674"><a href="#cb76-674"></a><span class="in">```{python}</span></span>
+<span id="cb76-675"><a href="#cb76-675"></a><span class="co">#| eval: false</span></span>
+<span id="cb76-676"><a href="#cb76-676"></a>loss <span class="op">=</span> <span class="op">-</span>probs[torch.arange(num), ys].log().mean() <span class="op">+</span> <span class="fl">0.01</span><span class="op">*</span>(W<span class="op">**</span><span class="dv">2</span>).mean()</span>
+<span id="cb76-677"><a href="#cb76-677"></a><span class="in">```</span></span>
+<span id="cb76-678"><a href="#cb76-678"></a></span>
+<span id="cb76-679"><a href="#cb76-679"></a><span class="fu">## sampling from the neural net</span></span>
+<span id="cb76-680"><a href="#cb76-680"></a></span>
+<span id="cb76-683"><a href="#cb76-683"></a><span class="in">```{python}</span></span>
+<span id="cb76-684"><a href="#cb76-684"></a><span class="co"># finally, sample from the 'neural net' model</span></span>
+<span id="cb76-685"><a href="#cb76-685"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>)</span>
+<span id="cb76-686"><a href="#cb76-686"></a></span>
+<span id="cb76-687"><a href="#cb76-687"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb76-688"><a href="#cb76-688"></a>  </span>
+<span id="cb76-689"><a href="#cb76-689"></a>  out <span class="op">=</span> []</span>
+<span id="cb76-690"><a href="#cb76-690"></a>  ix <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb76-691"><a href="#cb76-691"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb76-692"><a href="#cb76-692"></a>    </span>
+<span id="cb76-693"><a href="#cb76-693"></a>    <span class="co"># ----------</span></span>
+<span id="cb76-694"><a href="#cb76-694"></a>    <span class="co"># BEFORE:</span></span>
+<span id="cb76-695"><a href="#cb76-695"></a>    <span class="co"># p = P[ix]</span></span>
+<span id="cb76-696"><a href="#cb76-696"></a>    <span class="co"># ----------</span></span>
+<span id="cb76-697"><a href="#cb76-697"></a>    <span class="co"># NOW:</span></span>
+<span id="cb76-698"><a href="#cb76-698"></a>    xenc <span class="op">=</span> F.one_hot(torch.tensor([ix]), num_classes<span class="op">=</span><span class="dv">27</span>).<span class="bu">float</span>()</span>
+<span id="cb76-699"><a href="#cb76-699"></a>    logits <span class="op">=</span> xenc <span class="op">@</span> W <span class="co"># predict log-counts</span></span>
+<span id="cb76-700"><a href="#cb76-700"></a>    counts <span class="op">=</span> logits.exp() <span class="co"># counts, equivalent to N</span></span>
+<span id="cb76-701"><a href="#cb76-701"></a>    p <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>) <span class="co"># probabilities for next character</span></span>
+<span id="cb76-702"><a href="#cb76-702"></a>    <span class="co"># ----------</span></span>
+<span id="cb76-703"><a href="#cb76-703"></a>    </span>
+<span id="cb76-704"><a href="#cb76-704"></a>    ix <span class="op">=</span> torch.multinomial(p, num_samples<span class="op">=</span><span class="dv">1</span>, replacement<span class="op">=</span><span class="va">True</span>, generator<span class="op">=</span>g).item()</span>
+<span id="cb76-705"><a href="#cb76-705"></a>    out.append(itos[ix])</span>
+<span id="cb76-706"><a href="#cb76-706"></a>    <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb76-707"><a href="#cb76-707"></a>      <span class="cf">break</span></span>
+<span id="cb76-708"><a href="#cb76-708"></a>  <span class="bu">print</span>(<span class="st">''</span>.join(out))</span>
+<span id="cb76-709"><a href="#cb76-709"></a><span class="in">```</span></span>
+<span id="cb76-710"><a href="#cb76-710"></a></span>
+<span id="cb76-711"><a href="#cb76-711"></a><span class="fu">## conclusion</span></span>
+<span id="cb76-712"><a href="#cb76-712"></a></span>
+<span id="cb76-713"><a href="#cb76-713"></a>What we've gone through:</span>
+<span id="cb76-714"><a href="#cb76-714"></a></span>
+<span id="cb76-715"><a href="#cb76-715"></a><span class="ss">+ </span>introduced bigrams language model? how we can train, sample, and evaluate the model;</span>
+<span id="cb76-716"><a href="#cb76-716"></a><span class="ss">+ </span>we modeled by 2 different ways: </span>
+<span id="cb76-717"><a href="#cb76-717"></a><span class="ss">  - </span>1st: counted out the freq of bigram and normalized it;</span>
+<span id="cb76-718"><a href="#cb76-718"></a><span class="ss">  - </span>2nd: used a negative log likelihood loss as a guide to optimizing the counts matrix/array in a gradient-based framework;</span>
+<span id="cb76-719"><a href="#cb76-719"></a><span class="ss">  - </span>we obtained the same result!</span>
+<span id="cb76-720"><a href="#cb76-720"></a><span class="ss">+ </span>gradient-based framework is more flexible. We've just modeled the simplest/dumpiest language model. In next lessons, we will complexify it.</span>
+<span id="cb76-721"><a href="#cb76-721"></a></span>
+<span id="cb76-722"><a href="#cb76-722"></a>We are on the way out to **transformer**!</span>
+<span id="cb76-723"><a href="#cb76-723"></a></span>
+<span id="cb76-724"><a href="#cb76-724"></a>Thank you, Andrej!</span>
+<span id="cb76-725"><a href="#cb76-725"></a></span>
+<span id="cb76-726"><a href="#cb76-726"></a><span class="fu"># resources</span></span>
+<span id="cb76-727"><a href="#cb76-727"></a></span>
+<span id="cb76-728"><a href="#cb76-728"></a><span class="ss">1.  </span>YouTube video lecture: <span class="ot">&lt;https://www.youtube.com/watch?v=PaCmpygFfXo&gt;</span></span>
+<span id="cb76-729"><a href="#cb76-729"></a><span class="ss">2.  </span>Jupyter notebook files: <span class="ot">&lt;https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part1_bigrams.ipynb&gt;</span></span>
+<span id="cb76-730"><a href="#cb76-730"></a><span class="ss">3.  </span><span class="in">`makemore`</span> Github repo: <span class="ot">&lt;https://github.com/karpathy/makemore&gt;</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
