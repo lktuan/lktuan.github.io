@@ -897,145 +897,147 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb7-12"><a href="#cb7-12"></a><span class="an">format:</span></span>
 <span id="cb7-13"><a href="#cb7-13"></a><span class="co">  html:</span></span>
 <span id="cb7-14"><a href="#cb7-14"></a><span class="co">    code-overflow: wrap</span></span>
-<span id="cb7-15"><a href="#cb7-15"></a><span class="co">---</span></span>
-<span id="cb7-16"><a href="#cb7-16"></a></span>
-<span id="cb7-17"><a href="#cb7-17"></a><span class="fu"># 1. Set up &amp; play with a template</span></span>
-<span id="cb7-18"><a href="#cb7-18"></a></span>
-<span id="cb7-19"><a href="#cb7-19"></a>After creating a <span class="in">`.venv`</span> - virtual environment, activating it, we can try a template with the command <span class="in">`shiny create --template dashboard --mode express --github posit-dev/py-shiny-templates`</span>. The neccesary code, data, css formating will be downloaded to the repository.</span>
-<span id="cb7-20"><a href="#cb7-20"></a></span>
-<span id="cb7-21"><a href="#cb7-21"></a><span class="al">![Creating app using template](shiny_create.png)</span></span>
-<span id="cb7-22"><a href="#cb7-22"></a></span>
-<span id="cb7-23"><a href="#cb7-23"></a>Follow the instruction and when the installation is done, we can click the *RUN* button on <span class="in">`app.py`</span> or run: <span class="in">`shiny run .\dashboard\app.py`</span> and the dashboard can be accessed to the port <span class="in">`8000`</span> of the localhost. </span>
-<span id="cb7-24"><a href="#cb7-24"></a></span>
-<span id="cb7-25"><a href="#cb7-25"></a><span class="al">![Sample dashboard](sample_dashboard.png)</span></span>
-<span id="cb7-26"><a href="#cb7-26"></a></span>
-<span id="cb7-27"><a href="#cb7-27"></a>This gives us a vague understanding of how a shiny project works. Dive into this, we will delete all the code and start over to build a dashboard ourselves from scratch.</span>
-<span id="cb7-28"><a href="#cb7-28"></a></span>
-<span id="cb7-29"><a href="#cb7-29"></a><span class="fu"># 2. Build from the scratch</span></span>
-<span id="cb7-30"><a href="#cb7-30"></a></span>
-<span id="cb7-31"><a href="#cb7-31"></a><span class="fu">## simple `ui`</span></span>
-<span id="cb7-32"><a href="#cb7-32"></a></span>
-<span id="cb7-33"><a href="#cb7-33"></a>This is good start as we provide content for some basic elements (<span class="in">`h1`</span>, <span class="in">`p`</span> - just like HTML)</span>
-<span id="cb7-34"><a href="#cb7-34"></a></span>
-<span id="cb7-37"><a href="#cb7-37"></a><span class="in">```{python}</span></span>
-<span id="cb7-38"><a href="#cb7-38"></a><span class="co">#| eval: false</span></span>
-<span id="cb7-39"><a href="#cb7-39"></a><span class="im">from</span> shiny.express <span class="im">import</span> ui</span>
-<span id="cb7-40"><a href="#cb7-40"></a></span>
-<span id="cb7-41"><a href="#cb7-41"></a>ui.h1(<span class="st">"My Dashboard"</span>)</span>
-<span id="cb7-42"><a href="#cb7-42"></a></span>
-<span id="cb7-43"><a href="#cb7-43"></a>ui.p(<span class="st">"This is sometext"</span>)</span>
-<span id="cb7-44"><a href="#cb7-44"></a></span>
-<span id="cb7-45"><a href="#cb7-45"></a><span class="in">```</span></span>
-<span id="cb7-46"><a href="#cb7-46"></a></span>
-<span id="cb7-47"><a href="#cb7-47"></a><span class="al">![Header and paragraph](ui_simple_elements.png)</span></span>
-<span id="cb7-48"><a href="#cb7-48"></a></span>
-<span id="cb7-49"><a href="#cb7-49"></a><span class="fu">## let's `render` something</span></span>
-<span id="cb7-50"><a href="#cb7-50"></a></span>
-<span id="cb7-53"><a href="#cb7-53"></a><span class="in">```{python}</span></span>
-<span id="cb7-54"><a href="#cb7-54"></a><span class="co">#| eval: false</span></span>
-<span id="cb7-55"><a href="#cb7-55"></a><span class="im">from</span> shiny.express <span class="im">import</span> ui, render</span>
-<span id="cb7-56"><a href="#cb7-56"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb7-57"><a href="#cb7-57"></a></span>
-<span id="cb7-58"><a href="#cb7-58"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb7-59"><a href="#cb7-59"></a></span>
-<span id="cb7-60"><a href="#cb7-60"></a>file_path <span class="op">=</span> Path(<span class="va">__file__</span>).parent <span class="op">/</span> <span class="st">"penguins.csv"</span></span>
-<span id="cb7-61"><a href="#cb7-61"></a>df <span class="op">=</span> pd.read_csv(file_path)</span>
-<span id="cb7-62"><a href="#cb7-62"></a></span>
-<span id="cb7-63"><a href="#cb7-63"></a><span class="at">@render.data_frame</span></span>
-<span id="cb7-64"><a href="#cb7-64"></a><span class="kw">def</span> data():    </span>
-<span id="cb7-65"><a href="#cb7-65"></a>    <span class="cf">return</span> df</span>
-<span id="cb7-66"><a href="#cb7-66"></a><span class="in">```</span></span>
-<span id="cb7-67"><a href="#cb7-67"></a></span>
-<span id="cb7-68"><a href="#cb7-68"></a>Shiny app is **reactive**, as we provide the rendering command, the dashboard will be updated.</span>
-<span id="cb7-69"><a href="#cb7-69"></a></span>
-<span id="cb7-70"><a href="#cb7-70"></a><span class="al">![Shiny app is reactive](ui_the_app_is_reactive.png)</span></span>
-<span id="cb7-71"><a href="#cb7-71"></a></span>
-<span id="cb7-72"><a href="#cb7-72"></a><span class="fu">## let's create a filter, `input`</span></span>
-<span id="cb7-73"><a href="#cb7-73"></a></span>
-<span id="cb7-76"><a href="#cb7-76"></a><span class="in">```{python}</span></span>
-<span id="cb7-77"><a href="#cb7-77"></a><span class="co">#| eval: false</span></span>
-<span id="cb7-78"><a href="#cb7-78"></a><span class="im">from</span> shiny.express <span class="im">import</span> ui, render, <span class="bu">input</span></span>
-<span id="cb7-79"><a href="#cb7-79"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb7-80"><a href="#cb7-80"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb7-81"><a href="#cb7-81"></a></span>
-<span id="cb7-82"><a href="#cb7-82"></a>file_path <span class="op">=</span> Path(<span class="va">__file__</span>).parent <span class="op">/</span> <span class="st">"penguins.csv"</span></span>
-<span id="cb7-83"><a href="#cb7-83"></a>df <span class="op">=</span> pd.read_csv(file_path)</span>
-<span id="cb7-84"><a href="#cb7-84"></a>ui.input_slider(<span class="st">"mass"</span>, <span class="st">"Max body mass"</span>, <span class="dv">2000</span>, <span class="dv">8000</span>, <span class="dv">6000</span>)</span>
-<span id="cb7-85"><a href="#cb7-85"></a></span>
-<span id="cb7-86"><a href="#cb7-86"></a><span class="at">@render.data_frame</span></span>
-<span id="cb7-87"><a href="#cb7-87"></a><span class="kw">def</span> data():    </span>
-<span id="cb7-88"><a href="#cb7-88"></a>    <span class="cf">return</span> df[df[<span class="st">'body_mass_g'</span>] <span class="op">&lt;</span> <span class="bu">input</span>.mass()]</span>
-<span id="cb7-89"><a href="#cb7-89"></a><span class="in">```</span></span>
-<span id="cb7-90"><a href="#cb7-90"></a></span>
-<span id="cb7-91"><a href="#cb7-91"></a><span class="fu">## and create a plot with `plotly`</span></span>
-<span id="cb7-92"><a href="#cb7-92"></a></span>
-<span id="cb7-95"><a href="#cb7-95"></a><span class="in">```{python}</span></span>
-<span id="cb7-96"><a href="#cb7-96"></a><span class="co">#| eval: false</span></span>
-<span id="cb7-97"><a href="#cb7-97"></a><span class="im">import</span> plotly.express <span class="im">as</span> px</span>
-<span id="cb7-98"><a href="#cb7-98"></a><span class="at">@render_plotly</span></span>
-<span id="cb7-99"><a href="#cb7-99"></a><span class="kw">def</span> plot():</span>
-<span id="cb7-100"><a href="#cb7-100"></a>    df_subset <span class="op">=</span> df[df[<span class="st">'body_mass_g'</span>] <span class="op">&lt;</span> <span class="bu">input</span>.mass()] <span class="co"># we add this filter to make sure this plot and the table above are presenting the same data</span></span>
-<span id="cb7-101"><a href="#cb7-101"></a>    <span class="cf">return</span> px.scatter(df_subset, x<span class="op">=</span><span class="st">"bill_depth_mm"</span>, y <span class="op">=</span> <span class="st">"bill_length_mm"</span>)</span>
-<span id="cb7-102"><a href="#cb7-102"></a><span class="in">```</span></span>
-<span id="cb7-103"><a href="#cb7-103"></a></span>
-<span id="cb7-104"><a href="#cb7-104"></a>Now we are ready to explore more on the layouts of our **Dashboard**, or **Application layouts**.</span>
-<span id="cb7-105"><a href="#cb7-105"></a></span>
-<span id="cb7-106"><a href="#cb7-106"></a><span class="fu"># 3. Basic User Interfaces</span></span>
-<span id="cb7-107"><a href="#cb7-107"></a></span>
-<span id="cb7-108"><a href="#cb7-108"></a>The documentation of Shiny layouts can be accessed at: <span class="ot">&lt;https://shiny.posit.co/py/layouts/&gt;</span>, there are many types of layout:</span>
-<span id="cb7-109"><a href="#cb7-109"></a></span>
-<span id="cb7-110"><a href="#cb7-110"></a><span class="ss">- </span><span class="in">`Navbars`</span>: nagivation bar to navigate our app;</span>
-<span id="cb7-111"><a href="#cb7-111"></a><span class="ss">- </span><span class="in">`Sidebars`</span>: a layout of sidebar on one side (for input), and large dashboard on the other side;</span>
-<span id="cb7-112"><a href="#cb7-112"></a><span class="ss">- </span><span class="in">`Tabs`</span>: like a multiple pager report;</span>
-<span id="cb7-113"><a href="#cb7-113"></a><span class="ss">- </span>Panels &amp; Cards: for floating content;</span>
-<span id="cb7-114"><a href="#cb7-114"></a><span class="ss">- </span>Arrange Elements: arranging the ordering elements.</span>
-<span id="cb7-115"><a href="#cb7-115"></a></span>
-<span id="cb7-116"><a href="#cb7-116"></a>For example, below code - in Shiny Express - will create a sidebar layout:</span>
-<span id="cb7-117"><a href="#cb7-117"></a></span>
-<span id="cb7-120"><a href="#cb7-120"></a><span class="in">```{python}</span></span>
-<span id="cb7-121"><a href="#cb7-121"></a><span class="co">#| eval: false</span></span>
-<span id="cb7-122"><a href="#cb7-122"></a><span class="im">from</span> shiny.express <span class="im">import</span> ui</span>
-<span id="cb7-123"><a href="#cb7-123"></a></span>
-<span id="cb7-124"><a href="#cb7-124"></a><span class="cf">with</span> ui.sidebar(bg<span class="op">=</span><span class="st">"#f8f8f8"</span>):  <span class="co"># context manager</span></span>
-<span id="cb7-125"><a href="#cb7-125"></a>    <span class="co">"Sidebar"</span>  </span>
-<span id="cb7-126"><a href="#cb7-126"></a></span>
-<span id="cb7-127"><a href="#cb7-127"></a><span class="co">"Main content"</span>  </span>
-<span id="cb7-128"><a href="#cb7-128"></a><span class="in">```</span></span>
-<span id="cb7-129"><a href="#cb7-129"></a></span>
-<span id="cb7-130"><a href="#cb7-130"></a>We define the content of the sidebar under *with* statement, other rendering under sidebar context will be display in the large remaining area. For eg, putting the header, slicer in the sidebar:</span>
-<span id="cb7-131"><a href="#cb7-131"></a></span>
-<span id="cb7-134"><a href="#cb7-134"></a><span class="in">```{python}</span></span>
-<span id="cb7-135"><a href="#cb7-135"></a><span class="co">#| eval: false</span></span>
-<span id="cb7-136"><a href="#cb7-136"></a><span class="cf">with</span> ui.sidebar(bg<span class="op">=</span><span class="st">"#f8f8f8"</span>):  <span class="co"># context manager</span></span>
-<span id="cb7-137"><a href="#cb7-137"></a>    ui.h1(<span class="st">"My Dashboard"</span>)</span>
-<span id="cb7-138"><a href="#cb7-138"></a>    ui.p(<span class="st">"This is sometext"</span>)</span>
-<span id="cb7-139"><a href="#cb7-139"></a>    ui.input_slider(<span class="st">"mass"</span>, <span class="st">"Max body mass"</span>, <span class="dv">2000</span>, <span class="dv">8000</span>, <span class="dv">6000</span>)</span>
-<span id="cb7-140"><a href="#cb7-140"></a></span>
-<span id="cb7-141"><a href="#cb7-141"></a><span class="co">"Main content"</span></span>
-<span id="cb7-142"><a href="#cb7-142"></a><span class="in">```</span></span>
-<span id="cb7-143"><a href="#cb7-143"></a></span>
-<span id="cb7-144"><a href="#cb7-144"></a>Our dashboard will look like: </span>
-<span id="cb7-145"><a href="#cb7-145"></a></span>
-<span id="cb7-146"><a href="#cb7-146"></a><span class="al">![Sidebar example](sidebar_example.png)</span></span>
-<span id="cb7-147"><a href="#cb7-147"></a></span>
+<span id="cb7-15"><a href="#cb7-15"></a><span class="an">draft:</span><span class="co"> true</span></span>
+<span id="cb7-16"><a href="#cb7-16"></a><span class="co">---</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a></span>
+<span id="cb7-18"><a href="#cb7-18"></a><span class="fu"># 1. Set up &amp; play with a template</span></span>
+<span id="cb7-19"><a href="#cb7-19"></a></span>
+<span id="cb7-20"><a href="#cb7-20"></a>After creating a <span class="in">`.venv`</span> - virtual environment, activating it, we can try a template with the command <span class="in">`shiny create --template dashboard --mode express --github posit-dev/py-shiny-templates`</span>. The neccesary code, data, css formating will be downloaded to the repository.</span>
+<span id="cb7-21"><a href="#cb7-21"></a></span>
+<span id="cb7-22"><a href="#cb7-22"></a><span class="al">![Creating app using template](shiny_create.png)</span></span>
+<span id="cb7-23"><a href="#cb7-23"></a></span>
+<span id="cb7-24"><a href="#cb7-24"></a>Follow the instruction and when the installation is done, we can click the *RUN* button on <span class="in">`app.py`</span> or run: <span class="in">`shiny run .\dashboard\app.py`</span> and the dashboard can be accessed to the port <span class="in">`8000`</span> of the localhost. </span>
+<span id="cb7-25"><a href="#cb7-25"></a></span>
+<span id="cb7-26"><a href="#cb7-26"></a><span class="al">![Sample dashboard](sample_dashboard.png)</span></span>
+<span id="cb7-27"><a href="#cb7-27"></a></span>
+<span id="cb7-28"><a href="#cb7-28"></a>This gives us a vague understanding of how a shiny project works. Dive into this, we will delete all the code and start over to build a dashboard ourselves from scratch.</span>
+<span id="cb7-29"><a href="#cb7-29"></a></span>
+<span id="cb7-30"><a href="#cb7-30"></a><span class="fu"># 2. Build from the scratch</span></span>
+<span id="cb7-31"><a href="#cb7-31"></a></span>
+<span id="cb7-32"><a href="#cb7-32"></a><span class="fu">## simple `ui`</span></span>
+<span id="cb7-33"><a href="#cb7-33"></a></span>
+<span id="cb7-34"><a href="#cb7-34"></a>This is good start as we provide content for some basic elements (<span class="in">`h1`</span>, <span class="in">`p`</span> - just like HTML)</span>
+<span id="cb7-35"><a href="#cb7-35"></a></span>
+<span id="cb7-38"><a href="#cb7-38"></a><span class="in">```{python}</span></span>
+<span id="cb7-39"><a href="#cb7-39"></a><span class="co">#| eval: false</span></span>
+<span id="cb7-40"><a href="#cb7-40"></a><span class="im">from</span> shiny.express <span class="im">import</span> ui</span>
+<span id="cb7-41"><a href="#cb7-41"></a></span>
+<span id="cb7-42"><a href="#cb7-42"></a>ui.h1(<span class="st">"My Dashboard"</span>)</span>
+<span id="cb7-43"><a href="#cb7-43"></a></span>
+<span id="cb7-44"><a href="#cb7-44"></a>ui.p(<span class="st">"This is sometext"</span>)</span>
+<span id="cb7-45"><a href="#cb7-45"></a></span>
+<span id="cb7-46"><a href="#cb7-46"></a><span class="in">```</span></span>
+<span id="cb7-47"><a href="#cb7-47"></a></span>
+<span id="cb7-48"><a href="#cb7-48"></a><span class="al">![Header and paragraph](ui_simple_elements.png)</span></span>
+<span id="cb7-49"><a href="#cb7-49"></a></span>
+<span id="cb7-50"><a href="#cb7-50"></a><span class="fu">## let's `render` something</span></span>
+<span id="cb7-51"><a href="#cb7-51"></a></span>
+<span id="cb7-54"><a href="#cb7-54"></a><span class="in">```{python}</span></span>
+<span id="cb7-55"><a href="#cb7-55"></a><span class="co">#| eval: false</span></span>
+<span id="cb7-56"><a href="#cb7-56"></a><span class="im">from</span> shiny.express <span class="im">import</span> ui, render</span>
+<span id="cb7-57"><a href="#cb7-57"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb7-58"><a href="#cb7-58"></a></span>
+<span id="cb7-59"><a href="#cb7-59"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb7-60"><a href="#cb7-60"></a></span>
+<span id="cb7-61"><a href="#cb7-61"></a>file_path <span class="op">=</span> Path(<span class="va">__file__</span>).parent <span class="op">/</span> <span class="st">"penguins.csv"</span></span>
+<span id="cb7-62"><a href="#cb7-62"></a>df <span class="op">=</span> pd.read_csv(file_path)</span>
+<span id="cb7-63"><a href="#cb7-63"></a></span>
+<span id="cb7-64"><a href="#cb7-64"></a><span class="at">@render.data_frame</span></span>
+<span id="cb7-65"><a href="#cb7-65"></a><span class="kw">def</span> data():    </span>
+<span id="cb7-66"><a href="#cb7-66"></a>    <span class="cf">return</span> df</span>
+<span id="cb7-67"><a href="#cb7-67"></a><span class="in">```</span></span>
+<span id="cb7-68"><a href="#cb7-68"></a></span>
+<span id="cb7-69"><a href="#cb7-69"></a>Shiny app is **reactive**, as we provide the rendering command, the dashboard will be updated.</span>
+<span id="cb7-70"><a href="#cb7-70"></a></span>
+<span id="cb7-71"><a href="#cb7-71"></a><span class="al">![Shiny app is reactive](ui_the_app_is_reactive.png)</span></span>
+<span id="cb7-72"><a href="#cb7-72"></a></span>
+<span id="cb7-73"><a href="#cb7-73"></a><span class="fu">## let's create a filter, `input`</span></span>
+<span id="cb7-74"><a href="#cb7-74"></a></span>
+<span id="cb7-77"><a href="#cb7-77"></a><span class="in">```{python}</span></span>
+<span id="cb7-78"><a href="#cb7-78"></a><span class="co">#| eval: false</span></span>
+<span id="cb7-79"><a href="#cb7-79"></a><span class="im">from</span> shiny.express <span class="im">import</span> ui, render, <span class="bu">input</span></span>
+<span id="cb7-80"><a href="#cb7-80"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb7-81"><a href="#cb7-81"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb7-82"><a href="#cb7-82"></a></span>
+<span id="cb7-83"><a href="#cb7-83"></a>file_path <span class="op">=</span> Path(<span class="va">__file__</span>).parent <span class="op">/</span> <span class="st">"penguins.csv"</span></span>
+<span id="cb7-84"><a href="#cb7-84"></a>df <span class="op">=</span> pd.read_csv(file_path)</span>
+<span id="cb7-85"><a href="#cb7-85"></a>ui.input_slider(<span class="st">"mass"</span>, <span class="st">"Max body mass"</span>, <span class="dv">2000</span>, <span class="dv">8000</span>, <span class="dv">6000</span>)</span>
+<span id="cb7-86"><a href="#cb7-86"></a></span>
+<span id="cb7-87"><a href="#cb7-87"></a><span class="at">@render.data_frame</span></span>
+<span id="cb7-88"><a href="#cb7-88"></a><span class="kw">def</span> data():    </span>
+<span id="cb7-89"><a href="#cb7-89"></a>    <span class="cf">return</span> df[df[<span class="st">'body_mass_g'</span>] <span class="op">&lt;</span> <span class="bu">input</span>.mass()]</span>
+<span id="cb7-90"><a href="#cb7-90"></a><span class="in">```</span></span>
+<span id="cb7-91"><a href="#cb7-91"></a></span>
+<span id="cb7-92"><a href="#cb7-92"></a><span class="fu">## and create a plot with `plotly`</span></span>
+<span id="cb7-93"><a href="#cb7-93"></a></span>
+<span id="cb7-96"><a href="#cb7-96"></a><span class="in">```{python}</span></span>
+<span id="cb7-97"><a href="#cb7-97"></a><span class="co">#| eval: false</span></span>
+<span id="cb7-98"><a href="#cb7-98"></a><span class="im">import</span> plotly.express <span class="im">as</span> px</span>
+<span id="cb7-99"><a href="#cb7-99"></a><span class="at">@render_plotly</span></span>
+<span id="cb7-100"><a href="#cb7-100"></a><span class="kw">def</span> plot():</span>
+<span id="cb7-101"><a href="#cb7-101"></a>    df_subset <span class="op">=</span> df[df[<span class="st">'body_mass_g'</span>] <span class="op">&lt;</span> <span class="bu">input</span>.mass()] <span class="co"># we add this filter to make sure this plot and the table above are presenting the same data</span></span>
+<span id="cb7-102"><a href="#cb7-102"></a>    <span class="cf">return</span> px.scatter(df_subset, x<span class="op">=</span><span class="st">"bill_depth_mm"</span>, y <span class="op">=</span> <span class="st">"bill_length_mm"</span>)</span>
+<span id="cb7-103"><a href="#cb7-103"></a><span class="in">```</span></span>
+<span id="cb7-104"><a href="#cb7-104"></a></span>
+<span id="cb7-105"><a href="#cb7-105"></a>Now we are ready to explore more on the layouts of our **Dashboard**, or **Application layouts**.</span>
+<span id="cb7-106"><a href="#cb7-106"></a></span>
+<span id="cb7-107"><a href="#cb7-107"></a><span class="fu"># 3. Basic User Interfaces</span></span>
+<span id="cb7-108"><a href="#cb7-108"></a></span>
+<span id="cb7-109"><a href="#cb7-109"></a>The documentation of Shiny layouts can be accessed at: <span class="ot">&lt;https://shiny.posit.co/py/layouts/&gt;</span>, there are many types of layout:</span>
+<span id="cb7-110"><a href="#cb7-110"></a></span>
+<span id="cb7-111"><a href="#cb7-111"></a><span class="ss">- </span><span class="in">`Navbars`</span>: nagivation bar to navigate our app;</span>
+<span id="cb7-112"><a href="#cb7-112"></a><span class="ss">- </span><span class="in">`Sidebars`</span>: a layout of sidebar on one side (for input), and large dashboard on the other side;</span>
+<span id="cb7-113"><a href="#cb7-113"></a><span class="ss">- </span><span class="in">`Tabs`</span>: like a multiple pager report;</span>
+<span id="cb7-114"><a href="#cb7-114"></a><span class="ss">- </span>Panels &amp; Cards: for floating content;</span>
+<span id="cb7-115"><a href="#cb7-115"></a><span class="ss">- </span>Arrange Elements: arranging the ordering elements.</span>
+<span id="cb7-116"><a href="#cb7-116"></a></span>
+<span id="cb7-117"><a href="#cb7-117"></a>For example, below code - in Shiny Express - will create a sidebar layout:</span>
+<span id="cb7-118"><a href="#cb7-118"></a></span>
+<span id="cb7-121"><a href="#cb7-121"></a><span class="in">```{python}</span></span>
+<span id="cb7-122"><a href="#cb7-122"></a><span class="co">#| eval: false</span></span>
+<span id="cb7-123"><a href="#cb7-123"></a><span class="im">from</span> shiny.express <span class="im">import</span> ui</span>
+<span id="cb7-124"><a href="#cb7-124"></a></span>
+<span id="cb7-125"><a href="#cb7-125"></a><span class="cf">with</span> ui.sidebar(bg<span class="op">=</span><span class="st">"#f8f8f8"</span>):  <span class="co"># context manager</span></span>
+<span id="cb7-126"><a href="#cb7-126"></a>    <span class="co">"Sidebar"</span>  </span>
+<span id="cb7-127"><a href="#cb7-127"></a></span>
+<span id="cb7-128"><a href="#cb7-128"></a><span class="co">"Main content"</span>  </span>
+<span id="cb7-129"><a href="#cb7-129"></a><span class="in">```</span></span>
+<span id="cb7-130"><a href="#cb7-130"></a></span>
+<span id="cb7-131"><a href="#cb7-131"></a>We define the content of the sidebar under *with* statement, other rendering under sidebar context will be display in the large remaining area. For eg, putting the header, slicer in the sidebar:</span>
+<span id="cb7-132"><a href="#cb7-132"></a></span>
+<span id="cb7-135"><a href="#cb7-135"></a><span class="in">```{python}</span></span>
+<span id="cb7-136"><a href="#cb7-136"></a><span class="co">#| eval: false</span></span>
+<span id="cb7-137"><a href="#cb7-137"></a><span class="cf">with</span> ui.sidebar(bg<span class="op">=</span><span class="st">"#f8f8f8"</span>):  <span class="co"># context manager</span></span>
+<span id="cb7-138"><a href="#cb7-138"></a>    ui.h1(<span class="st">"My Dashboard"</span>)</span>
+<span id="cb7-139"><a href="#cb7-139"></a>    ui.p(<span class="st">"This is sometext"</span>)</span>
+<span id="cb7-140"><a href="#cb7-140"></a>    ui.input_slider(<span class="st">"mass"</span>, <span class="st">"Max body mass"</span>, <span class="dv">2000</span>, <span class="dv">8000</span>, <span class="dv">6000</span>)</span>
+<span id="cb7-141"><a href="#cb7-141"></a></span>
+<span id="cb7-142"><a href="#cb7-142"></a><span class="co">"Main content"</span></span>
+<span id="cb7-143"><a href="#cb7-143"></a><span class="in">```</span></span>
+<span id="cb7-144"><a href="#cb7-144"></a></span>
+<span id="cb7-145"><a href="#cb7-145"></a>Our dashboard will look like: </span>
+<span id="cb7-146"><a href="#cb7-146"></a></span>
+<span id="cb7-147"><a href="#cb7-147"></a><span class="al">![Sidebar example](sidebar_example.png)</span></span>
 <span id="cb7-148"><a href="#cb7-148"></a></span>
-<span id="cb7-149"><a href="#cb7-149"></a><span class="fu"># 4. Reactivity</span></span>
+<span id="cb7-149"><a href="#cb7-149"></a>The second layout that comes to our concern is <span class="in">`cards`</span>, which are eneral purpose containers used to group related UI elements together with a border and optional padding.</span>
 <span id="cb7-150"><a href="#cb7-150"></a></span>
-<span id="cb7-151"><a href="#cb7-151"></a><span class="fu"># 5. Reactive effects and events</span></span>
+<span id="cb7-151"><a href="#cb7-151"></a><span class="fu"># 4. Reactivity</span></span>
 <span id="cb7-152"><a href="#cb7-152"></a></span>
-<span id="cb7-153"><a href="#cb7-153"></a><span class="fu"># 6. Advanced User Interfaces</span></span>
+<span id="cb7-153"><a href="#cb7-153"></a><span class="fu"># 5. Reactive effects and events</span></span>
 <span id="cb7-154"><a href="#cb7-154"></a></span>
-<span id="cb7-155"><a href="#cb7-155"></a><span class="fu"># 7. Publishing</span></span>
+<span id="cb7-155"><a href="#cb7-155"></a><span class="fu"># 6. Advanced User Interfaces</span></span>
 <span id="cb7-156"><a href="#cb7-156"></a></span>
-<span id="cb7-157"><a href="#cb7-157"></a><span class="fu"># 8. Wrap up</span></span>
+<span id="cb7-157"><a href="#cb7-157"></a><span class="fu"># 7. Publishing</span></span>
 <span id="cb7-158"><a href="#cb7-158"></a></span>
-<span id="cb7-159"><a href="#cb7-159"></a><span class="fu"># Sources</span></span>
+<span id="cb7-159"><a href="#cb7-159"></a><span class="fu"># 8. Wrap up</span></span>
 <span id="cb7-160"><a href="#cb7-160"></a></span>
-<span id="cb7-161"><a href="#cb7-161"></a><span class="ss">1. </span><span class="ot">&lt;https://training.talkpython.fm/courses/details/reactive-web-dashboards-with-shiny-for-data-science&gt;</span>;</span>
-<span id="cb7-162"><a href="#cb7-162"></a><span class="ss">2. </span><span class="ot">&lt;https://talkpython.github.io/reactive-web-dashboards-with-shiny-course/&gt;</span>;</span>
-<span id="cb7-163"><a href="#cb7-163"></a><span class="ss">3. </span><span class="ot">&lt;https://shiny.posit.co/py/&gt;</span>;</span>
-<span id="cb7-164"><a href="#cb7-164"></a><span class="ss">4. </span><span class="ot">&lt;https://shiny.posit.co/py/templates/dashboard/index.html&gt;</span>;</span>
-<span id="cb7-165"><a href="#cb7-165"></a><span class="ss">5. </span><span class="ot">&lt;https://medium.com/berk-orbay/deploying-shinypy-0fa449a019e0&gt;</span></span>
+<span id="cb7-161"><a href="#cb7-161"></a><span class="fu"># Sources</span></span>
+<span id="cb7-162"><a href="#cb7-162"></a></span>
+<span id="cb7-163"><a href="#cb7-163"></a><span class="ss">1. </span><span class="ot">&lt;https://training.talkpython.fm/courses/details/reactive-web-dashboards-with-shiny-for-data-science&gt;</span>;</span>
+<span id="cb7-164"><a href="#cb7-164"></a><span class="ss">2. </span><span class="ot">&lt;https://talkpython.github.io/reactive-web-dashboards-with-shiny-course/&gt;</span>;</span>
+<span id="cb7-165"><a href="#cb7-165"></a><span class="ss">3. </span><span class="ot">&lt;https://shiny.posit.co/py/&gt;</span>;</span>
+<span id="cb7-166"><a href="#cb7-166"></a><span class="ss">4. </span><span class="ot">&lt;https://shiny.posit.co/py/templates/dashboard/index.html&gt;</span>;</span>
+<span id="cb7-167"><a href="#cb7-167"></a><span class="ss">5. </span><span class="ot">&lt;https://medium.com/berk-orbay/deploying-shinypy-0fa449a019e0&gt;</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
