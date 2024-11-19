@@ -1,0 +1,417 @@
+---
+title: "NN-Z2H Lesson 3: Building makemore part 2 - MLP"
+description: "implement a multilayer perceptron (MLP) character-level language model, introduce model training, learning rate tuning, hyperparameters, evaluation, train/dev/test splits, under/overfitting, etc."
+author:
+  - name: "Tuan Le Khac"
+    url: https://lktuan.github.io/
+categories: [til, python, andrej karpathy, nn-z2h, bigram, neural networks] 
+date: 11-20-2024
+date-modified: 11-20-2024
+image: NLM_Bengio_etal.png
+draft: false
+css: html/styles.scss
+fig-cap-location: bottom
+editor: visual
+format:
+  html:
+    code-overflow: wrap
+    code-tools: true
+    code-fold: show
+    code-annotations: hover
+---
+
+In the previous lecture, we built a simple `bigram` character-level language model, using 2 different approaches that are (1) count, and (2) 1 layer neural network. They produced the same (and both poor - since the context is 1 character only) result but the neural network option offers more flexibility so that we can complexify our model to get better performance.
+
+In this lecture we are going to implement 20-years ago neural probabilistic language model by *Bengio et al. (2003)*.
+
+# PART 1: intro to MLP
+
+## Bengio et al. 2003 (MLP language model) paper walkthrough
+
+### Summary
+
+**Problem Statement**:
+
+-   Traditional n-gram language models suffer from the *curse of dimensionality*: they can't effectively generalize to word sequences not seen in training data;
+-   The core issue is treating words as atomic units with no *inherent similarity* to each other;
+-   For example, if we've seen "dog is eating" in training but never "cat is eating", n-gram models can't leverage the similarity between "dog" and "cat";
+-   This leads to poor probability estimates for rare or unseen word sequences.
+
+**Solution**:
+
+-   Learn a *distributed representation* (embedding) for each word in a continuous vector space where similar words are close to each other;
+-   Use a neural network architecture with:
+    -   Input layer: concatenated embeddings of n-1 previous words;
+    -   Hidden layer: dense neural network with `tanh` activation;
+    -   Output layer: softmax over entire vocabulary to predict next word probability.
+
+**The model simultaneously learns**:
+
+-   Word feature vectors (embeddings) that capture *semantic/syntactic word similarities*;
+-   Neural network parameters that combine these features to estimate probability distributions.
+
+**Key advantages**:
+
+-   Words with similar meanings get similar feature vectors, enabling better *generalization*;
+-   The probability function is smooth with respect to word embeddings, so similar words yield *similar predictions*;
+-   Can generalize to *unseen sequences* by leveraging learned word similarities.
+
+### Methodology:
+
+-   Traditional Problem:
+
+    -   In n-gram models, each word sequence of length n is a separate parameter;
+    -   For vocabulary size $|V|$, need $|V|^n$ parameters;
+    -   Most sequences never appear in training, leading to poor generalization;
+
+-   Solution via **Distributed Representation**:
+
+    -   Each word mapped to a dense vector in $R^m$ (typically m=50-100);
+    -   Similar words get similar vectors through training;
+    -   Probability function is smooth w.r.t these vectors;
+    -   Key benefit: If "dog" and "cat" have similar vectors, model can generalize from "dog is eating" to "cat is eating";
+    -   Number of parameters reduces to $O(|V|×m + m×h + h×|V|)$, where $h$ is hidden layer size;
+    -   This is much smaller than $|V|^n$ and allows better generalization;
+
+### Neural architecture:
+
+**Input Layer**:
+
+-   Takes $n-1$ previous words (context window);
+-   Each word i mapped to vector $C(i) ∈ R^m$ via lookup table;
+-   Concatenates these vectors: $x = [C(wₜ₋ₙ₊₁), ..., C(wₜ₋₁)]$;
+-   $x$ dimension is $(n-1)×m$;
+
+**Hidden Layer**:
+
+-   Dense layer with tanh activation;
+-   Computation: $h = tanh(d + Hx)$;
+-   $H$ is weight matrix, $d$ is bias vector;
+-   Maps concatenated context to hidden representation;
+
+**Output Layer**:
+
+-   Computes probability distribution over all words;
+-   $y = b + Wx + Uh$;
+-   Softmax activation: $P(wₜ|context) = exp(yᵢ)/Σⱼexp(yⱼ)$;
+-   $W$ provides "shortcut" connections from input to output;
+-   Direct connection helps learn simpler patterns;
+
+**Training**:
+
+-   Maximizes log-likelihood of training data;
+-   Uses stochastic gradient descent;
+-   Learns both word vectors $C(i)$ and neural network parameters $(H, d, W, U, b)$;
+-   Word vectors capture similarities as they help predict similar contexts;
+-   Can initialize word vectors randomly or with pretrained vectors.
+
+![Neural Language Model proposed by (Bengio et al., 2003). C(i) is the i th word embedding.](NLM_Bengio_etal.png)
+
+## (re-)building our training dataset
+
+Loading library, reading data, building dictionary:
+
+```{python}
+import torch
+import torch.nn.functional as F
+import pandas as pd
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+```{python}
+import pandas as pd
+
+url = "https://raw.githubusercontent.com/karpathy/makemore/refs/heads/master/names.txt"
+words = pd.read_csv(url, header=None).iloc[:, 0].tolist()
+words[:8]
+```
+
+```{python}
+len(words)
+```
+
+```{python}
+# build the vocabulary of characters and mapping to/from integer
+chars = sorted(list(set(''.join(words))))
+stoi = {s:i+1 for i, s in enumerate(chars)}
+stoi['.'] = 0
+
+itos = {i: s for s, i in stoi.items()}
+itos
+```
+
+Building the dataset:
+
+```{python}
+block_size = 3 # the context length: how many characters do we take to predict the next one?
+X, Y = [], []
+
+for w in words[:5]:
+    print(w)
+    context = [0] * block_size # 0 so context will be padded by '.'
+    for ch in w + '.':
+        ix = stoi[ch]
+        X.append(context)
+        Y.append(ix)
+        print(''.join(itos[i] for i in context), '----->', itos[ix] )
+        context = context[1:] + [ix] # rolling to the next one
+
+X = torch.tensor(X)
+Y = torch.tensor(Y)
+```
+
+```{python}
+X.shape, X.dtype, Y.shape, Y.dtype
+```
+
+## implementing the embedding lookup table
+
+In the paper they cram 17k word into as-low-as-possible 30 dimensions space, for our data, we just cram words into 2D space.
+
+```{python}
+C = torch.randn((27, 2))
+```
+
+We can access the element of `torch.tensor` by:
+
+```{python}
+C[5] # can be integer, list [5, 6, 7], or torch.tensor([5,6,7])
+# > tensor([1.0825, 0.2010])
+
+# or
+
+F.one_hot(torch.tensor(5), num_classes=27).float() @ C
+# produce identical result, remember torch.tensor() infer long dtype int64, so we need to cast to float
+```
+
+...but in this lecture accessing by `C[5]` would be sufficient. We can even access using a more than 1 dimension tensor:
+
+```{python}
+print(C[X].shape)
+print(X[13, 2]) # integer 1 for 13rd index of 2nd dimension
+print(C[X][13,2]) # will be the embedding of that element
+print(C[1]) # so C[X][13,2] = C[1]
+```
+
+PyTorch is great for embedding words:
+
+```{python}
+emb = C[X]
+emb.shape
+```
+
+We've compeleted the first layer with `context` and lookup table!
+
+## implementing the hidden layer + internals of `torch.Tensor`: `storage`, `views`
+
+```{python}
+# input of tanh layer will be 6 (3 words in context x 2 dimensions)
+# and the number or neurons is up to us - let's set it 100
+W1 = torch.randn((6, 100))
+b1 = torch.randn(100)
+```
+
+Now we need to do something like `emb @ W1 + b1`, but `emb.shape` is `[32, 3, 2]` and `W1.shape` is `[6, 100]`. We need to somehow concatnate/transform:
+
+```{python}
+# emb[:, 0, :] is tensor for each input in the 3-words context, shape is [32, 2]
+# cat 3 of them using the 2nd dimension (index 1) -> so we set dim = 1
+torch.cat([emb[:, 0, :], emb[:, 1, :], emb[:, 2, :]], dim=1).shape
+```
+
+However this code does not change dynamically when we change the block size. We will be using `torch.unbind()`
+
+```{python}
+# this is good!
+torch.cat(torch.unbind(emb, 1), 1).shape
+# new memory for storage is created, so it is not efficient
+```
+
+This works, but we have a better and more efficient way to do this. Since:
+
+- every `torch.Tensor` have `.storage()` which is one-dimensional vector tensor;
+- when we call `.view()`, we instruct how this vector tensor is interpreted;
+- no memory is being changed/copied/moved/or created. the storage is identical.
+
+Readmore: <http://blog.ezyang.com/2019/05/pytorch-internals/>
+
+So this hidden layer can be declared:
+
+```{python}
+# instead or 32 we can write emb.shape[1], or -1 (whatever fitted)
+h = emb.view(-1, 6) @ W1 + b1
+h.shape
+```
+
+Notice that in the final operation, `b1` will be broadcasted.
+
+## implementing the output layer
+
+```{python}
+W2 = torch.randn((100, 27))
+b2 = torch.randn(27)
+```
+
+In Deep Learning, people use `logits` for what raw output that range from negative inf to positive inf.
+
+```{python}
+logits = h @ W2 + b2
+```
+
+```{python}
+logits.shape
+```
+
+Now we need to exponentiate it and get the probability.
+
+```{python}
+counts = logits.exp()
+```
+
+```{python}
+probs = counts / counts.sum(1, keepdims=True)
+```
+
+```{python}
+probs.shape
+```
+
+Every row of `probs` has sum of 1.
+
+```{python}
+probs[0].sum()
+```
+
+And this is the `probs` of each ground true `Y` in current output of the neural nets:
+
+```{python}
+probs[torch.arange(32), Y]
+```
+
+Result is not good as we've not trained the network yet!
+
+## implementing the negative log likelihood loss
+
+We define the negative log likelihood as:
+
+```{python}
+loss = - probs[torch.arange(32), Y].log().mean()
+loss
+```
+
+## summary of the full network
+
+Dataset:
+
+```{python}
+X.shape, Y.shape
+```
+
+Neural network layers:
+
+```{python}
+g = torch.Generator().manual_seed(2147483647)
+C = torch.randn((27, 2), generator=g)
+W1 = torch.randn((6, 100), generator=g)
+b1 = torch.randn(100, generator=g)
+W2 = torch.randn((100, 27), generator=g)
+b2 = torch.randn(27, generator=g)
+
+parameters = [C, W1, b1, W2, b2]
+```
+
+Size of the network:
+
+```{python}
+sum(p.nelement() for p in parameters)
+```
+
+Constructing forward pass:
+
+```{python}
+emb = C[X] # (32, 3, 2)
+h = torch.tanh(emb.view(-1, 6) @ W1 + b1) # (32, 100)
+logits = h @ W2 + b2 # (32, 27)
+counts = logits.exp()
+probs = counts / counts.sum(1, keepdims=True)
+loss = - probs[torch.arange(32), Y].log().mean()
+loss
+```
+
+# PART 2: intro to many basics of machine learning
+
+## introducing `F.cross_entropy` and why
+
+We re-define loss:
+
+```{python}
+loss = F.cross_entropy(logits, Y)
+loss
+```
+
+Why?
+
+- Pytorch will create more intermediate tensor for every assignment: `counts`, `probs` -> more memory;
+- Backward pass will be more optimized, because the expressions are much analytically and mathematically interpreted;
+- Cross entropy can be significantly & numerically well behaved (for eg when we exponentiate a large positive number we got inf, PyTorch cross entropy will calculate the max of set and subtract it - which will not impact the exp result)
+
+## implementing the training loop, overfitting one batch
+
+So the forward pass, backward pass, and update loop will be implemented as below:
+
+```{python}
+for p in parameters:
+    p.requires_grad = True
+```
+
+```{python}
+for _ in range(100):
+    # forward pass:
+    emb = C[X] # (32, 3, 2)
+    h = torch.tanh(emb.view(-1, 6) @ W1 + b1) # (32, 100)
+    logits = h @ W2 + b2 # (32, 27)
+    loss = F.cross_entropy(logits, Y)
+    print(loss.item())
+    # backward pass:
+    for p in parameters:
+        p.grad = None
+    loss.backward()
+    # update
+    for p in parameters:
+        p.data += -0.1 * p.grad
+
+print(loss.item())
+```
+
+We are fitting 32 examples to a neural nets of 3481 params, so it's super easy to be overfitting. We got a low final loss, but it would never be 0, because the output can varry for the same input, for eg, `...`.
+
+```{python}
+logits.max(1)
+```
+
+## training on the full dataset, minibatches
+
+## finding a good initial learning rate
+
+## splitting up the dataset into train/val/test splits and why
+
+## experiment: larger hidden layer
+
+## visualizing the character embeddings
+
+## experiment: larger embedding size
+
+## summary of our final code, conclusion
+
+## sampling from the model
+
+## google collab (new!!) notebook advertisement
+
+# resources
+
+1.  [**A Neural Probabilistic Language Model**, Bengio et al. (2003)](https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf)
+2.  [Video lecturer](https://www.youtube.com/watch?v=TCH_1BHY58I)
+3.  [Notebook](https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part2_mlp.ipynb)
+4.  [`makemore` on Github](https://github.com/karpathy/makemore)
+5.  [`torch.Tensor()` documentation](https://pytorch.org/docs/main/tensors.html)
