@@ -392,7 +392,187 @@ logits.max(1)
 
 ## training on the full dataset, minibatches
 
+We can deploy our code to all the dataset, un-fold the below code block to see full code.
+
+```{python}
+#| code-fold: true
+block_size = 3
+X, Y = [], []
+
+# Dataset
+for w in words:
+    # print(w)
+    context = [0] * block_size
+    for ch in w + '.':
+        ix = stoi[ch]
+        X.append(context)
+        Y.append(ix)
+        # print(''.join(itos[i] for i in context), '----->', itos[ix] )
+        context = context[1:] + [ix] # rolling to the next one
+
+# Input and ground true
+X = torch.tensor(X)
+Y = torch.tensor(Y)
+print("Data size", X.shape, Y.shape)
+
+# Lookup table
+g = torch.Generator().manual_seed(2147483647)
+C = torch.randn((27, 2), generator=g)
+emb = C[X] # (32, 3, 2)
+
+# Layer 1 - tanh
+W1 = torch.randn((6, 100), generator=g)
+b1 = torch.randn(100, generator=g)
+h = torch.tanh(emb.view(-1, 6) @ W1 + b1) # (32, 100)
+
+# Layer 2 - softmax
+W2 = torch.randn((100, 27), generator=g)
+b2 = torch.randn(27, generator=g)
+logits = h @ W2 + b2 # (32, 27)
+loss = F.cross_entropy(logits, Y)
+
+# All params
+parameters = [C, W1, b1, W2, b2]
+print("No of params: ", sum(p.nelement() for p in parameters))
+
+# Pre-traning
+for p in parameters:
+    p.requires_grad = True
+```
+
+We notice that it takes a bit long time for each training in the loop. In practice, we will perform the forward/backward passes and update parameters for a small batch of the dataset. The minibatch construction is added/modified for lines of code with `#👈`.
+
+Read more: <https://nttuan8.com/bai-10-cac-ky-thuat-co-ban-trong-deep-learning/>
+
+```{python}
+# Training
+for _ in range(100): # run 10 time
+    # minibatch construct                                           #👈
+    ix = torch.randint(0, X.shape[0], (32,))                        #👈
+
+    # forward pass:
+    emb = C[X[ix]] # (32, 3, 2)                                     #👈
+    h = torch.tanh(emb.view(-1, 6) @ W1 + b1) # (32, 100)
+    logits = h @ W2 + b2 # (32, 27)
+    loss = F.cross_entropy(logits, Y[ix])                           #👈
+    if _ >= 90: print(f"___after running {_} time: ", loss.item())
+    # backward pass:
+    for p in parameters:
+        p.grad = None
+    loss.backward()
+    # update
+    for p in parameters:
+        p.data += -0.1 * p.grad
+
+print("final minibatch loss: ", loss.item())
+```
+
+The `loss` decrease much much better, although the direction of gradient might be not correct direction. But it is good enough for an approximation. Notice the loss for a minibatch is not the loss of whole dataset.
+
+```{python}
+emb = C[X] # (32, 3, 2)                                    
+h = torch.tanh(emb.view(-1, 6) @ W1 + b1) # (32, 100)
+logits = h @ W2 + b2 # (32, 27)
+loss = F.cross_entropy(logits, Y)   
+loss.item()
+```
+
 ## finding a good initial learning rate
+
+Now we're continuing the optimization, let's focus on how much we update the data from the gradient `p.data += -0.1 * p.grad`. We do not know if we step too little or too much.
+
+We can create 1000 learning rates to use along with the training loop and see which one offers more stable convergence.
+
+```{python}
+lre = torch.linspace(-3, 0, 1000)
+lrs = 10**lre
+```
+
+Reset the code:
+
+```{python}
+#| code-fold: true
+block_size = 3
+X, Y = [], []
+
+# Dataset
+for w in words:
+    # print(w)
+    context = [0] * block_size
+    for ch in w + '.':
+        ix = stoi[ch]
+        X.append(context)
+        Y.append(ix)
+        # print(''.join(itos[i] for i in context), '----->', itos[ix] )
+        context = context[1:] + [ix] # rolling to the next one
+
+# Input and ground true
+X = torch.tensor(X)
+Y = torch.tensor(Y)
+print("Data size", X.shape, Y.shape)
+
+# Lookup table
+g = torch.Generator().manual_seed(2147483647)
+C = torch.randn((27, 2), generator=g)
+emb = C[X] # (32, 3, 2)
+
+# Layer 1 - tanh
+W1 = torch.randn((6, 100), generator=g)
+b1 = torch.randn(100, generator=g)
+h = torch.tanh(emb.view(-1, 6) @ W1 + b1) # (32, 100)
+
+# Layer 2 - softmax
+W2 = torch.randn((100, 27), generator=g)
+b2 = torch.randn(27, generator=g)
+logits = h @ W2 + b2 # (32, 27)
+loss = F.cross_entropy(logits, Y)
+
+# All params
+parameters = [C, W1, b1, W2, b2]
+print("No of params: ", sum(p.nelement() for p in parameters))
+
+# Pre-traning
+for p in parameters:
+    p.requires_grad = True
+```
+
+Training and tracking stats:
+
+```{python}
+lri = []
+lossi = []
+
+for i in range(1000): # run 10 time
+    # minibatch construct                                           
+    ix = torch.randint(0, X.shape[0], (32,))                        
+    # forward pass:
+    emb = C[X[ix]] # (32, 3, 2)                                    
+    h = torch.tanh(emb.view(-1, 6) @ W1 + b1) # (32, 100)
+    logits = h @ W2 + b2 # (32, 27)
+    loss = F.cross_entropy(logits, Y[ix])                           
+    # backward pass:
+    for p in parameters:
+        p.grad = None
+    loss.backward()
+    # update
+    lr = lrs[i]
+    for p in parameters:
+        p.data += - lr * p.grad
+
+    # track stats
+    lri.append(lre[i])
+    lossi.append(loss.item())
+
+loss.item()
+```
+
+Plotting, we see a good exponential element of learning rate turn out to be around `-1`.
+
+$10^-1$ is `0.1` so our initial guess seems good.
+
+```{python}
+plt.plot(lri, lossi)
+```
 
 ## splitting up the dataset into train/val/test splits and why
 
