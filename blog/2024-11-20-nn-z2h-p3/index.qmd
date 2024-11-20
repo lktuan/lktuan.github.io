@@ -230,9 +230,9 @@ torch.cat(torch.unbind(emb, 1), 1).shape
 
 This works, but we have a better and more efficient way to do this. Since:
 
-- every `torch.Tensor` have `.storage()` which is one-dimensional vector tensor;
-- when we call `.view()`, we instruct how this vector tensor is interpreted;
-- no memory is being changed/copied/moved/or created. the storage is identical.
+-   every `torch.Tensor` have `.storage()` which is one-dimensional vector tensor;
+-   when we call `.view()`, we instruct how this vector tensor is interpreted;
+-   no memory is being changed/copied/moved/or created. the storage is identical.
 
 Readmore: <http://blog.ezyang.com/2019/05/pytorch-internals/>
 
@@ -352,9 +352,9 @@ loss
 
 Why?
 
-- Pytorch will create more intermediate tensor for every assignment: `counts`, `probs` -> more memory;
-- Backward pass will be more optimized, because the expressions are much analytically and mathematically interpreted;
-- Cross entropy can be significantly & numerically well behaved (for eg when we exponentiate a large positive number we got inf, PyTorch cross entropy will calculate the max of set and subtract it - which will not impact the exp result)
+-   Pytorch will create more intermediate tensor for every assignment: `counts`, `probs` -\> more memory;
+-   Backward pass will be more optimized, because the expressions are much analytically and mathematically interpreted;
+-   Cross entropy can be significantly & numerically well behaved (for eg when we exponentiate a large positive number we got inf, PyTorch cross entropy will calculate the max of set and subtract it - which will not impact the exp result)
 
 ## implementing the training loop, overfitting one batch
 
@@ -366,7 +366,7 @@ for p in parameters:
 ```
 
 ```{python}
-for _ in range(100):
+for _ in range(10):
     # forward pass:
     emb = C[X] # (32, 3, 2)
     h = torch.tanh(emb.view(-1, 6) @ W1 + b1) # (32, 100)
@@ -435,7 +435,7 @@ loss = F.cross_entropy(logits, Y)
 parameters = [C, W1, b1, W2, b2]
 print("No of params: ", sum(p.nelement() for p in parameters))
 
-# Pre-traning
+# Pre-training
 for p in parameters:
     p.requires_grad = True
 ```
@@ -446,7 +446,7 @@ Read more: <https://nttuan8.com/bai-10-cac-ky-thuat-co-ban-trong-deep-learning/>
 
 ```{python}
 # Training
-for _ in range(100): # run 10 time
+for _ in range(10000):
     # minibatch construct                                           #👈
     ix = torch.randint(0, X.shape[0], (32,))                        #👈
 
@@ -455,7 +455,7 @@ for _ in range(100): # run 10 time
     h = torch.tanh(emb.view(-1, 6) @ W1 + b1) # (32, 100)
     logits = h @ W2 + b2 # (32, 27)
     loss = F.cross_entropy(logits, Y[ix])                           #👈
-    if _ >= 90: print(f"___after running {_} time: ", loss.item())
+    if _ >= 9990: print(f"___after running {_} time: ", loss.item())
     # backward pass:
     for p in parameters:
         p.grad = None
@@ -476,6 +476,8 @@ logits = h @ W2 + b2 # (32, 27)
 loss = F.cross_entropy(logits, Y)   
 loss.item()
 ```
+
+We archived 2.39 loss for final minibatch and 2.5 on overall network.
 
 ## finding a good initial learning rate
 
@@ -531,7 +533,7 @@ loss = F.cross_entropy(logits, Y)
 parameters = [C, W1, b1, W2, b2]
 print("No of params: ", sum(p.nelement() for p in parameters))
 
-# Pre-traning
+# Pre-training
 for p in parameters:
     p.requires_grad = True
 ```
@@ -542,7 +544,7 @@ Training and tracking stats:
 lri = []
 lossi = []
 
-for i in range(1000): # run 10 time
+for i in range(1000):
     # minibatch construct                                           
     ix = torch.randint(0, X.shape[0], (32,))                        
     # forward pass:
@@ -568,7 +570,7 @@ loss.item()
 
 Plotting, we see a good exponential element of learning rate turn out to be around `-1`.
 
-$10^-1$ is `0.1` so our initial guess seems good.
+$10^{-1}$ is `0.1` so our initial guess seems good.
 
 ```{python}
 plt.plot(lri, lossi)
@@ -576,17 +578,312 @@ plt.plot(lri, lossi)
 
 ## splitting up the dataset into train/val/test splits and why
 
-## experiment: larger hidden layer
+Now we can keep lengthening the training loop to continue decreasing loss. We can try some techniques like change the learning rate to `0.001` after 20k, 30k loops of training with `0.1`.
 
-## visualizing the character embeddings
+But it will come to be overfitting when we try to keep training or increase the size of network to achieve a lower loss. The model just memorizing our training set verbatim, so if we try to sample from the model it just gives us the same thing in the dataset. Or if we calculate the loss on another dataset, it might be very high.
 
-## experiment: larger embedding size
+So another industry standard is we will split the data set into 3 pieces: (1) training set; (2) dev/validation set; and (3) test set, they can be 80% - 10% - 10% roughly and respectively. 
+
+1. Training split: train the parameters;
+2. Dev/validation split: train the hyperparamerters (size of hidden layer, size of embedding, streng of regularization, etc);
+3. Test split: evaluate the performance of the model at the end, we only work on this a very very few times, otherwise we learn from it and repeat overfitting. 
+
+We are going to implement this train/dev/test splits:
+
+```{python}
+# build the dataset
+def buid_dataset(words):
+    block_size = 3
+    X, Y = [], []
+
+    for w in words:
+        context = [0] * block_size
+        for ch in w + '.':
+            ix = stoi[ch]
+            X.append(context)
+            Y.append(ix)
+            context = context[1:] + [ix]
+
+    X = torch.tensor(X)
+    Y = torch.tensor(Y)
+    print(X.shape, Y.shape)
+    return X, Y
+
+import random
+random.seed(42)
+random.shuffle(words)
+n1 = int(0.8 * len(words))
+n2 = int(0.9 * len(words))
+
+Xtr, Ytr = buid_dataset(words[:n1])
+Xdev, Ydev = buid_dataset(words[n1:n2])
+Xte, Yte = buid_dataset(words[n2:])
+```
+
+Now we're already to train on splits of the dataset, but let's hold on as we are talking abount overfitting. As discussed, overfitting also come from using a complex (too many parameters) for a small data set.
+
+Our dataset has roughly 228k records, while the size of network is only 3.4k. So we are still underfitting, let's continue to complexify our neural networks.
+
+2 things to consider here:
+
+- the size of tanh - hidden layer; and
+- dimensions of embedding space.
+
+## visualizing the loss, character embeddings
+
+First we want to see:
+- how the loss decrease with 200k training loop with current network setting, learning rate decay to 0.01 after first 100k; and
+- how the current character embeddings recognize the similarity between characters in (2D) space.
+
+Training on the `Xtr`, `Ytr`:
+
+```{python}
+# Lookup table
+g = torch.Generator().manual_seed(2147483647)
+C = torch.randn((27, 2), generator=g)
+
+# Layer 1 - tanh
+W1 = torch.randn((6, 100), generator=g)
+b1 = torch.randn(100, generator=g)
+
+# Layer 2 - softmax
+W2 = torch.randn((100, 27), generator=g)
+b2 = torch.randn(27, generator=g)
+
+# All params
+parameters = [C, W1, b1, W2, b2]
+print("No of params: ", sum(p.nelement() for p in parameters))
+
+# Pre-training
+for p in parameters:
+    p.requires_grad = True
+
+# Stats holders
+lossi = []
+stepi = []
+
+# Training on Xtr, Ytr
+for i in range(200_000):
+    # minibatch construct                                           
+    ix = torch.randint(0, Xtr.shape[0], (32,))                       #👈
+    # forward pass:
+    emb = C[Xtr[ix]] # (32, 3, 2)                                    #👈
+    h = torch.tanh(emb.view(-1, 6) @ W1 + b1) # (32, 100)
+    logits = h @ W2 + b2 # (32, 27)
+    loss = F.cross_entropy(logits, Ytr[ix])                          #👈
+    # backward pass:
+    for p in parameters:
+        p.grad = None
+    loss.backward()
+    # update
+    lr = 0.1 if i <= 100_000 else 0.01                                #👈
+    for p in parameters:
+        p.data += - lr * p.grad
+
+    # track stats
+    lossi.append(loss.item())
+    stepi.append(i)
+
+print("Loss on minibatch: ", loss.item())
+```
+
+Loss on whole training dataset:
+
+```{python}
+emb = C[Xtr] # (32, 3, 2)                                    
+h = torch.tanh(emb.view(-1, 6) @ W1 + b1) # (32, 100)
+logits = h @ W2 + b2 # (32, 27)
+loss = F.cross_entropy(logits, Ytr)   
+loss.item()
+```
+
+Loss on dev/validation dataset, it's not much different from loss on training as the model is still underfitting, it still generalizes thing:
+
+```{python}
+emb = C[Xdev] # (32, 3, 2)                                    
+h = torch.tanh(emb.view(-1, 6) @ W1 + b1) # (32, 100)
+logits = h @ W2 + b2 # (32, 27)
+loss = F.cross_entropy(logits, Ydev)   
+loss.item()
+```
+
+Visualizing loss, we can see the loss shaking significantly as the batch size still small - 32.
+
+```{python}
+plt.plot(stepi, lossi)
+```
+
+Visualizing the character embeddings, we can see the model can cluster for eg. vowels a, e, i, o, u.
+
+```{python}
+plt.figure(figsize=(8,8))
+plt.scatter(C[:,0].data, C[:, 1].data, s=200)
+for i in range(C.shape[0]):
+    plt.text(C[i,0].item(),C[i,1].item(), itos[i], ha="center", va="center", color="white")
+plt.grid('minor')
+```
+
+## experiment: larger hidden layer, larger embedding size
+
+Now we can experiment a larger hidden layer (300), and larger embedding_size (10). Below is the whole code:
+
+```{python}
+#| code-fold: true
+
+# hyper-parameters
+block_size = 3 # number of chracters / inputs to predict the nextone
+no_chars = 27 # number of possible chracters, include '.'
+emb_size = 10 # no of dimensions of the embedding space.
+hidden_size = 300 # size of the hidden - tanh layer
+batch_size = 32 # minibatch size for training, 2, 4, 8, 16, 32, 64, etc
+
+# build the dataset
+def buid_dataset(words):
+
+    X, Y = [], []
+
+    for w in words:
+        context = [0] * block_size
+        for ch in w + '.':
+            ix = stoi[ch]
+            X.append(context)
+            Y.append(ix)
+            context = context[1:] + [ix]
+
+    X = torch.tensor(X)
+    Y = torch.tensor(Y)
+    print(X.shape, Y.shape)
+    return X, Y
+
+import random
+random.seed(42)
+random.shuffle(words)
+n1 = int(0.8 * len(words))
+n2 = int(0.9 * len(words))
+
+# 80 - 10 - 10 splits
+Xtr, Ytr = buid_dataset(words[:n1])
+Xdev, Ydev = buid_dataset(words[n1:n2])
+Xte, Yte = buid_dataset(words[n2:])
+
+# Lookup table - 10 dimensional space
+g = torch.Generator().manual_seed(2147483647) # for reproductivity
+C = torch.randn((no_chars, emb_size), generator=g)
+
+# Layer 1 - tanh - 300 neurons
+W1 = torch.randn((block_size * emb_size, hidden_size), generator=g)
+b1 = torch.randn(hidden_size, generator=g)
+
+# Layer 2 - softmax
+W2 = torch.randn((hidden_size, no_chars), generator=g)
+b2 = torch.randn(no_chars, generator=g)
+
+# All params
+parameters = [C, W1, b1, W2, b2]
+print("No of params: ", sum(p.nelement() for p in parameters))
+
+# Pre-training
+for p in parameters:
+    p.requires_grad = True
+
+# Stats holders
+lossi = []
+stepi = []
+
+# Training on Xtr, Ytr
+for i in range(200_000):
+    # minibatch construct                                           
+    ix = torch.randint(0, Xtr.shape[0], (batch_size,))                      
+    # forward pass:
+    emb = C[Xtr[ix]]                                                
+    h = torch.tanh(emb.view(-1, block_size * emb_size) @ W1 + b1)
+    logits = h @ W2 + b2
+    loss = F.cross_entropy(logits, Ytr[ix]) 
+    # backward pass:
+    for p in parameters:
+        p.grad = None
+    loss.backward()
+    # update
+    lr = 0.1 if i <= 100_000 else 0.01 
+    for p in parameters:
+        p.data += - lr * p.grad
+
+    # track stats
+    lossi.append(loss.item())
+    stepi.append(i)
+
+print("Loss on minibatch: ", loss.item())
+```
+
+```{python}
+emb = C[Xtr]                                 
+h = torch.tanh(emb.view(-1, block_size * emb_size) @ W1 + b1)
+logits = h @ W2 + b2
+loss = F.cross_entropy(logits, Ytr)   
+print("Loss on whole training set: ", loss.item())
+
+emb = C[Xdev]                                
+h = torch.tanh(emb.view(-1, block_size * emb_size) @ W1 + b1)
+logits = h @ W2 + b2
+loss = F.cross_entropy(logits, Ydev)   
+print("Loss on dev/validation set: ", loss.item())
+
+emb = C[Xte]                                
+h = torch.tanh(emb.view(-1, block_size * emb_size) @ W1 + b1)
+logits = h @ W2 + b2
+loss = F.cross_entropy(logits, Yte)   
+print("Loss on test set: ", loss.item())
+```
 
 ## summary of our final code, conclusion
 
+
+```{python}
+plt.plot(stepi, lossi)
+```
+
+
+```{python}
+plt.figure(figsize=(8,8))
+plt.scatter(C[:,0].data, C[:, 1].data, s=200)
+for i in range(C.shape[0]):
+    plt.text(C[i,0].item(),C[i,1].item(), itos[i], ha="center", va="center", color="white")
+plt.grid('minor')
+```
+We can see the loss on validation set and test set are quite similar as we are not try different scenarios to calibrate/tune hyperparamters much. So they both have the same suprise to the model training by `Xtr`.
+
+We still have rooms for improvement!
+
 ## sampling from the model
 
+But our networks now can generate more name-like name!
+
+```{python}
+g = torch.Generator().manual_seed(2147483647 + 10)
+
+for _ in range(20):
+    
+    out = []
+    context = [0] * block_size # initialize with all ...
+    while True:
+      emb = C[torch.tensor([context])] # (1,block_size,d)
+      h = torch.tanh(emb.view(1, -1) @ W1 + b1)
+      logits = h @ W2 + b2
+      probs = F.softmax(logits, dim=1)
+      ix = torch.multinomial(probs, num_samples=1, generator=g).item()
+      context = context[1:] + [ix]
+      out.append(ix)
+      if ix == 0:
+        break
+    
+    print(''.join(itos[i] for i in out))
+```
+
 ## google collab (new!!) notebook advertisement
+
+Colab link: <https://colab.research.google.com/drive/1YIfmkftLrz6MPTOO9Vwqrop2Q5llHIGK?usp=sharing>
+
+Thanks Andrej!
 
 # resources
 
