@@ -10,7 +10,380 @@
 <atom:link href="https://lktuan.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>I am a Risk Modeler 🚀</description>
 <generator>quarto-1.4.554</generator>
-<lastBuildDate>Tue, 19 Nov 2024 17:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 25 Nov 2024 17:00:00 GMT</lastBuildDate>
+<item>
+  <title>NN-Z2H Lesson 4: Building makemore part 4 - Activations &amp; Gradients, BatchNorm</title>
+  <dc:creator>Tuan Le Khac</dc:creator>
+  <link>https://lktuan.github.io/blog/2024-11-26-nn-z2h-p4/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="part-1-intro" class="level1">
+
+<section id="starter-code" class="level2">
+
+<div id="30f522ab" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> torch</span>
+<span id="cb1-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> torch.nn.functional <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> F</span>
+<span id="cb1-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pandas <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pd</span>
+<span id="cb1-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> matplotlib.pyplot <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> plt</span>
+<span id="cb1-5"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%</span>matplotlib inline</span></code></pre></div>
+</details>
+</div>
+<div id="93c194c2" class="cell" data-execution_count="2">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pandas <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pd</span>
+<span id="cb2-2"></span>
+<span id="cb2-3">url <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://raw.githubusercontent.com/karpathy/makemore/refs/heads/master/names.txt"</span></span>
+<span id="cb2-4">words <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.read_csv(url, header<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>).iloc[:, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>].tolist()</span>
+<span id="cb2-5">words[:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span>]</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>['emma', 'olivia', 'ava', 'isabella', 'sophia', 'charlotte', 'mia', 'amelia']</code></pre>
+</div>
+</div>
+<div id="ede2d5a9" class="cell" data-execution_count="3">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(words)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>32033</code></pre>
+</div>
+</div>
+<div id="7b3d943c" class="cell" data-execution_count="4">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># build the vocabulary of characters and mapping to/from integer</span></span>
+<span id="cb6-2">chars <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sorted</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">list</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">set</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">''</span>.join(words))))</span>
+<span id="cb6-3">stoi <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> {s:i<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> i, s <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">enumerate</span>(chars)}</span>
+<span id="cb6-4">stoi[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'.'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span></span>
+<span id="cb6-5">itos <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> {i: s <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> s, i <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> stoi.items()}</span>
+<span id="cb6-6">vocab_size <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(itos)</span>
+<span id="cb6-7"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(itos)</span>
+<span id="cb6-8"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(vocab_size)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>{1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e', 6: 'f', 7: 'g', 8: 'h', 9: 'i', 10: 'j', 11: 'k', 12: 'l', 13: 'm', 14: 'n', 15: 'o', 16: 'p', 17: 'q', 18: 'r', 19: 's', 20: 't', 21: 'u', 22: 'v', 23: 'w', 24: 'x', 25: 'y', 26: 'z', 0: '.'}
+27</code></pre>
+</div>
+</div>
+<div id="1312917f" class="cell" data-execution_count="5">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># build the dataset</span></span>
+<span id="cb8-2"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> buid_dataset(words):</span>
+<span id="cb8-3">    block_size <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span></span>
+<span id="cb8-4">    X, Y <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [], []</span>
+<span id="cb8-5"></span>
+<span id="cb8-6">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> w <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> words:</span>
+<span id="cb8-7">        context <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> block_size</span>
+<span id="cb8-8">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> ch <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> w <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'.'</span>:</span>
+<span id="cb8-9">            ix <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> stoi[ch]</span>
+<span id="cb8-10">            X.append(context)</span>
+<span id="cb8-11">            Y.append(ix)</span>
+<span id="cb8-12">            context <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> context[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>:] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> [ix]</span>
+<span id="cb8-13"></span>
+<span id="cb8-14">    X <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.tensor(X)</span>
+<span id="cb8-15">    Y <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.tensor(Y)</span>
+<span id="cb8-16">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(X.shape, Y.shape)</span>
+<span id="cb8-17">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> X, Y</span>
+<span id="cb8-18"></span>
+<span id="cb8-19"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> random</span>
+<span id="cb8-20">random.seed(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">42</span>)</span>
+<span id="cb8-21">random.shuffle(words)</span>
+<span id="cb8-22">n1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">int</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(words))</span>
+<span id="cb8-23">n2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">int</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.9</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(words))</span>
+<span id="cb8-24"></span>
+<span id="cb8-25">Xtr, Ytr <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> buid_dataset(words[:n1])        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 80#</span></span>
+<span id="cb8-26">Xdev, Ydev <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> buid_dataset(words[n1:n2])    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 10%</span></span>
+<span id="cb8-27">Xte, Yte <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> buid_dataset(words[n2:])        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 10%</span></span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>torch.Size([182625, 3]) torch.Size([182625])
+torch.Size([22655, 3]) torch.Size([22655])
+torch.Size([22866, 3]) torch.Size([22866])</code></pre>
+</div>
+</div>
+<div id="66bef88b" class="cell" data-execution_count="6">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># hyper-parameters</span></span>
+<span id="cb10-2">block_size <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># number of chracters / inputs to predict the nextone</span></span>
+<span id="cb10-3">no_chars <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">27</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># number of possible chracters, include '.'</span></span>
+<span id="cb10-4">emb_size <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># no of dimensions of the embedding space.</span></span>
+<span id="cb10-5">hidden_size <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">300</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># size of the hidden - tanh layer</span></span>
+<span id="cb10-6">batch_size <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># minibatch size for training, 2, 4, 8, 16, 32, 64, etc</span></span></code></pre></div>
+</details>
+</div>
+</section>
+<section id="fixing-the-initial-loss" class="level2">
+
+</section>
+<section id="fixing-the-saturated-tanh" class="level2">
+
+</section>
+<section id="calculating-the-init-scale-kaiming-init" class="level2">
+
+</section>
+<section id="batch-normalization" class="level2">
+
+</section>
+<section id="batch-normalization-summary" class="level2">
+
+</section>
+<section id="real-example-resnet50-walkthrough" class="level2">
+
+</section>
+<section id="summary-of-the-lecture" class="level2">
+
+</section>
+</section>
+<section id="part-2-pytorch-ifying-the-code" class="level1">
+<h1>Part 2: PyTorch-ifying the code</h1>
+<section id="viz-1-forward-pass-activations-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="viz-1-forward-pass-activations-statistics">viz #1: forward pass activations statistics</h2>
+</section>
+<section id="viz-2-backward-pass-gradient-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="viz-2-backward-pass-gradient-statistics">viz #2: backward pass gradient statistics</h2>
+</section>
+<section id="the-fully-linear-case-of-no-non-linearities" class="level2">
+<h2 class="anchored" data-anchor-id="the-fully-linear-case-of-no-non-linearities">the fully linear case of no non-linearities</h2>
+</section>
+<section id="viz-3-parameter-activation-and-gradient-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="viz-3-parameter-activation-and-gradient-statistics">viz #3: parameter activation and gradient statistics</h2>
+</section>
+<section id="viz-4-update-data-ratio-over-time" class="level2">
+<h2 class="anchored" data-anchor-id="viz-4-update-data-ratio-over-time">viz #4: update: data ratio over time</h2>
+</section>
+<section id="bringing-back-batchnorm-looking-at-the-visualizations" class="level2">
+<h2 class="anchored" data-anchor-id="bringing-back-batchnorm-looking-at-the-visualizations">bringing back batchnorm, looking at the visualizations</h2>
+</section>
+<section id="summary-of-the-lecture-for-real-this-time" class="level2">
+<h2 class="anchored" data-anchor-id="summary-of-the-lecture-for-real-this-time">summary of the lecture for real this time</h2>
+</section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises:</h2>
+<ul>
+<li>E01: I did not get around to seeing what happens when you initialize all weights and biases to zero. Try this and train the neural net. You might think either that 1) the network trains just fine or 2) the network doesn’t train at all, but actually it is 3) the network trains but only partially, and achieves a pretty bad final performance. Inspect the gradients and activations to figure out what is happening and why the network is only partially training, and what part is being trained exactly.</li>
+<li>E02: BatchNorm, unlike other normalization layers like LayerNorm/GroupNorm etc. has the big advantage that after training, the batchnorm gamma/beta can be “folded into” the weights of the preceeding Linear layers, effectively erasing the need to forward it at test time. Set up a small 3-layer MLP with batchnorms, train the network, then “fold” the batchnorm gamma/beta into the preceeding Linear layer’s W,b by creating a new W2, b2 and erasing the batch norm. Verify that this gives the same forward pass during inference. i.e.&nbsp;we see that the batchnorm is there just for stabilizing the training, and can be thrown out after training is done! pretty cool.</li>
+</ul>
+
+
+<!-- -->
+
+</section>
+</section>
+
+ ]]></description>
+  <category>til</category>
+  <category>python</category>
+  <category>andrej karpathy</category>
+  <category>nn-z2h</category>
+  <category>bigram</category>
+  <category>neural networks</category>
+  <guid>https://lktuan.github.io/blog/2024-11-26-nn-z2h-p4/</guid>
+  <pubDate>Mon, 25 Nov 2024 17:00:00 GMT</pubDate>
+  <media:content url="https://lktuan.github.io/blog/2024-11-26-nn-z2h-p4/NLM_Bengio_etal.png" medium="image" type="image/png"/>
+</item>
 <item>
   <title>NN-Z2H Lesson 3: Building makemore part 2 - MLP</title>
   <dc:creator>Tuan Le Khac</dc:creator>
@@ -23352,1659 +23725,6 @@ font-style: inherit;">return</span> b58check_address</span></code></pre></div>
   <guid>https://lktuan.github.io/blog/2024-06-06-excel-blambda/</guid>
   <pubDate>Wed, 05 Jun 2024 17:00:00 GMT</pubDate>
   <media:content url="https://lktuan.github.io/blog/2024-06-06-excel-blambda/excel-lambda.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Về quy ước đặt tên dữ liệu</title>
-  <dc:creator>Tuan Le Khac</dc:creator>
-  <link>https://lktuan.github.io/blog/2024-06-05-cnac/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<div class="callout callout-style-default callout-note callout-titled" name="Edit">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Các bạn cũng có thể xem thêm slide về dbtplyr của Emily trong posit::conf ở <a href="https://www.emilyriederer.com/talk/dbtplyr/">đây</a>.</p>
-</div>
-</div>
-<hr>
-<p>Đây là keynote từ article <a href="https://emilyriederer.netlify.app/post/column-name-contracts/">Column Names as Contracts</a> của <a href="https://emilyriederer.netlify.app/about">Emily Riederer</a>.</p>
-<p>Các sản phẩm phần mềm luôn tuân theo một quy ước nhất định (về hình ảnh, ký tự) nhằm để người dùng có thể ngay lập tức nắm bắt được cách thức sử dụng, giao tiếp với nó. Ví dụ, nút Home thường sẽ đưa người dùng về trang chủ của một mobile app, nút “blog” trên blog của tôi sẽ đưa các bạn tiếp cận danh mục bài viết, etc. Ở layer phía sau, các API được BE viết cần tuân thủ documented inputs &amp; outputs, để các BE khác hay FE có thể sử dụng.</p>
-<p>Tuy nhiên các bảng dữ liệu lại nằm ở một vùng màu xám không rõ ràng. Data service (từ producer i.e DE -&gt; user i.e DA, DS) đủ tĩnh để không được xem là normal service, nhưng cũng đủ thô để người ta ít chú ý đến nó về mặt giao diện. DE cứ thể lấy hết mọi dữ liệu trong hệ thống, DA nhìn dữ liệu và ngay lập tức giả định được nội dung của (cột) dữ liệu đó.</p>
-<blockquote class="blockquote">
-<p>Producers wonder why consumers aren’t satisfied, and consumers wonder why the data is never “right”.</p>
-</blockquote>
-<p>Cũng có một cách được nhiều tổ chức sử dụng như là Metadata managament, như:</p>
-<ul>
-<li>Lyft’s <a href="https://eng.lyft.com/amundsen-lyfts-data-discovery-metadata-engine-62d27254fbb9">Amundsen</a></li>
-<li>LinkedIn’s <a href="https://www.linkedin.com/blog/engineering/archive/data-hub">DataHub</a></li>
-<li>Netflix’s <a href="https://netflixtechblog.com/building-and-scaling-data-lineage-at-netflix-to-improve-data-infrastructure-reliability-and-1a52526a7977">Metacat</a></li>
-</ul>
-<p>Tuy nhiên giải pháp này là documentation oriented, producer và user đều phải tuân thủ nghiêm ngặt. Nó không <em>trực diện</em> khi DE đặt tên cột, hay DA đọc dữ liệu.</p>
-<p>Ý tưởng của Emily là chuẩn hóa các quy ước đặt tên dữ liệu bằng <a href="https://en.wikipedia.org/wiki/Controlled_vocabulary">Controlled vocabulary</a>. Minh họa bằng <code>pointblank</code>, <code>collapsibleTree</code>, và <code>dplyr</code>.</p>
-<section id="controlled-vocabulary" class="level1">
-<h1>Controlled Vocabulary</h1>
-<p>CV là phương pháp sử dụng một tập hợp các từ, cụm từ, từ viết tắt để ký hiệu thông tin. Quy ước này cần được định nghĩa đề phù hợp cho tính chất bộ dữ liệu, và cũng đủ đơn giản để người tạo dữ liệu, người sử dụng dữ liệu sử dụng.</p>
-<p>Ví dụ, 1 ứng dụng booking.</p>
-<section id="level-1-kiểu-dữ-liệu-kiểu-đo-lường" class="level2">
-<h2 class="anchored" data-anchor-id="level-1-kiểu-dữ-liệu-kiểu-đo-lường">Level 1: Kiểu dữ liệu, kiểu đo lường</h2>
-<ul>
-<li><code>ID</code>: chỉ đối tượng, dạng numberic, tối ưu cho việc lưu trữ và thường làm khóa chính các bảng’</li>
-<li><code>IND</code>: giá trị boolean 0/1, tôi thì thường sử dụng các từ như <code>IS</code>, <code>FLAG</code>;</li>
-<li><code>N</code>: chỉ các dạng thông tin <em>có thể đếm (count)</em> được;</li>
-<li><code>AMT</code>: chỉ các dạng thông tin có thể tổng, thường đề cập đến <em>currency</em>;</li>
-<li><code>VAL</code>: cũng là số nhưng không thể tổng được (không có ý nghĩa), ví dụ như <em>kinh độ</em>, <em>vĩ độ</em>;</li>
-<li><code>DT</code>: ngày;</li>
-<li><code>TM</code>: giờ hoặc ngày giờ;</li>
-<li><code>CAT</code>: category</li>
-</ul>
-<p>Cũng tùy vào dữ liệu, có thể thêm các cụm từ nhất định đề đề cập đến thông tin dữ liệu đó mang lại, ví dụ <code>ADD</code> cho address.</p>
-</section>
-<section id="level-2-đối-tượng-chủ-đề" class="level2">
-<h2 class="anchored" data-anchor-id="level-2-đối-tượng-chủ-đề">Level 2: Đối tượng, chủ đề</h2>
-<p>Mối quan tâm của người dùng dữ liệu cũng giống như nhà quản trị, xung quanh các đối tượng của business: <code>USER</code>, <code>TRANSACTION</code>, etc.</p>
-<p>Đối với ứng dụng đặt xe, các chủ thể có thể cần quan tâm là <code>TRIP</code>, <code>TRAVELER</code>, <code>ACCOMODATION</code>, <code>TRANSPORTATION</code>, etc.</p>
-</section>
-<section id="level-3-n-chi-tiết" class="level2">
-<h2 class="anchored" data-anchor-id="level-3-n-chi-tiết">Level 3-n: Chi tiết</h2>
-<p>Hai tầng trên về cơ bản đã cho phép chúng ta mô tả được cột thông tin, chúng đều thể hiện được thuộc tính của chủ thể. Ví dụ:</p>
-<ul>
-<li><code>AMT_TRIP</code>: giá trị deal của Trip;</li>
-<li><code>ADD_DESTINATION</code>: Điểm đến của trip.</li>
-</ul>
-<p>Tuy nhiên tùy vào từng use case, chúng ta hoàn toàn có thể mở rộng được về cả hai phía. Ví dụ:</p>
-<ul>
-<li>Về phía trước: khi làm việc với nhiều layer dữ liệu, ta có thể dùng <code>RAW</code>, <code>STAGING</code>, <code>DW</code>, <code>DL</code>, <code>DM</code>, etc<br>
-</li>
-<li>Về phía sau: <code>DAY</code> hoặc <code>MONTH</code> cho <code>N_DURATION</code>, <code>VND</code> hoặc <code>USD</code> cho currency <code>AMT</code>.</li>
-</ul>
-<p>Miễn là có một quy chuẩn, và nó đủ đơn giản để sử dụng.</p>
-</section>
-<section id="kết-hợp-chúng-lại" class="level2">
-<h2 class="anchored" data-anchor-id="kết-hợp-chúng-lại">Kết hợp chúng lại</h2>
-<p>Tất nhiên ràng buộc việc đặt tên như vậy không chỉ để trang trí, nó sẽ giúp chúng ta tự động hóa quy trình kiểm soát chất lượng dữ liệu, .</p>
-<p>Tôi sử dụng <a href="https://www.kaggle.com/datasets/rkiattisak/traveler-trip-data">bộ dữ liệu</a> này để thực hành (cột dữ liệu đã được đổi tên).</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">head</span>(trip_data)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 13
-  ID_TRIP CAT_DESTINATION_CITY DT_START  DT_END N_DURATION_DAY CAT_TRAVELER_NAME
-    &lt;dbl&gt; &lt;chr&gt;                &lt;chr&gt;     &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;            
-1       1 London, UK           5/1/2023  5/8/2…              7 John Smith       
-2       2 Phuket, Thailand     6/15/2023 6/20/…              5 Jane Doe         
-3       3 Bali, Indonesia      7/1/2023  7/8/2…              7 David Lee        
-4       4 New York, USA        8/15/2023 8/29/…             14 Sarah Johnson    
-5       5 Tokyo, Japan         9/10/2023 9/17/…              7 Kim Nguyen       
-6       6 Paris, France        10/5/2023 10/10…              5 Michael Brown    
-# ℹ 7 more variables: VAL_AGE_TRAVELER &lt;dbl&gt;, IND_GENDER_TRAVELER &lt;chr&gt;,
-#   CAT_TRAVELER_NATIONALITY &lt;chr&gt;, CAT_ACCOMMODATION_TYPE &lt;chr&gt;,
-#   AMT_ACCOMMODATION_COST &lt;chr&gt;, CAT_TRANSPORTATION_TYPE &lt;chr&gt;,
-#   AMT_TRANSPORTATION_COST &lt;chr&gt;</code></pre>
-</div>
-</div>
-</section>
-</section>
-<section id="data-validation" class="level1 page-columns page-full">
-<h1>Data Validation</h1>
-<p>Sử dụng <code>pointblank</code> của R để kiếm tra một số tính chất của dữ liệu:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(pointblank)</span>
-<span id="cb3-2"></span>
-<span id="cb3-3">agent <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span></span>
-<span id="cb3-4">  trip_data  <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb3-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">create_agent</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">actions =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">action_levels</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">stop_at =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.001</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb3-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">col_vals_gte</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">starts_with</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"N"</span>), <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># check if cols start with N is GTE 0 or not</span></span>
-<span id="cb3-7">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">col_vals_gte</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">starts_with</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"VAL"</span>), <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># check if cols start with VAL is GTE 0 or not</span></span>
-<span id="cb3-8">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">col_vals_not_null</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">starts_with</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"IND"</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># check if cols start with IND contain Null or not</span></span>
-<span id="cb3-9">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">col_vals_in_set</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">starts_with</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"IND"</span>), <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Male"</span>,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Female"</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># validate the value of only column started with IND - Gender</span></span>
-<span id="cb3-10">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">col_is_date</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">starts_with</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"DT"</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># check validation of date columns</span></span>
-<span id="cb3-11">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">interrogate</span>()</span></code></pre></div>
-</div>
-
-<div class="no-row-height column-margin column-container"><div class="">
-<p>Note: To type <code>pipe</code> operator in VS Code, use this in the <code>keybindings.json</code> file:</p>
-<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb4-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">{</span></span>
-<span id="cb4-2">  <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">"key"</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">:</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Ctrl+Shift+m"</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">,</span>             </span>
-<span id="cb4-3">  <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">"command"</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">:</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"type"</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">,</span> </span>
-<span id="cb4-4">  <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">"args"</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">:</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">{</span> <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">"text"</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">:</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">" %&gt;% "</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">},</span></span>
-<span id="cb4-5">  <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">"when"</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">:</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"editorTextFocus </span></span>
-<span id="cb4-6"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">            &amp;&amp; !editorHasSelection </span></span>
-<span id="cb4-7"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">            &amp;&amp; editorLangId </span></span>
-<span id="cb4-8"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">            == 'quarto'"</span> </span>
-<span id="cb4-9"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">}</span></span></code></pre></div>
-<p>Then you can get the <code>pipe</code> when type <code>Ctrl + Shift + M</code>.</p>
-</div></div><div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1">agent</span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<div id="pb_agent" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-@import url("https://unpkg.com/balloon-css/balloon.min.css");
-#pb_agent table {
-  font-family: 'IBM Plex Sans', system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#pb_agent thead, #pb_agent tbody, #pb_agent tfoot, #pb_agent tr, #pb_agent td, #pb_agent th {
-  border-style: none;
-}
-
-#pb_agent p {
-  margin: 0;
-  padding: 0;
-}
-
-#pb_agent .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 90%;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#pb_agent .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#pb_agent .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#pb_agent .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#pb_agent .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#pb_agent .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#pb_agent .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#pb_agent .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#pb_agent .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#pb_agent .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#pb_agent .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#pb_agent .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#pb_agent .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#pb_agent .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#pb_agent .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#pb_agent .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#pb_agent .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#pb_agent .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#pb_agent .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#pb_agent .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#pb_agent .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#pb_agent .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#pb_agent .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#pb_agent .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#pb_agent .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#pb_agent .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#pb_agent .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#pb_agent .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#pb_agent .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#pb_agent .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#pb_agent .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#pb_agent .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#pb_agent .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#pb_agent .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#pb_agent .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#pb_agent .gt_left {
-  text-align: left;
-}
-
-#pb_agent .gt_center {
-  text-align: center;
-}
-
-#pb_agent .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#pb_agent .gt_font_normal {
-  font-weight: normal;
-}
-
-#pb_agent .gt_font_bold {
-  font-weight: bold;
-}
-
-#pb_agent .gt_font_italic {
-  font-style: italic;
-}
-
-#pb_agent .gt_super {
-  font-size: 65%;
-}
-
-#pb_agent .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#pb_agent .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#pb_agent .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#pb_agent .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#pb_agent .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#pb_agent .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#pb_agent .gt_indent_5 {
-  text-indent: 25px;
-}
-
-#pb_agent {
-  -webkit-font-smoothing: antialiased;
-}
-
-#pb_agent .gt_row {
-  overflow: visible;
-}
-
-#pb_agent .gt_sourcenote {
-  height: 35px;
-  padding: 0;
-}
-
-#pb_agent code {
-  font-family: 'IBM Plex Mono', monospace, courier;
-  color: black;
-  background-color: transparent;
-  padding: 0;
-}
-</style>
-
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
-<tr class="header gt_heading">
-<th colspan="14" class="gt_heading gt_title gt_font_normal" style="text-align: left; color: #444444; font-size: 28px; font-weight: 500;">Pointblank Validation</th>
-</tr>
-<tr class="odd gt_heading">
-<th colspan="14" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style="text-align: left; font-size: 12px;"><span style="text-decoration-style:solid;text-decoration-color:#ADD8E6;text-decoration-line:underline;text-underline-position:under;color:#333333;font-variant-numeric:tabular-nums;padding-left:4px;margin-right:5px;padding-right:2px;">[2024-07-04|09:52:39]</span>
-<p></p>
-<div style="height:25px;padding-top:10px;">
-<span style="background-color: #F1D35A;color: #222222;padding: 0.5em 0.5em;position: inherit;text-transform: uppercase;margin: 5px 1px 5px 4px;font-weight: bold;border: solid 1px #F1D35A;padding: 2px 10px 2px 10px;font-size: smaller;">tibble</span><span style="background-color:#E5AB00;color:white;padding:0.5em 0.5em;position:inherit;text-transform:uppercase;margin:5px 0px 5px 5px;font-weight:bold;border:solid 1px #E5AB00;padding:2px 15px 2px 15px;font-size:smaller;">WARN</span> <span style="background-color:none;color:#333333;padding:0.5em 0.5em;position:inherit;margin:5px 0px 5px -4px;font-weight:bold;border:solid 1px #E5AB00;padding:2px 15px 2px 15px;font-size:smaller;">—</span> <span style="background-color:#D0182F;color:white;padding:0.5em 0.5em;position:inherit;text-transform:uppercase;margin:5px 0px 5px 1px;font-weight:bold;border:solid 1px #D0182F;padding:2px 15px 2px 15px;font-size:smaller;">STOP</span> <span style="background-color:none;color:#333333;padding:0.5em 0.5em;position:inherit;margin:5px 0px 5px -4px;font-weight:bold;border:solid 1px #D0182F;padding:2px 15px 2px 15px;font-size:smaller;">0.00</span> <span style="background-color:#499FFE;color:white;padding:0.5em 0.5em;position:inherit;text-transform:uppercase;margin:5px 0px 5px 1px;font-weight:bold;border:solid 1px #499FFE;padding:2px 15px 2px 15px;font-size:smaller;">NOTIFY</span> <span style="background-color:none;color:#333333;padding:0.5em 0.5em;position:inherit;margin:5px 0px 5px -4px;font-weight:bold;border:solid 1px #499FFE;padding:2px 15px 2px 15px;font-size:smaller;">—</span>
-</div></th>
-</tr>
-<tr class="header gt_col_headings">
-<th class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col"></th>
-<th class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col"></th>
-<th id="STEP" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">STEP</th>
-<th id="COLUMNS" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">COLUMNS</th>
-<th id="VALUES" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">VALUES</th>
-<th id="TBL" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">TBL</th>
-<th id="EVAL" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">EVAL</th>
-<th id="UNITS" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">UNITS</th>
-<th id="PASS" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">PASS</th>
-<th id="FAIL" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">FAIL</th>
-<th id="W" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">W</th>
-<th id="S" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">S</th>
-<th id="N" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">N</th>
-<th id="EXT" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" style="color: #666666; font-weight: bold" scope="col">EXT</th>
-</tr>
-</thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left" headers="status_color" style="background-color: #CF142B; height: 40px"><br>
-</td>
-<td class="gt_row gt_right" headers="i" style="color: #666666; font-size: 13px; font-weight: bold; height: 40px">1</td>
-<td class="gt_row gt_left" headers="type" style="height: 40px"><div aria-label="Expect that values in `N_DURATION_DAY` should be >= `0`. " data-balloon-pos="right" style="width:fit-content;">
-<div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;">
-<svg width="30px" height="30px" viewbox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
-<title>
-col_vals_gte
-</title>
-<g id="All-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="col_vals_gte" transform="translate(0.000000, 0.241379)"> <path d="M56.712234,1 C59.1975153,1 61.4475153,2.00735931 63.076195,3.63603897 C64.7048747,5.26471863 65.712234,7.51471863 65.712234,10 L65.712234,10 L65.712234,65 L10.712234,65 C8.22695259,65 5.97695259,63.9926407 4.34827294,62.363961 C2.71959328,60.7352814 1.71223397,58.4852814 1.71223397,56 L1.71223397,56 L1.71223397,10 C1.71223397,7.51471863 2.71959328,5.26471863 4.34827294,3.63603897 C5.97695259,2.00735931 8.22695259,1 10.712234,1 L10.712234,1 Z" id="rectangle" stroke="#000000" stroke-width="2" fill="#FFFFFF"></path> <path d="M49.712234,12 L17.712234,12 C14.952234,12 12.712234,14.24 12.712234,17 L12.712234,49 C12.712234,51.76 14.952234,54 17.712234,54 L49.712234,54 C52.472234,54 54.712234,51.76 54.712234,49 L54.712234,17 C54.712234,14.24 52.472234,12 49.712234,12 Z M44.712234,47 L22.712234,47 L22.712234,45 L44.712234,45 L44.712234,47 Z M24.182234,40.88 L23.242234,39.12 L40.562234,30 L23.242234,20.88 L24.182234,19.12 L44.862234,30 L24.182234,40.88 Z" id="greater_than_equal" fill="#000000" fill-rule="nonzero"></path> </g> </g>
-</svg>
-</div>
-<code style="font-size:11px;">&nbsp;col_vals_gte()</code>
-</div></td>
-<td class="gt_row gt_left" headers="columns" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="N_DURATION_DAY" data-balloon-pos="left">
-<p><span style="color:purple;"><code>▮</code></span><code>N_DURATION_DAY</code></p>
-</div></td>
-<td class="gt_row gt_left" headers="values" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="0" data-balloon-pos="left">
-<p><code>0</code></p>
-</div></td>
-<td class="gt_row gt_center" headers="precon" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:10px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left">
-<svg width="25px" height="25px" viewbox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="vertical-align: middle;">
-<g id="unchanged" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="unchanged" transform="translate(0.500000, 0.570147)"> <rect id="Rectangle" x="0.125132506" y="0" width="23.749735" height="23.7894737"></rect> <path d="M5.80375046,8.18194736 C3.77191832,8.18194736 2.11875046,9.83495328 2.11875046,11.8669474 C2.11875046,13.8989414 3.77191832,15.5519474 5.80375046,15.5519474 C7.8355826,15.5519474 9.48875046,13.8989414 9.48875046,11.8669474 C9.48875046,9.83495328 7.83552863,8.18194736 5.80375046,8.18194736 Z M5.80375046,14.814915 C4.17821997,14.814915 2.85578285,13.4924778 2.85578285,11.8669474 C2.85578285,10.2414169 4.17821997,8.91897975 5.80375046,8.91897975 C7.42928095,8.91897975 8.75171807,10.2414169 8.75171807,11.8669474 C8.75171807,13.4924778 7.42928095,14.814915 5.80375046,14.814915 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path> <path d="M13.9638189,8.699335 C13.9364621,8.70430925 13.9091059,8.71176968 13.8842359,8.71923074 C13.7822704,8.73663967 13.6877654,8.77643115 13.6056956,8.83860518 L10.2433156,11.3852598 C10.0766886,11.5046343 9.97720993,11.6986181 9.97720993,11.9025491 C9.97720993,12.1064807 10.0766886,12.3004639 10.2433156,12.4198383 L13.6056956,14.966493 C13.891697,15.1803725 14.2970729,15.1231721 14.5109517,14.8371707 C14.7248313,14.5511692 14.6676309,14.145794 14.3816294,13.9319145 L12.5313257,12.5392127 L21.8812495,12.5392127 L21.8812495,11.2658854 L12.5313257,11.2658854 L14.3816294,9.87318364 C14.6377872,9.71650453 14.7497006,9.40066014 14.6477351,9.11714553 C14.5482564,8.83363156 14.262255,8.65954352 13.9638189,8.699335 Z" id="arrow" fill="#000000" transform="translate(15.929230, 11.894737) rotate(-180.000000) translate(-15.929230, -11.894737) "></path> </g> </g>
-</svg>
-</span></td>
-<td class="gt_row gt_center" headers="eval_sym" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></td>
-<td class="gt_row gt_right" headers="units" style="font-size: 11px; height: 40px"><code>139</code></td>
-<td class="gt_row gt_right" headers="n_pass" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>137</code><br>
-<code>0.98561</code></td>
-<td class="gt_row gt_right" headers="n_fail" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>2</code><br>
-<code>0.01439</code></td>
-<td class="gt_row gt_center" headers="W" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
-<td class="gt_row gt_center" headers="S" style="background-color: #FCFCFC; height: 40px"><span style="color: #CF142B;">●</span></td>
-<td class="gt_row gt_center" headers="N" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
-<td class="gt_row gt_center" headers="extract" style="height: 40px"><a href="data:text/csv;base64,IklEX1RSSVAiLCJDQVRfREVTVElOQVRJT05fQ0lUWSIsIkRUX1NUQVJUIiwiRFRfRU5EIiwiTl9EVVJBVElPTl9EQVkiLCJDQVRfVFJBVkVMRVJfTkFNRSIsIlZBTF9BR0VfVFJBVkVMRVIiLCJJTkRfR0VOREVSX1RSQVZFTEVSIiwiQ0FUX1RSQVZFTEVSX05BVElPTkFMSVRZIiwiQ0FUX0FDQ09NTU9EQVRJT05fVFlQRSIsIkFNVF9BQ0NPTU1PREFUSU9OX0NPU1QiLCJDQVRfVFJBTlNQT1JUQVRJT05fVFlQRSIsIkFNVF9UUkFOU1BPUlRBVElPTl9DT1NUIg0KNzIsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkENCjEyOCxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQQ0K" download="extract_0001.csv">
-<button aria-label="There are 2 'fail' rows available as a CSV file." data-balloon-pos="left" style="background-color:#67C2DC;color:#FFFFFF;border:none;padding:5px;font-weight:bold;cursor:pointer;border-radius:4px;">
-CSV
-</button>
-</a></td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="status_color" style="background-color: #CF142B; height: 40px"><br>
-</td>
-<td class="gt_row gt_right" headers="i" style="color: #666666; font-size: 13px; font-weight: bold; height: 40px">2</td>
-<td class="gt_row gt_left" headers="type" style="height: 40px"><div aria-label="Expect that values in `VAL_AGE_TRAVELER` should be >= `0`. " data-balloon-pos="right" style="width:fit-content;">
-<div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;">
-<svg width="30px" height="30px" viewbox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
-<title>
-col_vals_gte
-</title>
-<g id="All-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="col_vals_gte" transform="translate(0.000000, 0.241379)"> <path d="M56.712234,1 C59.1975153,1 61.4475153,2.00735931 63.076195,3.63603897 C64.7048747,5.26471863 65.712234,7.51471863 65.712234,10 L65.712234,10 L65.712234,65 L10.712234,65 C8.22695259,65 5.97695259,63.9926407 4.34827294,62.363961 C2.71959328,60.7352814 1.71223397,58.4852814 1.71223397,56 L1.71223397,56 L1.71223397,10 C1.71223397,7.51471863 2.71959328,5.26471863 4.34827294,3.63603897 C5.97695259,2.00735931 8.22695259,1 10.712234,1 L10.712234,1 Z" id="rectangle" stroke="#000000" stroke-width="2" fill="#FFFFFF"></path> <path d="M49.712234,12 L17.712234,12 C14.952234,12 12.712234,14.24 12.712234,17 L12.712234,49 C12.712234,51.76 14.952234,54 17.712234,54 L49.712234,54 C52.472234,54 54.712234,51.76 54.712234,49 L54.712234,17 C54.712234,14.24 52.472234,12 49.712234,12 Z M44.712234,47 L22.712234,47 L22.712234,45 L44.712234,45 L44.712234,47 Z M24.182234,40.88 L23.242234,39.12 L40.562234,30 L23.242234,20.88 L24.182234,19.12 L44.862234,30 L24.182234,40.88 Z" id="greater_than_equal" fill="#000000" fill-rule="nonzero"></path> </g> </g>
-</svg>
-</div>
-<code style="font-size:11px;">&nbsp;col_vals_gte()</code>
-</div></td>
-<td class="gt_row gt_left" headers="columns" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="VAL_AGE_TRAVELER" data-balloon-pos="left">
-<p><span style="color:purple;"><code>▮</code></span><code>VAL_AGE_TRAVELER</code></p>
-</div></td>
-<td class="gt_row gt_left" headers="values" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="0" data-balloon-pos="left">
-<p><code>0</code></p>
-</div></td>
-<td class="gt_row gt_center" headers="precon" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:10px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left">
-<svg width="25px" height="25px" viewbox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="vertical-align: middle;">
-<g id="unchanged" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="unchanged" transform="translate(0.500000, 0.570147)"> <rect id="Rectangle" x="0.125132506" y="0" width="23.749735" height="23.7894737"></rect> <path d="M5.80375046,8.18194736 C3.77191832,8.18194736 2.11875046,9.83495328 2.11875046,11.8669474 C2.11875046,13.8989414 3.77191832,15.5519474 5.80375046,15.5519474 C7.8355826,15.5519474 9.48875046,13.8989414 9.48875046,11.8669474 C9.48875046,9.83495328 7.83552863,8.18194736 5.80375046,8.18194736 Z M5.80375046,14.814915 C4.17821997,14.814915 2.85578285,13.4924778 2.85578285,11.8669474 C2.85578285,10.2414169 4.17821997,8.91897975 5.80375046,8.91897975 C7.42928095,8.91897975 8.75171807,10.2414169 8.75171807,11.8669474 C8.75171807,13.4924778 7.42928095,14.814915 5.80375046,14.814915 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path> <path d="M13.9638189,8.699335 C13.9364621,8.70430925 13.9091059,8.71176968 13.8842359,8.71923074 C13.7822704,8.73663967 13.6877654,8.77643115 13.6056956,8.83860518 L10.2433156,11.3852598 C10.0766886,11.5046343 9.97720993,11.6986181 9.97720993,11.9025491 C9.97720993,12.1064807 10.0766886,12.3004639 10.2433156,12.4198383 L13.6056956,14.966493 C13.891697,15.1803725 14.2970729,15.1231721 14.5109517,14.8371707 C14.7248313,14.5511692 14.6676309,14.145794 14.3816294,13.9319145 L12.5313257,12.5392127 L21.8812495,12.5392127 L21.8812495,11.2658854 L12.5313257,11.2658854 L14.3816294,9.87318364 C14.6377872,9.71650453 14.7497006,9.40066014 14.6477351,9.11714553 C14.5482564,8.83363156 14.262255,8.65954352 13.9638189,8.699335 Z" id="arrow" fill="#000000" transform="translate(15.929230, 11.894737) rotate(-180.000000) translate(-15.929230, -11.894737) "></path> </g> </g>
-</svg>
-</span></td>
-<td class="gt_row gt_center" headers="eval_sym" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></td>
-<td class="gt_row gt_right" headers="units" style="font-size: 11px; height: 40px"><code>139</code></td>
-<td class="gt_row gt_right" headers="n_pass" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>137</code><br>
-<code>0.98561</code></td>
-<td class="gt_row gt_right" headers="n_fail" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>2</code><br>
-<code>0.01439</code></td>
-<td class="gt_row gt_center" headers="W" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
-<td class="gt_row gt_center" headers="S" style="background-color: #FCFCFC; height: 40px"><span style="color: #CF142B;">●</span></td>
-<td class="gt_row gt_center" headers="N" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
-<td class="gt_row gt_center" headers="extract" style="height: 40px"><a href="data:text/csv;base64,IklEX1RSSVAiLCJDQVRfREVTVElOQVRJT05fQ0lUWSIsIkRUX1NUQVJUIiwiRFRfRU5EIiwiTl9EVVJBVElPTl9EQVkiLCJDQVRfVFJBVkVMRVJfTkFNRSIsIlZBTF9BR0VfVFJBVkVMRVIiLCJJTkRfR0VOREVSX1RSQVZFTEVSIiwiQ0FUX1RSQVZFTEVSX05BVElPTkFMSVRZIiwiQ0FUX0FDQ09NTU9EQVRJT05fVFlQRSIsIkFNVF9BQ0NPTU1PREFUSU9OX0NPU1QiLCJDQVRfVFJBTlNQT1JUQVRJT05fVFlQRSIsIkFNVF9UUkFOU1BPUlRBVElPTl9DT1NUIg0KNzIsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkENCjEyOCxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQQ0K" download="extract_0002.csv">
-<button aria-label="There are 2 'fail' rows available as a CSV file." data-balloon-pos="left" style="background-color:#67C2DC;color:#FFFFFF;border:none;padding:5px;font-weight:bold;cursor:pointer;border-radius:4px;">
-CSV
-</button>
-</a></td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="status_color" style="background-color: #CF142B; height: 40px"><br>
-</td>
-<td class="gt_row gt_right" headers="i" style="color: #666666; font-size: 13px; font-weight: bold; height: 40px">3</td>
-<td class="gt_row gt_left" headers="type" style="height: 40px"><div aria-label="Expect that all values in `IND_GENDER_TRAVELER` should not be NULL. " data-balloon-pos="right" style="width:fit-content;">
-<div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;">
-<svg width="30px" height="30px" viewbox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
-<title>
-col_vals_not_null
-</title>
-<g id="All-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="col_vals_not_null" transform="translate(0.000000, 0.551724)"> <path d="M56.712234,1 C59.1975153,1 61.4475153,2.00735931 63.076195,3.63603897 C64.7048747,5.26471863 65.712234,7.51471863 65.712234,10 L65.712234,10 L65.712234,65 L10.712234,65 C8.22695259,65 5.97695259,63.9926407 4.34827294,62.363961 C2.71959328,60.7352814 1.71223397,58.4852814 1.71223397,56 L1.71223397,56 L1.71223397,10 C1.71223397,7.51471863 2.71959328,5.26471863 4.34827294,3.63603897 C5.97695259,2.00735931 8.22695259,1 10.712234,1 L10.712234,1 Z" id="rectangle" stroke="#000000" stroke-width="2" fill="#FFFFFF"></path> <path d="M40.6120805,47.037834 C37.4692348,47.037834 35.0126139,45.9348613 33.712234,44.0140597 C32.4118541,45.9348613 29.9552331,47.037834 26.8123883,47.037834 C22.6574397,47.037834 16.0646712,43.4437723 16.0646712,33.8021619 C16.0646712,29.3401361 17.4715879,18.962166 30.5035862,18.962166 C30.9454018,18.962166 31.3057481,19.3225124 31.3057481,19.7643279 L31.3057481,21.3686518 C31.3057481,21.8104674 30.9454018,22.1708138 30.5035862,22.1708138 C26.6400486,22.1708138 22.4819668,25.8118774 22.4819668,33.8021619 C22.4819668,37.5090277 23.7635456,43.0270243 27.2949384,43.0270243 C29.795428,43.0270243 31.224279,40.4231312 32.0985095,38.2861221 C30.5067194,35.6101596 29.7014243,33.1034035 29.7014243,30.8347892 C29.7014243,25.6238707 31.8603677,23.7751377 33.712234,23.7751377 C35.5641002,23.7751377 37.7230437,25.6238707 37.7230437,30.8347892 C37.7230437,33.1347383 36.9396828,35.5788255 35.3290916,38.2861221 C36.6294715,41.4321009 38.243196,43.0270243 40.1295295,43.0270243 C43.6609223,43.0270243 44.9425012,37.5090277 44.9425012,33.8021619 C44.9425012,25.8118774 40.7844193,22.1708138 36.9208817,22.1708138 C36.4759329,22.1708138 36.1187198,21.8104674 36.1187198,21.3686518 L36.1187198,19.7643279 C36.1187198,19.3225124 36.4759329,18.962166 36.9208817,18.962166 C49.9528801,18.962166 51.3597967,29.3401361 51.3597967,33.8021619 C51.3597967,43.4437723 44.7670282,47.037834 40.6120805,47.037834 Z" id="omega" fill="#000000" fill-rule="nonzero"></path> <path d="M33,7.93597705 C33.2761424,7.93597705 33.5,8.15983467 33.5,8.43597705 L33.5,57.564023 C33.5,57.8401653 33.2761424,58.064023 33,58.064023 C32.7238576,58.064023 32.5,57.8401653 32.5,57.564023 L32.5,8.43597705 C32.5,8.15983467 32.7238576,7.93597705 33,7.93597705 Z" id="line_black" fill="#000000" transform="translate(33.000000, 33.000000) rotate(-320.000000) translate(-33.000000, -33.000000) "></path> <polygon id="line_white" fill="#FFFFFF" transform="translate(34.899496, 32.153303) rotate(-320.000000) translate(-34.899496, -32.153303) " points="34.3994962 8.54160469 35.3994962 8.54160469 35.3994962 55.7650019 34.3994962 55.7650019"></polygon> </g> </g>
-</svg>
-</div>
-<code style="font-size:10px;">&nbsp;col_vals_not_null()</code>
-</div></td>
-<td class="gt_row gt_left" headers="columns" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="IND_GENDER_TRAVELER" data-balloon-pos="left">
-<p><span style="color:purple;"><code>▮</code></span><code>IND_GENDER_TRAVELER</code></p>
-</div></td>
-<td class="gt_row gt_left" headers="values" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px">—</td>
-<td class="gt_row gt_center" headers="precon" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:10px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left">
-<svg width="25px" height="25px" viewbox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="vertical-align: middle;">
-<g id="unchanged" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="unchanged" transform="translate(0.500000, 0.570147)"> <rect id="Rectangle" x="0.125132506" y="0" width="23.749735" height="23.7894737"></rect> <path d="M5.80375046,8.18194736 C3.77191832,8.18194736 2.11875046,9.83495328 2.11875046,11.8669474 C2.11875046,13.8989414 3.77191832,15.5519474 5.80375046,15.5519474 C7.8355826,15.5519474 9.48875046,13.8989414 9.48875046,11.8669474 C9.48875046,9.83495328 7.83552863,8.18194736 5.80375046,8.18194736 Z M5.80375046,14.814915 C4.17821997,14.814915 2.85578285,13.4924778 2.85578285,11.8669474 C2.85578285,10.2414169 4.17821997,8.91897975 5.80375046,8.91897975 C7.42928095,8.91897975 8.75171807,10.2414169 8.75171807,11.8669474 C8.75171807,13.4924778 7.42928095,14.814915 5.80375046,14.814915 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path> <path d="M13.9638189,8.699335 C13.9364621,8.70430925 13.9091059,8.71176968 13.8842359,8.71923074 C13.7822704,8.73663967 13.6877654,8.77643115 13.6056956,8.83860518 L10.2433156,11.3852598 C10.0766886,11.5046343 9.97720993,11.6986181 9.97720993,11.9025491 C9.97720993,12.1064807 10.0766886,12.3004639 10.2433156,12.4198383 L13.6056956,14.966493 C13.891697,15.1803725 14.2970729,15.1231721 14.5109517,14.8371707 C14.7248313,14.5511692 14.6676309,14.145794 14.3816294,13.9319145 L12.5313257,12.5392127 L21.8812495,12.5392127 L21.8812495,11.2658854 L12.5313257,11.2658854 L14.3816294,9.87318364 C14.6377872,9.71650453 14.7497006,9.40066014 14.6477351,9.11714553 C14.5482564,8.83363156 14.262255,8.65954352 13.9638189,8.699335 Z" id="arrow" fill="#000000" transform="translate(15.929230, 11.894737) rotate(-180.000000) translate(-15.929230, -11.894737) "></path> </g> </g>
-</svg>
-</span></td>
-<td class="gt_row gt_center" headers="eval_sym" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></td>
-<td class="gt_row gt_right" headers="units" style="font-size: 11px; height: 40px"><code>139</code></td>
-<td class="gt_row gt_right" headers="n_pass" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>137</code><br>
-<code>0.98561</code></td>
-<td class="gt_row gt_right" headers="n_fail" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>2</code><br>
-<code>0.01439</code></td>
-<td class="gt_row gt_center" headers="W" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
-<td class="gt_row gt_center" headers="S" style="background-color: #FCFCFC; height: 40px"><span style="color: #CF142B;">●</span></td>
-<td class="gt_row gt_center" headers="N" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
-<td class="gt_row gt_center" headers="extract" style="height: 40px"><a href="data:text/csv;base64,IklEX1RSSVAiLCJDQVRfREVTVElOQVRJT05fQ0lUWSIsIkRUX1NUQVJUIiwiRFRfRU5EIiwiTl9EVVJBVElPTl9EQVkiLCJDQVRfVFJBVkVMRVJfTkFNRSIsIlZBTF9BR0VfVFJBVkVMRVIiLCJJTkRfR0VOREVSX1RSQVZFTEVSIiwiQ0FUX1RSQVZFTEVSX05BVElPTkFMSVRZIiwiQ0FUX0FDQ09NTU9EQVRJT05fVFlQRSIsIkFNVF9BQ0NPTU1PREFUSU9OX0NPU1QiLCJDQVRfVFJBTlNQT1JUQVRJT05fVFlQRSIsIkFNVF9UUkFOU1BPUlRBVElPTl9DT1NUIg0KNzIsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkENCjEyOCxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQQ0K" download="extract_0003.csv">
-<button aria-label="There are 2 'fail' rows available as a CSV file." data-balloon-pos="left" style="background-color:#67C2DC;color:#FFFFFF;border:none;padding:5px;font-weight:bold;cursor:pointer;border-radius:4px;">
-CSV
-</button>
-</a></td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="status_color" style="background-color: #CF142B; height: 40px"><br>
-</td>
-<td class="gt_row gt_right" headers="i" style="color: #666666; font-size: 13px; font-weight: bold; height: 40px">4</td>
-<td class="gt_row gt_left" headers="type" style="height: 40px"><div aria-label="Expect that values in `IND_GENDER_TRAVELER` should be in the set of `Male`, `Female`. " data-balloon-pos="right" style="width:fit-content;">
-<div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;">
-<svg width="30px" height="30px" viewbox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
-<title>
-col_vals_in_set
-</title>
-<g id="All-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="col_vals_in_set" transform="translate(0.000000, 0.172414)"> <path d="M56.712234,1 C59.1975153,1 61.4475153,2.00735931 63.076195,3.63603897 C64.7048747,5.26471863 65.712234,7.51471863 65.712234,10 L65.712234,10 L65.712234,65 L10.712234,65 C8.22695259,65 5.97695259,63.9926407 4.34827294,62.363961 C2.71959328,60.7352814 1.71223397,58.4852814 1.71223397,56 L1.71223397,56 L1.71223397,10 C1.71223397,7.51471863 2.71959328,5.26471863 4.34827294,3.63603897 C5.97695259,2.00735931 8.22695259,1 10.712234,1 L10.712234,1 Z" id="rectangle" stroke="#000000" stroke-width="2" fill="#FFFFFF"></path> <path d="M44.127969,41.1538382 L31.0814568,41.1538382 C29.9510748,41.1536429 28.8827052,40.9256134 27.9079888,40.5136953 C26.4467442,39.8960136 25.19849,38.8599685 24.3189894,37.5577099 C23.8792391,36.906727 23.5314818,36.1899233 23.2936866,35.4252675 C23.2130217,35.16589 23.1460289,34.9005554 23.0913409,34.6307286 L44.1278714,34.6307286 C45.028466,34.6306309 45.7586488,33.9004481 45.7586488,32.9998535 C45.7586488,32.0992589 45.028466,31.3690761 44.1278714,31.3690761 L23.0905596,31.3690761 C23.1990567,30.8337194 23.3597028,30.3180894 23.5675173,29.8264831 C24.185199,28.3652386 25.2212442,27.1169844 26.5236004,26.2374838 C27.1745833,25.7977334 27.891387,25.4499762 28.6560428,25.2122786 C29.4208939,24.9744833 30.2334994,24.8459665 31.0813591,24.8459665 L44.1277737,24.8459665 C45.0283683,24.8459665 45.7586488,24.1157837 45.7586488,23.2151891 C45.7586488,22.3145945 45.0283683,21.5844117 44.1277737,21.5844117 L31.0813591,21.5844117 C29.5096643,21.5844117 28.0039858,21.9038483 26.6373711,22.4820765 C24.5866678,23.3498583 22.8469049,24.7950871 21.6163267,26.616296 C20.3856508,28.4362354 19.665136,30.6413347 19.6658191,33.0000488 C19.6658191,34.5717436 19.9852563,36.0774222 20.5635822,37.4440369 C21.4312663,39.4947402 22.8765927,41.2345031 24.697704,42.4650813 C26.5176434,43.6957572 28.7227427,44.4155883 31.0814568,44.4155883 L44.1278714,44.4155883 C45.028466,44.4155883 45.7586488,43.6854055 45.7586488,42.7848109 C45.7586488,41.8842163 45.0285636,41.1538382 44.127969,41.1538382 Z" id="set_of" fill="#000000" fill-rule="nonzero"></path> </g> </g>
-</svg>
-</div>
-<code style="font-size:11px;">&nbsp;col_vals_in_set()</code>
-</div></td>
-<td class="gt_row gt_left" headers="columns" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="IND_GENDER_TRAVELER" data-balloon-pos="left">
-<p><span style="color:purple;"><code>▮</code></span><code>IND_GENDER_TRAVELER</code></p>
-</div></td>
-<td class="gt_row gt_left" headers="values" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="Male, Female" data-balloon-pos="left">
-<p><code>Male, Female</code></p>
-</div></td>
-<td class="gt_row gt_center" headers="precon" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:10px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left">
-<svg width="25px" height="25px" viewbox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="vertical-align: middle;">
-<g id="unchanged" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="unchanged" transform="translate(0.500000, 0.570147)"> <rect id="Rectangle" x="0.125132506" y="0" width="23.749735" height="23.7894737"></rect> <path d="M5.80375046,8.18194736 C3.77191832,8.18194736 2.11875046,9.83495328 2.11875046,11.8669474 C2.11875046,13.8989414 3.77191832,15.5519474 5.80375046,15.5519474 C7.8355826,15.5519474 9.48875046,13.8989414 9.48875046,11.8669474 C9.48875046,9.83495328 7.83552863,8.18194736 5.80375046,8.18194736 Z M5.80375046,14.814915 C4.17821997,14.814915 2.85578285,13.4924778 2.85578285,11.8669474 C2.85578285,10.2414169 4.17821997,8.91897975 5.80375046,8.91897975 C7.42928095,8.91897975 8.75171807,10.2414169 8.75171807,11.8669474 C8.75171807,13.4924778 7.42928095,14.814915 5.80375046,14.814915 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path> <path d="M13.9638189,8.699335 C13.9364621,8.70430925 13.9091059,8.71176968 13.8842359,8.71923074 C13.7822704,8.73663967 13.6877654,8.77643115 13.6056956,8.83860518 L10.2433156,11.3852598 C10.0766886,11.5046343 9.97720993,11.6986181 9.97720993,11.9025491 C9.97720993,12.1064807 10.0766886,12.3004639 10.2433156,12.4198383 L13.6056956,14.966493 C13.891697,15.1803725 14.2970729,15.1231721 14.5109517,14.8371707 C14.7248313,14.5511692 14.6676309,14.145794 14.3816294,13.9319145 L12.5313257,12.5392127 L21.8812495,12.5392127 L21.8812495,11.2658854 L12.5313257,11.2658854 L14.3816294,9.87318364 C14.6377872,9.71650453 14.7497006,9.40066014 14.6477351,9.11714553 C14.5482564,8.83363156 14.262255,8.65954352 13.9638189,8.699335 Z" id="arrow" fill="#000000" transform="translate(15.929230, 11.894737) rotate(-180.000000) translate(-15.929230, -11.894737) "></path> </g> </g>
-</svg>
-</span></td>
-<td class="gt_row gt_center" headers="eval_sym" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></td>
-<td class="gt_row gt_right" headers="units" style="font-size: 11px; height: 40px"><code>139</code></td>
-<td class="gt_row gt_right" headers="n_pass" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>137</code><br>
-<code>0.98561</code></td>
-<td class="gt_row gt_right" headers="n_fail" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>2</code><br>
-<code>0.01439</code></td>
-<td class="gt_row gt_center" headers="W" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
-<td class="gt_row gt_center" headers="S" style="background-color: #FCFCFC; height: 40px"><span style="color: #CF142B;">●</span></td>
-<td class="gt_row gt_center" headers="N" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
-<td class="gt_row gt_center" headers="extract" style="height: 40px"><a href="data:text/csv;base64,IklEX1RSSVAiLCJDQVRfREVTVElOQVRJT05fQ0lUWSIsIkRUX1NUQVJUIiwiRFRfRU5EIiwiTl9EVVJBVElPTl9EQVkiLCJDQVRfVFJBVkVMRVJfTkFNRSIsIlZBTF9BR0VfVFJBVkVMRVIiLCJJTkRfR0VOREVSX1RSQVZFTEVSIiwiQ0FUX1RSQVZFTEVSX05BVElPTkFMSVRZIiwiQ0FUX0FDQ09NTU9EQVRJT05fVFlQRSIsIkFNVF9BQ0NPTU1PREFUSU9OX0NPU1QiLCJDQVRfVFJBTlNQT1JUQVRJT05fVFlQRSIsIkFNVF9UUkFOU1BPUlRBVElPTl9DT1NUIg0KNzIsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkEsTkENCjEyOCxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQSxOQQ0K" download="extract_0004.csv">
-<button aria-label="There are 2 'fail' rows available as a CSV file." data-balloon-pos="left" style="background-color:#67C2DC;color:#FFFFFF;border:none;padding:5px;font-weight:bold;cursor:pointer;border-radius:4px;">
-CSV
-</button>
-</a></td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="status_color" style="background-color: #CF142B; height: 40px"><br>
-</td>
-<td class="gt_row gt_right" headers="i" style="color: #666666; font-size: 13px; font-weight: bold; height: 40px">5</td>
-<td class="gt_row gt_left" headers="type" style="height: 40px"><div aria-label="Expect that column `DT_START` is of type: Date. " data-balloon-pos="right" style="width:fit-content;">
-<div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;">
-<svg width="30px" height="30px" viewbox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
-<title>
-col_is_date
-</title>
-<g id="All-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="col_is_date" transform="translate(0.000000, 0.379310)"> <path d="M56.712234,1.01466935 C59.1975153,1.01466935 61.4475153,2.02202867 63.076195,3.65070832 C64.7048747,5.27938798 65.712234,7.52938798 65.712234,10.0146694 L65.712234,10.0146694 L65.712234,65.0146694 L10.712234,65.0146694 C8.22695259,65.0146694 5.97695259,64.00731 4.34827294,62.3786304 C2.71959328,60.7499507 1.71223397,58.4999507 1.71223397,56.0146694 L1.71223397,56.0146694 L1.71223397,10.0146694 C1.71223397,7.52938798 2.71959328,5.27938798 4.34827294,3.65070832 C5.97695259,2.02202867 8.22695259,1.01466935 10.712234,1.01466935 L10.712234,1.01466935 Z" id="rectangle" stroke="#000000" stroke-width="2" fill="#FFFFFF"></path> <rect id="column" fill="#000000" x="12.2117153" y="12.0146694" width="20" height="42" rx="1"></rect> <path d="M40.7190873,43.0146694 L40.7190873,24.2256069 L46.9651811,24.2256069 C48.8271696,24.2256069 50.3315491,24.4329616 51.4783647,24.8476772 C52.6251803,25.2623928 53.6175206,25.9648597 54.4554155,26.955099 C55.7841981,28.5293257 56.4485795,30.6028726 56.4485795,33.1758022 C56.4485795,36.2988647 55.6233925,38.7194134 53.9729936,40.4375209 C52.3225947,42.1556285 49.9993758,43.0146694 47.003267,43.0146694 L40.7190873,43.0146694 Z M43.385103,41.0215053 L46.800142,41.0215053 C49.2376542,41.0215053 50.9641994,40.3655874 51.9798295,39.0537319 C53.0716319,37.6572405 53.6175248,35.7825848 53.6175248,33.4297084 C53.6175248,31.220713 53.0800953,29.4857043 52.0052202,28.2246303 C51.3535242,27.4544441 50.5748861,26.9275939 49.6692827,26.6440639 C48.7636792,26.3605338 47.4010626,26.2187709 45.581392,26.2187709 L43.385103,26.2187709 L43.385103,41.0215053 Z" id="D" fill="#000000"></path> </g> </g>
-</svg>
-</div>
-<code style="font-size:11px;">&nbsp;col_is_date()</code>
-</div></td>
-<td class="gt_row gt_left" headers="columns" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="DT_START" data-balloon-pos="left">
-<p><span style="color:purple;"><code>▮</code></span><code>DT_START</code></p>
-</div></td>
-<td class="gt_row gt_left" headers="values" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px">—</td>
-<td class="gt_row gt_center" headers="precon" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:10px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left">
-<svg width="25px" height="25px" viewbox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="vertical-align: middle;">
-<g id="unchanged" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="unchanged" transform="translate(0.500000, 0.570147)"> <rect id="Rectangle" x="0.125132506" y="0" width="23.749735" height="23.7894737"></rect> <path d="M5.80375046,8.18194736 C3.77191832,8.18194736 2.11875046,9.83495328 2.11875046,11.8669474 C2.11875046,13.8989414 3.77191832,15.5519474 5.80375046,15.5519474 C7.8355826,15.5519474 9.48875046,13.8989414 9.48875046,11.8669474 C9.48875046,9.83495328 7.83552863,8.18194736 5.80375046,8.18194736 Z M5.80375046,14.814915 C4.17821997,14.814915 2.85578285,13.4924778 2.85578285,11.8669474 C2.85578285,10.2414169 4.17821997,8.91897975 5.80375046,8.91897975 C7.42928095,8.91897975 8.75171807,10.2414169 8.75171807,11.8669474 C8.75171807,13.4924778 7.42928095,14.814915 5.80375046,14.814915 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path> <path d="M13.9638189,8.699335 C13.9364621,8.70430925 13.9091059,8.71176968 13.8842359,8.71923074 C13.7822704,8.73663967 13.6877654,8.77643115 13.6056956,8.83860518 L10.2433156,11.3852598 C10.0766886,11.5046343 9.97720993,11.6986181 9.97720993,11.9025491 C9.97720993,12.1064807 10.0766886,12.3004639 10.2433156,12.4198383 L13.6056956,14.966493 C13.891697,15.1803725 14.2970729,15.1231721 14.5109517,14.8371707 C14.7248313,14.5511692 14.6676309,14.145794 14.3816294,13.9319145 L12.5313257,12.5392127 L21.8812495,12.5392127 L21.8812495,11.2658854 L12.5313257,11.2658854 L14.3816294,9.87318364 C14.6377872,9.71650453 14.7497006,9.40066014 14.6477351,9.11714553 C14.5482564,8.83363156 14.262255,8.65954352 13.9638189,8.699335 Z" id="arrow" fill="#000000" transform="translate(15.929230, 11.894737) rotate(-180.000000) translate(-15.929230, -11.894737) "></path> </g> </g>
-</svg>
-</span></td>
-<td class="gt_row gt_center" headers="eval_sym" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></td>
-<td class="gt_row gt_right" headers="units" style="font-size: 11px; height: 40px"><code>1</code></td>
-<td class="gt_row gt_right" headers="n_pass" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>0</code><br>
-<code>0</code></td>
-<td class="gt_row gt_right" headers="n_fail" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>1</code><br>
-<code>1</code></td>
-<td class="gt_row gt_center" headers="W" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
-<td class="gt_row gt_center" headers="S" style="background-color: #FCFCFC; height: 40px"><span style="color: #CF142B;">●</span></td>
-<td class="gt_row gt_center" headers="N" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
-<td class="gt_row gt_center" headers="extract" style="height: 40px">—</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="status_color" style="background-color: #CF142B; height: 40px"><br>
-</td>
-<td class="gt_row gt_right" headers="i" style="color: #666666; font-size: 13px; font-weight: bold; height: 40px">6</td>
-<td class="gt_row gt_left" headers="type" style="height: 40px"><div aria-label="Expect that column `DT_END` is of type: Date. " data-balloon-pos="right" style="width:fit-content;">
-<div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;">
-<svg width="30px" height="30px" viewbox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
-<title>
-col_is_date
-</title>
-<g id="All-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="col_is_date" transform="translate(0.000000, 0.379310)"> <path d="M56.712234,1.01466935 C59.1975153,1.01466935 61.4475153,2.02202867 63.076195,3.65070832 C64.7048747,5.27938798 65.712234,7.52938798 65.712234,10.0146694 L65.712234,10.0146694 L65.712234,65.0146694 L10.712234,65.0146694 C8.22695259,65.0146694 5.97695259,64.00731 4.34827294,62.3786304 C2.71959328,60.7499507 1.71223397,58.4999507 1.71223397,56.0146694 L1.71223397,56.0146694 L1.71223397,10.0146694 C1.71223397,7.52938798 2.71959328,5.27938798 4.34827294,3.65070832 C5.97695259,2.02202867 8.22695259,1.01466935 10.712234,1.01466935 L10.712234,1.01466935 Z" id="rectangle" stroke="#000000" stroke-width="2" fill="#FFFFFF"></path> <rect id="column" fill="#000000" x="12.2117153" y="12.0146694" width="20" height="42" rx="1"></rect> <path d="M40.7190873,43.0146694 L40.7190873,24.2256069 L46.9651811,24.2256069 C48.8271696,24.2256069 50.3315491,24.4329616 51.4783647,24.8476772 C52.6251803,25.2623928 53.6175206,25.9648597 54.4554155,26.955099 C55.7841981,28.5293257 56.4485795,30.6028726 56.4485795,33.1758022 C56.4485795,36.2988647 55.6233925,38.7194134 53.9729936,40.4375209 C52.3225947,42.1556285 49.9993758,43.0146694 47.003267,43.0146694 L40.7190873,43.0146694 Z M43.385103,41.0215053 L46.800142,41.0215053 C49.2376542,41.0215053 50.9641994,40.3655874 51.9798295,39.0537319 C53.0716319,37.6572405 53.6175248,35.7825848 53.6175248,33.4297084 C53.6175248,31.220713 53.0800953,29.4857043 52.0052202,28.2246303 C51.3535242,27.4544441 50.5748861,26.9275939 49.6692827,26.6440639 C48.7636792,26.3605338 47.4010626,26.2187709 45.581392,26.2187709 L43.385103,26.2187709 L43.385103,41.0215053 Z" id="D" fill="#000000"></path> </g> </g>
-</svg>
-</div>
-<code style="font-size:11px;">&nbsp;col_is_date()</code>
-</div></td>
-<td class="gt_row gt_left" headers="columns" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px"><div aria-label="DT_END" data-balloon-pos="left">
-<p><span style="color:purple;"><code>▮</code></span><code>DT_END</code></p>
-</div></td>
-<td class="gt_row gt_left" headers="values" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height: 40px">—</td>
-<td class="gt_row gt_center" headers="precon" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:10px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left">
-<svg width="25px" height="25px" viewbox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="vertical-align: middle;">
-<g id="unchanged" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="unchanged" transform="translate(0.500000, 0.570147)"> <rect id="Rectangle" x="0.125132506" y="0" width="23.749735" height="23.7894737"></rect> <path d="M5.80375046,8.18194736 C3.77191832,8.18194736 2.11875046,9.83495328 2.11875046,11.8669474 C2.11875046,13.8989414 3.77191832,15.5519474 5.80375046,15.5519474 C7.8355826,15.5519474 9.48875046,13.8989414 9.48875046,11.8669474 C9.48875046,9.83495328 7.83552863,8.18194736 5.80375046,8.18194736 Z M5.80375046,14.814915 C4.17821997,14.814915 2.85578285,13.4924778 2.85578285,11.8669474 C2.85578285,10.2414169 4.17821997,8.91897975 5.80375046,8.91897975 C7.42928095,8.91897975 8.75171807,10.2414169 8.75171807,11.8669474 C8.75171807,13.4924778 7.42928095,14.814915 5.80375046,14.814915 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path> <path d="M13.9638189,8.699335 C13.9364621,8.70430925 13.9091059,8.71176968 13.8842359,8.71923074 C13.7822704,8.73663967 13.6877654,8.77643115 13.6056956,8.83860518 L10.2433156,11.3852598 C10.0766886,11.5046343 9.97720993,11.6986181 9.97720993,11.9025491 C9.97720993,12.1064807 10.0766886,12.3004639 10.2433156,12.4198383 L13.6056956,14.966493 C13.891697,15.1803725 14.2970729,15.1231721 14.5109517,14.8371707 C14.7248313,14.5511692 14.6676309,14.145794 14.3816294,13.9319145 L12.5313257,12.5392127 L21.8812495,12.5392127 L21.8812495,11.2658854 L12.5313257,11.2658854 L14.3816294,9.87318364 C14.6377872,9.71650453 14.7497006,9.40066014 14.6477351,9.11714553 C14.5482564,8.83363156 14.262255,8.65954352 13.9638189,8.699335 Z" id="arrow" fill="#000000" transform="translate(15.929230, 11.894737) rotate(-180.000000) translate(-15.929230, -11.894737) "></path> </g> </g>
-</svg>
-</span></td>
-<td class="gt_row gt_center" headers="eval_sym" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px"><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></td>
-<td class="gt_row gt_right" headers="units" style="font-size: 11px; height: 40px"><code>1</code></td>
-<td class="gt_row gt_right" headers="n_pass" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>0</code><br>
-<code>0</code></td>
-<td class="gt_row gt_right" headers="n_fail" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; font-size: 11px; height: 40px"><code>1</code><br>
-<code>1</code></td>
-<td class="gt_row gt_center" headers="W" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
-<td class="gt_row gt_center" headers="S" style="background-color: #FCFCFC; height: 40px"><span style="color: #CF142B;">●</span></td>
-<td class="gt_row gt_center" headers="N" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height: 40px">—</td>
-<td class="gt_row gt_center" headers="extract" style="height: 40px">—</td>
-</tr>
-</tbody><tfoot class="gt_sourcenotes">
-<tr class="odd">
-<td colspan="14" class="gt_sourcenote"><span style="background-color:#FFF;color:#444;padding:0.5em 0.5em;position:inherit;text-transform:uppercase;margin-left:10px;border:solid 1px #999999;font-variant-numeric:tabular-nums;border-radius:0;padding:2px 10px 2px 10px;padding:2px 10px 2px 10px;">2024-07-04 09:52:39 +07</span> <span style="background-color:#FFF;color:#444;padding:0.5em 0.5em;position:inherit;margin:5px 1px 5px 0;border:solid 1px #999999;font-variant-numeric:tabular-nums;border-radius:0;padding:2px 10px 2px 10px;">&lt; 1 s</span> <span style="background-color:#FFF;color:#444;padding:0.5em 0.5em;position:inherit;text-transform:uppercase;margin:5px 1px 5px -1px;border:solid 1px #999999;font-variant-numeric:tabular-nums;border-radius:0;padding:2px 10px 2px 10px;">2024-07-04 09:52:39 +07</span></td>
-</tr>
-</tfoot>
-
-</table>
-
-</div>
-</div>
-</div>
-</div>
-<p>Cool! Không chỉ kiểm tra được tính đúng đắn của dữ liệu, cũng có thể xác định được biến nào không tuân theo quy tắc đặt tên.</p>
-</section>
-<section id="data-discoverability" class="level1">
-<h1>Data Discoverability</h1>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1">cols_data <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">names</span>(trip_data)</span>
-<span id="cb6-2">cols_data_split <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">strsplit</span>(cols_data,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"_"</span>)</span>
-<span id="cb6-3">cols_components <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">data.frame</span>(</span>
-<span id="cb6-4">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">variable =</span> cols_data,</span>
-<span id="cb6-5">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">level1 =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">vapply</span>(cols_data_split, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">FUN =</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">function</span>(x) x[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>], <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">FUN.VALUE =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">character</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)),</span>
-<span id="cb6-6">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">level2 =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">vapply</span>(cols_data_split, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">FUN =</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">function</span>(x) x[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>], <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">FUN.VALUE =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">character</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>))</span>
-<span id="cb6-7">)</span>
-<span id="cb6-8"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">head</span>(cols_components)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>              variable level1      level2
-1              ID_TRIP     ID        TRIP
-2 CAT_DESTINATION_CITY    CAT DESTINATION
-3             DT_START     DT       START
-4               DT_END     DT         END
-5       N_DURATION_DAY      N    DURATION
-6    CAT_TRAVELER_NAME    CAT    TRAVELER</code></pre>
-</div>
-</div>
-<p>Đây là một cách để xây dựng metadata, chúng ta có thể touch một cách interactive với:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(DT)</span>
-<span id="cb8-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">datatable</span>(cols_components,  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">filter =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">list</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">position =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'top'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">clear =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">FALSE</span>))</span></code></pre></div>
-<div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-38da5d6e8848be63810c" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-38da5d6e8848be63810c">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td><\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n    <\/div>\n  <\/td>\n<\/tr>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13"],["ID_TRIP","CAT_DESTINATION_CITY","DT_START","DT_END","N_DURATION_DAY","CAT_TRAVELER_NAME","VAL_AGE_TRAVELER","IND_GENDER_TRAVELER","CAT_TRAVELER_NATIONALITY","CAT_ACCOMMODATION_TYPE","AMT_ACCOMMODATION_COST","CAT_TRANSPORTATION_TYPE","AMT_TRANSPORTATION_COST"],["ID","CAT","DT","DT","N","CAT","VAL","IND","CAT","CAT","AMT","CAT","AMT"],["TRIP","DESTINATION","START","END","DURATION","TRAVELER","AGE","GENDER","TRAVELER","ACCOMMODATION","ACCOMMODATION","TRANSPORTATION","TRANSPORTATION"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>variable<\/th>\n      <th>level1<\/th>\n      <th>level2<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"variable","targets":1},{"name":"level1","targets":2},{"name":"level2","targets":3}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true}},"evals":[],"jsHooks":[]}</script>
-</div>
-</div>
-<p>Cũng có thể visualize thành một tree như bên dưới:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(collapsibleTree)</span>
-<span id="cb9-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">collapsibleTree</span>(cols_components, </span>
-<span id="cb9-3">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">hierarchy =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"level"</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>),</span>
-<span id="cb9-4">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">nodeSize =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"leafCount"</span></span>
-<span id="cb9-5">                )</span></code></pre></div>
-<div class="cell-output-display">
-<div class="collapsibleTree html-widget html-fill-item" id="htmlwidget-848b250e5c4166207b6a" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-848b250e5c4166207b6a">{"x":{"data":{"name":"cols_components","SizeOfNode":34.41,"children":[{"name":"ID","SizeOfNode":9.93,"children":[{"name":"TRIP","SizeOfNode":9.93}]},{"name":"CAT","SizeOfNode":19.87,"children":[{"name":"DESTINATION","SizeOfNode":9.93},{"name":"TRAVELER","SizeOfNode":9.93},{"name":"ACCOMMODATION","SizeOfNode":9.93},{"name":"TRANSPORTATION","SizeOfNode":9.93}]},{"name":"DT","SizeOfNode":14.05,"children":[{"name":"START","SizeOfNode":9.93},{"name":"END","SizeOfNode":9.93}]},{"name":"N","SizeOfNode":9.93,"children":[{"name":"DURATION","SizeOfNode":9.93}]},{"name":"VAL","SizeOfNode":9.93,"children":[{"name":"AGE","SizeOfNode":9.93}]},{"name":"IND","SizeOfNode":9.93,"children":[{"name":"GENDER","SizeOfNode":9.93}]},{"name":"AMT","SizeOfNode":14.05,"children":[{"name":"ACCOMMODATION","SizeOfNode":9.93},{"name":"TRANSPORTATION","SizeOfNode":9.93}]}]},"options":{"hierarchy":["level1","level2"],"input":null,"attribute":"leafCount","linkLength":null,"fontSize":10,"tooltip":false,"collapsed":true,"zoomable":true,"margin":{"top":20,"bottom":20,"left":124.41,"right":95},"fill":"lightsteelblue"}},"evals":[],"jsHooks":[]}</script>
-</div>
-</div>
-<p>Đây là cách xem từ kiểu dữ liệu -&gt; chủ thể, chúng ta cũng có thể làm ngược lại:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">collapsibleTree</span>(cols_components, </span>
-<span id="cb10-2">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">hierarchy =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"level"</span>, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)),</span>
-<span id="cb10-3">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">nodeSize =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"leafCount"</span></span>
-<span id="cb10-4">                )</span></code></pre></div>
-<div class="cell-output-display">
-<div class="collapsibleTree html-widget html-fill-item" id="htmlwidget-7e3f955f97ec0b1d8268" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-7e3f955f97ec0b1d8268">{"x":{"data":{"name":"cols_components","SizeOfNode":34.41,"children":[{"name":"TRIP","SizeOfNode":9.93,"children":[{"name":"ID","SizeOfNode":9.93}]},{"name":"DESTINATION","SizeOfNode":9.93,"children":[{"name":"CAT","SizeOfNode":9.93}]},{"name":"START","SizeOfNode":9.93,"children":[{"name":"DT","SizeOfNode":9.93}]},{"name":"END","SizeOfNode":9.93,"children":[{"name":"DT","SizeOfNode":9.93}]},{"name":"DURATION","SizeOfNode":9.93,"children":[{"name":"N","SizeOfNode":9.93}]},{"name":"TRAVELER","SizeOfNode":9.93,"children":[{"name":"CAT","SizeOfNode":9.93}]},{"name":"AGE","SizeOfNode":9.93,"children":[{"name":"VAL","SizeOfNode":9.93}]},{"name":"GENDER","SizeOfNode":9.93,"children":[{"name":"IND","SizeOfNode":9.93}]},{"name":"ACCOMMODATION","SizeOfNode":14.05,"children":[{"name":"CAT","SizeOfNode":9.93},{"name":"AMT","SizeOfNode":9.93}]},{"name":"TRANSPORTATION","SizeOfNode":14.05,"children":[{"name":"CAT","SizeOfNode":9.93},{"name":"AMT","SizeOfNode":9.93}]}]},"options":{"hierarchy":["level2","level1"],"input":null,"attribute":"leafCount","linkLength":null,"fontSize":10,"tooltip":false,"collapsed":true,"zoomable":true,"margin":{"top":20,"bottom":20,"left":124.41,"right":40},"fill":"lightsteelblue"}},"evals":[],"jsHooks":[]}</script>
-</div>
-</div>
-<p>Bộ dữ liệu mình sử dụng khá nghèo nàn và tập trung về một chủ thể duy nhất là <code>TRIP</code>, nên khả năng minh họa không được phong phú 😂. Ngoài ra, việc đặt tên như thế cũng giúp ta dễ dàng gọi biến ở IDE.</p>
-</section>
-<section id="data-wrangling" class="level1">
-<h1>Data Wrangling</h1>
-<p>Tương tự, với việc sử dụng một bộ từ điển có hệ thống, lớp lang cũng support chúng ta trong việc biến đổi dữ liệu. Ví dụ chúng ta có thể tận dụng “select helpers” trong gói <code>dplyr</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(dplyr)</span>
-<span id="cb11-2">trip_data <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.data.frame</span>(trip_data)</span>
-<span id="cb11-3">trip_data <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb11-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">filter</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">if_any</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">everything</span>(), <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">!</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">is.na</span>(.))) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb11-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">group_by</span>(CAT_TRAVELER_NATIONALITY) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb11-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">summarize</span>(</span>
-<span id="cb11-7">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">across</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">starts_with</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"DT_"</span>), <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(min,max))</span>
-<span id="cb11-8">  )</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 42 × 5
-   CAT_TRAVELER_NATIONALITY DT_START_1 DT_START_2 DT_END_1   DT_END_2 
-   &lt;chr&gt;                    &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;    
- 1 American                 1/1/2023   9/15/2022  1/1/2023   9/22/2022
- 2 Australian               11/20/2023 9/5/2022   11/30/2023 9/14/2022
- 3 Brazil                   4/3/2024   4/3/2024   4/10/2024  4/10/2024
- 4 Brazilian                1/15/2024  8/1/2023   1/12/2024  8/10/2023
- 5 British                  1/1/2025   8/20/2022  1/15/2023  9/2/2022 
- 6 Cambodia                 9/10/2022  9/10/2022  9/15/2022  9/15/2022
- 7 Canada                   7/1/2022   9/1/2022   7/10/2022  9/10/2022
- 8 Canadian                 1/2/2023   8/15/2023  1/9/2023   8/22/2023
- 9 China                    5/8/2023   5/8/2023   5/14/2023  5/14/2023
-10 Chinese                  11/11/2022 9/1/2023   11/21/2022 9/8/2023 
-# ℹ 32 more rows</code></pre>
-</div>
-</div>
-</section>
-<section id="other-languages" class="level1">
-<h1>Other languages</h1>
-<section id="generating-sql" class="level2">
-<h2 class="anchored" data-anchor-id="generating-sql">Generating SQL</h2>
-<p>Sử dụng R để generate SQL query</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(dbplyr)</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'dbplyr'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:dplyr':
-
-    ident, sql</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(RSQLite)</span>
-<span id="cb16-2">df_mem <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">memdb_frame</span>(trip_data, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">.name =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"example_table"</span>)</span>
-<span id="cb16-3"></span>
-<span id="cb16-4">df_mem <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb16-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">group_by</span>(CAT_TRAVELER_NATIONALITY) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb16-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">summarize_at</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">vars</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">starts_with</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"N_"</span>)), mean, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">na.rm =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">TRUE</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb16-7">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">show_query</span>()</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;SQL&gt;
-SELECT `CAT_TRAVELER_NATIONALITY`, AVG(`N_DURATION_DAY`) AS `N_DURATION_DAY`
-FROM `example_table`
-GROUP BY `CAT_TRAVELER_NATIONALITY`</code></pre>
-</div>
-</div>
-</section>
-<section id="r---base-data.table" class="level2">
-<h2 class="anchored" data-anchor-id="r---base-data.table">R - <code>base</code> &amp; <code>data.table</code></h2>
-<p>sử dụng <code>base::grep</code> để tìm tất cả các columns bắt đầu bằng <code>AMT_</code></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1">cols_n <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">grep</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"^AMT_"</span>, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">names</span>(trip_data), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">value =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">TRUE</span>)</span>
-<span id="cb18-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">print</span>(cols_n)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "AMT_ACCOMMODATION_COST"  "AMT_TRANSPORTATION_COST"</code></pre>
-</div>
-</div>
-<p>sử dụng vector để lưu các cột chúng ta muốn group by:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1">cols_grp <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"CAT_TRAVELER_NATIONALITY"</span>)</span></code></pre></div>
-</div>
-<p>chúng ta có thể dùng vector này trong <code>stats::aggregate</code></p>
-<p>hoặc trong <code>data.table</code></p>
-</section>
-<section id="python-pandas" class="level2">
-<h2 class="anchored" data-anchor-id="python-pandas">python <code>pandas</code></h2>
-<p>tương tự trong python, sử dụng list comprehension:</p>
-<div class="sourceCode" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb21-1"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">```{python}</span></span>
-<span id="cb21-2"></span>
-<span id="cb21-3"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">import pandas as pd</span></span>
-<span id="cb21-4"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">cols_n   = [vbl for vbl in trip_data.columns if vbl[0:2] == 'AMT_']</span></span>
-<span id="cb21-5"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">cols_grp = ["CAT_TRAVELER_NATIONALITY"]</span></span>
-<span id="cb21-6"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">trip_data.groupby(cols_grp)[cols_n].sum()</span></span>
-<span id="cb21-7"><span class="in" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">```</span></span></code></pre></div>
-</section>
-</section>
-<section id="updates-by-emily" class="level1">
-<h1>Updates by Emily</h1>
-<section id="concept-map" class="level2">
-<h2 class="anchored" data-anchor-id="concept-map">Concept Map</h2>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">%%{init: {'theme':'dark'}}%%
-flowchart LR
-  A(dataframe)-- has --&gt; B(columns)
-  A(dataframe)-- has --&gt; C(names)
-  B -- have --&gt; D(data types)
-  B -- have --&gt; E(units)
-  B -- have --&gt; F(meaning)
-  C -- should encode --&gt; D
-  C -- should encode --&gt; E
-  C -- should encode --&gt; F
-  C -- can support --&gt; G(validation)
-  C -- explained in --&gt; H(documentation)
-  G -- should check consistency of --&gt; C
-  G -- should check consistency of --&gt; H
-  H --&gt; I(data dictionary)
-  H --&gt; K(ERD)
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-</section>
-<section id="new-package-dec-2020" class="level2">
-<h2 class="anchored" data-anchor-id="new-package-dec-2020">New Package (Dec 2020)</h2>
-<p><a href="https://emilyriederer.github.io/convo/articles/quickstart-guide.html"><code>convo</code></a> là một thư viện released bởi Emily phục vụ cho việc quản lý controlled vocabulary:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(convo)</span></code></pre></div>
-</div>
-<div class="cell">
-<div class="code-with-filename">
-<div class="code-with-filename-file">
-<pre><strong>vocab.yaml</strong></pre>
-</div>
-<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb23-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">level1</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb23-2"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ID</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb23-3"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">desc</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> Unique identifier</span></span>
-<span id="cb23-4"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">valid</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb23-5"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> col_vals_not_null()</span></span>
-<span id="cb23-6"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> col_is_numeric()</span></span>
-<span id="cb23-7"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> col_vals_between(1000, 99999)</span></span>
-<span id="cb23-8"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">IND</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb23-9"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">desc</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> Binary indicator</span></span>
-<span id="cb23-10"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">valid</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb23-11"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> col_is_numeric()</span></span>
-<span id="cb23-12"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> col_vals_in_set(c(0,1))</span></span>
-<span id="cb23-13"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rename</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb23-14"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">when</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> SUM</span></span>
-<span id="cb23-15"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">then</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'N'</span></span>
-<span id="cb23-16"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">when</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> AVG</span></span>
-<span id="cb23-17"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">then</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> P</span></span>
-<span id="cb23-18"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">AMT</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb23-19"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">desc</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> Non-negative, summable quantity</span></span>
-<span id="cb23-20"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">valid</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb23-21"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> col_is_numeric()</span></span>
-<span id="cb23-22"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> col_vals_gte(0)</span></span>
-<span id="cb23-23"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">VAL</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb23-24"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">desc</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> Value</span></span>
-<span id="cb23-25"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">valid</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb23-26"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> col_is_numeric()</span></span>
-<span id="cb23-27"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rename</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb23-28"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">when</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> AVG</span></span>
-<span id="cb23-29"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">then</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> VALAV</span></span></code></pre></div>
-</div>
-</div>
-</section>
-<section id="new-package-april-2021" class="level2">
-<h2 class="anchored" data-anchor-id="new-package-april-2021">New Package (April 2021)</h2>
-<p><a href="https://emilyriederer.github.io/dbtplyr/#!/overview"><code>dbtplyr</code></a> là một package port tính năng “select helpers” của <code>dplyr</code> sang <code>dbt</code>.</p>
-
-
-<!-- -->
-
-</section>
-</section>
-
- ]]></description>
-  <category>data quality</category>
-  <category>name convention</category>
-  <category>controlled vocabulary</category>
-  <category>metadata</category>
-  <guid>https://lktuan.github.io/blog/2024-06-05-cnac/</guid>
-  <pubDate>Tue, 04 Jun 2024 17:00:00 GMT</pubDate>
-  <media:content url="https://lktuan.github.io/blog/2024-06-05-cnac/pepe.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>

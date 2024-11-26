@@ -1,0 +1,118 @@
+---
+title: "NN-Z2H Lesson 4: Building makemore part 4 - Activations & Gradients, BatchNorm"
+description: "dive into the internals of MLPs, scrutinize the statistics of the forward pass activations, backward pass gradients, understand the health of your deep network, introduce batch normalization"
+author:
+  - name: "Tuan Le Khac"
+    url: https://lktuan.github.io/
+categories: [til, python, andrej karpathy, nn-z2h, bigram, neural networks] 
+date: 11-26-2024
+date-modified: 11-26-2024
+image: NLM_Bengio_etal.png
+draft: false
+css: html/styles.scss
+fig-cap-location: bottom
+editor: visual
+format:
+  html:
+    code-overflow: wrap
+    code-tools: true
+    code-fold: show
+    code-annotations: hover
+---
+
+# Part 1: intro
+
+## starter code
+
+```{python}
+import torch
+import torch.nn.functional as F
+import pandas as pd
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+```{python}
+import pandas as pd
+
+url = "https://raw.githubusercontent.com/karpathy/makemore/refs/heads/master/names.txt"
+words = pd.read_csv(url, header=None).iloc[:, 0].tolist()
+words[:8]
+```
+
+```{python}
+len(words)
+```
+
+```{python}
+# build the vocabulary of characters and mapping to/from integer
+chars = sorted(list(set(''.join(words))))
+stoi = {s:i+1 for i, s in enumerate(chars)}
+stoi['.'] = 0
+itos = {i: s for s, i in stoi.items()}
+vocab_size = len(itos)
+print(itos)
+print(vocab_size)
+```
+
+
+```{python}
+# build the dataset
+def buid_dataset(words):
+    block_size = 3
+    X, Y = [], []
+
+    for w in words:
+        context = [0] * block_size
+        for ch in w + '.':
+            ix = stoi[ch]
+            X.append(context)
+            Y.append(ix)
+            context = context[1:] + [ix]
+
+    X = torch.tensor(X)
+    Y = torch.tensor(Y)
+    print(X.shape, Y.shape)
+    return X, Y
+
+import random
+random.seed(42)
+random.shuffle(words)
+n1 = int(0.8 * len(words))
+n2 = int(0.9 * len(words))
+
+Xtr, Ytr = buid_dataset(words[:n1])        # 80#
+Xdev, Ydev = buid_dataset(words[n1:n2])    # 10%
+Xte, Yte = buid_dataset(words[n2:])        # 10%
+```
+
+```{python}
+# hyper-parameters
+block_size = 3 # number of chracters / inputs to predict the nextone
+no_chars = 27 # number of possible chracters, include '.'
+emb_size = 10 # no of dimensions of the embedding space.
+hidden_size = 300 # size of the hidden - tanh layer
+batch_size = 32 # minibatch size for training, 2, 4, 8, 16, 32, 64, etc
+
+```
+## fixing the initial loss 
+## fixing the saturated tanh
+## calculating the init scale: “Kaiming init”
+## batch normalization
+## batch normalization: summary
+## real example: resnet50 walkthrough
+## summary of the lecture
+
+# Part 2: PyTorch-ifying the code
+## viz #1: forward pass activations statistics
+## viz #2: backward pass gradient statistics
+## the fully linear case of no non-linearities
+## viz #3: parameter activation and gradient statistics
+## viz #4: update: data ratio over time
+## bringing back batchnorm, looking at the visualizations
+## summary of the lecture for real this time
+
+## Exercises:
+
+- E01: I did not get around to seeing what happens when you initialize all weights and biases to zero. Try this and train the neural net. You might think either that 1) the network trains just fine or 2) the network doesn't train at all, but actually it is 3) the network trains but only partially, and achieves a pretty bad final performance. Inspect the gradients and activations to figure out what is happening and why the network is only partially training, and what part is being trained exactly.
+- E02: BatchNorm, unlike other normalization layers like LayerNorm/GroupNorm etc. has the big advantage that after training, the batchnorm gamma/beta can be "folded into" the weights of the preceeding Linear layers, effectively erasing the need to forward it at test time. Set up a small 3-layer MLP with batchnorms, train the network, then "fold" the batchnorm gamma/beta into the preceeding Linear layer's W,b by creating a new W2, b2 and erasing the batch norm. Verify that this gives the same forward pass during inference. i.e. we see that the batchnorm is there just for stabilizing the training, and can be thrown out after training is done! pretty cool.

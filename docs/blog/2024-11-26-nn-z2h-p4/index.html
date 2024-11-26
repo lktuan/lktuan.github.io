@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Tuan Le Khac">
+<meta name="dcterms.date" content="2024-11-26">
+<meta name="description" content="I am a Risk Modeler 🚀">
+
+<title>Le Khac Tuan - NN-Z2H Lesson 4: Building makemore part 4 - Activations &amp; Gradients, BatchNorm</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../img/rocket_1613268.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="html/styles.scss">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Le Khac Tuan</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../curriculum/index.html"> 
+<span class="menu-text">Curriculum</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../学汉语的日记.html"> 
+<span class="menu-text">学汉语的日记</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../jiu_jitsu_journal/index.html"> 
+<span class="menu-text">Jiu Jitsu Journal</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/lktuan"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/tuanlekhac/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.facebook.com/toilatuan.lk/"> <i class="bi bi-facebook" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:tuan.lekhac0905@gmail.com"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <div class="quarto-title-block"><div><h1 class="title">NN-Z2H Lesson 4: Building makemore part 4 - Activations &amp; Gradients, BatchNorm</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+                  <div>
+        <div class="description">
+          dive into the internals of MLPs, scrutinize the statistics of the forward pass activations, backward pass gradients, understand the health of your deep network, introduce batch normalization
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">til</div>
+                <div class="quarto-category">python</div>
+                <div class="quarto-category">andrej karpathy</div>
+                <div class="quarto-category">nn-z2h</div>
+                <div class="quarto-category">bigram</div>
+                <div class="quarto-category">neural networks</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p><a href="https://lktuan.github.io/">Tuan Le Khac</a> </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 26, 2024</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">November 26, 2024</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#part-1-intro" id="toc-part-1-intro" class="nav-link active" data-scroll-target="#part-1-intro">Part 1: intro</a>
+  <ul class="collapse">
+  <li><a href="#starter-code" id="toc-starter-code" class="nav-link" data-scroll-target="#starter-code">starter code</a></li>
+  <li><a href="#fixing-the-initial-loss" id="toc-fixing-the-initial-loss" class="nav-link" data-scroll-target="#fixing-the-initial-loss">fixing the initial loss</a></li>
+  <li><a href="#fixing-the-saturated-tanh" id="toc-fixing-the-saturated-tanh" class="nav-link" data-scroll-target="#fixing-the-saturated-tanh">fixing the saturated tanh</a></li>
+  <li><a href="#calculating-the-init-scale-kaiming-init" id="toc-calculating-the-init-scale-kaiming-init" class="nav-link" data-scroll-target="#calculating-the-init-scale-kaiming-init">calculating the init scale: “Kaiming init”</a></li>
+  <li><a href="#batch-normalization" id="toc-batch-normalization" class="nav-link" data-scroll-target="#batch-normalization">batch normalization</a></li>
+  <li><a href="#batch-normalization-summary" id="toc-batch-normalization-summary" class="nav-link" data-scroll-target="#batch-normalization-summary">batch normalization: summary</a></li>
+  <li><a href="#real-example-resnet50-walkthrough" id="toc-real-example-resnet50-walkthrough" class="nav-link" data-scroll-target="#real-example-resnet50-walkthrough">real example: resnet50 walkthrough</a></li>
+  <li><a href="#summary-of-the-lecture" id="toc-summary-of-the-lecture" class="nav-link" data-scroll-target="#summary-of-the-lecture">summary of the lecture</a></li>
+  </ul></li>
+  <li><a href="#part-2-pytorch-ifying-the-code" id="toc-part-2-pytorch-ifying-the-code" class="nav-link" data-scroll-target="#part-2-pytorch-ifying-the-code">Part 2: PyTorch-ifying the code</a>
+  <ul class="collapse">
+  <li><a href="#viz-1-forward-pass-activations-statistics" id="toc-viz-1-forward-pass-activations-statistics" class="nav-link" data-scroll-target="#viz-1-forward-pass-activations-statistics">viz #1: forward pass activations statistics</a></li>
+  <li><a href="#viz-2-backward-pass-gradient-statistics" id="toc-viz-2-backward-pass-gradient-statistics" class="nav-link" data-scroll-target="#viz-2-backward-pass-gradient-statistics">viz #2: backward pass gradient statistics</a></li>
+  <li><a href="#the-fully-linear-case-of-no-non-linearities" id="toc-the-fully-linear-case-of-no-non-linearities" class="nav-link" data-scroll-target="#the-fully-linear-case-of-no-non-linearities">the fully linear case of no non-linearities</a></li>
+  <li><a href="#viz-3-parameter-activation-and-gradient-statistics" id="toc-viz-3-parameter-activation-and-gradient-statistics" class="nav-link" data-scroll-target="#viz-3-parameter-activation-and-gradient-statistics">viz #3: parameter activation and gradient statistics</a></li>
+  <li><a href="#viz-4-update-data-ratio-over-time" id="toc-viz-4-update-data-ratio-over-time" class="nav-link" data-scroll-target="#viz-4-update-data-ratio-over-time">viz #4: update: data ratio over time</a></li>
+  <li><a href="#bringing-back-batchnorm-looking-at-the-visualizations" id="toc-bringing-back-batchnorm-looking-at-the-visualizations" class="nav-link" data-scroll-target="#bringing-back-batchnorm-looking-at-the-visualizations">bringing back batchnorm, looking at the visualizations</a></li>
+  <li><a href="#summary-of-the-lecture-for-real-this-time" id="toc-summary-of-the-lecture-for-real-this-time" class="nav-link" data-scroll-target="#summary-of-the-lecture-for-real-this-time">summary of the lecture for real this time</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises:</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="part-1-intro" class="level1">
+<h1>Part 1: intro</h1>
+<section id="starter-code" class="level2">
+<h2 class="anchored" data-anchor-id="starter-code">starter code</h2>
+<div id="30f522ab" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="op">%</span>matplotlib inline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="93c194c2" class="cell" data-execution_count="2">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/karpathy/makemore/refs/heads/master/names.txt"</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a>words <span class="op">=</span> pd.read_csv(url, header<span class="op">=</span><span class="va">None</span>).iloc[:, <span class="dv">0</span>].tolist()</span>
+<span id="cb2-5"><a href="#cb2-5"></a>words[:<span class="dv">8</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>['emma', 'olivia', 'ava', 'isabella', 'sophia', 'charlotte', 'mia', 'amelia']</code></pre>
+</div>
+</div>
+<div id="ede2d5a9" class="cell" data-execution_count="3">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="bu">len</span>(words)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>32033</code></pre>
+</div>
+</div>
+<div id="7b3d943c" class="cell" data-execution_count="4">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># build the vocabulary of characters and mapping to/from integer</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>chars <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">list</span>(<span class="bu">set</span>(<span class="st">''</span>.join(words))))</span>
+<span id="cb6-3"><a href="#cb6-3"></a>stoi <span class="op">=</span> {s:i<span class="op">+</span><span class="dv">1</span> <span class="cf">for</span> i, s <span class="kw">in</span> <span class="bu">enumerate</span>(chars)}</span>
+<span id="cb6-4"><a href="#cb6-4"></a>stoi[<span class="st">'.'</span>] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a>itos <span class="op">=</span> {i: s <span class="cf">for</span> s, i <span class="kw">in</span> stoi.items()}</span>
+<span id="cb6-6"><a href="#cb6-6"></a>vocab_size <span class="op">=</span> <span class="bu">len</span>(itos)</span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="bu">print</span>(itos)</span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="bu">print</span>(vocab_size)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>{1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e', 6: 'f', 7: 'g', 8: 'h', 9: 'i', 10: 'j', 11: 'k', 12: 'l', 13: 'm', 14: 'n', 15: 'o', 16: 'p', 17: 'q', 18: 'r', 19: 's', 20: 't', 21: 'u', 22: 'v', 23: 'w', 24: 'x', 25: 'y', 26: 'z', 0: '.'}
+27</code></pre>
+</div>
+</div>
+<div id="1312917f" class="cell" data-execution_count="5">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># build the dataset</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">def</span> buid_dataset(words):</span>
+<span id="cb8-3"><a href="#cb8-3"></a>    block_size <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a>    X, Y <span class="op">=</span> [], []</span>
+<span id="cb8-5"><a href="#cb8-5"></a></span>
+<span id="cb8-6"><a href="#cb8-6"></a>    <span class="cf">for</span> w <span class="kw">in</span> words:</span>
+<span id="cb8-7"><a href="#cb8-7"></a>        context <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> block_size</span>
+<span id="cb8-8"><a href="#cb8-8"></a>        <span class="cf">for</span> ch <span class="kw">in</span> w <span class="op">+</span> <span class="st">'.'</span>:</span>
+<span id="cb8-9"><a href="#cb8-9"></a>            ix <span class="op">=</span> stoi[ch]</span>
+<span id="cb8-10"><a href="#cb8-10"></a>            X.append(context)</span>
+<span id="cb8-11"><a href="#cb8-11"></a>            Y.append(ix)</span>
+<span id="cb8-12"><a href="#cb8-12"></a>            context <span class="op">=</span> context[<span class="dv">1</span>:] <span class="op">+</span> [ix]</span>
+<span id="cb8-13"><a href="#cb8-13"></a></span>
+<span id="cb8-14"><a href="#cb8-14"></a>    X <span class="op">=</span> torch.tensor(X)</span>
+<span id="cb8-15"><a href="#cb8-15"></a>    Y <span class="op">=</span> torch.tensor(Y)</span>
+<span id="cb8-16"><a href="#cb8-16"></a>    <span class="bu">print</span>(X.shape, Y.shape)</span>
+<span id="cb8-17"><a href="#cb8-17"></a>    <span class="cf">return</span> X, Y</span>
+<span id="cb8-18"><a href="#cb8-18"></a></span>
+<span id="cb8-19"><a href="#cb8-19"></a><span class="im">import</span> random</span>
+<span id="cb8-20"><a href="#cb8-20"></a>random.seed(<span class="dv">42</span>)</span>
+<span id="cb8-21"><a href="#cb8-21"></a>random.shuffle(words)</span>
+<span id="cb8-22"><a href="#cb8-22"></a>n1 <span class="op">=</span> <span class="bu">int</span>(<span class="fl">0.8</span> <span class="op">*</span> <span class="bu">len</span>(words))</span>
+<span id="cb8-23"><a href="#cb8-23"></a>n2 <span class="op">=</span> <span class="bu">int</span>(<span class="fl">0.9</span> <span class="op">*</span> <span class="bu">len</span>(words))</span>
+<span id="cb8-24"><a href="#cb8-24"></a></span>
+<span id="cb8-25"><a href="#cb8-25"></a>Xtr, Ytr <span class="op">=</span> buid_dataset(words[:n1])        <span class="co"># 80#</span></span>
+<span id="cb8-26"><a href="#cb8-26"></a>Xdev, Ydev <span class="op">=</span> buid_dataset(words[n1:n2])    <span class="co"># 10%</span></span>
+<span id="cb8-27"><a href="#cb8-27"></a>Xte, Yte <span class="op">=</span> buid_dataset(words[n2:])        <span class="co"># 10%</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>torch.Size([182625, 3]) torch.Size([182625])
+torch.Size([22655, 3]) torch.Size([22655])
+torch.Size([22866, 3]) torch.Size([22866])</code></pre>
+</div>
+</div>
+<div id="66bef88b" class="cell" data-execution_count="6">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># hyper-parameters</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>block_size <span class="op">=</span> <span class="dv">3</span> <span class="co"># number of chracters / inputs to predict the nextone</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a>no_chars <span class="op">=</span> <span class="dv">27</span> <span class="co"># number of possible chracters, include '.'</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a>emb_size <span class="op">=</span> <span class="dv">10</span> <span class="co"># no of dimensions of the embedding space.</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a>hidden_size <span class="op">=</span> <span class="dv">300</span> <span class="co"># size of the hidden - tanh layer</span></span>
+<span id="cb10-6"><a href="#cb10-6"></a>batch_size <span class="op">=</span> <span class="dv">32</span> <span class="co"># minibatch size for training, 2, 4, 8, 16, 32, 64, etc</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="fixing-the-initial-loss" class="level2">
+<h2 class="anchored" data-anchor-id="fixing-the-initial-loss">fixing the initial loss</h2>
+</section>
+<section id="fixing-the-saturated-tanh" class="level2">
+<h2 class="anchored" data-anchor-id="fixing-the-saturated-tanh">fixing the saturated tanh</h2>
+</section>
+<section id="calculating-the-init-scale-kaiming-init" class="level2">
+<h2 class="anchored" data-anchor-id="calculating-the-init-scale-kaiming-init">calculating the init scale: “Kaiming init”</h2>
+</section>
+<section id="batch-normalization" class="level2">
+<h2 class="anchored" data-anchor-id="batch-normalization">batch normalization</h2>
+</section>
+<section id="batch-normalization-summary" class="level2">
+<h2 class="anchored" data-anchor-id="batch-normalization-summary">batch normalization: summary</h2>
+</section>
+<section id="real-example-resnet50-walkthrough" class="level2">
+<h2 class="anchored" data-anchor-id="real-example-resnet50-walkthrough">real example: resnet50 walkthrough</h2>
+</section>
+<section id="summary-of-the-lecture" class="level2">
+<h2 class="anchored" data-anchor-id="summary-of-the-lecture">summary of the lecture</h2>
+</section>
+</section>
+<section id="part-2-pytorch-ifying-the-code" class="level1">
+<h1>Part 2: PyTorch-ifying the code</h1>
+<section id="viz-1-forward-pass-activations-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="viz-1-forward-pass-activations-statistics">viz #1: forward pass activations statistics</h2>
+</section>
+<section id="viz-2-backward-pass-gradient-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="viz-2-backward-pass-gradient-statistics">viz #2: backward pass gradient statistics</h2>
+</section>
+<section id="the-fully-linear-case-of-no-non-linearities" class="level2">
+<h2 class="anchored" data-anchor-id="the-fully-linear-case-of-no-non-linearities">the fully linear case of no non-linearities</h2>
+</section>
+<section id="viz-3-parameter-activation-and-gradient-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="viz-3-parameter-activation-and-gradient-statistics">viz #3: parameter activation and gradient statistics</h2>
+</section>
+<section id="viz-4-update-data-ratio-over-time" class="level2">
+<h2 class="anchored" data-anchor-id="viz-4-update-data-ratio-over-time">viz #4: update: data ratio over time</h2>
+</section>
+<section id="bringing-back-batchnorm-looking-at-the-visualizations" class="level2">
+<h2 class="anchored" data-anchor-id="bringing-back-batchnorm-looking-at-the-visualizations">bringing back batchnorm, looking at the visualizations</h2>
+</section>
+<section id="summary-of-the-lecture-for-real-this-time" class="level2">
+<h2 class="anchored" data-anchor-id="summary-of-the-lecture-for-real-this-time">summary of the lecture for real this time</h2>
+</section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises:</h2>
+<ul>
+<li>E01: I did not get around to seeing what happens when you initialize all weights and biases to zero. Try this and train the neural net. You might think either that 1) the network trains just fine or 2) the network doesn’t train at all, but actually it is 3) the network trains but only partially, and achieves a pretty bad final performance. Inspect the gradients and activations to figure out what is happening and why the network is only partially training, and what part is being trained exactly.</li>
+<li>E02: BatchNorm, unlike other normalization layers like LayerNorm/GroupNorm etc. has the big advantage that after training, the batchnorm gamma/beta can be “folded into” the weights of the preceeding Linear layers, effectively erasing the need to forward it at test time. Set up a small 3-layer MLP with batchnorms, train the network, then “fold” the batchnorm gamma/beta into the preceeding Linear layer’s W,b by creating a new W2, b2 and erasing the batch norm. Verify that this gives the same forward pass during inference. i.e.&nbsp;we see that the batchnorm is there just for stabilizing the training, and can be thrown out after training is done! pretty cool.</li>
+</ul>
+
+
+<!-- -->
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/lktuan\.github\.io\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'left'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb11" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1"></a><span class="co">---</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="an">title:</span><span class="co"> "NN-Z2H Lesson 4: Building makemore part 4 - Activations &amp; Gradients, BatchNorm"</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="an">description:</span><span class="co"> "dive into the internals of MLPs, scrutinize the statistics of the forward pass activations, backward pass gradients, understand the health of your deep network, introduce batch normalization"</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="an">author:</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
+<span id="cb11-6"><a href="#cb11-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
+<span id="cb11-7"><a href="#cb11-7"></a><span class="an">categories:</span><span class="co"> [til, python, andrej karpathy, nn-z2h, bigram, neural networks] </span></span>
+<span id="cb11-8"><a href="#cb11-8"></a><span class="an">date:</span><span class="co"> 11-26-2024</span></span>
+<span id="cb11-9"><a href="#cb11-9"></a><span class="an">date-modified:</span><span class="co"> 11-26-2024</span></span>
+<span id="cb11-10"><a href="#cb11-10"></a><span class="an">image:</span><span class="co"> NLM_Bengio_etal.png</span></span>
+<span id="cb11-11"><a href="#cb11-11"></a><span class="an">draft:</span><span class="co"> false</span></span>
+<span id="cb11-12"><a href="#cb11-12"></a><span class="an">css:</span><span class="co"> html/styles.scss</span></span>
+<span id="cb11-13"><a href="#cb11-13"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
+<span id="cb11-14"><a href="#cb11-14"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb11-15"><a href="#cb11-15"></a><span class="an">format:</span></span>
+<span id="cb11-16"><a href="#cb11-16"></a><span class="co">  html:</span></span>
+<span id="cb11-17"><a href="#cb11-17"></a><span class="co">    code-overflow: wrap</span></span>
+<span id="cb11-18"><a href="#cb11-18"></a><span class="co">    code-tools: true</span></span>
+<span id="cb11-19"><a href="#cb11-19"></a><span class="co">    code-fold: show</span></span>
+<span id="cb11-20"><a href="#cb11-20"></a><span class="co">    code-annotations: hover</span></span>
+<span id="cb11-21"><a href="#cb11-21"></a><span class="co">---</span></span>
+<span id="cb11-22"><a href="#cb11-22"></a></span>
+<span id="cb11-23"><a href="#cb11-23"></a><span class="fu"># Part 1: intro</span></span>
+<span id="cb11-24"><a href="#cb11-24"></a></span>
+<span id="cb11-25"><a href="#cb11-25"></a><span class="fu">## starter code</span></span>
+<span id="cb11-26"><a href="#cb11-26"></a></span>
+<span id="cb11-29"><a href="#cb11-29"></a><span class="in">```{python}</span></span>
+<span id="cb11-30"><a href="#cb11-30"></a><span class="im">import</span> torch</span>
+<span id="cb11-31"><a href="#cb11-31"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb11-32"><a href="#cb11-32"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb11-33"><a href="#cb11-33"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb11-34"><a href="#cb11-34"></a><span class="op">%</span>matplotlib inline</span>
+<span id="cb11-35"><a href="#cb11-35"></a><span class="in">```</span></span>
+<span id="cb11-36"><a href="#cb11-36"></a></span>
+<span id="cb11-39"><a href="#cb11-39"></a><span class="in">```{python}</span></span>
+<span id="cb11-40"><a href="#cb11-40"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb11-41"><a href="#cb11-41"></a></span>
+<span id="cb11-42"><a href="#cb11-42"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/karpathy/makemore/refs/heads/master/names.txt"</span></span>
+<span id="cb11-43"><a href="#cb11-43"></a>words <span class="op">=</span> pd.read_csv(url, header<span class="op">=</span><span class="va">None</span>).iloc[:, <span class="dv">0</span>].tolist()</span>
+<span id="cb11-44"><a href="#cb11-44"></a>words[:<span class="dv">8</span>]</span>
+<span id="cb11-45"><a href="#cb11-45"></a><span class="in">```</span></span>
+<span id="cb11-46"><a href="#cb11-46"></a></span>
+<span id="cb11-49"><a href="#cb11-49"></a><span class="in">```{python}</span></span>
+<span id="cb11-50"><a href="#cb11-50"></a><span class="bu">len</span>(words)</span>
+<span id="cb11-51"><a href="#cb11-51"></a><span class="in">```</span></span>
+<span id="cb11-52"><a href="#cb11-52"></a></span>
+<span id="cb11-55"><a href="#cb11-55"></a><span class="in">```{python}</span></span>
+<span id="cb11-56"><a href="#cb11-56"></a><span class="co"># build the vocabulary of characters and mapping to/from integer</span></span>
+<span id="cb11-57"><a href="#cb11-57"></a>chars <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">list</span>(<span class="bu">set</span>(<span class="st">''</span>.join(words))))</span>
+<span id="cb11-58"><a href="#cb11-58"></a>stoi <span class="op">=</span> {s:i<span class="op">+</span><span class="dv">1</span> <span class="cf">for</span> i, s <span class="kw">in</span> <span class="bu">enumerate</span>(chars)}</span>
+<span id="cb11-59"><a href="#cb11-59"></a>stoi[<span class="st">'.'</span>] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb11-60"><a href="#cb11-60"></a>itos <span class="op">=</span> {i: s <span class="cf">for</span> s, i <span class="kw">in</span> stoi.items()}</span>
+<span id="cb11-61"><a href="#cb11-61"></a>vocab_size <span class="op">=</span> <span class="bu">len</span>(itos)</span>
+<span id="cb11-62"><a href="#cb11-62"></a><span class="bu">print</span>(itos)</span>
+<span id="cb11-63"><a href="#cb11-63"></a><span class="bu">print</span>(vocab_size)</span>
+<span id="cb11-64"><a href="#cb11-64"></a><span class="in">```</span></span>
+<span id="cb11-65"><a href="#cb11-65"></a></span>
+<span id="cb11-66"><a href="#cb11-66"></a></span>
+<span id="cb11-69"><a href="#cb11-69"></a><span class="in">```{python}</span></span>
+<span id="cb11-70"><a href="#cb11-70"></a><span class="co"># build the dataset</span></span>
+<span id="cb11-71"><a href="#cb11-71"></a><span class="kw">def</span> buid_dataset(words):</span>
+<span id="cb11-72"><a href="#cb11-72"></a>    block_size <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb11-73"><a href="#cb11-73"></a>    X, Y <span class="op">=</span> [], []</span>
+<span id="cb11-74"><a href="#cb11-74"></a></span>
+<span id="cb11-75"><a href="#cb11-75"></a>    <span class="cf">for</span> w <span class="kw">in</span> words:</span>
+<span id="cb11-76"><a href="#cb11-76"></a>        context <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> block_size</span>
+<span id="cb11-77"><a href="#cb11-77"></a>        <span class="cf">for</span> ch <span class="kw">in</span> w <span class="op">+</span> <span class="st">'.'</span>:</span>
+<span id="cb11-78"><a href="#cb11-78"></a>            ix <span class="op">=</span> stoi[ch]</span>
+<span id="cb11-79"><a href="#cb11-79"></a>            X.append(context)</span>
+<span id="cb11-80"><a href="#cb11-80"></a>            Y.append(ix)</span>
+<span id="cb11-81"><a href="#cb11-81"></a>            context <span class="op">=</span> context[<span class="dv">1</span>:] <span class="op">+</span> [ix]</span>
+<span id="cb11-82"><a href="#cb11-82"></a></span>
+<span id="cb11-83"><a href="#cb11-83"></a>    X <span class="op">=</span> torch.tensor(X)</span>
+<span id="cb11-84"><a href="#cb11-84"></a>    Y <span class="op">=</span> torch.tensor(Y)</span>
+<span id="cb11-85"><a href="#cb11-85"></a>    <span class="bu">print</span>(X.shape, Y.shape)</span>
+<span id="cb11-86"><a href="#cb11-86"></a>    <span class="cf">return</span> X, Y</span>
+<span id="cb11-87"><a href="#cb11-87"></a></span>
+<span id="cb11-88"><a href="#cb11-88"></a><span class="im">import</span> random</span>
+<span id="cb11-89"><a href="#cb11-89"></a>random.seed(<span class="dv">42</span>)</span>
+<span id="cb11-90"><a href="#cb11-90"></a>random.shuffle(words)</span>
+<span id="cb11-91"><a href="#cb11-91"></a>n1 <span class="op">=</span> <span class="bu">int</span>(<span class="fl">0.8</span> <span class="op">*</span> <span class="bu">len</span>(words))</span>
+<span id="cb11-92"><a href="#cb11-92"></a>n2 <span class="op">=</span> <span class="bu">int</span>(<span class="fl">0.9</span> <span class="op">*</span> <span class="bu">len</span>(words))</span>
+<span id="cb11-93"><a href="#cb11-93"></a></span>
+<span id="cb11-94"><a href="#cb11-94"></a>Xtr, Ytr <span class="op">=</span> buid_dataset(words[:n1])        <span class="co"># 80#</span></span>
+<span id="cb11-95"><a href="#cb11-95"></a>Xdev, Ydev <span class="op">=</span> buid_dataset(words[n1:n2])    <span class="co"># 10%</span></span>
+<span id="cb11-96"><a href="#cb11-96"></a>Xte, Yte <span class="op">=</span> buid_dataset(words[n2:])        <span class="co"># 10%</span></span>
+<span id="cb11-97"><a href="#cb11-97"></a><span class="in">```</span></span>
+<span id="cb11-98"><a href="#cb11-98"></a></span>
+<span id="cb11-101"><a href="#cb11-101"></a><span class="in">```{python}</span></span>
+<span id="cb11-102"><a href="#cb11-102"></a><span class="co"># hyper-parameters</span></span>
+<span id="cb11-103"><a href="#cb11-103"></a>block_size <span class="op">=</span> <span class="dv">3</span> <span class="co"># number of chracters / inputs to predict the nextone</span></span>
+<span id="cb11-104"><a href="#cb11-104"></a>no_chars <span class="op">=</span> <span class="dv">27</span> <span class="co"># number of possible chracters, include '.'</span></span>
+<span id="cb11-105"><a href="#cb11-105"></a>emb_size <span class="op">=</span> <span class="dv">10</span> <span class="co"># no of dimensions of the embedding space.</span></span>
+<span id="cb11-106"><a href="#cb11-106"></a>hidden_size <span class="op">=</span> <span class="dv">300</span> <span class="co"># size of the hidden - tanh layer</span></span>
+<span id="cb11-107"><a href="#cb11-107"></a>batch_size <span class="op">=</span> <span class="dv">32</span> <span class="co"># minibatch size for training, 2, 4, 8, 16, 32, 64, etc</span></span>
+<span id="cb11-108"><a href="#cb11-108"></a></span>
+<span id="cb11-109"><a href="#cb11-109"></a><span class="in">```</span></span>
+<span id="cb11-110"><a href="#cb11-110"></a><span class="fu">## fixing the initial loss </span></span>
+<span id="cb11-111"><a href="#cb11-111"></a><span class="fu">## fixing the saturated tanh</span></span>
+<span id="cb11-112"><a href="#cb11-112"></a><span class="fu">## calculating the init scale: “Kaiming init”</span></span>
+<span id="cb11-113"><a href="#cb11-113"></a><span class="fu">## batch normalization</span></span>
+<span id="cb11-114"><a href="#cb11-114"></a><span class="fu">## batch normalization: summary</span></span>
+<span id="cb11-115"><a href="#cb11-115"></a><span class="fu">## real example: resnet50 walkthrough</span></span>
+<span id="cb11-116"><a href="#cb11-116"></a><span class="fu">## summary of the lecture</span></span>
+<span id="cb11-117"><a href="#cb11-117"></a></span>
+<span id="cb11-118"><a href="#cb11-118"></a><span class="fu"># Part 2: PyTorch-ifying the code</span></span>
+<span id="cb11-119"><a href="#cb11-119"></a><span class="fu">## viz #1: forward pass activations statistics</span></span>
+<span id="cb11-120"><a href="#cb11-120"></a><span class="fu">## viz #2: backward pass gradient statistics</span></span>
+<span id="cb11-121"><a href="#cb11-121"></a><span class="fu">## the fully linear case of no non-linearities</span></span>
+<span id="cb11-122"><a href="#cb11-122"></a><span class="fu">## viz #3: parameter activation and gradient statistics</span></span>
+<span id="cb11-123"><a href="#cb11-123"></a><span class="fu">## viz #4: update: data ratio over time</span></span>
+<span id="cb11-124"><a href="#cb11-124"></a><span class="fu">## bringing back batchnorm, looking at the visualizations</span></span>
+<span id="cb11-125"><a href="#cb11-125"></a><span class="fu">## summary of the lecture for real this time</span></span>
+<span id="cb11-126"><a href="#cb11-126"></a></span>
+<span id="cb11-127"><a href="#cb11-127"></a><span class="fu">## Exercises:</span></span>
+<span id="cb11-128"><a href="#cb11-128"></a></span>
+<span id="cb11-129"><a href="#cb11-129"></a><span class="ss">- </span>E01: I did not get around to seeing what happens when you initialize all weights and biases to zero. Try this and train the neural net. You might think either that 1) the network trains just fine or 2) the network doesn't train at all, but actually it is 3) the network trains but only partially, and achieves a pretty bad final performance. Inspect the gradients and activations to figure out what is happening and why the network is only partially training, and what part is being trained exactly.</span>
+<span id="cb11-130"><a href="#cb11-130"></a><span class="ss">- </span>E02: BatchNorm, unlike other normalization layers like LayerNorm/GroupNorm etc. has the big advantage that after training, the batchnorm gamma/beta can be "folded into" the weights of the preceeding Linear layers, effectively erasing the need to forward it at test time. Set up a small 3-layer MLP with batchnorms, train the network, then "fold" the batchnorm gamma/beta into the preceeding Linear layer's W,b by creating a new W2, b2 and erasing the batch norm. Verify that this gives the same forward pass during inference. i.e. we see that the batchnorm is there just for stabilizing the training, and can be thrown out after training is done! pretty cool.</span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2024 Le Khac Tuan</span></p>
+</div>   
+    <div class="nav-footer-center">
+<p><span class="faux-block">Designed with <i class="fa-solid fa-heart" aria-label="heart"></i></span></p>
+</div>
+    <div class="nav-footer-right">
+<p><span class="faux-block">Made with <a href="https://quarto.org/">Quarto</a></span> <span class="faux-block"><a href="https://github.com/lktuan/lktuan.github.io">View the source at <i class="fa-brands fa-github" aria-label="github"></i> GitHub</a></span></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
