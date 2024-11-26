@@ -582,11 +582,11 @@ Now we can keep lengthening the training loop to continue decreasing loss. We ca
 
 But it will come to be overfitting when we try to keep training or increase the size of network to achieve a lower loss. The model just memorizing our training set verbatim, so if we try to sample from the model it just gives us the same thing in the dataset. Or if we calculate the loss on another dataset, it might be very high.
 
-So another industry standard is we will split the data set into 3 pieces: (1) training set; (2) dev/validation set; and (3) test set, they can be 80% - 10% - 10% roughly and respectively. 
+So another industry standard is we will split the data set into 3 pieces: (1) training set; (2) dev/validation set; and (3) test set, they can be 80% - 10% - 10% roughly and respectively.
 
-1. Training split: train the parameters;
-2. Dev/validation split: train the hyperparamerters (size of hidden layer, size of embedding, streng of regularization, etc);
-3. Test split: evaluate the performance of the model at the end, we only work on this a very very few times, otherwise we learn from it and repeat overfitting. 
+1.  Training split: train the parameters;
+2.  Dev/validation split: train the hyperparamerters (size of hidden layer, size of embedding, streng of regularization, etc);
+3.  Test split: evaluate the performance of the model at the end, we only work on this a very very few times, otherwise we learn from it and repeat overfitting.
 
 We are going to implement this train/dev/test splits:
 
@@ -626,14 +626,12 @@ Our dataset has roughly 228k records, while the size of network is only 3.4k. So
 
 2 things to consider here:
 
-- the size of tanh - hidden layer; and
-- dimensions of embedding space.
+-   the size of tanh - hidden layer; and
+-   dimensions of embedding space.
 
 ## visualizing the loss, character embeddings
 
-First we want to see:
-- how the loss decrease with 200k training loop with current network setting, learning rate decay to 0.01 after first 100k; and
-- how the current character embeddings recognize the similarity between characters in (2D) space.
+First we want to see: - how the loss decrease with 200k training loop with current network setting, learning rate decay to 0.01 after first 100k; and - how the current character embeddings recognize the similarity between characters in (2D) space.
 
 Training on the `Xtr`, `Ytr`:
 
@@ -837,11 +835,9 @@ print("Loss on test set: ", loss.item())
 
 ## summary of our final code, conclusion
 
-
 ```{python}
 plt.plot(stepi, lossi)
 ```
-
 
 ```{python}
 plt.figure(figsize=(8,8))
@@ -850,6 +846,7 @@ for i in range(C.shape[0]):
     plt.text(C[i,0].item(),C[i,1].item(), itos[i], ha="center", va="center", color="white")
 plt.grid('minor')
 ```
+
 We can see the loss on validation set and test set are quite similar as we are not try different scenarios to calibrate/tune hyperparamters much. So they both have the same suprise to the model training by `Xtr`.
 
 We still have rooms for improvement!
