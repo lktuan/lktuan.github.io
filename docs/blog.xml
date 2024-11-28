@@ -521,7 +521,7 @@ This is not orginal content!
 <section id="re-building-our-training-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="re-building-our-training-dataset">(re-)building our training dataset</h2>
 <p>Loading library, reading data, building dictionary:</p>
-<div id="936d357d" class="cell" data-execution_count="1">
+<div id="e492dcd6" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
@@ -547,7 +547,7 @@ background-color: null;
 font-style: inherit;">%</span>matplotlib inline</span></code></pre></div>
 </details>
 </div>
-<div id="1a9eefcc" class="cell" data-execution_count="2">
+<div id="01121608" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
@@ -578,7 +578,7 @@ font-style: inherit;">8</span>]</span></code></pre></div>
 <pre><code>['emma', 'olivia', 'ava', 'isabella', 'sophia', 'charlotte', 'mia', 'amelia']</code></pre>
 </div>
 </div>
-<div id="9e582bf2" class="cell" data-execution_count="3">
+<div id="c2af0470" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="bu" style="color: null;
@@ -589,7 +589,7 @@ font-style: inherit;">len</span>(words)</span></code></pre></div>
 <pre><code>32033</code></pre>
 </div>
 </div>
-<div id="60adae0b" class="cell" data-execution_count="4">
+<div id="510583ce" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
@@ -667,7 +667,7 @@ font-style: inherit;">in</span> stoi.items()}</span>
 </div>
 </div>
 <p>Building the dataset:</p>
-<div id="34a7e227" class="cell" data-execution_count="5">
+<div id="af0815d1" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1">block_size <span class="op" style="color: #5E5E5E;
@@ -782,7 +782,7 @@ phi -----&gt; a
 hia -----&gt; .</code></pre>
 </div>
 </div>
-<div id="12cfc054" class="cell" data-execution_count="6">
+<div id="bd6807e0" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1">X.shape, X.dtype, Y.shape, Y.dtype</span></code></pre></div>
@@ -795,7 +795,7 @@ hia -----&gt; .</code></pre>
 <section id="implementing-the-embedding-lookup-table" class="level2">
 <h2 class="anchored" data-anchor-id="implementing-the-embedding-lookup-table">implementing the embedding lookup table</h2>
 <p>In the paper they cram 17k word into as-low-as-possible 30 dimensions space, for our data, we just cram words into 2D space.</p>
-<div id="852082c8" class="cell" data-execution_count="7">
+<div id="d8c16f21" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1">C <span class="op" style="color: #5E5E5E;
@@ -808,7 +808,7 @@ font-style: inherit;">2</span>))</span></code></pre></div>
 </details>
 </div>
 <p>We can access the element of <code>torch.tensor</code> by:</p>
-<div id="4b088d74" class="cell" data-execution_count="8">
+<div id="036a30dd" class="cell" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1">C[<span class="dv" style="color: #AD0000;
@@ -840,11 +840,11 @@ background-color: null;
 font-style: inherit;"># produce identical result, remember torch.tensor() infer long dtype int64, so we need to cast to float</span></span></code></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>tensor([ 0.8973, -1.2431])</code></pre>
+<pre><code>tensor([ 0.3055, -0.4069])</code></pre>
 </div>
 </div>
 <p>…but in this lecture accessing by <code>C[5]</code> would be sufficient. We can even access using a more than 1 dimension tensor:</p>
-<div id="d2c84f9a" class="cell" data-execution_count="9">
+<div id="5afd1cbb" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><span class="bu" style="color: null;
@@ -879,12 +879,12 @@ font-style: inherit;"># so C[X][13,2] = C[1]</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>torch.Size([32, 3, 2])
 tensor(1)
-tensor([0.5971, 1.1914])
-tensor([0.5971, 1.1914])</code></pre>
+tensor([0.0748, 0.8711])
+tensor([0.0748, 0.8711])</code></pre>
 </div>
 </div>
 <p>PyTorch is great for embedding words:</p>
-<div id="726a6090" class="cell" data-execution_count="10">
+<div id="8fb9db32" class="cell" data-execution_count="10">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1">emb <span class="op" style="color: #5E5E5E;
@@ -900,7 +900,7 @@ font-style: inherit;">=</span> C[X]</span>
 </section>
 <section id="implementing-the-hidden-layer-internals-of-torch.tensor-storage-views" class="level2">
 <h2 class="anchored" data-anchor-id="implementing-the-hidden-layer-internals-of-torch.tensor-storage-views">implementing the hidden layer + internals of <code>torch.Tensor</code>: <code>storage</code>, <code>views</code></h2>
-<div id="4e541442" class="cell" data-execution_count="11">
+<div id="8aa99d10" class="cell" data-execution_count="11">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><span class="co" style="color: #5E5E5E;
@@ -924,7 +924,7 @@ font-style: inherit;">100</span>)</span></code></pre></div>
 </details>
 </div>
 <p>Now we need to do something like <code>emb @ W1 + b1</code>, but <code>emb.shape</code> is <code>[32, 3, 2]</code> and <code>W1.shape</code> is <code>[6, 100]</code>. We need to somehow concatnate/transform:</p>
-<div id="562e9aaa" class="cell" data-execution_count="12">
+<div id="a07a406b" class="cell" data-execution_count="12">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><span class="co" style="color: #5E5E5E;
@@ -950,7 +950,7 @@ font-style: inherit;">1</span>).shape</span></code></pre></div>
 </div>
 </div>
 <p>However this code does not change dynamically when we change the block size. We will be using <code>torch.unbind()</code></p>
-<div id="799a20f6" class="cell" data-execution_count="13">
+<div id="23521555" class="cell" data-execution_count="13">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><span class="co" style="color: #5E5E5E;
@@ -977,7 +977,7 @@ font-style: inherit;"># new memory for storage is created, so it is not efficien
 </ul>
 <p>Readmore: <a href="http://blog.ezyang.com/2019/05/pytorch-internals/" class="uri">http://blog.ezyang.com/2019/05/pytorch-internals/</a></p>
 <p>So this hidden layer can be declared:</p>
-<div id="0756cf5c" class="cell" data-execution_count="14">
+<div id="6f67b25b" class="cell" data-execution_count="14">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><span class="co" style="color: #5E5E5E;
@@ -1006,7 +1006,7 @@ font-style: inherit;">+</span> b1</span>
 </section>
 <section id="implementing-the-output-layer" class="level2">
 <h2 class="anchored" data-anchor-id="implementing-the-output-layer">implementing the output layer</h2>
-<div id="ecef251f" class="cell" data-execution_count="15">
+<div id="e78eceef" class="cell" data-execution_count="15">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1">W2 <span class="op" style="color: #5E5E5E;
@@ -1024,7 +1024,7 @@ font-style: inherit;">27</span>)</span></code></pre></div>
 </details>
 </div>
 <p>In Deep Learning, people use <code>logits</code> for what raw output that range from negative inf to positive inf.</p>
-<div id="3f7f0890" class="cell" data-execution_count="16">
+<div id="f21d0db5" class="cell" data-execution_count="16">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1">logits <span class="op" style="color: #5E5E5E;
@@ -1036,7 +1036,7 @@ background-color: null;
 font-style: inherit;">+</span> b2</span></code></pre></div>
 </details>
 </div>
-<div id="289ed76c" class="cell" data-execution_count="17">
+<div id="ab4c6cac" class="cell" data-execution_count="17">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1">logits.shape</span></code></pre></div>
@@ -1046,7 +1046,7 @@ font-style: inherit;">+</span> b2</span></code></pre></div>
 </div>
 </div>
 <p>Now we need to exponentiate it and get the probability.</p>
-<div id="e6a858ac" class="cell" data-execution_count="18">
+<div id="08609b0d" class="cell" data-execution_count="18">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1">counts <span class="op" style="color: #5E5E5E;
@@ -1054,7 +1054,7 @@ background-color: null;
 font-style: inherit;">=</span> logits.exp()</span></code></pre></div>
 </details>
 </div>
-<div id="eb5a9a8f" class="cell" data-execution_count="19">
+<div id="9e545490" class="cell" data-execution_count="19">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1">probs <span class="op" style="color: #5E5E5E;
@@ -1072,7 +1072,7 @@ background-color: null;
 font-style: inherit;">True</span>)</span></code></pre></div>
 </details>
 </div>
-<div id="4cd01c5c" class="cell" data-execution_count="20">
+<div id="a0c442b2" class="cell" data-execution_count="20">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1">probs.shape</span></code></pre></div>
@@ -1082,7 +1082,7 @@ font-style: inherit;">True</span>)</span></code></pre></div>
 </div>
 </div>
 <p>Every row of <code>probs</code> has sum of 1.</p>
-<div id="0e80089e" class="cell" data-execution_count="21">
+<div id="ca70c847" class="cell" data-execution_count="21">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1">probs[<span class="dv" style="color: #AD0000;
@@ -1096,7 +1096,7 @@ font-style: inherit;">sum</span>()</span></code></pre></div>
 </div>
 </div>
 <p>And this is the <code>probs</code> of each ground true <code>Y</code> in current output of the neural nets:</p>
-<div id="a8bf96b8" class="cell" data-execution_count="22">
+<div id="e53f2b9d" class="cell" data-execution_count="22">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1">probs[torch.arange(<span class="dv" style="color: #AD0000;
@@ -1104,12 +1104,12 @@ background-color: null;
 font-style: inherit;">32</span>), Y]</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="22">
-<pre><code>tensor([4.9081e-25, 1.0000e+00, 6.0444e-30, 7.2866e-32, 2.1774e-09, 3.1644e-15,
-        3.8986e-21, 1.9714e-08, 5.4988e-14, 3.1142e-22, 7.2273e-33, 2.3117e-30,
-        2.4803e-16, 1.9796e-32, 1.6826e-25, 2.8026e-45, 1.0032e-18, 5.3268e-18,
-        7.4422e-11, 2.2252e-29, 9.4067e-18, 1.8139e-18, 4.7444e-20, 6.1309e-21,
-        9.9715e-01, 8.7578e-29, 2.5972e-15, 0.0000e+00, 9.9036e-25, 4.8021e-19,
-        1.5411e-05, 4.2611e-22])</code></pre>
+<pre><code>tensor([2.0660e-21, 3.6184e-15, 1.5675e-11, 1.2796e-08, 4.4312e-02, 2.4003e-12,
+        3.5811e-13, 1.3876e-18, 3.3465e-14, 2.5158e-22, 8.3230e-35, 3.4999e-08,
+        7.5305e-10, 6.8868e-24, 1.8081e-28, 8.6262e-08, 4.0514e-18, 4.2847e-19,
+        4.9013e-15, 1.0952e-10, 8.4563e-11, 2.1141e-26, 4.4209e-22, 6.9570e-30,
+        3.9779e-10, 3.2419e-13, 2.2802e-07, 6.5380e-23, 3.0035e-37, 0.0000e+00,
+        0.0000e+00, 3.2723e-26])</code></pre>
 </div>
 </div>
 <p>Result is not good as we’ve not trained the network yet!</p>
@@ -1117,7 +1117,7 @@ font-style: inherit;">32</span>), Y]</span></code></pre></div>
 <section id="implementing-the-negative-log-likelihood-loss" class="level2">
 <h2 class="anchored" data-anchor-id="implementing-the-negative-log-likelihood-loss">implementing the negative log likelihood loss</h2>
 <p>We define the negative log likelihood as:</p>
-<div id="7e15e5ad" class="cell" data-execution_count="23">
+<div id="4127f2e6" class="cell" data-execution_count="23">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1">loss <span class="op" style="color: #5E5E5E;
@@ -1137,7 +1137,7 @@ font-style: inherit;">32</span>), Y].log().mean()</span>
 <section id="summary-of-the-full-network" class="level2">
 <h2 class="anchored" data-anchor-id="summary-of-the-full-network">summary of the full network</h2>
 <p>Dataset:</p>
-<div id="dc1dca86" class="cell" data-execution_count="24">
+<div id="3ddbeeb7" class="cell" data-execution_count="24">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1">X.shape, Y.shape</span></code></pre></div>
@@ -1147,7 +1147,7 @@ font-style: inherit;">32</span>), Y].log().mean()</span>
 </div>
 </div>
 <p>Neural network layers:</p>
-<div id="1ba4e1cd" class="cell" data-execution_count="25">
+<div id="29fb9ebc" class="cell" data-execution_count="25">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1">g <span class="op" style="color: #5E5E5E;
@@ -1203,7 +1203,7 @@ font-style: inherit;">=</span> [C, W1, b1, W2, b2]</span></code></pre></div>
 </details>
 </div>
 <p>Size of the network:</p>
-<div id="ced0d99c" class="cell" data-execution_count="26">
+<div id="ee60f1e7" class="cell" data-execution_count="26">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><span class="bu" style="color: null;
@@ -1219,7 +1219,7 @@ font-style: inherit;">in</span> parameters)</span></code></pre></div>
 </div>
 </div>
 <p>Constructing forward pass:</p>
-<div id="8a031dc1" class="cell" data-execution_count="27">
+<div id="7d9f3566" class="cell" data-execution_count="27">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1">emb <span class="op" style="color: #5E5E5E;
@@ -1287,7 +1287,7 @@ font-style: inherit;">32</span>), Y].log().mean()</span>
 <section id="introducing-f.cross_entropy-and-why" class="level2">
 <h2 class="anchored" data-anchor-id="introducing-f.cross_entropy-and-why">introducing <code>F.cross_entropy</code> and why</h2>
 <p>We re-define loss:</p>
-<div id="b24c5d5b" class="cell" data-execution_count="28">
+<div id="955bff3c" class="cell" data-execution_count="28">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb47-1">loss <span class="op" style="color: #5E5E5E;
@@ -1309,7 +1309,7 @@ font-style: inherit;">=</span> F.cross_entropy(logits, Y)</span>
 <section id="implementing-the-training-loop-overfitting-one-batch" class="level2">
 <h2 class="anchored" data-anchor-id="implementing-the-training-loop-overfitting-one-batch">implementing the training loop, overfitting one batch</h2>
 <p>So the forward pass, backward pass, and update loop will be implemented as below:</p>
-<div id="9a90af6f" class="cell" data-execution_count="29">
+<div id="64d4c38a" class="cell" data-execution_count="29">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb49-1"><span class="cf" style="color: #003B4F;
@@ -1324,7 +1324,7 @@ background-color: null;
 font-style: inherit;">True</span></span></code></pre></div>
 </details>
 </div>
-<div id="5172e6eb" class="cell" data-execution_count="30">
+<div id="b08ab8cb" class="cell" data-execution_count="30">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb50-1"><span class="cf" style="color: #003B4F;
@@ -1425,7 +1425,7 @@ font-style: inherit;">print</span>(loss.item())</span></code></pre></div>
 </div>
 </div>
 <p>We are fitting 32 examples to a neural nets of 3481 params, so it’s super easy to be overfitting. We got a low final loss, but it would never be 0, because the output can varry for the same input, for eg, <code>...</code>.</p>
-<div id="4c53be67" class="cell" data-execution_count="31">
+<div id="181635eb" class="cell" data-execution_count="31">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb52" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb52-1">logits.<span class="bu" style="color: null;
@@ -1449,7 +1449,7 @@ indices=tensor([ 1,  8,  9,  0, 15,  1, 17,  2,  9,  9,  2,  0,  1, 15,  1,  0, 
 <section id="training-on-the-full-dataset-minibatches" class="level2">
 <h2 class="anchored" data-anchor-id="training-on-the-full-dataset-minibatches">training on the full dataset, minibatches</h2>
 <p>We can deploy our code to all the dataset, un-fold the below code block to see full code.</p>
-<div id="ed3cfba2" class="cell" data-execution_count="32">
+<div id="82aa36e9" class="cell" data-execution_count="32">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb54" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb54-1">block_size <span class="op" style="color: #5E5E5E;
@@ -1650,7 +1650,7 @@ No of params:  3481</code></pre>
 </div>
 <p>We notice that it takes a bit long time for each training in the loop. In practice, we will perform the forward/backward passes and update parameters for a small batch of the dataset. The minibatch construction is added/modified for lines of code with <code>#👈</code>.</p>
 <p>Read more: <a href="https://nttuan8.com/bai-10-cac-ky-thuat-co-ban-trong-deep-learning/" class="uri">https://nttuan8.com/bai-10-cac-ky-thuat-co-ban-trong-deep-learning/</a></p>
-<div id="23d60b81" class="cell" data-execution_count="33">
+<div id="dabcf778" class="cell" data-execution_count="33">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb56" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb56-1"><span class="co" style="color: #5E5E5E;
@@ -1773,21 +1773,21 @@ background-color: null;
 font-style: inherit;">"final minibatch loss: "</span>, loss.item())</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>___after running 9990 time:  2.4647300243377686
-___after running 9991 time:  2.675736427307129
-___after running 9992 time:  2.6969025135040283
-___after running 9993 time:  2.43367075920105
-___after running 9994 time:  2.054608106613159
-___after running 9995 time:  3.010594129562378
-___after running 9996 time:  2.5384514331817627
-___after running 9997 time:  2.6669182777404785
-___after running 9998 time:  2.537275552749634
-___after running 9999 time:  2.657783031463623
-final minibatch loss:  2.657783031463623</code></pre>
+<pre><code>___after running 9990 time:  2.4769816398620605
+___after running 9991 time:  2.719482660293579
+___after running 9992 time:  2.5886943340301514
+___after running 9993 time:  2.2563774585723877
+___after running 9994 time:  2.584904432296753
+___after running 9995 time:  2.8459784984588623
+___after running 9996 time:  2.4365286827087402
+___after running 9997 time:  2.2122902870178223
+___after running 9998 time:  2.440680742263794
+___after running 9999 time:  2.183750867843628
+final minibatch loss:  2.183750867843628</code></pre>
 </div>
 </div>
 <p>The <code>loss</code> decrease much much better, although the direction of gradient might be not correct direction. But it is good enough for an approximation. Notice the loss for a minibatch is not the loss of whole dataset.</p>
-<div id="9a2e76bf" class="cell" data-execution_count="34">
+<div id="abed3dd9" class="cell" data-execution_count="34">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb58" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb58-1">emb <span class="op" style="color: #5E5E5E;
@@ -1825,7 +1825,7 @@ font-style: inherit;">=</span> F.cross_entropy(logits, Y)   </span>
 <span id="cb58-5">loss.item()</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="34">
-<pre><code>2.4748528003692627</code></pre>
+<pre><code>2.492901086807251</code></pre>
 </div>
 </div>
 <p>We archived 2.39 loss for final minibatch and 2.5 on overall network.</p>
@@ -1834,7 +1834,7 @@ font-style: inherit;">=</span> F.cross_entropy(logits, Y)   </span>
 <h2 class="anchored" data-anchor-id="finding-a-good-initial-learning-rate">finding a good initial learning rate</h2>
 <p>Now we’re continuing the optimization, let’s focus on how much we update the data from the gradient <code>p.data += -0.1 * p.grad</code>. We do not know if we step too little or too much.</p>
 <p>We can create 1000 learning rates to use along with the training loop and see which one offers more stable convergence.</p>
-<div id="216b1d6c" class="cell" data-execution_count="35">
+<div id="fa9347fd" class="cell" data-execution_count="35">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb60" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb60-1">lre <span class="op" style="color: #5E5E5E;
@@ -1858,7 +1858,7 @@ font-style: inherit;">**</span>lre</span></code></pre></div>
 </details>
 </div>
 <p>Reset the code:</p>
-<div id="57e8baf7" class="cell" data-execution_count="36">
+<div id="76628b82" class="cell" data-execution_count="36">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb61" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb61-1">block_size <span class="op" style="color: #5E5E5E;
@@ -2058,7 +2058,7 @@ No of params:  3481</code></pre>
 </div>
 </div>
 <p>Training and tracking stats:</p>
-<div id="1b480dd1" class="cell" data-execution_count="37">
+<div id="6ca24afc" class="cell" data-execution_count="37">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb63" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb63-1">lri <span class="op" style="color: #5E5E5E;
@@ -2166,12 +2166,12 @@ font-style: inherit;"># track stats</span></span>
 <span id="cb63-25">loss.item()</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="37">
-<pre><code>5.875598907470703</code></pre>
+<pre><code>8.216608047485352</code></pre>
 </div>
 </div>
 <p>Plotting, we see a good exponential element of learning rate turn out to be around <code>-1</code>.</p>
 <p><img src="https://latex.codecogs.com/png.latex?10%5E%7B-1%7D"> is <code>0.1</code> so our initial guess seems good.</p>
-<div id="ca0330b8" class="cell" data-execution_count="38">
+<div id="640c4dae" class="cell" data-execution_count="38">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb65" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb65-1">plt.plot(lri, lossi)</span></code></pre></div>
@@ -2179,7 +2179,7 @@ font-style: inherit;"># track stats</span></span>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://lktuan.github.io/blog/2024-11-20-nn-z2h-p3/index_files/figure-html/cell-39-output-1.png" width="566" height="411" class="figure-img"></p>
+<p><img src="https://lktuan.github.io/blog/2024-11-20-nn-z2h-p3/index_files/figure-html/cell-39-output-1.png" width="579" height="411" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -2196,7 +2196,7 @@ font-style: inherit;"># track stats</span></span>
 <li>Test split: evaluate the performance of the model at the end, we only work on this a very very few times, otherwise we learn from it and repeat overfitting.</li>
 </ol>
 <p>We are going to implement this train/dev/test splits:</p>
-<div id="004efb01" class="cell" data-execution_count="39">
+<div id="ed4b4242" class="cell" data-execution_count="39">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb66" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb66-1"><span class="co" style="color: #5E5E5E;
@@ -2319,7 +2319,7 @@ torch.Size([22866, 3]) torch.Size([22866])</code></pre>
 <h2 class="anchored" data-anchor-id="visualizing-the-loss-character-embeddings">visualizing the loss, character embeddings</h2>
 <p>First we want to see: - how the loss decrease with 200k training loop with current network setting, learning rate decay to 0.01 after first 100k; and - how the current character embeddings recognize the similarity between characters in (2D) space.</p>
 <p>Training on the <code>Xtr</code>, <code>Ytr</code>:</p>
-<div id="df50986e" class="cell" data-execution_count="40">
+<div id="5ef3b3e4" class="cell" data-execution_count="40">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb68" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb68-1"><span class="co" style="color: #5E5E5E;
@@ -2546,11 +2546,11 @@ font-style: inherit;">"Loss on minibatch: "</span>, loss.item())</span></code></
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>No of params:  3481
-Loss on minibatch:  2.0989880561828613</code></pre>
+Loss on minibatch:  2.1069579124450684</code></pre>
 </div>
 </div>
 <p>Loss on whole training dataset:</p>
-<div id="f90d1a2e" class="cell" data-execution_count="41">
+<div id="fe5e43a0" class="cell" data-execution_count="41">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb70" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb70-1">emb <span class="op" style="color: #5E5E5E;
@@ -2588,11 +2588,11 @@ font-style: inherit;">=</span> F.cross_entropy(logits, Ytr)   </span>
 <span id="cb70-5">loss.item()</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="41">
-<pre><code>2.2517852783203125</code></pre>
+<pre><code>2.259035110473633</code></pre>
 </div>
 </div>
 <p>Loss on dev/validation dataset, it’s not much different from loss on training as the model is still underfitting, it still generalizes thing:</p>
-<div id="a1079f52" class="cell" data-execution_count="42">
+<div id="422b9d22" class="cell" data-execution_count="42">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb72" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb72-1">emb <span class="op" style="color: #5E5E5E;
@@ -2630,11 +2630,11 @@ font-style: inherit;">=</span> F.cross_entropy(logits, Ydev)   </span>
 <span id="cb72-5">loss.item()</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="42">
-<pre><code>2.257295846939087</code></pre>
+<pre><code>2.257272958755493</code></pre>
 </div>
 </div>
 <p>Visualizing loss, we can see the loss shaking significantly as the batch size still small - 32.</p>
-<div id="7aa3758d" class="cell" data-execution_count="43">
+<div id="d86667b8" class="cell" data-execution_count="43">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb74" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb74-1">plt.plot(stepi, lossi)</span></code></pre></div>
@@ -2648,7 +2648,7 @@ font-style: inherit;">=</span> F.cross_entropy(logits, Ydev)   </span>
 </div>
 </div>
 <p>Visualizing the character embeddings, we can see the model can cluster for eg. vowels a, e, i, o, u.</p>
-<div id="007291dd" class="cell" data-execution_count="44">
+<div id="c788851a" class="cell" data-execution_count="44">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb75" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb75-1">plt.figure(figsize<span class="op" style="color: #5E5E5E;
@@ -2709,7 +2709,7 @@ font-style: inherit;">'minor'</span>)</span></code></pre></div>
 <section id="experiment-larger-hidden-layer-larger-embedding-size" class="level2">
 <h2 class="anchored" data-anchor-id="experiment-larger-hidden-layer-larger-embedding-size">experiment: larger hidden layer, larger embedding size</h2>
 <p>Now we can experiment a larger hidden layer (300), and larger embedding_size (10). Below is the whole code:</p>
-<div id="36248c1f" class="cell" data-execution_count="45">
+<div id="c62f8cec" class="cell" data-execution_count="45">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb76" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb76-1"><span class="co" style="color: #5E5E5E;
@@ -3053,10 +3053,10 @@ font-style: inherit;">"Loss on minibatch: "</span>, loss.item())</span></code></
 torch.Size([22767, 3]) torch.Size([22767])
 torch.Size([22799, 3]) torch.Size([22799])
 No of params:  17697
-Loss on minibatch:  2.156968832015991</code></pre>
+Loss on minibatch:  2.0859084129333496</code></pre>
 </div>
 </div>
-<div id="cb77fa5a" class="cell" data-execution_count="46">
+<div id="9354902a" class="cell" data-execution_count="46">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb78" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb78-1">emb <span class="op" style="color: #5E5E5E;
@@ -3156,15 +3156,15 @@ background-color: null;
 font-style: inherit;">"Loss on test set: "</span>, loss.item())</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Loss on whole training set:  2.1348249912261963
-Loss on dev/validation set:  2.1882998943328857
-Loss on test set:  2.1922454833984375</code></pre>
+<pre><code>Loss on whole training set:  2.117095947265625
+Loss on dev/validation set:  2.1767637729644775
+Loss on test set:  2.1748299598693848</code></pre>
 </div>
 </div>
 </section>
 <section id="summary-of-our-final-code-conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="summary-of-our-final-code-conclusion">summary of our final code, conclusion</h2>
-<div id="18583013" class="cell" data-execution_count="47">
+<div id="582cd2a2" class="cell" data-execution_count="47">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb80" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb80-1">plt.plot(stepi, lossi)</span></code></pre></div>
@@ -3177,7 +3177,7 @@ Loss on test set:  2.1922454833984375</code></pre>
 </div>
 </div>
 </div>
-<div id="f5eb38a2" class="cell" data-execution_count="48">
+<div id="70b97c29" class="cell" data-execution_count="48">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb81" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb81-1">plt.figure(figsize<span class="op" style="color: #5E5E5E;
@@ -3229,7 +3229,7 @@ font-style: inherit;">'minor'</span>)</span></code></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://lktuan.github.io/blog/2024-11-20-nn-z2h-p3/index_files/figure-html/cell-49-output-1.png" width="656" height="633" class="figure-img"></p>
+<p><img src="https://lktuan.github.io/blog/2024-11-20-nn-z2h-p3/index_files/figure-html/cell-49-output-1.png" width="662" height="633" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -3240,7 +3240,7 @@ font-style: inherit;">'minor'</span>)</span></code></pre></div>
 <section id="sampling-from-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="sampling-from-the-model">sampling from the model</h2>
 <p>But our networks now can generate more name-like name!</p>
-<div id="242bdee9" class="cell" data-execution_count="49">
+<div id="b3778f33" class="cell" data-execution_count="49">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb82" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb82-1">g <span class="op" style="color: #5E5E5E;
@@ -3351,26 +3351,26 @@ background-color: null;
 font-style: inherit;">in</span> out))</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>mona.
-kmyah.
-keel.
-nihahalee.
-thruckadrie.
-cadered.
-elin.
-shivaelle.
-elisson.
-artelle.
-malaia.
-noshdyn.
-gihiriel.
-kinde.
-jelipanterianu.
-mayven.
-kylene.
-ehsyn.
-ajahsen.
-daihia.</code></pre>
+<pre><code>eria.
+kayanniee.
+mad.
+rylle.
+evers.
+endra.
+kalie.
+kaillie.
+shivonna.
+keisenna.
+araelyzion.
+kalin.
+shubergenghies.
+kindrendy.
+pan.
+puon.
+ubertedir.
+yarleyel.
+yule.
+myshelda.</code></pre>
 </div>
 </div>
 </section>
