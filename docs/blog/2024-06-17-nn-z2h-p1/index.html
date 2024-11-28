@@ -8,7 +8,7 @@
 
 <meta name="author" content="Tuan Le Khac">
 <meta name="dcterms.date" content="2024-06-16">
-<meta name="description" content="I am a Risk Modeler 🚀">
+<meta name="description" content="This is Tuan’s blog">
 
 <title>Le Khac Tuan - NN-Z2H Lesson 1: The spelled-out intro to neural networks and backpropagation - building micrograd</title>
 <style>
@@ -72,10 +72,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -196,6 +198,11 @@ window.Quarto = {
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/Halle4231"> <i class="bi bi-twitter-x" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
     <a class="nav-link" href="mailto:tuan.lekhac0905@gmail.com"> <i class="bi bi-envelope" role="img">
 </i> 
 <span class="menu-text"></span></a>
@@ -203,6 +210,7 @@ window.Quarto = {
 </ul>
           </div> <!-- /navcollapse -->
           <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -350,7 +358,7 @@ This is not orginal content!
 <p>What is MicroGrad ❓: a tiny <strong>auto-grad</strong> (automatic gradient) engine, implement of <strong>backpropagation</strong> ~ itertively tune the weight of that nn to minimize the loss function -&gt; improve the accuracy of the neural network. Backpropagation will be the mathematical core of any modern deep neutral network like, say <code>pytorch</code>, or <code>jaxx</code>.</p>
 <p>Installation: <code>pip install micrograd</code></p>
 <p>Example:</p>
-<div id="99137746" class="cell" data-execution_count="1">
+<div id="3bb769a3" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="annotated-cell-1"><pre class="sourceCode numberSource python code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode python"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1"></a><span class="im">from</span> micrograd.engine <span class="im">import</span> Value</span>
@@ -402,7 +410,7 @@ This is not orginal content!
 <section id="derivative-of-a-simple-function-with-one-input" class="level2">
 <h2 class="anchored" data-anchor-id="derivative-of-a-simple-function-with-one-input">derivative of a simple function with one input</h2>
 <p>❓What exactly is derivative❓</p>
-<div id="a8f6f678" class="cell" data-execution_count="2">
+<div id="f98fcd6d" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> math</span>
@@ -412,14 +420,14 @@ This is not orginal content!
 </details>
 </div>
 <p>A simple quadratic function:</p>
-<div id="b31179bf" class="cell" data-execution_count="3">
+<div id="dcd4ec3d" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">def</span> f(x):</span>
 <span id="cb3-2"><a href="#cb3-2"></a>    <span class="cf">return</span> <span class="dv">3</span><span class="op">*</span>x<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> <span class="dv">4</span><span class="op">*</span>x <span class="op">+</span> <span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="06a6e8d9" class="cell" data-execution_count="4">
+<div id="188ae8df" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>f(<span class="fl">3.0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -429,7 +437,7 @@ This is not orginal content!
 </div>
 </div>
 <p>Input also can be an array, we can plot it for visibility.</p>
-<div id="d6c5dd6c" class="cell" data-execution_count="5">
+<div id="c9b0bd52" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>xs <span class="op">=</span> np.arange(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="fl">0.25</span>)</span>
@@ -445,7 +453,7 @@ This is not orginal content!
 </div>
 </div>
 <p>If we bump up a litle value <code>h</code> of <code>x</code>, how <code>f(x)</code> will response?</p>
-<div id="8084f35d" class="cell" data-execution_count="6">
+<div id="89fe64f9" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="annotated-cell-6"><pre class="sourceCode numberSource python code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode python"><button class="code-annotation-anchor" data-target-cell="annotated-cell-6" data-target-annotation="1">1</button><span id="annotated-cell-6-1" class="code-annotation-target"><a href="#annotated-cell-6-1"></a>h <span class="op">=</span> <span class="fl">0.000000000001</span></span>
@@ -468,7 +476,7 @@ This is not orginal content!
 </section>
 <section id="derivative-of-a-function-with-multiple-inputs" class="level2">
 <h2 class="anchored" data-anchor-id="derivative-of-a-function-with-multiple-inputs">derivative of a function with multiple inputs</h2>
-<div id="36be2f24" class="cell" data-execution_count="7">
+<div id="d477f02f" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>a <span class="op">=</span> <span class="fl">2.0</span></span>
@@ -482,7 +490,7 @@ This is not orginal content!
 </div>
 </div>
 <p>Put our bump-up element to this multi-variables function:</p>
-<div id="17c686c7" class="cell" data-execution_count="8">
+<div id="acf9bf22" class="cell" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="annotated-cell-8"><pre class="sourceCode numberSource python code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode python"><span id="annotated-cell-8-1"><a href="#annotated-cell-8-1"></a>h <span class="op">=</span> <span class="fl">0.001</span></span>
@@ -522,7 +530,7 @@ slope:  -3.0000000000001137</code></pre>
 <section id="starting-the-core-value-object-of-micrograd-and-its-visualization" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="starting-the-core-value-object-of-micrograd-and-its-visualization">starting the core <code>Value</code> object of micrograd and its visualization</h2>
 <p>So we now have some intuitive sense of what is derivative is telling you about the function. We now move to the Neural Networks, which would be massive mathematical expressions. We need some data structures that maintain these expressions, we first declare an object <code>Value</code> that holds data.</p>
-<div id="11e2841b" class="cell" data-execution_count="9">
+<div id="d87d8432" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="annotated-cell-9"><pre class="sourceCode numberSource python code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode python"><span id="annotated-cell-9-1"><a href="#annotated-cell-9-1"></a><span class="kw">class</span> Value:</span>
@@ -621,7 +629,7 @@ slope:  -3.0000000000001137</code></pre>
 </div>
 </div>
 <p>Setting input and expression:</p>
-<div id="8a82c626" class="cell" data-execution_count="10">
+<div id="7f26cf0e" class="cell" data-execution_count="10">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="annotated-cell-10"><pre class="sourceCode numberSource python code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode python"><span id="annotated-cell-10-1"><a href="#annotated-cell-10-1"></a>a <span class="op">=</span> Value(<span class="fl">2.0</span>, label<span class="op">=</span><span class="st">'a'</span>)</span>
@@ -657,7 +665,7 @@ slope:  -3.0000000000001137</code></pre>
 </div>
 </div>
 <p>So that we can know the children:</p>
-<div id="794e6040" class="cell" data-execution_count="11">
+<div id="ed1ed56a" class="cell" data-execution_count="11">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>d._prev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -667,7 +675,7 @@ slope:  -3.0000000000001137</code></pre>
 </div>
 </div>
 <p>We can know the operations:</p>
-<div id="0a7a4f58" class="cell" data-execution_count="12">
+<div id="f973e63a" class="cell" data-execution_count="12">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>d._op</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -677,7 +685,7 @@ slope:  -3.0000000000001137</code></pre>
 </div>
 </div>
 <p>Now we know exactly how each value came to be by <strong>word</strong> expression and from what other values. These will be quite abit larger, so we need a way to nicely visualize these expressions that we’re building out. Below are a-little-scary codes.</p>
-<div id="83cfdb80" class="cell" data-execution_count="13">
+<div id="e726ddd4" class="cell" data-execution_count="13">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="annotated-cell-13"><pre class="sourceCode numberSource python code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode python"><span id="annotated-cell-13-1"><a href="#annotated-cell-13-1"></a><span class="im">import</span> os</span>
@@ -735,7 +743,7 @@ slope:  -3.0000000000001137</code></pre>
 
 <div class="no-row-height column-margin column-container"><div class="">
 <p>Remember to let <a href="https://graphviz.org/download/">graphviz</a> installed on your machine, not only Python package, I also run this:</p>
-<div id="aec55076" class="cell" data-execution_count="14">
+<div id="a3251e5c" class="cell" data-execution_count="14">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="im">import</span> os</span>
@@ -743,7 +751,7 @@ slope:  -3.0000000000001137</code></pre>
 </details>
 </div>
 </div></div><p>Now we can draw 🚀.</p>
-<div id="8c4c4c9d" class="cell" data-execution_count="15">
+<div id="b4d58613" class="cell" data-execution_count="15">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>draw_dot(d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -768,7 +776,7 @@ slope:  -3.0000000000001137</code></pre>
 <section id="manual-backpropagation-example-1-simple-expression" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="manual-backpropagation-example-1-simple-expression">manual backpropagation example #1: simple expression</h2>
 <div class="page-columns page-full">
-<div id="9092621c" class="cell page-columns page-full" data-execution_count="16">
+<div id="0000f751" class="cell page-columns page-full" data-execution_count="16">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a>draw_dot(L)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -794,7 +802,7 @@ slope:  -3.0000000000001137</code></pre>
 <li><code>dl/db = dL/de * de/db = -2.0 * a = -2.0 * 2.0 = -4.0</code>.</li>
 </ol>
 <div class="no-row-height column-margin column-container"><span class="margin-aside"><a href="https://en.wikipedia.org/wiki/Chain_rule">Chain Rules Wiki</a></span></div><p>We can also create a function for playing around / gradient check, and not messing up the global scope.</p>
-<div id="bc73cd99" class="cell" data-execution_count="17">
+<div id="c7194503" class="cell" data-execution_count="17">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">def</span> lol():</span>
@@ -835,7 +843,7 @@ slope:  -3.0000000000001137</code></pre>
 <section id="preview-of-a-single-optimization-step" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="preview-of-a-single-optimization-step">preview of a single optimization step</h2>
 <p>We can change the input that we can control <code>a, b, c, f</code> to see 1 step of the optimization of process.</p>
-<div id="cba8d2c4" class="cell" data-execution_count="18">
+<div id="7c039380" class="cell" data-execution_count="18">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>a.grad <span class="op">=</span> <span class="fl">6.0</span></span>
@@ -860,7 +868,7 @@ slope:  -3.0000000000001137</code></pre>
 </div>
 <p>We can see the changes, <code>L</code> increased a little bit as expected.</p>
 <div class="page-columns page-full">
-<div id="9bc9cc09" class="cell page-columns page-full" data-execution_count="19">
+<div id="0b3e10c2" class="cell page-columns page-full" data-execution_count="19">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>draw_dot(L)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -902,7 +910,7 @@ slope:  -3.0000000000001137</code></pre>
 </div>
 </div>
 <p>🚀How does the <code>tanh</code> look like? this hyperbolic function will squash the output to the edge values: <code>-1.0</code> or <code>1.0</code>.</p>
-<div id="9e5db24b" class="cell" data-execution_count="20">
+<div id="719e688d" class="cell" data-execution_count="20">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a>plt.plot(np.arange(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="fl">0.2</span>), np.tanh(np.arange(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="fl">0.2</span>)))<span class="op">;</span> plt.grid()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -918,7 +926,7 @@ slope:  -3.0000000000001137</code></pre>
 
 <div class="no-row-height column-margin column-container"><div class="">
 <p>We first implement <a href="https://en.wikipedia.org/wiki/Hyperbolic_functions"><code>tanh</code></a> function to our class <code>Value</code>.</p>
-<div id="d10ad9d7" class="cell" data-execution_count="21">
+<div id="4a45e192" class="cell" data-execution_count="21">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">def</span> tanh(<span class="va">self</span>):</span>
@@ -931,7 +939,7 @@ slope:  -3.0000000000001137</code></pre>
 </details>
 </div>
 </div></div><p>Let’s take a simple example of 2-dimensional neuron with 2 inputs <code>x1</code> and <code>x2</code>:</p>
-<div id="74d2af71" class="cell" data-execution_count="22">
+<div id="7fca4684" class="cell" data-execution_count="22">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a><span class="co"># input x1, x2</span></span>
@@ -952,7 +960,7 @@ slope:  -3.0000000000001137</code></pre>
 </details>
 </div>
 <div class="page-columns page-full">
-<div id="b5ec2b43" class="cell page-columns page-full" data-execution_count="23">
+<div id="753eaa26" class="cell page-columns page-full" data-execution_count="23">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a>draw_dot(o)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -968,7 +976,7 @@ slope:  -3.0000000000001137</code></pre>
 </div>
 
 <div class="no-row-height column-margin column-container"><div class="">
-<div id="831b5fd1" class="cell" data-execution_count="24">
+<div id="63f90b81" class="cell" data-execution_count="24">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a>o.grad <span class="op">=</span> <span class="fl">1.0</span></span>
@@ -997,7 +1005,7 @@ slope:  -3.0000000000001137</code></pre>
 <li><code>do/dw2 = x2 * do/dx2w2</code>.</li>
 </ol>
 <div class="page-columns page-full">
-<div id="c50364e8" class="cell page-columns page-full" data-execution_count="25">
+<div id="f6b67c89" class="cell page-columns page-full" data-execution_count="25">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1"></a>draw_dot(o)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1016,7 +1024,7 @@ slope:  -3.0000000000001137</code></pre>
 <h2 class="anchored" data-anchor-id="implementing-the-backward-function-for-each-operation">implementing the backward function for each operation</h2>
 <p>Doing the backpropagation manually is obviously ridiculous and we are now to put an end to this suffering. We will see how we can implement backward pass a bit more automatically.</p>
 <p>We create <code>_backward</code> operation for each operator, implement the Chain Rules. Activate the <code>_backward</code> call along with funtion execution.</p>
-<div id="140fc958" class="cell" data-execution_count="26">
+<div id="e7f3ad22" class="cell" data-execution_count="26">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a>o.grad <span class="op">=</span> <span class="fl">1.0</span></span>
@@ -1030,7 +1038,7 @@ slope:  -3.0000000000001137</code></pre>
 </details>
 </div>
 <div class="page-columns page-full">
-<div id="0194ec34" class="cell page-columns page-full" data-execution_count="27">
+<div id="2311ff06" class="cell page-columns page-full" data-execution_count="27">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1"></a>draw_dot(o)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1067,7 +1075,7 @@ slope:  -3.0000000000001137</code></pre>
 </div>
 
 <div class="no-row-height column-margin column-container"><div class="">
-<div id="d397b461" class="cell" data-execution_count="28">
+<div id="f3e5ee90" class="cell" data-execution_count="28">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a><span class="co"># we first reset the Values</span></span>
@@ -1084,7 +1092,7 @@ slope:  -3.0000000000001137</code></pre>
 </details>
 </div>
 </div></div><p>Below is the code:</p>
-<div id="97851db1" class="cell" data-execution_count="29">
+<div id="c75567f6" class="cell" data-execution_count="29">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1"></a>topo <span class="op">=</span> []</span>
@@ -1102,26 +1110,26 @@ slope:  -3.0000000000001137</code></pre>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="27">
 <pre><code>[Value(data=6.88137358),
+ Value(data=2.0),
+ Value(data=-3.0),
+ Value(data=-6.0),
  Value(data=0.0),
  Value(data=1.0),
  Value(data=0.0),
- Value(data=-3.0),
- Value(data=2.0),
- Value(data=-6.0),
  Value(data=-6.0),
  Value(data=0.88137358),
  Value(data=0.707106777676776)]</code></pre>
 </div>
 </div>
 <p>We implement the topological sort to <code>backward()</code> (without underscore) function. Now we can trigger the whole process:</p>
-<div id="30c678f0" class="cell" data-execution_count="30">
+<div id="04877a79" class="cell" data-execution_count="30">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1"></a>o.backward()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="page-columns page-full">
-<div id="3e1dd7dd" class="cell page-columns page-full" data-execution_count="31">
+<div id="e58df73b" class="cell page-columns page-full" data-execution_count="31">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a>draw_dot(o)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1139,7 +1147,7 @@ slope:  -3.0000000000001137</code></pre>
 <section id="fixing-a-backprop-bug-when-one-node-is-used-multiple-times" class="level2">
 <h2 class="anchored" data-anchor-id="fixing-a-backprop-bug-when-one-node-is-used-multiple-times">fixing a backprop bug when one node is used multiple times ⛔</h2>
 <p>This <code>a.grad</code> should be <code>2.0</code>.</p>
-<div id="6461e722" class="cell" data-execution_count="32">
+<div id="b561947c" class="cell" data-execution_count="32">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1"></a>a <span class="op">=</span> Value(<span class="fl">3.0</span>, label<span class="op">=</span><span class="st">'a'</span>)</span>
@@ -1159,14 +1167,14 @@ slope:  -3.0000000000001137</code></pre>
 <section id="breaking-up-a-tanh-exercising-with-more-operations" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="breaking-up-a-tanh-exercising-with-more-operations">breaking up a <code>tanh</code>, exercising with more operations</h2>
 <p>Sometime we do operations between <code>Value</code> and other, like <code>int</code>. We can not do this unless we add below code to <code>__add__</code> and <code>__mul__</code> operations. Now we can <code>Value(1.0) + 1.0</code>, or <code>Value(2.0) * 2</code>.</p>
-<div id="d1fc327e" class="cell" data-execution_count="33">
+<div id="f9f28228" class="cell" data-execution_count="33">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1"></a>other <span class="op">=</span> other <span class="cf">if</span> <span class="bu">isinstance</span>(other, Value) <span class="cf">else</span> Value(other)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>But for <code>2 * Value(2.0)</code>, which will internally call <code>2.__mul__(Value(2.0))</code>, will not work. We add <code>__rmul__</code>:</p>
-<div id="d88b8457" class="cell" data-execution_count="34">
+<div id="65a28a3c" class="cell" data-execution_count="34">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1"></a><span class="kw">def</span> <span class="fu">__rmul__</span>(<span class="va">self</span>, other): <span class="co"># other * self</span></span>
@@ -1176,7 +1184,7 @@ slope:  -3.0000000000001137</code></pre>
 </details>
 </div>
 <p>For exponential, we add <code>epx</code>:</p>
-<div id="58d0428d" class="cell" data-execution_count="35">
+<div id="5c58e623" class="cell" data-execution_count="35">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1"></a><span class="kw">def</span> exp(<span class="va">self</span>):</span>
@@ -1193,7 +1201,7 @@ slope:  -3.0000000000001137</code></pre>
 </details>
 </div>
 <p>For division, we add <code>__truediv__</code>:</p>
-<div id="36f0862f" class="cell" data-execution_count="36">
+<div id="fb264fb1" class="cell" data-execution_count="36">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1"></a><span class="kw">def</span> <span class="fu">__truediv__</span>(<span class="va">self</span>, other): <span class="co"># self / other</span></span>
@@ -1203,7 +1211,7 @@ slope:  -3.0000000000001137</code></pre>
 </details>
 </div>
 <p>For power, we add <code>__pow__</code>:</p>
-<div id="20b59a82" class="cell" data-execution_count="37">
+<div id="42788b33" class="cell" data-execution_count="37">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1"></a><span class="kw">def</span> <span class="fu">__pow__</span>(<span class="va">self</span>, other): <span class="co"># self ** other</span></span>
@@ -1220,7 +1228,7 @@ slope:  -3.0000000000001137</code></pre>
 </details>
 </div>
 <p>For subtract, we add <code>__neg__</code> and <code>__sub__</code>:</p>
-<div id="eec4b2a1" class="cell" data-execution_count="38">
+<div id="89c750af" class="cell" data-execution_count="38">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1"></a><span class="kw">def</span> <span class="fu">__neg__</span>(<span class="va">self</span>): <span class="co"># - self</span></span>
@@ -1235,7 +1243,7 @@ slope:  -3.0000000000001137</code></pre>
 </details>
 </div>
 <p>Now we are ready to try <code>tanh</code> in a different way:</p>
-<div id="3031ab29" class="cell" data-execution_count="39">
+<div id="f7340b4b" class="cell" data-execution_count="39">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1"></a>x1 <span class="op">=</span> Value(<span class="fl">2.0</span>, label<span class="op">=</span><span class="st">'x1'</span>)</span>
@@ -1255,7 +1263,7 @@ slope:  -3.0000000000001137</code></pre>
 </details>
 </div>
 <div class="page-columns page-full">
-<div id="da415ebd" class="cell page-columns page-full" data-execution_count="40">
+<div id="2bb3d9bd" class="cell page-columns page-full" data-execution_count="40">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1"></a>draw_dot(o)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1275,7 +1283,7 @@ slope:  -3.0000000000001137</code></pre>
 <h1>PyTorch comparison</h1>
 <section id="doing-the-same-thing-but-in-pytorch-comparison" class="level2">
 <h2 class="anchored" data-anchor-id="doing-the-same-thing-but-in-pytorch-comparison">doing the same thing but in PyTorch: comparison</h2>
-<div id="a1ea0ea7" class="cell" data-execution_count="41">
+<div id="a887f767" class="cell" data-execution_count="41">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1"></a><span class="im">import</span> torch</span>
@@ -1331,7 +1339,7 @@ w2 0.0
 </div>
 </div>
 </div>
-<div id="e6716873" class="cell" data-execution_count="42">
+<div id="ef2c6b16" class="cell" data-execution_count="42">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="annotated-cell-31"><pre class="sourceCode numberSource python code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode python"><span id="annotated-cell-31-1"><a href="#annotated-cell-31-1"></a><span class="kw">class</span> Neuron:</span>
@@ -1400,7 +1408,7 @@ w2 0.0
 </dl>
 </div>
 </div>
-<div id="a30615e7" class="cell" data-execution_count="43">
+<div id="59a01061" class="cell" data-execution_count="43">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1"></a>nin <span class="op">=</span> <span class="dv">3</span></span>
@@ -1411,7 +1419,7 @@ w2 0.0
 <pre><code>[3, 2.0, 3.0, -1.0]</code></pre>
 </div>
 </div>
-<div id="5cc3ab74" class="cell" data-execution_count="44">
+<div id="cd945f86" class="cell" data-execution_count="44">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1"></a>x <span class="op">=</span> [<span class="fl">2.0</span>, <span class="fl">3.0</span>]</span>
@@ -1421,12 +1429,12 @@ w2 0.0
 <span id="cb50-5"><a href="#cb50-5"></a>l(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="41">
-<pre><code>[Value(data=-0.9047838941709598),
- Value(data=-0.9931624957187651),
- Value(data=-0.3111887486121363)]</code></pre>
+<pre><code>[Value(data=-0.9436737893480257),
+ Value(data=0.910851754824634),
+ Value(data=0.9819458458197922)]</code></pre>
 </div>
 </div>
-<div id="c379e05b" class="cell" data-execution_count="45">
+<div id="120384bb" class="cell" data-execution_count="45">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1"></a>x <span class="op">=</span> [<span class="fl">2.0</span>, <span class="fl">3.0</span>, <span class="op">-</span><span class="fl">1.0</span>]</span>
@@ -1434,11 +1442,11 @@ w2 0.0
 <span id="cb52-3"><a href="#cb52-3"></a>m(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="42">
-<pre><code>Value(data=-0.6685441422574908)</code></pre>
+<pre><code>Value(data=0.017552562832080985)</code></pre>
 </div>
 </div>
 <div class="page-columns page-full">
-<div id="0ad7a0c4" class="cell page-columns page-full" data-execution_count="46">
+<div id="ebada77a" class="cell page-columns page-full" data-execution_count="46">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1"></a>draw_dot(m(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1456,7 +1464,7 @@ w2 0.0
 <section id="creating-a-tiny-dataset-writing-the-loss-function" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="creating-a-tiny-dataset-writing-the-loss-function">creating a tiny dataset, writing the loss function</h2>
 <p>A simple data set, <code>m()</code> is the MLP we defined above.</p>
-<div id="e880e6c7" class="cell" data-execution_count="47">
+<div id="a23c629a" class="cell" data-execution_count="47">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1"></a>xs <span class="op">=</span> [</span>
@@ -1469,7 +1477,7 @@ w2 0.0
 </details>
 </div>
 <div class="page-columns page-full"><p>Writing the loss function. </p><div class="no-row-height column-margin column-container"><span class="margin-aside">I was unable to sum a list of Value, found the solution <a href="https://stackoverflow.com/questions/54153552/unsupported-operand-type-error-when-adding-objects-within-list-using-sum-functio">here</a>; Edit: I used Numpy random instead of random</span></div></div>
-<div id="d370b5e3" class="cell" data-execution_count="48">
+<div id="067973bd" class="cell" data-execution_count="48">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1"></a>ypred <span class="op">=</span> [m(x) <span class="cf">for</span> x <span class="kw">in</span> xs]</span>
@@ -1478,30 +1486,30 @@ w2 0.0
 <span id="cb56-4"><a href="#cb56-4"></a>loss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="45">
-<pre><code>Value(data=5.6827403636898675)</code></pre>
+<pre><code>Value(data=2.2454067439529672)</code></pre>
 </div>
 </div>
 <p>Backpropagation the <code>loss</code>, some magical here:</p>
-<div id="3551ef90" class="cell" data-execution_count="49">
+<div id="72afa9f0" class="cell" data-execution_count="49">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1"></a>loss.backward()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>We can look into the gradient of weight of the first neuron of the first layer (input layer)</p>
-<div id="13c47430" class="cell" data-execution_count="50">
+<div id="844b39e5" class="cell" data-execution_count="50">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1"></a><span class="bu">print</span>(<span class="st">'value of 1st neuron in 1st layer: '</span>,m.layers[<span class="dv">0</span>].neurons[<span class="dv">0</span>].w[<span class="dv">0</span>].data)</span>
 <span id="cb59-2"><a href="#cb59-2"></a><span class="bu">print</span>(<span class="st">'grad of 1st neuron in 1st layer: '</span>,m.layers[<span class="dv">0</span>].neurons[<span class="dv">0</span>].w[<span class="dv">0</span>].grad)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>value of 1st neuron in 1st layer:  0.33080974079761516
-grad of 1st neuron in 1st layer:  -0.21614852409234245</code></pre>
+<pre><code>value of 1st neuron in 1st layer:  0.6122541262352386
+grad of 1st neuron in 1st layer:  -0.11311733839375913</code></pre>
 </div>
 </div>
 <div class="page-columns page-full">
-<div id="a77db41f" class="cell page-columns page-full" data-execution_count="51">
+<div id="9eb572f7" class="cell page-columns page-full" data-execution_count="51">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1"></a>draw_dot(loss)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1520,7 +1528,7 @@ grad of 1st neuron in 1st layer:  -0.21614852409234245</code></pre>
 <h2 class="anchored" data-anchor-id="collecting-all-of-the-parameters-of-the-neural-net">collecting all of the parameters of the neural net</h2>
 <p>We aim to produce the fitness <code>ypred</code>. <code>xs</code> is the data, the input of problem, we can not change it. <code>ys</code> is the ground true, can not changes as well. What we can change is the “paramters” of each neuron, which is weight <code>w</code> and bias <code>b</code>.</p>
 <p>We add in to each class a <code>parameters()</code> function to collect those. Finally we can get all the paramters of the MLP:</p>
-<div id="24e37755" class="cell" data-execution_count="52">
+<div id="33eeeb44" class="cell" data-execution_count="52">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1"></a><span class="bu">len</span>(m.parameters())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1534,7 +1542,7 @@ grad of 1st neuron in 1st layer:  -0.21614852409234245</code></pre>
 <h2 class="anchored" data-anchor-id="doing-gradient-descent-optimization-manually-training-the-network">doing gradient descent optimization manually, training the network</h2>
 <p>Now we will try to change the paramters to minimize the loss, which means our prediction will be more close to the ground true.</p>
 <p><strong>Forward pass</strong>, calculate the loss:</p>
-<div id="c2e5c84c" class="cell" data-execution_count="53">
+<div id="1b9300ef" class="cell" data-execution_count="53">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1"></a>ypred <span class="op">=</span> [m(x) <span class="cf">for</span> x <span class="kw">in</span> xs]</span>
@@ -1542,18 +1550,18 @@ grad of 1st neuron in 1st layer:  -0.21614852409234245</code></pre>
 <span id="cb64-3"><a href="#cb64-3"></a>loss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="50">
-<pre><code>Value(data=5.6827403636898675)</code></pre>
+<pre><code>Value(data=2.2454067439529672)</code></pre>
 </div>
 </div>
 <p><strong>Backward pass</strong>, calculate the parameters:</p>
-<div id="50d05867" class="cell" data-execution_count="54">
+<div id="4845a6c1" class="cell" data-execution_count="54">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1"></a>loss.backward()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p><strong>Update the parameters</strong>, change the parameters following opposite direction to reduce the loss:</p>
-<div id="200e011c" class="cell" data-execution_count="55">
+<div id="264a598e" class="cell" data-execution_count="55">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1"></a><span class="cf">for</span> p <span class="kw">in</span> m.parameters():</span>
@@ -1562,7 +1570,7 @@ grad of 1st neuron in 1st layer:  -0.21614852409234245</code></pre>
 </div>
 <p><code>0.01</code> is the learning rate!</p>
 <p><strong>New loss</strong></p>
-<div id="3bed693b" class="cell" data-execution_count="56">
+<div id="f260bd05" class="cell" data-execution_count="56">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1"></a>ypred <span class="op">=</span> [m(x) <span class="cf">for</span> x <span class="kw">in</span> xs]</span>
@@ -1570,7 +1578,7 @@ grad of 1st neuron in 1st layer:  -0.21614852409234245</code></pre>
 <span id="cb68-3"><a href="#cb68-3"></a>loss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="53">
-<pre><code>Value(data=2.8826103795679217)</code></pre>
+<pre><code>Value(data=1.8748986906624858)</code></pre>
 </div>
 </div>
 <p>Yeah the loss decreased. In short, the process is:</p>
@@ -1611,7 +1619,7 @@ Warning
 </div>
 </div>
 </div>
-<div id="a49aa6b4" class="cell" data-execution_count="57">
+<div id="52f70d45" class="cell" data-execution_count="57">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20</span>):</span>
@@ -1631,38 +1639,38 @@ Warning
 <span id="cb70-15"><a href="#cb70-15"></a>    <span class="bu">print</span>(k, loss.data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>0 2.8826103795679217
-1 1.7566681206780186
-2 1.0869686911252612
-3 0.7770377900504826
-4 0.6150934726748319
-5 0.515579511455619
-6 0.4477522298346213
-7 0.3981971255824403
-8 0.360131386692805
-9 0.3297644433083367
-10 0.3048182253524904
-11 0.28384449762206293
-12 0.26587976678828085
-13 0.25025826104107685
-14 0.23650481548768754
-15 0.22427067500665265
-16 0.21329351959899484
-17 0.20337174060716812
-18 0.19434740416622942
-19 0.18609467630599943</code></pre>
+<pre><code>0 1.8748986906624858
+1 1.7525389208607982
+2 1.640329535604251
+3 1.5330776503948085
+4 1.428451983077621
+5 1.3258854458264309
+6 1.2258454466617152
+7 1.129307611387194
+8 1.0373655570775884
+9 0.950965398742569
+10 0.8707632046017467
+11 0.7970871382629623
+12 0.729969891292043
+13 0.6692148145684491
+14 0.6144684747058207
+15 0.5652846324996362
+16 0.5211741017573215
+17 0.48164032652210864
+18 0.4462028394628461
+19 0.41441137525018645</code></pre>
 </div>
 </div>
-<div id="f750430d" class="cell" data-execution_count="58">
+<div id="1770bfd0" class="cell" data-execution_count="58">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1"></a>ypred</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="55">
-<pre><code>[Value(data=0.8453246410659455),
- Value(data=-0.8165030776303048),
- Value(data=-0.7548909287582599),
- Value(data=0.7384266215371249)]</code></pre>
+<pre><code>[Value(data=0.5688075795666488),
+ Value(data=-0.8981072657206238),
+ Value(data=-0.6253226704952907),
+ Value(data=0.721218291010141)]</code></pre>
 </div>
 </div>
 </section>
@@ -1728,6 +1736,150 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -3197,7 +3349,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <p><span class="faux-block">Designed with <i class="fa-solid fa-heart" aria-label="heart"></i></span></p>
 </div>
     <div class="nav-footer-right">
-<p><span class="faux-block">Made with <a href="https://quarto.org/">Quarto</a></span> <span class="faux-block"><a href="https://github.com/lktuan/lktuan.github.io">View the source at <i class="fa-brands fa-github" aria-label="github"></i> GitHub</a></span></p>
+<p><span class="faux-block">Made with <a href="https://quarto.org/">Quarto</a></span></p>
 </div>
   </div>
 </footer>
