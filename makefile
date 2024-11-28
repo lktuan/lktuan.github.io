@@ -4,11 +4,11 @@
 .PHONY: render render_main
 
 render:
-	@echo "Render all documents"
+	@echo "Rendering all documents"
 	quarto render
 	
 render_main:
-	@echo "Preparing for a major version change..."
+	@echo "Preparing rendering main files"
 	quarto render index.qmd
 	quarto render about\index.qmd
 	quarto render curriculum\index.qmd
@@ -22,5 +22,6 @@ render_main:
 # Help target to show available commands
 help:
 	@echo "Available commands:"
-	@echo "  make major_change  - Prepare and render for a major version change"
+	@echo "  make render  - Render all files"
+	@echo "  make render_main  - Render main files"
 	@echo "  make help      - Show this help message"
