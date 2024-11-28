@@ -242,12 +242,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#starter-code" id="toc-starter-code" class="nav-link" data-scroll-target="#starter-code">starter code</a></li>
   <li><a href="#fixing-the-initial-loss" id="toc-fixing-the-initial-loss" class="nav-link" data-scroll-target="#fixing-the-initial-loss">fixing the initial loss</a></li>
-  <li><a href="#fixing-the-saturated-tanh" id="toc-fixing-the-saturated-tanh" class="nav-link" data-scroll-target="#fixing-the-saturated-tanh">fixing the saturated tanh</a></li>
+  <li><a href="#fixing-the-saturated-tanh" id="toc-fixing-the-saturated-tanh" class="nav-link" data-scroll-target="#fixing-the-saturated-tanh">fixing the saturated <code>tanh</code></a></li>
   <li><a href="#calculating-the-init-scale-kaiming-init" id="toc-calculating-the-init-scale-kaiming-init" class="nav-link" data-scroll-target="#calculating-the-init-scale-kaiming-init">calculating the init scale: “Kaiming init”</a></li>
   <li><a href="#batch-normalization" id="toc-batch-normalization" class="nav-link" data-scroll-target="#batch-normalization">batch normalization</a></li>
   <li><a href="#batch-normalization-summary" id="toc-batch-normalization-summary" class="nav-link" data-scroll-target="#batch-normalization-summary">batch normalization: summary</a></li>
-  <li><a href="#real-example-resnet50-walkthrough" id="toc-real-example-resnet50-walkthrough" class="nav-link" data-scroll-target="#real-example-resnet50-walkthrough">real example: resnet50 walkthrough</a></li>
-  <li><a href="#summary-of-the-lecture" id="toc-summary-of-the-lecture" class="nav-link" data-scroll-target="#summary-of-the-lecture">summary of the lecture</a></li>
+  <li><a href="#real-example-resnet50-walkthrough" id="toc-real-example-resnet50-walkthrough" class="nav-link" data-scroll-target="#real-example-resnet50-walkthrough">real example: <code>resnet50</code> walkthrough</a></li>
+  <li><a href="#summary-of-the-lecture" id="toc-summary-of-the-lecture" class="nav-link" data-scroll-target="#summary-of-the-lecture">summary of the lecture</a>
+  <ul class="collapse">
+  <li><a href="#loss-logs" id="toc-loss-logs" class="nav-link" data-scroll-target="#loss-logs">loss logs</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#part-2-pytorch-ifying-the-code" id="toc-part-2-pytorch-ifying-the-code" class="nav-link" data-scroll-target="#part-2-pytorch-ifying-the-code">Part 2: PyTorch-ifying the code</a>
   <ul class="collapse">
@@ -288,7 +291,7 @@ This is not orginal content!
 <h1>Part 1: intro</h1>
 <section id="starter-code" class="level2">
 <h2 class="anchored" data-anchor-id="starter-code">starter code</h2>
-<div id="26749f97" class="cell" data-execution_count="1">
+<div id="f31486eb" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> torch</span>
@@ -298,7 +301,7 @@ This is not orginal content!
 <span id="cb1-5"><a href="#cb1-5"></a><span class="op">%</span>matplotlib inline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cae58903" class="cell" data-execution_count="2">
+<div id="06e257bf" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -307,20 +310,20 @@ This is not orginal content!
 <span id="cb2-4"><a href="#cb2-4"></a>words <span class="op">=</span> pd.read_csv(url, header<span class="op">=</span><span class="va">None</span>).iloc[:, <span class="dv">0</span>].tolist()</span>
 <span id="cb2-5"><a href="#cb2-5"></a>words[:<span class="dv">8</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="14">
+<div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>['emma', 'olivia', 'ava', 'isabella', 'sophia', 'charlotte', 'mia', 'amelia']</code></pre>
 </div>
 </div>
-<div id="42862a72" class="cell" data-execution_count="3">
+<div id="b3eb1b4b" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="bu">len</span>(words)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="15">
+<div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>32033</code></pre>
 </div>
 </div>
-<div id="61c468af" class="cell" data-execution_count="4">
+<div id="abda4845" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># build the vocabulary of characters and mapping to/from integer</span></span>
@@ -337,12 +340,12 @@ This is not orginal content!
 27</code></pre>
 </div>
 </div>
-<div id="d39716ab" class="cell" data-execution_count="5">
+<div id="546db4f4" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># build the dataset</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">def</span> buid_dataset(words):</span>
-<span id="cb8-3"><a href="#cb8-3"></a>    block_size <span class="op">=</span> <span class="dv">3</span></span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>block_size <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="co"># build the dataset</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="kw">def</span> buid_dataset(words):</span>
 <span id="cb8-4"><a href="#cb8-4"></a>    X, Y <span class="op">=</span> [], []</span>
 <span id="cb8-5"><a href="#cb8-5"></a></span>
 <span id="cb8-6"><a href="#cb8-6"></a>    <span class="cf">for</span> w <span class="kw">in</span> words:</span>
@@ -374,23 +377,217 @@ torch.Size([22655, 3]) torch.Size([22655])
 torch.Size([22866, 3]) torch.Size([22866])</code></pre>
 </div>
 </div>
-<div id="77ccb683" class="cell" data-execution_count="6">
+<div id="f627574e" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># hyper-parameters</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a>block_size <span class="op">=</span> <span class="dv">3</span> <span class="co"># number of chracters / inputs to predict the nextone</span></span>
-<span id="cb10-3"><a href="#cb10-3"></a>no_chars <span class="op">=</span> <span class="dv">27</span> <span class="co"># number of possible chracters, include '.'</span></span>
-<span id="cb10-4"><a href="#cb10-4"></a>emb_size <span class="op">=</span> <span class="dv">10</span> <span class="co"># no of dimensions of the embedding space.</span></span>
-<span id="cb10-5"><a href="#cb10-5"></a>hidden_size <span class="op">=</span> <span class="dv">300</span> <span class="co"># size of the hidden - tanh layer</span></span>
-<span id="cb10-6"><a href="#cb10-6"></a>batch_size <span class="op">=</span> <span class="dv">32</span> <span class="co"># minibatch size for training, 2, 4, 8, 16, 32, 64, etc</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># MLP revisited</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>n_emb <span class="op">=</span> <span class="dv">10</span> <span class="co"># no of dimensions of the embedding space.</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a>n_hidden <span class="op">=</span> <span class="dv">200</span> <span class="co"># size of the hidden - tanh layer</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a></span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="co"># Lookup table - 10 dimensional space</span></span>
+<span id="cb10-6"><a href="#cb10-6"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>) <span class="co"># for reproductivity</span></span>
+<span id="cb10-7"><a href="#cb10-7"></a>C <span class="op">=</span> torch.randn((vocab_size, n_emb),                  generator<span class="op">=</span>g)</span>
+<span id="cb10-8"><a href="#cb10-8"></a></span>
+<span id="cb10-9"><a href="#cb10-9"></a><span class="co"># Layer 1 - tanh - 300 neurons</span></span>
+<span id="cb10-10"><a href="#cb10-10"></a>W1 <span class="op">=</span> torch.randn((block_size <span class="op">*</span> n_emb, n_hidden),      generator<span class="op">=</span>g)</span>
+<span id="cb10-11"><a href="#cb10-11"></a>b1 <span class="op">=</span> torch.randn(n_hidden,                            generator<span class="op">=</span>g)</span>
+<span id="cb10-12"><a href="#cb10-12"></a></span>
+<span id="cb10-13"><a href="#cb10-13"></a><span class="co"># Layer 2 - softmax</span></span>
+<span id="cb10-14"><a href="#cb10-14"></a>W2 <span class="op">=</span> torch.randn((n_hidden, vocab_size),              generator<span class="op">=</span>g)</span>
+<span id="cb10-15"><a href="#cb10-15"></a>b2 <span class="op">=</span> torch.randn(vocab_size,                          generator<span class="op">=</span>g)</span>
+<span id="cb10-16"><a href="#cb10-16"></a></span>
+<span id="cb10-17"><a href="#cb10-17"></a><span class="co"># All params</span></span>
+<span id="cb10-18"><a href="#cb10-18"></a>parameters <span class="op">=</span> [C, W1, b1, W2, b2]</span>
+<span id="cb10-19"><a href="#cb10-19"></a><span class="bu">print</span>(<span class="st">"No of params: "</span>, <span class="bu">sum</span>(p.nelement() <span class="cf">for</span> p <span class="kw">in</span> parameters))</span>
+<span id="cb10-20"><a href="#cb10-20"></a></span>
+<span id="cb10-21"><a href="#cb10-21"></a><span class="co"># Pre-training</span></span>
+<span id="cb10-22"><a href="#cb10-22"></a><span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb10-23"><a href="#cb10-23"></a>    p.requires_grad <span class="op">=</span> <span class="va">True</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>No of params:  11897</code></pre>
+</div>
+</div>
+<div id="16db1d3b" class="cell" data-execution_count="7">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># Optimization</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a>max_steps <span class="op">=</span> <span class="dv">200_000</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a>batch_size <span class="op">=</span> <span class="dv">32</span></span>
+<span id="cb12-4"><a href="#cb12-4"></a></span>
+<span id="cb12-5"><a href="#cb12-5"></a><span class="co"># Stats holders</span></span>
+<span id="cb12-6"><a href="#cb12-6"></a>lossi <span class="op">=</span> []</span>
+<span id="cb12-7"><a href="#cb12-7"></a></span>
+<span id="cb12-8"><a href="#cb12-8"></a><span class="co"># Training on Xtr, Ytr</span></span>
+<span id="cb12-9"><a href="#cb12-9"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(max_steps):</span>
+<span id="cb12-10"><a href="#cb12-10"></a></span>
+<span id="cb12-11"><a href="#cb12-11"></a>    <span class="co"># minibatch construct      </span></span>
+<span id="cb12-12"><a href="#cb12-12"></a>    ix <span class="op">=</span> torch.randint(<span class="dv">0</span>, Xtr.shape[<span class="dv">0</span>], (batch_size,)) </span>
+<span id="cb12-13"><a href="#cb12-13"></a>    Xb, Yb <span class="op">=</span> Xtr[ix], Ytr[ix] <span class="co"># batch X, Y</span></span>
+<span id="cb12-14"><a href="#cb12-14"></a></span>
+<span id="cb12-15"><a href="#cb12-15"></a>    <span class="co"># forward pass:</span></span>
+<span id="cb12-16"><a href="#cb12-16"></a>    emb <span class="op">=</span> C[Xb] <span class="co"># embed the characters into vectors   </span></span>
+<span id="cb12-17"><a href="#cb12-17"></a>    emb_cat <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) <span class="co"># concatenate the vectors</span></span>
+<span id="cb12-18"><a href="#cb12-18"></a>    h_pre_act <span class="op">=</span> emb_cat <span class="op">@</span> W1 <span class="op">+</span> b1 <span class="co"># hidden layer pre-activation</span></span>
+<span id="cb12-19"><a href="#cb12-19"></a>    h <span class="op">=</span> torch.tanh(h_pre_act) <span class="co"># hidden layer</span></span>
+<span id="cb12-20"><a href="#cb12-20"></a>    logits <span class="op">=</span> h <span class="op">@</span> W2 <span class="op">+</span> b2 <span class="co"># output layer</span></span>
+<span id="cb12-21"><a href="#cb12-21"></a>    loss <span class="op">=</span> F.cross_entropy(logits, Yb) <span class="co"># loss function</span></span>
+<span id="cb12-22"><a href="#cb12-22"></a></span>
+<span id="cb12-23"><a href="#cb12-23"></a>    <span class="co"># backward pass:</span></span>
+<span id="cb12-24"><a href="#cb12-24"></a>    <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb12-25"><a href="#cb12-25"></a>        p.grad <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb12-26"><a href="#cb12-26"></a>    loss.backward()</span>
+<span id="cb12-27"><a href="#cb12-27"></a></span>
+<span id="cb12-28"><a href="#cb12-28"></a>    <span class="co"># update</span></span>
+<span id="cb12-29"><a href="#cb12-29"></a>    lr <span class="op">=</span> <span class="fl">0.1</span> <span class="cf">if</span> i <span class="op">&lt;=</span> max_steps <span class="op">/</span> <span class="dv">2</span> <span class="cf">else</span> <span class="fl">0.01</span> <span class="co"># step learning rate decay</span></span>
+<span id="cb12-30"><a href="#cb12-30"></a>    <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb12-31"><a href="#cb12-31"></a>        p.data <span class="op">+=</span> <span class="op">-</span> lr <span class="op">*</span> p.grad</span>
+<span id="cb12-32"><a href="#cb12-32"></a></span>
+<span id="cb12-33"><a href="#cb12-33"></a>    <span class="co"># track stats</span></span>
+<span id="cb12-34"><a href="#cb12-34"></a>    <span class="cf">if</span> i <span class="op">%</span> <span class="dv">10000</span> <span class="op">==</span> <span class="dv">0</span>: <span class="co"># print once every while</span></span>
+<span id="cb12-35"><a href="#cb12-35"></a>      <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">:7d}</span><span class="ss">/</span><span class="sc">{</span>max_steps<span class="sc">:7d}</span><span class="ss">: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb12-36"><a href="#cb12-36"></a>    lossi.append(loss.log10().item())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>      0/ 200000: 21.4529
+  10000/ 200000: 2.4276
+  20000/ 200000: 1.8410
+  30000/ 200000: 2.1607
+  40000/ 200000: 2.2440
+  50000/ 200000: 2.1949
+  60000/ 200000: 2.6642
+  70000/ 200000: 2.0009
+  80000/ 200000: 2.4149
+  90000/ 200000: 2.2581
+ 100000/ 200000: 2.0506
+ 110000/ 200000: 1.6414
+ 120000/ 200000: 1.9025
+ 130000/ 200000: 2.0175
+ 140000/ 200000: 1.9718
+ 150000/ 200000: 2.2683
+ 160000/ 200000: 2.4889
+ 170000/ 200000: 1.9916
+ 180000/ 200000: 2.2306
+ 190000/ 200000: 2.4035</code></pre>
+</div>
+</div>
+<div id="14692033" class="cell" data-execution_count="8">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>plt.plot(lossi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-9-output-1.png" width="572" height="411" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="b533d5b0" class="cell" data-execution_count="9">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="at">@torch.no_grad</span>() <span class="co"># disables gradient tracking</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="kw">def</span> split_loss(split: <span class="bu">str</span>):</span>
+<span id="cb15-3"><a href="#cb15-3"></a>  x, y <span class="op">=</span> {</span>
+<span id="cb15-4"><a href="#cb15-4"></a>    <span class="st">'train'</span>: (Xtr, Ytr),</span>
+<span id="cb15-5"><a href="#cb15-5"></a>    <span class="st">'val'</span>: (Xdev, Ydev),</span>
+<span id="cb15-6"><a href="#cb15-6"></a>    <span class="st">'test'</span>: (Xte, Yte)</span>
+<span id="cb15-7"><a href="#cb15-7"></a>  }[split]</span>
+<span id="cb15-8"><a href="#cb15-8"></a>  emb <span class="op">=</span> C[x] <span class="co"># (N, block_size, n_emb)</span></span>
+<span id="cb15-9"><a href="#cb15-9"></a>  emb_cat <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) <span class="co"># concatenate into (N, block_size * n_emb)</span></span>
+<span id="cb15-10"><a href="#cb15-10"></a>  h <span class="op">=</span> torch.tanh(emb_cat <span class="op">@</span> W1 <span class="op">+</span> b1) <span class="co"># (N, n_hidden)</span></span>
+<span id="cb15-11"><a href="#cb15-11"></a>  logits <span class="op">=</span> h <span class="op">@</span> W2 <span class="op">+</span> b2 <span class="co"># (N, vocab_size)</span></span>
+<span id="cb15-12"><a href="#cb15-12"></a>  loss <span class="op">=</span> F.cross_entropy(logits, y) <span class="co"># loss function</span></span>
+<span id="cb15-13"><a href="#cb15-13"></a>  <span class="bu">print</span>(split, loss.item())</span>
+<span id="cb15-14"><a href="#cb15-14"></a></span>
+<span id="cb15-15"><a href="#cb15-15"></a>split_loss(<span class="st">'train'</span>)</span>
+<span id="cb15-16"><a href="#cb15-16"></a>split_loss(<span class="st">'val'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>train 2.113288164138794
+val 2.1518607139587402</code></pre>
+</div>
+</div>
+<div id="bc7b1494" class="cell" data-execution_count="10">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># sample from the model</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span> <span class="op">+</span> <span class="dv">10</span>)</span>
+<span id="cb17-3"><a href="#cb17-3"></a></span>
+<span id="cb17-4"><a href="#cb17-4"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20</span>):</span>
+<span id="cb17-5"><a href="#cb17-5"></a>    </span>
+<span id="cb17-6"><a href="#cb17-6"></a>    out <span class="op">=</span> []</span>
+<span id="cb17-7"><a href="#cb17-7"></a>    context <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> block_size <span class="co"># initialize with all ...</span></span>
+<span id="cb17-8"><a href="#cb17-8"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb17-9"><a href="#cb17-9"></a>      <span class="co"># forward pass the neural net</span></span>
+<span id="cb17-10"><a href="#cb17-10"></a>      emb <span class="op">=</span> C[torch.tensor([context])] <span class="co"># (1,block_size,n_embd)</span></span>
+<span id="cb17-11"><a href="#cb17-11"></a>      h <span class="op">=</span> torch.tanh(emb.view(<span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>) <span class="op">@</span> W1 <span class="op">+</span> b1)</span>
+<span id="cb17-12"><a href="#cb17-12"></a>      logits <span class="op">=</span> h <span class="op">@</span> W2 <span class="op">+</span> b2</span>
+<span id="cb17-13"><a href="#cb17-13"></a>      probs <span class="op">=</span> F.softmax(logits, dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb17-14"><a href="#cb17-14"></a>      <span class="co"># sample from the distribution</span></span>
+<span id="cb17-15"><a href="#cb17-15"></a>      ix <span class="op">=</span> torch.multinomial(probs, num_samples<span class="op">=</span><span class="dv">1</span>, generator<span class="op">=</span>g).item()</span>
+<span id="cb17-16"><a href="#cb17-16"></a>      <span class="co"># shift the context window and track the samples</span></span>
+<span id="cb17-17"><a href="#cb17-17"></a>      context <span class="op">=</span> context[<span class="dv">1</span>:] <span class="op">+</span> [ix]</span>
+<span id="cb17-18"><a href="#cb17-18"></a>      out.append(ix)</span>
+<span id="cb17-19"><a href="#cb17-19"></a>      <span class="co"># if we sample the special '.' token, break</span></span>
+<span id="cb17-20"><a href="#cb17-20"></a>      <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb17-21"><a href="#cb17-21"></a>        <span class="cf">break</span></span>
+<span id="cb17-22"><a href="#cb17-22"></a>    </span>
+<span id="cb17-23"><a href="#cb17-23"></a>    <span class="bu">print</span>(<span class="st">''</span>.join(itos[i] <span class="cf">for</span> i <span class="kw">in</span> out)) <span class="co"># decode and print the generated word</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>mora.
+mayah.
+see.
+med.
+rylee.
+emman.
+endraegradelynnelin.
+shi.
+jenleigh.
+camanaraelynn.
+hokelin.
+shubergahiriel.
+kindreelynn.
+novana.
+ubzey.
+dariyahulyeks.
+kay.
+mya.
+kyla.
+hal.</code></pre>
+</div>
 </div>
 </section>
 <section id="fixing-the-initial-loss" class="level2">
 <h2 class="anchored" data-anchor-id="fixing-the-initial-loss">fixing the initial loss</h2>
+<p>Okay so now our network has multiple things wrong at the initialization, let’s list down below:</p>
+<p>We can see at the <code>step = 0</code>, the loss was <code>27</code> and after some <code>k</code>s training loops it decreased to <code>1</code> or <code>2</code>. It extremely high at the begining. In practice, we should give the network somehow the expectation we want when generating a character after some characters (<code>3</code>).</p>
+<p>In this case, without training yet, we expect all <code>27</code> characters’ posibilities to be equal (<code>1 / 27.0</code>) ~ <strong>uniform distribution</strong>, so the loss ~ negative log likelihood would be:</p>
+<div id="b13a91aa" class="cell" data-execution_count="11">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="op">-</span> torch.tensor(<span class="dv">1</span> <span class="op">/</span> <span class="fl">27.0</span>).log()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>tensor(3.2958)</code></pre>
+</div>
+</div>
+<p>It’s far lower than <code>27</code>, we say that the network is <strong>confidently wrong</strong>. Andrej demonstrated by another simple 5 elements tensor and showed that the loss is lowest when all elements are equal.</p>
+<p>We want the <code>logits</code> to be low entropy as possible (but not equal to <code>0</code>, which will be showed later), we added multipliers <code>0.01</code> to <code>W2</code>, and <code>0</code> to <code>b2</code>. We got the loss to be <code>3.xx</code> at the beginning.</p>
+<div id="1ac6b84c" class="cell" data-execution_count="12">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># Layer 2 - softmax</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>W2 <span class="op">=</span> torch.randn((n_hidden, vocab_size),              generator<span class="op">=</span>g) <span class="op">*</span> <span class="fl">0.01</span></span>
+<span id="cb21-3"><a href="#cb21-3"></a>b2 <span class="op">=</span> torch.randn(vocab_size,                          generator<span class="op">=</span>g) <span class="op">*</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Now re-train the model and we will notice the the <code>lossi</code> will not look like the <em>hookey stick</em> anymore! Morever the final loss on train set and dev set is better!</p>
 </section>
 <section id="fixing-the-saturated-tanh" class="level2">
-<h2 class="anchored" data-anchor-id="fixing-the-saturated-tanh">fixing the saturated tanh</h2>
+<h2 class="anchored" data-anchor-id="fixing-the-saturated-tanh">fixing the saturated <code>tanh</code></h2>
 </section>
 <section id="calculating-the-init-scale-kaiming-init" class="level2">
 <h2 class="anchored" data-anchor-id="calculating-the-init-scale-kaiming-init">calculating the init scale: “Kaiming init”</h2>
@@ -402,10 +599,213 @@ torch.Size([22866, 3]) torch.Size([22866])</code></pre>
 <h2 class="anchored" data-anchor-id="batch-normalization-summary">batch normalization: summary</h2>
 </section>
 <section id="real-example-resnet50-walkthrough" class="level2">
-<h2 class="anchored" data-anchor-id="real-example-resnet50-walkthrough">real example: resnet50 walkthrough</h2>
+<h2 class="anchored" data-anchor-id="real-example-resnet50-walkthrough">real example: <code>resnet50</code> walkthrough</h2>
 </section>
 <section id="summary-of-the-lecture" class="level2">
 <h2 class="anchored" data-anchor-id="summary-of-the-lecture">summary of the lecture</h2>
+<p>Our final code in part 1 (un-fold to see), <code># 👈</code> indicates a change:</p>
+<div id="3ac5be40" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a>block_size <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="co"># build the dataset</span></span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="kw">def</span> buid_dataset(words):</span>
+<span id="cb22-4"><a href="#cb22-4"></a>    X, Y <span class="op">=</span> [], []</span>
+<span id="cb22-5"><a href="#cb22-5"></a></span>
+<span id="cb22-6"><a href="#cb22-6"></a>    <span class="cf">for</span> w <span class="kw">in</span> words:</span>
+<span id="cb22-7"><a href="#cb22-7"></a>        context <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> block_size</span>
+<span id="cb22-8"><a href="#cb22-8"></a>        <span class="cf">for</span> ch <span class="kw">in</span> w <span class="op">+</span> <span class="st">'.'</span>:</span>
+<span id="cb22-9"><a href="#cb22-9"></a>            ix <span class="op">=</span> stoi[ch]</span>
+<span id="cb22-10"><a href="#cb22-10"></a>            X.append(context)</span>
+<span id="cb22-11"><a href="#cb22-11"></a>            Y.append(ix)</span>
+<span id="cb22-12"><a href="#cb22-12"></a>            context <span class="op">=</span> context[<span class="dv">1</span>:] <span class="op">+</span> [ix]</span>
+<span id="cb22-13"><a href="#cb22-13"></a></span>
+<span id="cb22-14"><a href="#cb22-14"></a>    X <span class="op">=</span> torch.tensor(X)</span>
+<span id="cb22-15"><a href="#cb22-15"></a>    Y <span class="op">=</span> torch.tensor(Y)</span>
+<span id="cb22-16"><a href="#cb22-16"></a>    <span class="bu">print</span>(X.shape, Y.shape)</span>
+<span id="cb22-17"><a href="#cb22-17"></a>    <span class="cf">return</span> X, Y</span>
+<span id="cb22-18"><a href="#cb22-18"></a></span>
+<span id="cb22-19"><a href="#cb22-19"></a><span class="im">import</span> random</span>
+<span id="cb22-20"><a href="#cb22-20"></a>random.seed(<span class="dv">42</span>)</span>
+<span id="cb22-21"><a href="#cb22-21"></a>random.shuffle(words)</span>
+<span id="cb22-22"><a href="#cb22-22"></a>n1 <span class="op">=</span> <span class="bu">int</span>(<span class="fl">0.8</span> <span class="op">*</span> <span class="bu">len</span>(words))</span>
+<span id="cb22-23"><a href="#cb22-23"></a>n2 <span class="op">=</span> <span class="bu">int</span>(<span class="fl">0.9</span> <span class="op">*</span> <span class="bu">len</span>(words))</span>
+<span id="cb22-24"><a href="#cb22-24"></a></span>
+<span id="cb22-25"><a href="#cb22-25"></a>Xtr, Ytr <span class="op">=</span> buid_dataset(words[:n1])        <span class="co"># 80#</span></span>
+<span id="cb22-26"><a href="#cb22-26"></a>Xdev, Ydev <span class="op">=</span> buid_dataset(words[n1:n2])    <span class="co"># 10%</span></span>
+<span id="cb22-27"><a href="#cb22-27"></a>Xte, Yte <span class="op">=</span> buid_dataset(words[n2:])        <span class="co"># 10%</span></span>
+<span id="cb22-28"><a href="#cb22-28"></a></span>
+<span id="cb22-29"><a href="#cb22-29"></a><span class="co"># MLP revisited</span></span>
+<span id="cb22-30"><a href="#cb22-30"></a>n_emb <span class="op">=</span> <span class="dv">10</span> <span class="co"># no of dimensions of the embedding space.</span></span>
+<span id="cb22-31"><a href="#cb22-31"></a>n_hidden <span class="op">=</span> <span class="dv">200</span> <span class="co"># size of the hidden - tanh layer</span></span>
+<span id="cb22-32"><a href="#cb22-32"></a></span>
+<span id="cb22-33"><a href="#cb22-33"></a><span class="co"># Lookup table - 10 dimensional space</span></span>
+<span id="cb22-34"><a href="#cb22-34"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>) <span class="co"># for reproductivity</span></span>
+<span id="cb22-35"><a href="#cb22-35"></a>C <span class="op">=</span> torch.randn((vocab_size, n_emb),                  generator<span class="op">=</span>g)</span>
+<span id="cb22-36"><a href="#cb22-36"></a></span>
+<span id="cb22-37"><a href="#cb22-37"></a><span class="co"># Layer 1 - tanh - 300 neurons</span></span>
+<span id="cb22-38"><a href="#cb22-38"></a>W1 <span class="op">=</span> torch.randn((block_size <span class="op">*</span> n_emb, n_hidden),      generator<span class="op">=</span>g)</span>
+<span id="cb22-39"><a href="#cb22-39"></a>b1 <span class="op">=</span> torch.randn(n_hidden,                            generator<span class="op">=</span>g)</span>
+<span id="cb22-40"><a href="#cb22-40"></a></span>
+<span id="cb22-41"><a href="#cb22-41"></a><span class="co"># Layer 2 - softmax</span></span>
+<span id="cb22-42"><a href="#cb22-42"></a>W2 <span class="op">=</span> torch.randn((n_hidden, vocab_size),              generator<span class="op">=</span>g) <span class="op">*</span> <span class="fl">0.01</span>       <span class="co"># 👈</span></span>
+<span id="cb22-43"><a href="#cb22-43"></a>b2 <span class="op">=</span> torch.randn(vocab_size,                          generator<span class="op">=</span>g) <span class="op">*</span> <span class="dv">0</span>          <span class="co"># 👈</span></span>
+<span id="cb22-44"><a href="#cb22-44"></a></span>
+<span id="cb22-45"><a href="#cb22-45"></a><span class="co"># All params</span></span>
+<span id="cb22-46"><a href="#cb22-46"></a>parameters <span class="op">=</span> [C, W1, b1, W2, b2]</span>
+<span id="cb22-47"><a href="#cb22-47"></a><span class="bu">print</span>(<span class="st">"No of params: "</span>, <span class="bu">sum</span>(p.nelement() <span class="cf">for</span> p <span class="kw">in</span> parameters))</span>
+<span id="cb22-48"><a href="#cb22-48"></a></span>
+<span id="cb22-49"><a href="#cb22-49"></a><span class="co"># Pre-training</span></span>
+<span id="cb22-50"><a href="#cb22-50"></a><span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb22-51"><a href="#cb22-51"></a>    p.requires_grad <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb22-52"><a href="#cb22-52"></a></span>
+<span id="cb22-53"><a href="#cb22-53"></a><span class="co"># Optimization</span></span>
+<span id="cb22-54"><a href="#cb22-54"></a>max_steps <span class="op">=</span> <span class="dv">200_000</span></span>
+<span id="cb22-55"><a href="#cb22-55"></a>batch_size <span class="op">=</span> <span class="dv">32</span></span>
+<span id="cb22-56"><a href="#cb22-56"></a></span>
+<span id="cb22-57"><a href="#cb22-57"></a><span class="co"># Stats holders</span></span>
+<span id="cb22-58"><a href="#cb22-58"></a>lossi <span class="op">=</span> []</span>
+<span id="cb22-59"><a href="#cb22-59"></a></span>
+<span id="cb22-60"><a href="#cb22-60"></a><span class="co"># Training on Xtr, Ytr</span></span>
+<span id="cb22-61"><a href="#cb22-61"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(max_steps):</span>
+<span id="cb22-62"><a href="#cb22-62"></a></span>
+<span id="cb22-63"><a href="#cb22-63"></a>    <span class="co"># minibatch construct      </span></span>
+<span id="cb22-64"><a href="#cb22-64"></a>    ix <span class="op">=</span> torch.randint(<span class="dv">0</span>, Xtr.shape[<span class="dv">0</span>], (batch_size,)) </span>
+<span id="cb22-65"><a href="#cb22-65"></a>    Xb, Yb <span class="op">=</span> Xtr[ix], Ytr[ix] <span class="co"># batch X, Y</span></span>
+<span id="cb22-66"><a href="#cb22-66"></a></span>
+<span id="cb22-67"><a href="#cb22-67"></a>    <span class="co"># forward pass:</span></span>
+<span id="cb22-68"><a href="#cb22-68"></a>    emb <span class="op">=</span> C[Xb] <span class="co"># embed the characters into vectors   </span></span>
+<span id="cb22-69"><a href="#cb22-69"></a>    emb_cat <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) <span class="co"># concatenate the vectors</span></span>
+<span id="cb22-70"><a href="#cb22-70"></a>    h_pre_act <span class="op">=</span> emb_cat <span class="op">@</span> W1 <span class="op">+</span> b1 <span class="co"># hidden layer pre-activation</span></span>
+<span id="cb22-71"><a href="#cb22-71"></a>    h <span class="op">=</span> torch.tanh(h_pre_act) <span class="co"># hidden layer</span></span>
+<span id="cb22-72"><a href="#cb22-72"></a>    logits <span class="op">=</span> h <span class="op">@</span> W2 <span class="op">+</span> b2 <span class="co"># output layer</span></span>
+<span id="cb22-73"><a href="#cb22-73"></a>    loss <span class="op">=</span> F.cross_entropy(logits, Yb) <span class="co"># loss function</span></span>
+<span id="cb22-74"><a href="#cb22-74"></a></span>
+<span id="cb22-75"><a href="#cb22-75"></a>    <span class="co"># backward pass:</span></span>
+<span id="cb22-76"><a href="#cb22-76"></a>    <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb22-77"><a href="#cb22-77"></a>        p.grad <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb22-78"><a href="#cb22-78"></a>    loss.backward()</span>
+<span id="cb22-79"><a href="#cb22-79"></a></span>
+<span id="cb22-80"><a href="#cb22-80"></a>    <span class="co"># update</span></span>
+<span id="cb22-81"><a href="#cb22-81"></a>    lr <span class="op">=</span> <span class="fl">0.1</span> <span class="cf">if</span> i <span class="op">&lt;=</span> max_steps <span class="op">/</span> <span class="dv">2</span> <span class="cf">else</span> <span class="fl">0.01</span> <span class="co"># step learning rate decay</span></span>
+<span id="cb22-82"><a href="#cb22-82"></a>    <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb22-83"><a href="#cb22-83"></a>        p.data <span class="op">+=</span> <span class="op">-</span> lr <span class="op">*</span> p.grad</span>
+<span id="cb22-84"><a href="#cb22-84"></a></span>
+<span id="cb22-85"><a href="#cb22-85"></a>    <span class="co"># track stats</span></span>
+<span id="cb22-86"><a href="#cb22-86"></a>    <span class="cf">if</span> i <span class="op">%</span> <span class="dv">10000</span> <span class="op">==</span> <span class="dv">0</span>: <span class="co"># print once every while</span></span>
+<span id="cb22-87"><a href="#cb22-87"></a>      <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">:7d}</span><span class="ss">/</span><span class="sc">{</span>max_steps<span class="sc">:7d}</span><span class="ss">: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb22-88"><a href="#cb22-88"></a>    lossi.append(loss.log10().item())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>torch.Size([182580, 3]) torch.Size([182580])
+torch.Size([22767, 3]) torch.Size([22767])
+torch.Size([22799, 3]) torch.Size([22799])
+No of params:  11897
+      0/ 200000: 3.3228
+  10000/ 200000: 2.4804
+  20000/ 200000: 2.2836
+  30000/ 200000: 2.0523
+  40000/ 200000: 2.1388
+  50000/ 200000: 2.0566
+  60000/ 200000: 1.6524
+  70000/ 200000: 2.4781
+  80000/ 200000: 2.0559
+  90000/ 200000: 2.2465
+ 100000/ 200000: 2.0229
+ 110000/ 200000: 1.9163
+ 120000/ 200000: 2.0193
+ 130000/ 200000: 2.1747
+ 140000/ 200000: 1.8792
+ 150000/ 200000: 1.6847
+ 160000/ 200000: 2.0320
+ 170000/ 200000: 2.2350
+ 180000/ 200000: 2.4009
+ 190000/ 200000: 1.7599</code></pre>
+</div>
+</div>
+<div id="6243b6d7" class="cell" data-execution_count="14">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a>plt.plot(lossi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-15-output-1.png" width="572" height="411" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="35c1b1bb" class="cell" data-execution_count="15">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a><span class="at">@torch.no_grad</span>() <span class="co"># disables gradient tracking</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a><span class="kw">def</span> split_loss(split: <span class="bu">str</span>):</span>
+<span id="cb25-3"><a href="#cb25-3"></a>  x, y <span class="op">=</span> {</span>
+<span id="cb25-4"><a href="#cb25-4"></a>    <span class="st">'train'</span>: (Xtr, Ytr),</span>
+<span id="cb25-5"><a href="#cb25-5"></a>    <span class="st">'val'</span>: (Xdev, Ydev),</span>
+<span id="cb25-6"><a href="#cb25-6"></a>    <span class="st">'test'</span>: (Xte, Yte)</span>
+<span id="cb25-7"><a href="#cb25-7"></a>  }[split]</span>
+<span id="cb25-8"><a href="#cb25-8"></a>  emb <span class="op">=</span> C[x] <span class="co"># (N, block_size, n_emb)</span></span>
+<span id="cb25-9"><a href="#cb25-9"></a>  emb_cat <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) <span class="co"># concatenate into (N, block_size * n_emb)</span></span>
+<span id="cb25-10"><a href="#cb25-10"></a>  h <span class="op">=</span> torch.tanh(emb_cat <span class="op">@</span> W1 <span class="op">+</span> b1) <span class="co"># (N, n_hidden)</span></span>
+<span id="cb25-11"><a href="#cb25-11"></a>  logits <span class="op">=</span> h <span class="op">@</span> W2 <span class="op">+</span> b2 <span class="co"># (N, vocab_size)</span></span>
+<span id="cb25-12"><a href="#cb25-12"></a>  loss <span class="op">=</span> F.cross_entropy(logits, y) <span class="co"># loss function</span></span>
+<span id="cb25-13"><a href="#cb25-13"></a>  <span class="bu">print</span>(split, loss.item())</span>
+<span id="cb25-14"><a href="#cb25-14"></a></span>
+<span id="cb25-15"><a href="#cb25-15"></a>split_loss(<span class="st">'train'</span>)</span>
+<span id="cb25-16"><a href="#cb25-16"></a>split_loss(<span class="st">'val'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>train 2.069159507751465
+val 2.1323189735412598</code></pre>
+</div>
+</div>
+<section id="loss-logs" class="level3">
+<h3 class="anchored" data-anchor-id="loss-logs">loss logs</h3>
+<table class="table">
+<caption>Loss logs</caption>
+<colgroup>
+<col style="width: 12%">
+<col style="width: 40%">
+<col style="width: 48%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>What we did</th>
+<th>Loss we got</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>original</td>
+<td>train 2.1169614791870117 val 2.1623435020446777</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>fixed softmax confidently wrong</td>
+<td>train 2.0666463375091553 val 2.1468191146850586</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>fixed tanh layer too saturated at init</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>used semi principle “kaiming init” instead of hacking init</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>added batch norm layer</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
 </section>
 </section>
 <section id="part-2-pytorch-ifying-the-code" class="level1">
@@ -1088,129 +1488,398 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb11" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1"></a><span class="co">---</span></span>
-<span id="cb11-2"><a href="#cb11-2"></a><span class="an">title:</span><span class="co"> "NN-Z2H Lesson 4: Building makemore part 4 - Activations &amp; Gradients, BatchNorm"</span></span>
-<span id="cb11-3"><a href="#cb11-3"></a><span class="an">description:</span><span class="co"> "dive into the internals of MLPs, scrutinize the statistics of the forward pass activations, backward pass gradients, understand the health of your deep network, introduce batch normalization"</span></span>
-<span id="cb11-4"><a href="#cb11-4"></a><span class="an">author:</span></span>
-<span id="cb11-5"><a href="#cb11-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
-<span id="cb11-6"><a href="#cb11-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
-<span id="cb11-7"><a href="#cb11-7"></a><span class="an">categories:</span><span class="co"> [til, python, andrej karpathy, nn-z2h, bigram, neural networks] </span></span>
-<span id="cb11-8"><a href="#cb11-8"></a><span class="an">date:</span><span class="co"> 11-26-2024</span></span>
-<span id="cb11-9"><a href="#cb11-9"></a><span class="an">date-modified:</span><span class="co"> 11-26-2024</span></span>
-<span id="cb11-10"><a href="#cb11-10"></a><span class="an">image:</span><span class="co"> NLM_Bengio_etal.png</span></span>
-<span id="cb11-11"><a href="#cb11-11"></a><span class="an">draft:</span><span class="co"> false</span></span>
-<span id="cb11-12"><a href="#cb11-12"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
-<span id="cb11-13"><a href="#cb11-13"></a><span class="an">editor:</span><span class="co"> visual</span></span>
-<span id="cb11-14"><a href="#cb11-14"></a><span class="an">format:</span></span>
-<span id="cb11-15"><a href="#cb11-15"></a><span class="co">  html:</span></span>
-<span id="cb11-16"><a href="#cb11-16"></a><span class="co">    code-overflow: wrap</span></span>
-<span id="cb11-17"><a href="#cb11-17"></a><span class="co">    code-tools: true</span></span>
-<span id="cb11-18"><a href="#cb11-18"></a><span class="co">    code-fold: show</span></span>
-<span id="cb11-19"><a href="#cb11-19"></a><span class="co">    code-annotations: hover</span></span>
-<span id="cb11-20"><a href="#cb11-20"></a><span class="co">---</span></span>
-<span id="cb11-21"><a href="#cb11-21"></a></span>
-<span id="cb11-22"><a href="#cb11-22"></a>::: {.callout-important title="This is not orginal content!"}</span>
-<span id="cb11-23"><a href="#cb11-23"></a>This is my study notes / codes along with Andrej Karpathy's "<span class="co">[</span><span class="ot">Neural Networks: Zero to Hero</span><span class="co">](https://www.youtube.com/watch?v=VMj-3S1tku0&amp;list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ)</span>" series.</span>
-<span id="cb11-24"><a href="#cb11-24"></a>:::</span>
-<span id="cb11-25"><a href="#cb11-25"></a></span>
-<span id="cb11-26"><a href="#cb11-26"></a>We want to stay a bit longer with the MLPs, to have more concrete intuitive of the **activations** in the neural nets and **gradients** that flowing backwards. It's good to learn about the development history of these architectures. Since Recurrent Neural Network (RNN), they are although very *expressive* but not easily *optimizable* with current gradient techniques we have so far. Let's get started!</span>
-<span id="cb11-27"><a href="#cb11-27"></a></span>
-<span id="cb11-28"><a href="#cb11-28"></a><span class="fu"># Part 1: intro</span></span>
-<span id="cb11-29"><a href="#cb11-29"></a></span>
-<span id="cb11-30"><a href="#cb11-30"></a><span class="fu">## starter code</span></span>
-<span id="cb11-31"><a href="#cb11-31"></a></span>
-<span id="cb11-34"><a href="#cb11-34"></a><span class="in">```{python}</span></span>
-<span id="cb11-35"><a href="#cb11-35"></a><span class="im">import</span> torch</span>
-<span id="cb11-36"><a href="#cb11-36"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
-<span id="cb11-37"><a href="#cb11-37"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb11-38"><a href="#cb11-38"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb11-39"><a href="#cb11-39"></a><span class="op">%</span>matplotlib inline</span>
-<span id="cb11-40"><a href="#cb11-40"></a><span class="in">```</span></span>
-<span id="cb11-41"><a href="#cb11-41"></a></span>
-<span id="cb11-44"><a href="#cb11-44"></a><span class="in">```{python}</span></span>
-<span id="cb11-45"><a href="#cb11-45"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb11-46"><a href="#cb11-46"></a></span>
-<span id="cb11-47"><a href="#cb11-47"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/karpathy/makemore/refs/heads/master/names.txt"</span></span>
-<span id="cb11-48"><a href="#cb11-48"></a>words <span class="op">=</span> pd.read_csv(url, header<span class="op">=</span><span class="va">None</span>).iloc[:, <span class="dv">0</span>].tolist()</span>
-<span id="cb11-49"><a href="#cb11-49"></a>words[:<span class="dv">8</span>]</span>
-<span id="cb11-50"><a href="#cb11-50"></a><span class="in">```</span></span>
-<span id="cb11-51"><a href="#cb11-51"></a></span>
-<span id="cb11-54"><a href="#cb11-54"></a><span class="in">```{python}</span></span>
-<span id="cb11-55"><a href="#cb11-55"></a><span class="bu">len</span>(words)</span>
-<span id="cb11-56"><a href="#cb11-56"></a><span class="in">```</span></span>
-<span id="cb11-57"><a href="#cb11-57"></a></span>
-<span id="cb11-60"><a href="#cb11-60"></a><span class="in">```{python}</span></span>
-<span id="cb11-61"><a href="#cb11-61"></a><span class="co"># build the vocabulary of characters and mapping to/from integer</span></span>
-<span id="cb11-62"><a href="#cb11-62"></a>chars <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">list</span>(<span class="bu">set</span>(<span class="st">''</span>.join(words))))</span>
-<span id="cb11-63"><a href="#cb11-63"></a>stoi <span class="op">=</span> {s:i<span class="op">+</span><span class="dv">1</span> <span class="cf">for</span> i, s <span class="kw">in</span> <span class="bu">enumerate</span>(chars)}</span>
-<span id="cb11-64"><a href="#cb11-64"></a>stoi[<span class="st">'.'</span>] <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb11-65"><a href="#cb11-65"></a>itos <span class="op">=</span> {i: s <span class="cf">for</span> s, i <span class="kw">in</span> stoi.items()}</span>
-<span id="cb11-66"><a href="#cb11-66"></a>vocab_size <span class="op">=</span> <span class="bu">len</span>(itos)</span>
-<span id="cb11-67"><a href="#cb11-67"></a><span class="bu">print</span>(itos)</span>
-<span id="cb11-68"><a href="#cb11-68"></a><span class="bu">print</span>(vocab_size)</span>
-<span id="cb11-69"><a href="#cb11-69"></a><span class="in">```</span></span>
-<span id="cb11-70"><a href="#cb11-70"></a></span>
-<span id="cb11-71"><a href="#cb11-71"></a></span>
-<span id="cb11-74"><a href="#cb11-74"></a><span class="in">```{python}</span></span>
-<span id="cb11-75"><a href="#cb11-75"></a><span class="co"># build the dataset</span></span>
-<span id="cb11-76"><a href="#cb11-76"></a><span class="kw">def</span> buid_dataset(words):</span>
-<span id="cb11-77"><a href="#cb11-77"></a>    block_size <span class="op">=</span> <span class="dv">3</span></span>
-<span id="cb11-78"><a href="#cb11-78"></a>    X, Y <span class="op">=</span> [], []</span>
-<span id="cb11-79"><a href="#cb11-79"></a></span>
-<span id="cb11-80"><a href="#cb11-80"></a>    <span class="cf">for</span> w <span class="kw">in</span> words:</span>
-<span id="cb11-81"><a href="#cb11-81"></a>        context <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> block_size</span>
-<span id="cb11-82"><a href="#cb11-82"></a>        <span class="cf">for</span> ch <span class="kw">in</span> w <span class="op">+</span> <span class="st">'.'</span>:</span>
-<span id="cb11-83"><a href="#cb11-83"></a>            ix <span class="op">=</span> stoi[ch]</span>
-<span id="cb11-84"><a href="#cb11-84"></a>            X.append(context)</span>
-<span id="cb11-85"><a href="#cb11-85"></a>            Y.append(ix)</span>
-<span id="cb11-86"><a href="#cb11-86"></a>            context <span class="op">=</span> context[<span class="dv">1</span>:] <span class="op">+</span> [ix]</span>
-<span id="cb11-87"><a href="#cb11-87"></a></span>
-<span id="cb11-88"><a href="#cb11-88"></a>    X <span class="op">=</span> torch.tensor(X)</span>
-<span id="cb11-89"><a href="#cb11-89"></a>    Y <span class="op">=</span> torch.tensor(Y)</span>
-<span id="cb11-90"><a href="#cb11-90"></a>    <span class="bu">print</span>(X.shape, Y.shape)</span>
-<span id="cb11-91"><a href="#cb11-91"></a>    <span class="cf">return</span> X, Y</span>
-<span id="cb11-92"><a href="#cb11-92"></a></span>
-<span id="cb11-93"><a href="#cb11-93"></a><span class="im">import</span> random</span>
-<span id="cb11-94"><a href="#cb11-94"></a>random.seed(<span class="dv">42</span>)</span>
-<span id="cb11-95"><a href="#cb11-95"></a>random.shuffle(words)</span>
-<span id="cb11-96"><a href="#cb11-96"></a>n1 <span class="op">=</span> <span class="bu">int</span>(<span class="fl">0.8</span> <span class="op">*</span> <span class="bu">len</span>(words))</span>
-<span id="cb11-97"><a href="#cb11-97"></a>n2 <span class="op">=</span> <span class="bu">int</span>(<span class="fl">0.9</span> <span class="op">*</span> <span class="bu">len</span>(words))</span>
-<span id="cb11-98"><a href="#cb11-98"></a></span>
-<span id="cb11-99"><a href="#cb11-99"></a>Xtr, Ytr <span class="op">=</span> buid_dataset(words[:n1])        <span class="co"># 80#</span></span>
-<span id="cb11-100"><a href="#cb11-100"></a>Xdev, Ydev <span class="op">=</span> buid_dataset(words[n1:n2])    <span class="co"># 10%</span></span>
-<span id="cb11-101"><a href="#cb11-101"></a>Xte, Yte <span class="op">=</span> buid_dataset(words[n2:])        <span class="co"># 10%</span></span>
-<span id="cb11-102"><a href="#cb11-102"></a><span class="in">```</span></span>
-<span id="cb11-103"><a href="#cb11-103"></a></span>
-<span id="cb11-106"><a href="#cb11-106"></a><span class="in">```{python}</span></span>
-<span id="cb11-107"><a href="#cb11-107"></a><span class="co"># hyper-parameters</span></span>
-<span id="cb11-108"><a href="#cb11-108"></a>block_size <span class="op">=</span> <span class="dv">3</span> <span class="co"># number of chracters / inputs to predict the nextone</span></span>
-<span id="cb11-109"><a href="#cb11-109"></a>no_chars <span class="op">=</span> <span class="dv">27</span> <span class="co"># number of possible chracters, include '.'</span></span>
-<span id="cb11-110"><a href="#cb11-110"></a>emb_size <span class="op">=</span> <span class="dv">10</span> <span class="co"># no of dimensions of the embedding space.</span></span>
-<span id="cb11-111"><a href="#cb11-111"></a>hidden_size <span class="op">=</span> <span class="dv">300</span> <span class="co"># size of the hidden - tanh layer</span></span>
-<span id="cb11-112"><a href="#cb11-112"></a>batch_size <span class="op">=</span> <span class="dv">32</span> <span class="co"># minibatch size for training, 2, 4, 8, 16, 32, 64, etc</span></span>
-<span id="cb11-113"><a href="#cb11-113"></a></span>
-<span id="cb11-114"><a href="#cb11-114"></a><span class="in">```</span></span>
-<span id="cb11-115"><a href="#cb11-115"></a><span class="fu">## fixing the initial loss </span></span>
-<span id="cb11-116"><a href="#cb11-116"></a><span class="fu">## fixing the saturated tanh</span></span>
-<span id="cb11-117"><a href="#cb11-117"></a><span class="fu">## calculating the init scale: “Kaiming init”</span></span>
-<span id="cb11-118"><a href="#cb11-118"></a><span class="fu">## batch normalization</span></span>
-<span id="cb11-119"><a href="#cb11-119"></a><span class="fu">## batch normalization: summary</span></span>
-<span id="cb11-120"><a href="#cb11-120"></a><span class="fu">## real example: resnet50 walkthrough</span></span>
-<span id="cb11-121"><a href="#cb11-121"></a><span class="fu">## summary of the lecture</span></span>
-<span id="cb11-122"><a href="#cb11-122"></a></span>
-<span id="cb11-123"><a href="#cb11-123"></a><span class="fu"># Part 2: PyTorch-ifying the code</span></span>
-<span id="cb11-124"><a href="#cb11-124"></a><span class="fu">## viz #1: forward pass activations statistics</span></span>
-<span id="cb11-125"><a href="#cb11-125"></a><span class="fu">## viz #2: backward pass gradient statistics</span></span>
-<span id="cb11-126"><a href="#cb11-126"></a><span class="fu">## the fully linear case of no non-linearities</span></span>
-<span id="cb11-127"><a href="#cb11-127"></a><span class="fu">## viz #3: parameter activation and gradient statistics</span></span>
-<span id="cb11-128"><a href="#cb11-128"></a><span class="fu">## viz #4: update: data ratio over time</span></span>
-<span id="cb11-129"><a href="#cb11-129"></a><span class="fu">## bringing back batchnorm, looking at the visualizations</span></span>
-<span id="cb11-130"><a href="#cb11-130"></a><span class="fu">## summary of the lecture for real this time</span></span>
-<span id="cb11-131"><a href="#cb11-131"></a></span>
-<span id="cb11-132"><a href="#cb11-132"></a><span class="fu">## Exercises:</span></span>
-<span id="cb11-133"><a href="#cb11-133"></a></span>
-<span id="cb11-134"><a href="#cb11-134"></a><span class="ss">- </span>E01: I did not get around to seeing what happens when you initialize all weights and biases to zero. Try this and train the neural net. You might think either that 1) the network trains just fine or 2) the network doesn't train at all, but actually it is 3) the network trains but only partially, and achieves a pretty bad final performance. Inspect the gradients and activations to figure out what is happening and why the network is only partially training, and what part is being trained exactly.</span>
-<span id="cb11-135"><a href="#cb11-135"></a><span class="ss">- </span>E02: BatchNorm, unlike other normalization layers like LayerNorm/GroupNorm etc. has the big advantage that after training, the batchnorm gamma/beta can be "folded into" the weights of the preceeding Linear layers, effectively erasing the need to forward it at test time. Set up a small 3-layer MLP with batchnorms, train the network, then "fold" the batchnorm gamma/beta into the preceeding Linear layer's W,b by creating a new W2, b2 and erasing the batch norm. Verify that this gives the same forward pass during inference. i.e. we see that the batchnorm is there just for stabilizing the training, and can be thrown out after training is done! pretty cool.</span>
+<div class="sourceCode" id="cb27" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb27-1"><a href="#cb27-1"></a><span class="co">---</span></span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="an">title:</span><span class="co"> "NN-Z2H Lesson 4: Building makemore part 4 - Activations &amp; Gradients, BatchNorm"</span></span>
+<span id="cb27-3"><a href="#cb27-3"></a><span class="an">description:</span><span class="co"> "dive into the internals of MLPs, scrutinize the statistics of the forward pass activations, backward pass gradients, understand the health of your deep network, introduce batch normalization"</span></span>
+<span id="cb27-4"><a href="#cb27-4"></a><span class="an">author:</span></span>
+<span id="cb27-5"><a href="#cb27-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
+<span id="cb27-6"><a href="#cb27-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
+<span id="cb27-7"><a href="#cb27-7"></a><span class="an">categories:</span><span class="co"> [til, python, andrej karpathy, nn-z2h, bigram, neural networks] </span></span>
+<span id="cb27-8"><a href="#cb27-8"></a><span class="an">date:</span><span class="co"> 11-26-2024</span></span>
+<span id="cb27-9"><a href="#cb27-9"></a><span class="an">date-modified:</span><span class="co"> 11-26-2024</span></span>
+<span id="cb27-10"><a href="#cb27-10"></a><span class="an">image:</span><span class="co"> NLM_Bengio_etal.png</span></span>
+<span id="cb27-11"><a href="#cb27-11"></a><span class="an">draft:</span><span class="co"> false</span></span>
+<span id="cb27-12"><a href="#cb27-12"></a><span class="an">fig-cap-location:</span><span class="co"> bottom</span></span>
+<span id="cb27-13"><a href="#cb27-13"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb27-14"><a href="#cb27-14"></a><span class="an">format:</span></span>
+<span id="cb27-15"><a href="#cb27-15"></a><span class="co">  html:</span></span>
+<span id="cb27-16"><a href="#cb27-16"></a><span class="co">    code-overflow: wrap</span></span>
+<span id="cb27-17"><a href="#cb27-17"></a><span class="co">    code-tools: true</span></span>
+<span id="cb27-18"><a href="#cb27-18"></a><span class="co">    code-fold: show</span></span>
+<span id="cb27-19"><a href="#cb27-19"></a><span class="co">    code-annotations: hover</span></span>
+<span id="cb27-20"><a href="#cb27-20"></a><span class="co">---</span></span>
+<span id="cb27-21"><a href="#cb27-21"></a></span>
+<span id="cb27-22"><a href="#cb27-22"></a>::: {.callout-important title="This is not orginal content!"}</span>
+<span id="cb27-23"><a href="#cb27-23"></a>This is my study notes / codes along with Andrej Karpathy's "<span class="co">[</span><span class="ot">Neural Networks: Zero to Hero</span><span class="co">](https://www.youtube.com/watch?v=VMj-3S1tku0&amp;list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ)</span>" series.</span>
+<span id="cb27-24"><a href="#cb27-24"></a>:::</span>
+<span id="cb27-25"><a href="#cb27-25"></a></span>
+<span id="cb27-26"><a href="#cb27-26"></a>We want to stay a bit longer with the MLPs, to have more concrete intuitive of the **activations** in the neural nets and **gradients** that flowing backwards. It's good to learn about the development history of these architectures. Since Recurrent Neural Network (RNN), they are although very *expressive* but not easily *optimizable* with current gradient techniques we have so far. Let's get started!</span>
+<span id="cb27-27"><a href="#cb27-27"></a></span>
+<span id="cb27-28"><a href="#cb27-28"></a><span class="fu"># Part 1: intro</span></span>
+<span id="cb27-29"><a href="#cb27-29"></a></span>
+<span id="cb27-30"><a href="#cb27-30"></a><span class="fu">## starter code</span></span>
+<span id="cb27-31"><a href="#cb27-31"></a></span>
+<span id="cb27-34"><a href="#cb27-34"></a><span class="in">```{python}</span></span>
+<span id="cb27-35"><a href="#cb27-35"></a><span class="im">import</span> torch</span>
+<span id="cb27-36"><a href="#cb27-36"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb27-37"><a href="#cb27-37"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb27-38"><a href="#cb27-38"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb27-39"><a href="#cb27-39"></a><span class="op">%</span>matplotlib inline</span>
+<span id="cb27-40"><a href="#cb27-40"></a><span class="in">```</span></span>
+<span id="cb27-41"><a href="#cb27-41"></a></span>
+<span id="cb27-44"><a href="#cb27-44"></a><span class="in">```{python}</span></span>
+<span id="cb27-45"><a href="#cb27-45"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb27-46"><a href="#cb27-46"></a></span>
+<span id="cb27-47"><a href="#cb27-47"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/karpathy/makemore/refs/heads/master/names.txt"</span></span>
+<span id="cb27-48"><a href="#cb27-48"></a>words <span class="op">=</span> pd.read_csv(url, header<span class="op">=</span><span class="va">None</span>).iloc[:, <span class="dv">0</span>].tolist()</span>
+<span id="cb27-49"><a href="#cb27-49"></a>words[:<span class="dv">8</span>]</span>
+<span id="cb27-50"><a href="#cb27-50"></a><span class="in">```</span></span>
+<span id="cb27-51"><a href="#cb27-51"></a></span>
+<span id="cb27-54"><a href="#cb27-54"></a><span class="in">```{python}</span></span>
+<span id="cb27-55"><a href="#cb27-55"></a><span class="bu">len</span>(words)</span>
+<span id="cb27-56"><a href="#cb27-56"></a><span class="in">```</span></span>
+<span id="cb27-57"><a href="#cb27-57"></a></span>
+<span id="cb27-60"><a href="#cb27-60"></a><span class="in">```{python}</span></span>
+<span id="cb27-61"><a href="#cb27-61"></a><span class="co"># build the vocabulary of characters and mapping to/from integer</span></span>
+<span id="cb27-62"><a href="#cb27-62"></a>chars <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">list</span>(<span class="bu">set</span>(<span class="st">''</span>.join(words))))</span>
+<span id="cb27-63"><a href="#cb27-63"></a>stoi <span class="op">=</span> {s:i<span class="op">+</span><span class="dv">1</span> <span class="cf">for</span> i, s <span class="kw">in</span> <span class="bu">enumerate</span>(chars)}</span>
+<span id="cb27-64"><a href="#cb27-64"></a>stoi[<span class="st">'.'</span>] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb27-65"><a href="#cb27-65"></a>itos <span class="op">=</span> {i: s <span class="cf">for</span> s, i <span class="kw">in</span> stoi.items()}</span>
+<span id="cb27-66"><a href="#cb27-66"></a>vocab_size <span class="op">=</span> <span class="bu">len</span>(itos)</span>
+<span id="cb27-67"><a href="#cb27-67"></a><span class="bu">print</span>(itos)</span>
+<span id="cb27-68"><a href="#cb27-68"></a><span class="bu">print</span>(vocab_size)</span>
+<span id="cb27-69"><a href="#cb27-69"></a><span class="in">```</span></span>
+<span id="cb27-70"><a href="#cb27-70"></a></span>
+<span id="cb27-73"><a href="#cb27-73"></a><span class="in">```{python}</span></span>
+<span id="cb27-74"><a href="#cb27-74"></a>block_size <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb27-75"><a href="#cb27-75"></a><span class="co"># build the dataset</span></span>
+<span id="cb27-76"><a href="#cb27-76"></a><span class="kw">def</span> buid_dataset(words):</span>
+<span id="cb27-77"><a href="#cb27-77"></a>    X, Y <span class="op">=</span> [], []</span>
+<span id="cb27-78"><a href="#cb27-78"></a></span>
+<span id="cb27-79"><a href="#cb27-79"></a>    <span class="cf">for</span> w <span class="kw">in</span> words:</span>
+<span id="cb27-80"><a href="#cb27-80"></a>        context <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> block_size</span>
+<span id="cb27-81"><a href="#cb27-81"></a>        <span class="cf">for</span> ch <span class="kw">in</span> w <span class="op">+</span> <span class="st">'.'</span>:</span>
+<span id="cb27-82"><a href="#cb27-82"></a>            ix <span class="op">=</span> stoi[ch]</span>
+<span id="cb27-83"><a href="#cb27-83"></a>            X.append(context)</span>
+<span id="cb27-84"><a href="#cb27-84"></a>            Y.append(ix)</span>
+<span id="cb27-85"><a href="#cb27-85"></a>            context <span class="op">=</span> context[<span class="dv">1</span>:] <span class="op">+</span> [ix]</span>
+<span id="cb27-86"><a href="#cb27-86"></a></span>
+<span id="cb27-87"><a href="#cb27-87"></a>    X <span class="op">=</span> torch.tensor(X)</span>
+<span id="cb27-88"><a href="#cb27-88"></a>    Y <span class="op">=</span> torch.tensor(Y)</span>
+<span id="cb27-89"><a href="#cb27-89"></a>    <span class="bu">print</span>(X.shape, Y.shape)</span>
+<span id="cb27-90"><a href="#cb27-90"></a>    <span class="cf">return</span> X, Y</span>
+<span id="cb27-91"><a href="#cb27-91"></a></span>
+<span id="cb27-92"><a href="#cb27-92"></a><span class="im">import</span> random</span>
+<span id="cb27-93"><a href="#cb27-93"></a>random.seed(<span class="dv">42</span>)</span>
+<span id="cb27-94"><a href="#cb27-94"></a>random.shuffle(words)</span>
+<span id="cb27-95"><a href="#cb27-95"></a>n1 <span class="op">=</span> <span class="bu">int</span>(<span class="fl">0.8</span> <span class="op">*</span> <span class="bu">len</span>(words))</span>
+<span id="cb27-96"><a href="#cb27-96"></a>n2 <span class="op">=</span> <span class="bu">int</span>(<span class="fl">0.9</span> <span class="op">*</span> <span class="bu">len</span>(words))</span>
+<span id="cb27-97"><a href="#cb27-97"></a></span>
+<span id="cb27-98"><a href="#cb27-98"></a>Xtr, Ytr <span class="op">=</span> buid_dataset(words[:n1])        <span class="co"># 80#</span></span>
+<span id="cb27-99"><a href="#cb27-99"></a>Xdev, Ydev <span class="op">=</span> buid_dataset(words[n1:n2])    <span class="co"># 10%</span></span>
+<span id="cb27-100"><a href="#cb27-100"></a>Xte, Yte <span class="op">=</span> buid_dataset(words[n2:])        <span class="co"># 10%</span></span>
+<span id="cb27-101"><a href="#cb27-101"></a><span class="in">```</span></span>
+<span id="cb27-102"><a href="#cb27-102"></a></span>
+<span id="cb27-105"><a href="#cb27-105"></a><span class="in">```{python}</span></span>
+<span id="cb27-106"><a href="#cb27-106"></a><span class="co"># MLP revisited</span></span>
+<span id="cb27-107"><a href="#cb27-107"></a>n_emb <span class="op">=</span> <span class="dv">10</span> <span class="co"># no of dimensions of the embedding space.</span></span>
+<span id="cb27-108"><a href="#cb27-108"></a>n_hidden <span class="op">=</span> <span class="dv">200</span> <span class="co"># size of the hidden - tanh layer</span></span>
+<span id="cb27-109"><a href="#cb27-109"></a></span>
+<span id="cb27-110"><a href="#cb27-110"></a><span class="co"># Lookup table - 10 dimensional space</span></span>
+<span id="cb27-111"><a href="#cb27-111"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>) <span class="co"># for reproductivity</span></span>
+<span id="cb27-112"><a href="#cb27-112"></a>C <span class="op">=</span> torch.randn((vocab_size, n_emb),                  generator<span class="op">=</span>g)</span>
+<span id="cb27-113"><a href="#cb27-113"></a></span>
+<span id="cb27-114"><a href="#cb27-114"></a><span class="co"># Layer 1 - tanh - 300 neurons</span></span>
+<span id="cb27-115"><a href="#cb27-115"></a>W1 <span class="op">=</span> torch.randn((block_size <span class="op">*</span> n_emb, n_hidden),      generator<span class="op">=</span>g)</span>
+<span id="cb27-116"><a href="#cb27-116"></a>b1 <span class="op">=</span> torch.randn(n_hidden,                            generator<span class="op">=</span>g)</span>
+<span id="cb27-117"><a href="#cb27-117"></a></span>
+<span id="cb27-118"><a href="#cb27-118"></a><span class="co"># Layer 2 - softmax</span></span>
+<span id="cb27-119"><a href="#cb27-119"></a>W2 <span class="op">=</span> torch.randn((n_hidden, vocab_size),              generator<span class="op">=</span>g)</span>
+<span id="cb27-120"><a href="#cb27-120"></a>b2 <span class="op">=</span> torch.randn(vocab_size,                          generator<span class="op">=</span>g)</span>
+<span id="cb27-121"><a href="#cb27-121"></a></span>
+<span id="cb27-122"><a href="#cb27-122"></a><span class="co"># All params</span></span>
+<span id="cb27-123"><a href="#cb27-123"></a>parameters <span class="op">=</span> [C, W1, b1, W2, b2]</span>
+<span id="cb27-124"><a href="#cb27-124"></a><span class="bu">print</span>(<span class="st">"No of params: "</span>, <span class="bu">sum</span>(p.nelement() <span class="cf">for</span> p <span class="kw">in</span> parameters))</span>
+<span id="cb27-125"><a href="#cb27-125"></a></span>
+<span id="cb27-126"><a href="#cb27-126"></a><span class="co"># Pre-training</span></span>
+<span id="cb27-127"><a href="#cb27-127"></a><span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb27-128"><a href="#cb27-128"></a>    p.requires_grad <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb27-129"><a href="#cb27-129"></a><span class="in">```</span></span>
+<span id="cb27-130"><a href="#cb27-130"></a></span>
+<span id="cb27-133"><a href="#cb27-133"></a><span class="in">```{python}</span></span>
+<span id="cb27-134"><a href="#cb27-134"></a><span class="co"># Optimization</span></span>
+<span id="cb27-135"><a href="#cb27-135"></a>max_steps <span class="op">=</span> <span class="dv">200_000</span></span>
+<span id="cb27-136"><a href="#cb27-136"></a>batch_size <span class="op">=</span> <span class="dv">32</span></span>
+<span id="cb27-137"><a href="#cb27-137"></a></span>
+<span id="cb27-138"><a href="#cb27-138"></a><span class="co"># Stats holders</span></span>
+<span id="cb27-139"><a href="#cb27-139"></a>lossi <span class="op">=</span> []</span>
+<span id="cb27-140"><a href="#cb27-140"></a></span>
+<span id="cb27-141"><a href="#cb27-141"></a><span class="co"># Training on Xtr, Ytr</span></span>
+<span id="cb27-142"><a href="#cb27-142"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(max_steps):</span>
+<span id="cb27-143"><a href="#cb27-143"></a></span>
+<span id="cb27-144"><a href="#cb27-144"></a>    <span class="co"># minibatch construct      </span></span>
+<span id="cb27-145"><a href="#cb27-145"></a>    ix <span class="op">=</span> torch.randint(<span class="dv">0</span>, Xtr.shape[<span class="dv">0</span>], (batch_size,)) </span>
+<span id="cb27-146"><a href="#cb27-146"></a>    Xb, Yb <span class="op">=</span> Xtr[ix], Ytr[ix] <span class="co"># batch X, Y</span></span>
+<span id="cb27-147"><a href="#cb27-147"></a></span>
+<span id="cb27-148"><a href="#cb27-148"></a>    <span class="co"># forward pass:</span></span>
+<span id="cb27-149"><a href="#cb27-149"></a>    emb <span class="op">=</span> C[Xb] <span class="co"># embed the characters into vectors   </span></span>
+<span id="cb27-150"><a href="#cb27-150"></a>    emb_cat <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) <span class="co"># concatenate the vectors</span></span>
+<span id="cb27-151"><a href="#cb27-151"></a>    h_pre_act <span class="op">=</span> emb_cat <span class="op">@</span> W1 <span class="op">+</span> b1 <span class="co"># hidden layer pre-activation</span></span>
+<span id="cb27-152"><a href="#cb27-152"></a>    h <span class="op">=</span> torch.tanh(h_pre_act) <span class="co"># hidden layer</span></span>
+<span id="cb27-153"><a href="#cb27-153"></a>    logits <span class="op">=</span> h <span class="op">@</span> W2 <span class="op">+</span> b2 <span class="co"># output layer</span></span>
+<span id="cb27-154"><a href="#cb27-154"></a>    loss <span class="op">=</span> F.cross_entropy(logits, Yb) <span class="co"># loss function</span></span>
+<span id="cb27-155"><a href="#cb27-155"></a></span>
+<span id="cb27-156"><a href="#cb27-156"></a>    <span class="co"># backward pass:</span></span>
+<span id="cb27-157"><a href="#cb27-157"></a>    <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb27-158"><a href="#cb27-158"></a>        p.grad <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb27-159"><a href="#cb27-159"></a>    loss.backward()</span>
+<span id="cb27-160"><a href="#cb27-160"></a></span>
+<span id="cb27-161"><a href="#cb27-161"></a>    <span class="co"># update</span></span>
+<span id="cb27-162"><a href="#cb27-162"></a>    lr <span class="op">=</span> <span class="fl">0.1</span> <span class="cf">if</span> i <span class="op">&lt;=</span> max_steps <span class="op">/</span> <span class="dv">2</span> <span class="cf">else</span> <span class="fl">0.01</span> <span class="co"># step learning rate decay</span></span>
+<span id="cb27-163"><a href="#cb27-163"></a>    <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb27-164"><a href="#cb27-164"></a>        p.data <span class="op">+=</span> <span class="op">-</span> lr <span class="op">*</span> p.grad</span>
+<span id="cb27-165"><a href="#cb27-165"></a></span>
+<span id="cb27-166"><a href="#cb27-166"></a>    <span class="co"># track stats</span></span>
+<span id="cb27-167"><a href="#cb27-167"></a>    <span class="cf">if</span> i <span class="op">%</span> <span class="dv">10000</span> <span class="op">==</span> <span class="dv">0</span>: <span class="co"># print once every while</span></span>
+<span id="cb27-168"><a href="#cb27-168"></a>      <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">:7d}</span><span class="ss">/</span><span class="sc">{</span>max_steps<span class="sc">:7d}</span><span class="ss">: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb27-169"><a href="#cb27-169"></a>    lossi.append(loss.log10().item())</span>
+<span id="cb27-170"><a href="#cb27-170"></a><span class="in">```</span></span>
+<span id="cb27-171"><a href="#cb27-171"></a></span>
+<span id="cb27-174"><a href="#cb27-174"></a><span class="in">```{python}</span></span>
+<span id="cb27-175"><a href="#cb27-175"></a>plt.plot(lossi)</span>
+<span id="cb27-176"><a href="#cb27-176"></a><span class="in">```</span></span>
+<span id="cb27-177"><a href="#cb27-177"></a></span>
+<span id="cb27-180"><a href="#cb27-180"></a><span class="in">```{python}</span></span>
+<span id="cb27-181"><a href="#cb27-181"></a><span class="at">@torch.no_grad</span>() <span class="co"># disables gradient tracking</span></span>
+<span id="cb27-182"><a href="#cb27-182"></a><span class="kw">def</span> split_loss(split: <span class="bu">str</span>):</span>
+<span id="cb27-183"><a href="#cb27-183"></a>  x, y <span class="op">=</span> {</span>
+<span id="cb27-184"><a href="#cb27-184"></a>    <span class="st">'train'</span>: (Xtr, Ytr),</span>
+<span id="cb27-185"><a href="#cb27-185"></a>    <span class="st">'val'</span>: (Xdev, Ydev),</span>
+<span id="cb27-186"><a href="#cb27-186"></a>    <span class="st">'test'</span>: (Xte, Yte)</span>
+<span id="cb27-187"><a href="#cb27-187"></a>  }[split]</span>
+<span id="cb27-188"><a href="#cb27-188"></a>  emb <span class="op">=</span> C[x] <span class="co"># (N, block_size, n_emb)</span></span>
+<span id="cb27-189"><a href="#cb27-189"></a>  emb_cat <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) <span class="co"># concatenate into (N, block_size * n_emb)</span></span>
+<span id="cb27-190"><a href="#cb27-190"></a>  h <span class="op">=</span> torch.tanh(emb_cat <span class="op">@</span> W1 <span class="op">+</span> b1) <span class="co"># (N, n_hidden)</span></span>
+<span id="cb27-191"><a href="#cb27-191"></a>  logits <span class="op">=</span> h <span class="op">@</span> W2 <span class="op">+</span> b2 <span class="co"># (N, vocab_size)</span></span>
+<span id="cb27-192"><a href="#cb27-192"></a>  loss <span class="op">=</span> F.cross_entropy(logits, y) <span class="co"># loss function</span></span>
+<span id="cb27-193"><a href="#cb27-193"></a>  <span class="bu">print</span>(split, loss.item())</span>
+<span id="cb27-194"><a href="#cb27-194"></a></span>
+<span id="cb27-195"><a href="#cb27-195"></a>split_loss(<span class="st">'train'</span>)</span>
+<span id="cb27-196"><a href="#cb27-196"></a>split_loss(<span class="st">'val'</span>)</span>
+<span id="cb27-197"><a href="#cb27-197"></a><span class="in">```</span></span>
+<span id="cb27-198"><a href="#cb27-198"></a></span>
+<span id="cb27-201"><a href="#cb27-201"></a><span class="in">```{python}</span></span>
+<span id="cb27-202"><a href="#cb27-202"></a><span class="co"># sample from the model</span></span>
+<span id="cb27-203"><a href="#cb27-203"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span> <span class="op">+</span> <span class="dv">10</span>)</span>
+<span id="cb27-204"><a href="#cb27-204"></a></span>
+<span id="cb27-205"><a href="#cb27-205"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20</span>):</span>
+<span id="cb27-206"><a href="#cb27-206"></a>    </span>
+<span id="cb27-207"><a href="#cb27-207"></a>    out <span class="op">=</span> []</span>
+<span id="cb27-208"><a href="#cb27-208"></a>    context <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> block_size <span class="co"># initialize with all ...</span></span>
+<span id="cb27-209"><a href="#cb27-209"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb27-210"><a href="#cb27-210"></a>      <span class="co"># forward pass the neural net</span></span>
+<span id="cb27-211"><a href="#cb27-211"></a>      emb <span class="op">=</span> C[torch.tensor([context])] <span class="co"># (1,block_size,n_embd)</span></span>
+<span id="cb27-212"><a href="#cb27-212"></a>      h <span class="op">=</span> torch.tanh(emb.view(<span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>) <span class="op">@</span> W1 <span class="op">+</span> b1)</span>
+<span id="cb27-213"><a href="#cb27-213"></a>      logits <span class="op">=</span> h <span class="op">@</span> W2 <span class="op">+</span> b2</span>
+<span id="cb27-214"><a href="#cb27-214"></a>      probs <span class="op">=</span> F.softmax(logits, dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb27-215"><a href="#cb27-215"></a>      <span class="co"># sample from the distribution</span></span>
+<span id="cb27-216"><a href="#cb27-216"></a>      ix <span class="op">=</span> torch.multinomial(probs, num_samples<span class="op">=</span><span class="dv">1</span>, generator<span class="op">=</span>g).item()</span>
+<span id="cb27-217"><a href="#cb27-217"></a>      <span class="co"># shift the context window and track the samples</span></span>
+<span id="cb27-218"><a href="#cb27-218"></a>      context <span class="op">=</span> context[<span class="dv">1</span>:] <span class="op">+</span> [ix]</span>
+<span id="cb27-219"><a href="#cb27-219"></a>      out.append(ix)</span>
+<span id="cb27-220"><a href="#cb27-220"></a>      <span class="co"># if we sample the special '.' token, break</span></span>
+<span id="cb27-221"><a href="#cb27-221"></a>      <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb27-222"><a href="#cb27-222"></a>        <span class="cf">break</span></span>
+<span id="cb27-223"><a href="#cb27-223"></a>    </span>
+<span id="cb27-224"><a href="#cb27-224"></a>    <span class="bu">print</span>(<span class="st">''</span>.join(itos[i] <span class="cf">for</span> i <span class="kw">in</span> out)) <span class="co"># decode and print the generated word</span></span>
+<span id="cb27-225"><a href="#cb27-225"></a><span class="in">```</span></span>
+<span id="cb27-226"><a href="#cb27-226"></a></span>
+<span id="cb27-227"><a href="#cb27-227"></a><span class="fu">## fixing the initial loss</span></span>
+<span id="cb27-228"><a href="#cb27-228"></a></span>
+<span id="cb27-229"><a href="#cb27-229"></a>Okay so now our network has multiple things wrong at the initialization, let's list down below:</span>
+<span id="cb27-230"><a href="#cb27-230"></a></span>
+<span id="cb27-231"><a href="#cb27-231"></a>We can see at the <span class="in">`step = 0`</span>, the loss was <span class="in">`27`</span> and after some <span class="in">`k`</span>s training loops it decreased to <span class="in">`1`</span> or <span class="in">`2`</span>. It extremely high at the begining. In practice, we should give the network somehow the expectation we want when generating a character after some characters (<span class="in">`3`</span>).</span>
+<span id="cb27-232"><a href="#cb27-232"></a></span>
+<span id="cb27-233"><a href="#cb27-233"></a>In this case, without training yet, we expect all <span class="in">`27`</span> characters' posibilities to be equal (<span class="in">`1 / 27.0`</span>) \~ **uniform distribution**, so the loss \~ negative log likelihood would be:</span>
+<span id="cb27-234"><a href="#cb27-234"></a></span>
+<span id="cb27-237"><a href="#cb27-237"></a><span class="in">```{python}</span></span>
+<span id="cb27-238"><a href="#cb27-238"></a><span class="op">-</span> torch.tensor(<span class="dv">1</span> <span class="op">/</span> <span class="fl">27.0</span>).log()</span>
+<span id="cb27-239"><a href="#cb27-239"></a><span class="in">```</span></span>
+<span id="cb27-240"><a href="#cb27-240"></a></span>
+<span id="cb27-241"><a href="#cb27-241"></a>It's far lower than <span class="in">`27`</span>, we say that the network is **confidently wrong**. Andrej demonstrated by another simple 5 elements tensor and showed that the loss is lowest when all elements are equal.</span>
+<span id="cb27-242"><a href="#cb27-242"></a></span>
+<span id="cb27-243"><a href="#cb27-243"></a>We want the <span class="in">`logits`</span> to be low entropy as possible (but not equal to <span class="in">`0`</span>, which will be showed later), we added multipliers <span class="in">`0.01`</span> to <span class="in">`W2`</span>, and <span class="in">`0`</span> to <span class="in">`b2`</span>. We got the loss to be <span class="in">`3.xx`</span> at the beginning.</span>
+<span id="cb27-244"><a href="#cb27-244"></a></span>
+<span id="cb27-247"><a href="#cb27-247"></a><span class="in">```{python}</span></span>
+<span id="cb27-248"><a href="#cb27-248"></a><span class="co">#| eval: false</span></span>
+<span id="cb27-249"><a href="#cb27-249"></a><span class="co"># Layer 2 - softmax</span></span>
+<span id="cb27-250"><a href="#cb27-250"></a>W2 <span class="op">=</span> torch.randn((n_hidden, vocab_size),              generator<span class="op">=</span>g) <span class="op">*</span> <span class="fl">0.01</span></span>
+<span id="cb27-251"><a href="#cb27-251"></a>b2 <span class="op">=</span> torch.randn(vocab_size,                          generator<span class="op">=</span>g) <span class="op">*</span> <span class="dv">0</span></span>
+<span id="cb27-252"><a href="#cb27-252"></a><span class="in">```</span></span>
+<span id="cb27-253"><a href="#cb27-253"></a></span>
+<span id="cb27-254"><a href="#cb27-254"></a>Now re-train the model and we will notice the the <span class="in">`lossi`</span> will not look like the *hookey stick* anymore! Morever the final loss on train set and dev set is better!</span>
+<span id="cb27-255"><a href="#cb27-255"></a></span>
+<span id="cb27-256"><a href="#cb27-256"></a><span class="fu">## fixing the saturated `tanh`</span></span>
+<span id="cb27-257"><a href="#cb27-257"></a></span>
+<span id="cb27-258"><a href="#cb27-258"></a><span class="fu">## calculating the init scale: “Kaiming init”</span></span>
+<span id="cb27-259"><a href="#cb27-259"></a></span>
+<span id="cb27-260"><a href="#cb27-260"></a><span class="fu">## batch normalization</span></span>
+<span id="cb27-261"><a href="#cb27-261"></a></span>
+<span id="cb27-262"><a href="#cb27-262"></a><span class="fu">## batch normalization: summary</span></span>
+<span id="cb27-263"><a href="#cb27-263"></a></span>
+<span id="cb27-264"><a href="#cb27-264"></a><span class="fu">## real example: `resnet50` walkthrough</span></span>
+<span id="cb27-265"><a href="#cb27-265"></a></span>
+<span id="cb27-266"><a href="#cb27-266"></a><span class="fu">## summary of the lecture</span></span>
+<span id="cb27-267"><a href="#cb27-267"></a></span>
+<span id="cb27-268"><a href="#cb27-268"></a>Our final code in part 1 (un-fold to see), <span class="in">`# 👈`</span> indicates a change:</span>
+<span id="cb27-269"><a href="#cb27-269"></a></span>
+<span id="cb27-272"><a href="#cb27-272"></a><span class="in">```{python}</span></span>
+<span id="cb27-273"><a href="#cb27-273"></a><span class="co">#| code-fold: true</span></span>
+<span id="cb27-274"><a href="#cb27-274"></a>block_size <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb27-275"><a href="#cb27-275"></a><span class="co"># build the dataset</span></span>
+<span id="cb27-276"><a href="#cb27-276"></a><span class="kw">def</span> buid_dataset(words):</span>
+<span id="cb27-277"><a href="#cb27-277"></a>    X, Y <span class="op">=</span> [], []</span>
+<span id="cb27-278"><a href="#cb27-278"></a></span>
+<span id="cb27-279"><a href="#cb27-279"></a>    <span class="cf">for</span> w <span class="kw">in</span> words:</span>
+<span id="cb27-280"><a href="#cb27-280"></a>        context <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> block_size</span>
+<span id="cb27-281"><a href="#cb27-281"></a>        <span class="cf">for</span> ch <span class="kw">in</span> w <span class="op">+</span> <span class="st">'.'</span>:</span>
+<span id="cb27-282"><a href="#cb27-282"></a>            ix <span class="op">=</span> stoi[ch]</span>
+<span id="cb27-283"><a href="#cb27-283"></a>            X.append(context)</span>
+<span id="cb27-284"><a href="#cb27-284"></a>            Y.append(ix)</span>
+<span id="cb27-285"><a href="#cb27-285"></a>            context <span class="op">=</span> context[<span class="dv">1</span>:] <span class="op">+</span> [ix]</span>
+<span id="cb27-286"><a href="#cb27-286"></a></span>
+<span id="cb27-287"><a href="#cb27-287"></a>    X <span class="op">=</span> torch.tensor(X)</span>
+<span id="cb27-288"><a href="#cb27-288"></a>    Y <span class="op">=</span> torch.tensor(Y)</span>
+<span id="cb27-289"><a href="#cb27-289"></a>    <span class="bu">print</span>(X.shape, Y.shape)</span>
+<span id="cb27-290"><a href="#cb27-290"></a>    <span class="cf">return</span> X, Y</span>
+<span id="cb27-291"><a href="#cb27-291"></a></span>
+<span id="cb27-292"><a href="#cb27-292"></a><span class="im">import</span> random</span>
+<span id="cb27-293"><a href="#cb27-293"></a>random.seed(<span class="dv">42</span>)</span>
+<span id="cb27-294"><a href="#cb27-294"></a>random.shuffle(words)</span>
+<span id="cb27-295"><a href="#cb27-295"></a>n1 <span class="op">=</span> <span class="bu">int</span>(<span class="fl">0.8</span> <span class="op">*</span> <span class="bu">len</span>(words))</span>
+<span id="cb27-296"><a href="#cb27-296"></a>n2 <span class="op">=</span> <span class="bu">int</span>(<span class="fl">0.9</span> <span class="op">*</span> <span class="bu">len</span>(words))</span>
+<span id="cb27-297"><a href="#cb27-297"></a></span>
+<span id="cb27-298"><a href="#cb27-298"></a>Xtr, Ytr <span class="op">=</span> buid_dataset(words[:n1])        <span class="co"># 80#</span></span>
+<span id="cb27-299"><a href="#cb27-299"></a>Xdev, Ydev <span class="op">=</span> buid_dataset(words[n1:n2])    <span class="co"># 10%</span></span>
+<span id="cb27-300"><a href="#cb27-300"></a>Xte, Yte <span class="op">=</span> buid_dataset(words[n2:])        <span class="co"># 10%</span></span>
+<span id="cb27-301"><a href="#cb27-301"></a></span>
+<span id="cb27-302"><a href="#cb27-302"></a><span class="co"># MLP revisited</span></span>
+<span id="cb27-303"><a href="#cb27-303"></a>n_emb <span class="op">=</span> <span class="dv">10</span> <span class="co"># no of dimensions of the embedding space.</span></span>
+<span id="cb27-304"><a href="#cb27-304"></a>n_hidden <span class="op">=</span> <span class="dv">200</span> <span class="co"># size of the hidden - tanh layer</span></span>
+<span id="cb27-305"><a href="#cb27-305"></a></span>
+<span id="cb27-306"><a href="#cb27-306"></a><span class="co"># Lookup table - 10 dimensional space</span></span>
+<span id="cb27-307"><a href="#cb27-307"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>) <span class="co"># for reproductivity</span></span>
+<span id="cb27-308"><a href="#cb27-308"></a>C <span class="op">=</span> torch.randn((vocab_size, n_emb),                  generator<span class="op">=</span>g)</span>
+<span id="cb27-309"><a href="#cb27-309"></a></span>
+<span id="cb27-310"><a href="#cb27-310"></a><span class="co"># Layer 1 - tanh - 300 neurons</span></span>
+<span id="cb27-311"><a href="#cb27-311"></a>W1 <span class="op">=</span> torch.randn((block_size <span class="op">*</span> n_emb, n_hidden),      generator<span class="op">=</span>g)</span>
+<span id="cb27-312"><a href="#cb27-312"></a>b1 <span class="op">=</span> torch.randn(n_hidden,                            generator<span class="op">=</span>g)</span>
+<span id="cb27-313"><a href="#cb27-313"></a></span>
+<span id="cb27-314"><a href="#cb27-314"></a><span class="co"># Layer 2 - softmax</span></span>
+<span id="cb27-315"><a href="#cb27-315"></a>W2 <span class="op">=</span> torch.randn((n_hidden, vocab_size),              generator<span class="op">=</span>g) <span class="op">*</span> <span class="fl">0.01</span>       <span class="co"># 👈</span></span>
+<span id="cb27-316"><a href="#cb27-316"></a>b2 <span class="op">=</span> torch.randn(vocab_size,                          generator<span class="op">=</span>g) <span class="op">*</span> <span class="dv">0</span>          <span class="co"># 👈</span></span>
+<span id="cb27-317"><a href="#cb27-317"></a></span>
+<span id="cb27-318"><a href="#cb27-318"></a><span class="co"># All params</span></span>
+<span id="cb27-319"><a href="#cb27-319"></a>parameters <span class="op">=</span> [C, W1, b1, W2, b2]</span>
+<span id="cb27-320"><a href="#cb27-320"></a><span class="bu">print</span>(<span class="st">"No of params: "</span>, <span class="bu">sum</span>(p.nelement() <span class="cf">for</span> p <span class="kw">in</span> parameters))</span>
+<span id="cb27-321"><a href="#cb27-321"></a></span>
+<span id="cb27-322"><a href="#cb27-322"></a><span class="co"># Pre-training</span></span>
+<span id="cb27-323"><a href="#cb27-323"></a><span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb27-324"><a href="#cb27-324"></a>    p.requires_grad <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb27-325"><a href="#cb27-325"></a></span>
+<span id="cb27-326"><a href="#cb27-326"></a><span class="co"># Optimization</span></span>
+<span id="cb27-327"><a href="#cb27-327"></a>max_steps <span class="op">=</span> <span class="dv">200_000</span></span>
+<span id="cb27-328"><a href="#cb27-328"></a>batch_size <span class="op">=</span> <span class="dv">32</span></span>
+<span id="cb27-329"><a href="#cb27-329"></a></span>
+<span id="cb27-330"><a href="#cb27-330"></a><span class="co"># Stats holders</span></span>
+<span id="cb27-331"><a href="#cb27-331"></a>lossi <span class="op">=</span> []</span>
+<span id="cb27-332"><a href="#cb27-332"></a></span>
+<span id="cb27-333"><a href="#cb27-333"></a><span class="co"># Training on Xtr, Ytr</span></span>
+<span id="cb27-334"><a href="#cb27-334"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(max_steps):</span>
+<span id="cb27-335"><a href="#cb27-335"></a></span>
+<span id="cb27-336"><a href="#cb27-336"></a>    <span class="co"># minibatch construct      </span></span>
+<span id="cb27-337"><a href="#cb27-337"></a>    ix <span class="op">=</span> torch.randint(<span class="dv">0</span>, Xtr.shape[<span class="dv">0</span>], (batch_size,)) </span>
+<span id="cb27-338"><a href="#cb27-338"></a>    Xb, Yb <span class="op">=</span> Xtr[ix], Ytr[ix] <span class="co"># batch X, Y</span></span>
+<span id="cb27-339"><a href="#cb27-339"></a></span>
+<span id="cb27-340"><a href="#cb27-340"></a>    <span class="co"># forward pass:</span></span>
+<span id="cb27-341"><a href="#cb27-341"></a>    emb <span class="op">=</span> C[Xb] <span class="co"># embed the characters into vectors   </span></span>
+<span id="cb27-342"><a href="#cb27-342"></a>    emb_cat <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) <span class="co"># concatenate the vectors</span></span>
+<span id="cb27-343"><a href="#cb27-343"></a>    h_pre_act <span class="op">=</span> emb_cat <span class="op">@</span> W1 <span class="op">+</span> b1 <span class="co"># hidden layer pre-activation</span></span>
+<span id="cb27-344"><a href="#cb27-344"></a>    h <span class="op">=</span> torch.tanh(h_pre_act) <span class="co"># hidden layer</span></span>
+<span id="cb27-345"><a href="#cb27-345"></a>    logits <span class="op">=</span> h <span class="op">@</span> W2 <span class="op">+</span> b2 <span class="co"># output layer</span></span>
+<span id="cb27-346"><a href="#cb27-346"></a>    loss <span class="op">=</span> F.cross_entropy(logits, Yb) <span class="co"># loss function</span></span>
+<span id="cb27-347"><a href="#cb27-347"></a></span>
+<span id="cb27-348"><a href="#cb27-348"></a>    <span class="co"># backward pass:</span></span>
+<span id="cb27-349"><a href="#cb27-349"></a>    <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb27-350"><a href="#cb27-350"></a>        p.grad <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb27-351"><a href="#cb27-351"></a>    loss.backward()</span>
+<span id="cb27-352"><a href="#cb27-352"></a></span>
+<span id="cb27-353"><a href="#cb27-353"></a>    <span class="co"># update</span></span>
+<span id="cb27-354"><a href="#cb27-354"></a>    lr <span class="op">=</span> <span class="fl">0.1</span> <span class="cf">if</span> i <span class="op">&lt;=</span> max_steps <span class="op">/</span> <span class="dv">2</span> <span class="cf">else</span> <span class="fl">0.01</span> <span class="co"># step learning rate decay</span></span>
+<span id="cb27-355"><a href="#cb27-355"></a>    <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb27-356"><a href="#cb27-356"></a>        p.data <span class="op">+=</span> <span class="op">-</span> lr <span class="op">*</span> p.grad</span>
+<span id="cb27-357"><a href="#cb27-357"></a></span>
+<span id="cb27-358"><a href="#cb27-358"></a>    <span class="co"># track stats</span></span>
+<span id="cb27-359"><a href="#cb27-359"></a>    <span class="cf">if</span> i <span class="op">%</span> <span class="dv">10000</span> <span class="op">==</span> <span class="dv">0</span>: <span class="co"># print once every while</span></span>
+<span id="cb27-360"><a href="#cb27-360"></a>      <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">:7d}</span><span class="ss">/</span><span class="sc">{</span>max_steps<span class="sc">:7d}</span><span class="ss">: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb27-361"><a href="#cb27-361"></a>    lossi.append(loss.log10().item())</span>
+<span id="cb27-362"><a href="#cb27-362"></a><span class="in">```</span></span>
+<span id="cb27-363"><a href="#cb27-363"></a></span>
+<span id="cb27-366"><a href="#cb27-366"></a><span class="in">```{python}</span></span>
+<span id="cb27-367"><a href="#cb27-367"></a>plt.plot(lossi)</span>
+<span id="cb27-368"><a href="#cb27-368"></a><span class="in">```</span></span>
+<span id="cb27-369"><a href="#cb27-369"></a></span>
+<span id="cb27-372"><a href="#cb27-372"></a><span class="in">```{python}</span></span>
+<span id="cb27-373"><a href="#cb27-373"></a><span class="at">@torch.no_grad</span>() <span class="co"># disables gradient tracking</span></span>
+<span id="cb27-374"><a href="#cb27-374"></a><span class="kw">def</span> split_loss(split: <span class="bu">str</span>):</span>
+<span id="cb27-375"><a href="#cb27-375"></a>  x, y <span class="op">=</span> {</span>
+<span id="cb27-376"><a href="#cb27-376"></a>    <span class="st">'train'</span>: (Xtr, Ytr),</span>
+<span id="cb27-377"><a href="#cb27-377"></a>    <span class="st">'val'</span>: (Xdev, Ydev),</span>
+<span id="cb27-378"><a href="#cb27-378"></a>    <span class="st">'test'</span>: (Xte, Yte)</span>
+<span id="cb27-379"><a href="#cb27-379"></a>  }[split]</span>
+<span id="cb27-380"><a href="#cb27-380"></a>  emb <span class="op">=</span> C[x] <span class="co"># (N, block_size, n_emb)</span></span>
+<span id="cb27-381"><a href="#cb27-381"></a>  emb_cat <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) <span class="co"># concatenate into (N, block_size * n_emb)</span></span>
+<span id="cb27-382"><a href="#cb27-382"></a>  h <span class="op">=</span> torch.tanh(emb_cat <span class="op">@</span> W1 <span class="op">+</span> b1) <span class="co"># (N, n_hidden)</span></span>
+<span id="cb27-383"><a href="#cb27-383"></a>  logits <span class="op">=</span> h <span class="op">@</span> W2 <span class="op">+</span> b2 <span class="co"># (N, vocab_size)</span></span>
+<span id="cb27-384"><a href="#cb27-384"></a>  loss <span class="op">=</span> F.cross_entropy(logits, y) <span class="co"># loss function</span></span>
+<span id="cb27-385"><a href="#cb27-385"></a>  <span class="bu">print</span>(split, loss.item())</span>
+<span id="cb27-386"><a href="#cb27-386"></a></span>
+<span id="cb27-387"><a href="#cb27-387"></a>split_loss(<span class="st">'train'</span>)</span>
+<span id="cb27-388"><a href="#cb27-388"></a>split_loss(<span class="st">'val'</span>)</span>
+<span id="cb27-389"><a href="#cb27-389"></a><span class="in">```</span></span>
+<span id="cb27-390"><a href="#cb27-390"></a></span>
+<span id="cb27-391"><a href="#cb27-391"></a><span class="fu">### loss logs</span></span>
+<span id="cb27-392"><a href="#cb27-392"></a></span>
+<span id="cb27-393"><a href="#cb27-393"></a>| Step | What we did                                                | Loss we got                                     |</span>
+<span id="cb27-394"><a href="#cb27-394"></a>|----------------|--------------------------|-------------------------------|</span>
+<span id="cb27-395"><a href="#cb27-395"></a>| 1    | original                                                   | train 2.1169614791870117 val 2.1623435020446777 |</span>
+<span id="cb27-396"><a href="#cb27-396"></a>| 2    | fixed softmax confidently wrong                            | train 2.0666463375091553 val 2.1468191146850586 |</span>
+<span id="cb27-397"><a href="#cb27-397"></a>| 3    | fixed tanh layer too saturated at init                     |                                                 |</span>
+<span id="cb27-398"><a href="#cb27-398"></a>| 4    | used semi principle "kaiming init" instead of hacking init |                                                 |</span>
+<span id="cb27-399"><a href="#cb27-399"></a>| 5    | added batch norm layer                                     |                                                 |</span>
+<span id="cb27-400"><a href="#cb27-400"></a></span>
+<span id="cb27-401"><a href="#cb27-401"></a>: Loss logs</span>
+<span id="cb27-402"><a href="#cb27-402"></a></span>
+<span id="cb27-403"><a href="#cb27-403"></a><span class="fu"># Part 2: PyTorch-ifying the code</span></span>
+<span id="cb27-404"><a href="#cb27-404"></a></span>
+<span id="cb27-405"><a href="#cb27-405"></a><span class="fu">## viz #1: forward pass activations statistics</span></span>
+<span id="cb27-406"><a href="#cb27-406"></a></span>
+<span id="cb27-407"><a href="#cb27-407"></a><span class="fu">## viz #2: backward pass gradient statistics</span></span>
+<span id="cb27-408"><a href="#cb27-408"></a></span>
+<span id="cb27-409"><a href="#cb27-409"></a><span class="fu">## the fully linear case of no non-linearities</span></span>
+<span id="cb27-410"><a href="#cb27-410"></a></span>
+<span id="cb27-411"><a href="#cb27-411"></a><span class="fu">## viz #3: parameter activation and gradient statistics</span></span>
+<span id="cb27-412"><a href="#cb27-412"></a></span>
+<span id="cb27-413"><a href="#cb27-413"></a><span class="fu">## viz #4: update: data ratio over time</span></span>
+<span id="cb27-414"><a href="#cb27-414"></a></span>
+<span id="cb27-415"><a href="#cb27-415"></a><span class="fu">## bringing back batchnorm, looking at the visualizations</span></span>
+<span id="cb27-416"><a href="#cb27-416"></a></span>
+<span id="cb27-417"><a href="#cb27-417"></a><span class="fu">## summary of the lecture for real this time</span></span>
+<span id="cb27-418"><a href="#cb27-418"></a></span>
+<span id="cb27-419"><a href="#cb27-419"></a><span class="fu">## Exercises:</span></span>
+<span id="cb27-420"><a href="#cb27-420"></a></span>
+<span id="cb27-421"><a href="#cb27-421"></a><span class="ss">-   </span>E01: I did not get around to seeing what happens when you initialize all weights and biases to zero. Try this and train the neural net. You might think either that 1) the network trains just fine or 2) the network doesn't train at all, but actually it is 3) the network trains but only partially, and achieves a pretty bad final performance. Inspect the gradients and activations to figure out what is happening and why the network is only partially training, and what part is being trained exactly.</span>
+<span id="cb27-422"><a href="#cb27-422"></a><span class="ss">-   </span>E02: BatchNorm, unlike other normalization layers like LayerNorm/GroupNorm etc. has the big advantage that after training, the batchnorm gamma/beta can be "folded into" the weights of the preceeding Linear layers, effectively erasing the need to forward it at test time. Set up a small 3-layer MLP with batchnorms, train the network, then "fold" the batchnorm gamma/beta into the preceeding Linear layer's W,b by creating a new W2, b2 and erasing the batch norm. Verify that this gives the same forward pass during inference. i.e. we see that the batchnorm is there just for stabilizing the training, and can be thrown out after training is done! pretty cool.</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

@@ -4,7 +4,7 @@ description: "dive into the internals of MLPs, scrutinize the statistics of the 
 author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
-categories: [til, python, andrej karpathy, nn-z2h, bigram, neural networks] 
+categories: [til, python, andrej karpathy, nn-z2h, neural networks] 
 date: 11-26-2024
 date-modified: 11-26-2024
 image: NLM_Bengio_etal.png
@@ -60,11 +60,10 @@ print(itos)
 print(vocab_size)
 ```
 
-
 ```{python}
+block_size = 3
 # build the dataset
 def buid_dataset(words):
-    block_size = 3
     X, Y = [], []
 
     for w in words:
@@ -92,32 +91,307 @@ Xte, Yte = buid_dataset(words[n2:])        # 10%
 ```
 
 ```{python}
-# hyper-parameters
-block_size = 3 # number of chracters / inputs to predict the nextone
-no_chars = 27 # number of possible chracters, include '.'
-emb_size = 10 # no of dimensions of the embedding space.
-hidden_size = 300 # size of the hidden - tanh layer
-batch_size = 32 # minibatch size for training, 2, 4, 8, 16, 32, 64, etc
+# MLP revisited
+n_emb = 10 # no of dimensions of the embedding space.
+n_hidden = 200 # size of the hidden - tanh layer
 
+# Lookup table - 10 dimensional space
+g = torch.Generator().manual_seed(2147483647) # for reproductivity
+C = torch.randn((vocab_size, n_emb),                  generator=g)
+
+# Layer 1 - tanh - 300 neurons
+W1 = torch.randn((block_size * n_emb, n_hidden),      generator=g)
+b1 = torch.randn(n_hidden,                            generator=g)
+
+# Layer 2 - softmax
+W2 = torch.randn((n_hidden, vocab_size),              generator=g)
+b2 = torch.randn(vocab_size,                          generator=g)
+
+# All params
+parameters = [C, W1, b1, W2, b2]
+print("No of params: ", sum(p.nelement() for p in parameters))
+
+# Pre-training
+for p in parameters:
+    p.requires_grad = True
 ```
-## fixing the initial loss 
-## fixing the saturated tanh
+
+```{python}
+# Optimization
+max_steps = 200_000
+batch_size = 32
+
+# Stats holders
+lossi = []
+
+# Training on Xtr, Ytr
+for i in range(max_steps):
+
+    # minibatch construct      
+    ix = torch.randint(0, Xtr.shape[0], (batch_size,)) 
+    Xb, Yb = Xtr[ix], Ytr[ix] # batch X, Y
+
+    # forward pass:
+    emb = C[Xb] # embed the characters into vectors   
+    emb_cat = emb.view(emb.shape[0], -1) # concatenate the vectors
+    h_pre_act = emb_cat @ W1 + b1 # hidden layer pre-activation
+    h = torch.tanh(h_pre_act) # hidden layer
+    logits = h @ W2 + b2 # output layer
+    loss = F.cross_entropy(logits, Yb) # loss function
+
+    # backward pass:
+    for p in parameters:
+        p.grad = None
+    loss.backward()
+
+    # update
+    lr = 0.1 if i <= max_steps / 2 else 0.01 # step learning rate decay
+    for p in parameters:
+        p.data += - lr * p.grad
+
+    # track stats
+    if i % 10000 == 0: # print once every while
+      print(f'{i:7d}/{max_steps:7d}: {loss.item():.4f}')
+    lossi.append(loss.log10().item())
+```
+
+```{python}
+plt.plot(lossi)
+```
+
+```{python}
+@torch.no_grad() # disables gradient tracking
+def split_loss(split: str):
+  x, y = {
+    'train': (Xtr, Ytr),
+    'val': (Xdev, Ydev),
+    'test': (Xte, Yte)
+  }[split]
+  emb = C[x] # (N, block_size, n_emb)
+  emb_cat = emb.view(emb.shape[0], -1) # concatenate into (N, block_size * n_emb)
+  h = torch.tanh(emb_cat @ W1 + b1) # (N, n_hidden)
+  logits = h @ W2 + b2 # (N, vocab_size)
+  loss = F.cross_entropy(logits, y) # loss function
+  print(split, loss.item())
+
+split_loss('train')
+split_loss('val')
+```
+
+```{python}
+# sample from the model
+g = torch.Generator().manual_seed(2147483647 + 10)
+
+for _ in range(20):
+    
+    out = []
+    context = [0] * block_size # initialize with all ...
+    while True:
+      # forward pass the neural net
+      emb = C[torch.tensor([context])] # (1,block_size,n_embd)
+      h = torch.tanh(emb.view(1, -1) @ W1 + b1)
+      logits = h @ W2 + b2
+      probs = F.softmax(logits, dim=1)
+      # sample from the distribution
+      ix = torch.multinomial(probs, num_samples=1, generator=g).item()
+      # shift the context window and track the samples
+      context = context[1:] + [ix]
+      out.append(ix)
+      # if we sample the special '.' token, break
+      if ix == 0:
+        break
+    
+    print(''.join(itos[i] for i in out)) # decode and print the generated word
+```
+
+## fixing the initial loss
+
+Okay so now our network has multiple things wrong at the initialization, let's list down below:
+
+We can see at the `step = 0`, the loss was `27` and after some `k`s training loops it decreased to `1` or `2`. It extremely high at the begining. In practice, we should give the network somehow the expectation we want when generating a character after some characters (`3`).
+
+In this case, without training yet, we expect all `27` characters' posibilities to be equal (`1 / 27.0`) \~ **uniform distribution**, so the loss \~ negative log likelihood would be:
+
+```{python}
+- torch.tensor(1 / 27.0).log()
+```
+
+It's far lower than `27`, we say that the network is **confidently wrong**. Andrej demonstrated by another simple 5 elements tensor and showed that the loss is lowest when all elements are equal.
+
+We want the `logits` to be low entropy as possible (but not equal to `0`, which will be showed later), we added multipliers `0.01` to `W2`, and `0` to `b2`. We got the loss to be `3.xx` at the beginning.
+
+```{python}
+#| eval: false
+# Layer 2 - softmax
+W2 = torch.randn((n_hidden, vocab_size),              generator=g) * 0.01
+b2 = torch.randn(vocab_size,                          generator=g) * 0
+```
+
+Now re-train the model and we will notice the the `lossi` will not look like the *hookey stick* anymore! Morever the final loss on train set and dev set is better!
+
+## fixing the saturated `tanh`
+
 ## calculating the init scale: “Kaiming init”
+
 ## batch normalization
+
 ## batch normalization: summary
-## real example: resnet50 walkthrough
+
+## real example: `resnet50` walkthrough
+
 ## summary of the lecture
 
+Our final code in part 1 (un-fold to see), `# 👈` indicates a change:
+
+```{python}
+#| code-fold: true
+block_size = 3
+# build the dataset
+def buid_dataset(words):
+    X, Y = [], []
+
+    for w in words:
+        context = [0] * block_size
+        for ch in w + '.':
+            ix = stoi[ch]
+            X.append(context)
+            Y.append(ix)
+            context = context[1:] + [ix]
+
+    X = torch.tensor(X)
+    Y = torch.tensor(Y)
+    print(X.shape, Y.shape)
+    return X, Y
+
+import random
+random.seed(42)
+random.shuffle(words)
+n1 = int(0.8 * len(words))
+n2 = int(0.9 * len(words))
+
+Xtr, Ytr = buid_dataset(words[:n1])        # 80#
+Xdev, Ydev = buid_dataset(words[n1:n2])    # 10%
+Xte, Yte = buid_dataset(words[n2:])        # 10%
+
+# MLP revisited
+n_emb = 10 # no of dimensions of the embedding space.
+n_hidden = 200 # size of the hidden - tanh layer
+
+# Lookup table - 10 dimensional space
+g = torch.Generator().manual_seed(2147483647) # for reproductivity
+C = torch.randn((vocab_size, n_emb),                  generator=g)
+
+# Layer 1 - tanh - 300 neurons
+W1 = torch.randn((block_size * n_emb, n_hidden),      generator=g)
+b1 = torch.randn(n_hidden,                            generator=g)
+
+# Layer 2 - softmax
+W2 = torch.randn((n_hidden, vocab_size),              generator=g) * 0.01       # 👈
+b2 = torch.randn(vocab_size,                          generator=g) * 0          # 👈
+
+# All params
+parameters = [C, W1, b1, W2, b2]
+print("No of params: ", sum(p.nelement() for p in parameters))
+
+# Pre-training
+for p in parameters:
+    p.requires_grad = True
+
+# Optimization
+max_steps = 200_000
+batch_size = 32
+
+# Stats holders
+lossi = []
+
+# Training on Xtr, Ytr
+for i in range(max_steps):
+
+    # minibatch construct      
+    ix = torch.randint(0, Xtr.shape[0], (batch_size,)) 
+    Xb, Yb = Xtr[ix], Ytr[ix] # batch X, Y
+
+    # forward pass:
+    emb = C[Xb] # embed the characters into vectors   
+    emb_cat = emb.view(emb.shape[0], -1) # concatenate the vectors
+    h_pre_act = emb_cat @ W1 + b1 # hidden layer pre-activation
+    h = torch.tanh(h_pre_act) # hidden layer
+    logits = h @ W2 + b2 # output layer
+    loss = F.cross_entropy(logits, Yb) # loss function
+
+    # backward pass:
+    for p in parameters:
+        p.grad = None
+    loss.backward()
+
+    # update
+    lr = 0.1 if i <= max_steps / 2 else 0.01 # step learning rate decay
+    for p in parameters:
+        p.data += - lr * p.grad
+
+    # track stats
+    if i % 10000 == 0: # print once every while
+      print(f'{i:7d}/{max_steps:7d}: {loss.item():.4f}')
+    lossi.append(loss.log10().item())
+```
+
+```{python}
+plt.plot(lossi)
+```
+
+```{python}
+@torch.no_grad() # disables gradient tracking
+def split_loss(split: str):
+  x, y = {
+    'train': (Xtr, Ytr),
+    'val': (Xdev, Ydev),
+    'test': (Xte, Yte)
+  }[split]
+  emb = C[x] # (N, block_size, n_emb)
+  emb_cat = emb.view(emb.shape[0], -1) # concatenate into (N, block_size * n_emb)
+  h = torch.tanh(emb_cat @ W1 + b1) # (N, n_hidden)
+  logits = h @ W2 + b2 # (N, vocab_size)
+  loss = F.cross_entropy(logits, y) # loss function
+  print(split, loss.item())
+
+split_loss('train')
+split_loss('val')
+```
+
+### loss logs
+
+| Step | What we did                                                | Loss we got                                     |
+|----------------|--------------------------|-------------------------------|
+| 1    | original                                                   | train 2.1169614791870117 val 2.1623435020446777 |
+| 2    | fixed softmax confidently wrong                            | train 2.0666463375091553 val 2.1468191146850586 |
+| 3    | fixed tanh layer too saturated at init                     |                                                 |
+| 4    | used semi principle "kaiming init" instead of hacking init |                                                 |
+| 5    | added batch norm layer                                     |                                                 |
+
+: Loss logs
+
 # Part 2: PyTorch-ifying the code
+
 ## viz #1: forward pass activations statistics
+
 ## viz #2: backward pass gradient statistics
+
 ## the fully linear case of no non-linearities
+
 ## viz #3: parameter activation and gradient statistics
+
 ## viz #4: update: data ratio over time
+
 ## bringing back batchnorm, looking at the visualizations
+
 ## summary of the lecture for real this time
 
 ## Exercises:
 
-- E01: I did not get around to seeing what happens when you initialize all weights and biases to zero. Try this and train the neural net. You might think either that 1) the network trains just fine or 2) the network doesn't train at all, but actually it is 3) the network trains but only partially, and achieves a pretty bad final performance. Inspect the gradients and activations to figure out what is happening and why the network is only partially training, and what part is being trained exactly.
-- E02: BatchNorm, unlike other normalization layers like LayerNorm/GroupNorm etc. has the big advantage that after training, the batchnorm gamma/beta can be "folded into" the weights of the preceeding Linear layers, effectively erasing the need to forward it at test time. Set up a small 3-layer MLP with batchnorms, train the network, then "fold" the batchnorm gamma/beta into the preceeding Linear layer's W,b by creating a new W2, b2 and erasing the batch norm. Verify that this gives the same forward pass during inference. i.e. we see that the batchnorm is there just for stabilizing the training, and can be thrown out after training is done! pretty cool.
+-   E01: I did not get around to seeing what happens when you initialize all weights and biases to zero. Try this and train the neural net. You might think either that 1) the network trains just fine or 2) the network doesn't train at all, but actually it is 3) the network trains but only partially, and achieves a pretty bad final performance. Inspect the gradients and activations to figure out what is happening and why the network is only partially training, and what part is being trained exactly.
+-   E02: BatchNorm, unlike other normalization layers like LayerNorm/GroupNorm etc. has the big advantage that after training, the batchnorm gamma/beta can be "folded into" the weights of the preceeding Linear layers, effectively erasing the need to forward it at test time. Set up a small 3-layer MLP with batchnorms, train the network, then "fold" the batchnorm gamma/beta into the preceeding Linear layer's W,b by creating a new W2, b2 and erasing the batch norm. Verify that this gives the same forward pass during inference. i.e. we see that the batchnorm is there just for stabilizing the training, and can be thrown out after training is done! pretty cool.
+
+# resources:
+
+1. other people learn from AK like me: <https://bedirtapkan.com/posts/blog_posts/karpathy_3_makemore_activations/>; <https://skeptric.com/index.html#category=makemore> - a replicate (?) with more OOPs on another dataset;
+
