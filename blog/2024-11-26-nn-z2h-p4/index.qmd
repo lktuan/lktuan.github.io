@@ -368,15 +368,6 @@ It's recommended in Kaiming paper to use a **gain** multiplier base on nonlinear
 W1 = torch.randn((block_size * n_emb, n_hidden),      generator=g)  * (5/3) / ((block_size * n_emb)**0.5) # * 0.2
 ```
 
-::: {.callout-note title="Why 5/3?"}
-A comment in his video explain why `5/3` is recommended, it comes from the avg of $[\tanh(x)]^2$ where $x$ is distributed as a Gaussian:
-
-$\int_{-\infty}^{\infty} \frac{[\tanh(x)]^2 \exp(-\frac{x^2}{2})}{\sqrt{2\pi}} \, dx \approx 0.39$
-
-> The square root of this value is how much the tanh squeezes the variance of the incoming variable: 0.39 ** .5 ~= 0.63 ~= 3/5 (hence 5/3 is just an approximation of the exact gain).
-
-:::
-
 In this case is roughly `0.3`, re-train and although the loss only improved so insignificant (because previously we set it to be `0.2` - very close), but we've parameterized this hyper-constant.
 
 ## batch normalization
@@ -613,7 +604,8 @@ for _ in range(20):
 
 # Part 2: PyTorch-ifying the code, and train a deeper network
 
-Below is PyTorch-ified code by Andrej, some comment input by me:
+Below is PyTorch-ified code by Andrej, some comments inputted by me:
+
 ```{python}
 # Let's train a deeper network
 # The classes we create here are the same API as nn.Module in PyTorch
@@ -771,7 +763,45 @@ plt.legend(legends);
 plt.title('activation distribution')
 ```
 
+If we set the gain to `1`, the std is shrinking, and the saturations is coming to zeros, due to the first layer is pretty decent, but the next ones are shrinking to zero because of the `tanh()` - a squashing function.
+
+``` md
+layer 1 (      Tanh): mean -0.02, std 0.62, saturated: 3.50%
+layer 3 (      Tanh): mean -0.00, std 0.48, saturated: 0.03%
+layer 5 (      Tanh): mean +0.00, std 0.41, saturated: 0.06%
+layer 7 (      Tanh): mean +0.00, std 0.35, saturated: 0.00%
+layer 9 (      Tanh): mean -0.02, std 0.32, saturated: 0.00%
+Text(0.5, 1.0, 'activation distribution')
+```
+
+![If the gain is 1](viz1_gain1.png)
+
+But if we set the gain is far too high, let's say `3`, we can see the saturations is too high.
+
+``` md
+layer 1 (      Tanh): mean -0.03, std 0.85, saturated: 47.66%
+layer 3 (      Tanh): mean +0.00, std 0.84, saturated: 40.47%
+layer 5 (      Tanh): mean -0.01, std 0.84, saturated: 42.38%
+layer 7 (      Tanh): mean -0.01, std 0.84, saturated: 42.00%
+layer 9 (      Tanh): mean -0.03, std 0.84, saturated: 42.41%
+Text(0.5, 1.0, 'activation distribution')
+```
+
+![If the gain is 3](viz1_gain3.png)
+
+So `5/3` is a nice one, balancing the std and saturation.
+
+::: {.callout-note title="Why 5/3?"}
+A comment in his video explains why `5/3` is recommended, it comes from the avg of $[\tanh(x)]^2$ where $x$ is distributed as a Gaussian:
+
+$\int_{-\infty}^{\infty} \frac{[\tanh(x)]^2 \exp(-\frac{x^2}{2})}{\sqrt{2\pi}} \, dx \approx 0.39$
+
+> The square root of this value is how much the tanh squeezes the variance of the incoming variable: 0.39 \*\* .5 \~= 0.63 \~= 3/5 (hence 5/3 is just an approximation of the exact gain).
+:::
+
 ## viz #2: backward pass gradient statistics
+
+Similarly, we can do the samething with gradients. With the setting of gain as `5/3`, the distribution of gradients through layers quite the same.
 
 ```{python}
 # visualize histograms
@@ -790,13 +820,29 @@ plt.title('gradient distribution')
 
 ## the fully linear case of no non-linearities
 
+Now imagine if we remove the `tanh` from all layers:
+
+```{python}
+#| eval: false
+layers = [
+  Linear(n_embd * block_size, n_hidden), #Tanh(),
+  Linear(           n_hidden, n_hidden), #Tanh(),
+  Linear(           n_hidden, n_hidden), #Tanh(),
+  Linear(           n_hidden, n_hidden), #Tanh(),
+  Linear(           n_hidden, n_hidden), #Tanh(),
+  Linear(           n_hidden, vocab_size),
+]
+```
+
+The recommend gain now for Linear is `1`. But no matter of how many Linear Layers you stacked up, you'll always get linear network, which will greatly limit the capacity of the neural nets.
+
 > Training Neural Network is like balancing a pencil on a finger
 
 ## viz #3: parameter activation and gradient statistics
 
 ```{python}
 # visualize histograms
-plt.figure(figsize=(20, 4)) # width and height of the plot
+plt.figure(figsize=(15, 4)) # width and height of the plot
 legends = []
 for i,p in enumerate(parameters):
   t = p.grad

@@ -959,13 +959,6 @@
     "text": "batch normalization\nAs discussed before, we dont want the h_pre_act to be way too small (~is not doing anything) or too large (~saturated), we want it to just roughly follow the standardized Gaussian Distribution (ie. mean equal to 0, std equal to 1).\nWe’ve done it at the initialization, why don’t we just normalize the hidden states to be unit Gaussian? in batch normalization, this can be achieved by 4 steps, demonstrated with our case:\n\n\nShow the code\n# 1. mini-batch mean\nhpa_mean = h_pre_act.mean(0, keepdim=True)\n# 2. mini-batch variance / standard deviation\nhpa_std = h_pre_act.std(0, keepdim=True)\n# 3. normalize\nh_pre_act = (h_pre_act - hpa_mean) / hpa_std\n# 4. scale and shift\n# multiply by a \"gain\" then \"shift\" it with a bias\nbngain = torch.ones((1, n_hidden))\nbnbias = torch.zeros((1, n_hidden))\nh_pre_act = bngain * h_pre_act + bnbias\n\n\nWe modified our code accordingly and re-run the code, actually this time the model did not improve much. Because actually this is very simple and shallow neural network. We also notice that the training loop now is slower than before, because the calculation volumn is bigger. Batch Normalization also unexpectedly comes up with a side effect, the forward and backward pass of any input now also depend on the mini-batch, not just itself (because of mean()/std()). This effect is suprisingly a good thing and acts as a regularizer.\nThere are also non-coupling regularizers such as: Linear Normalization, Layer Normalization, Group Normalization.\nOne othering to consider is in the deployment/testing phase, we dont want to use the batch norm calculated by a mini-batch. Instead we want to use the mean and standard deviation from the whole training data set:\n\n\nShow the code\n# calibrate the batch norm after training\n\nwith torch.no_grad():\n    # pass the training set through\n    emb = C[x_train]\n    embcat = emb.view(-1, emb.shape[1] * emb.shape[2])\n    hpreact = embcat @ W1 + b1\n    # measure the mean/std over the entire training set\n    bnmean = hpreact.mean(0, keepdim=True)\n    bnstd = hpreact.std(0, keepdim=True)\n\n\nRather, we can also use the running mean and standard deviation as implemented below which will give close estimates. Remaining 2 notes on the BN are:\n\nDividing zeros: we add a \\(\\epsilon\\) value to the variance to avoid. We do not include this here as it likely not to happen with out example;\nThe bias b1 will be subtracting in BN calculation, we will notice the b1.grad will be zeros as it does not impact any other calculation. Thus when using the BN, for layer before like weight, we should remove the bias. The bnbias now will be incharge for biasing the distributions."
   },
   {
-    "objectID": "blog/2024-11-26-nn-z2h-p4/index.html#batch-normalization-summary",
-    "href": "blog/2024-11-26-nn-z2h-p4/index.html#batch-normalization-summary",
-    "title": "NN-Z2H Lesson 4: Building makemore part 4 - Activations & Gradients, BatchNorm",
-    "section": "batch normalization: summary",
-    "text": "batch normalization: summary"
-  },
-  {
     "objectID": "blog/2024-11-26-nn-z2h-p4/index.html#real-example-resnet50-walkthrough",
     "href": "blog/2024-11-26-nn-z2h-p4/index.html#real-example-resnet50-walkthrough",
     "title": "NN-Z2H Lesson 4: Building makemore part 4 - Activations & Gradients, BatchNorm",
@@ -1502,7 +1495,7 @@
     "href": "blog/2024-06-05-cnac/index.html#level-1-kiểu-dữ-liệu-kiểu-đo-lường",
     "title": "Về quy ước đặt tên dữ liệu",
     "section": "Level 1: Kiểu dữ liệu, kiểu đo lường",
-    "text": "Level 1: Kiểu dữ liệu, kiểu đo lường\n\n\nID: chỉ đối tượng, dạng numberic, tối ưu cho việc lưu trữ và thường làm khóa chính các bảng’\n\nIND: giá trị boolean 0/1, tôi thì thường sử dụng các từ như IS, FLAG;\n\nN: chỉ các dạng thông tin có thể đếm (count) được;\n\nAMT: chỉ các dạng thông tin có thể tổng, thường đề cập đến currency;\n\nVAL: cũng là số nhưng không thể tổng được (không có ý nghĩa), ví dụ như kinh độ, vĩ độ;\n\nDT: ngày;\n\nTM: giờ hoặc ngày giờ;\n\nCAT: category\n\nCũng tùy vào dữ liệu, có thể thêm các cụm từ nhất định đề đề cập đến thông tin dữ liệu đó mang lại, ví dụ ADD cho address."
+    "text": "Level 1: Kiểu dữ liệu, kiểu đo lường\n\nID: chỉ đối tượng, dạng numberic, tối ưu cho việc lưu trữ và thường làm khóa chính các bảng’\nIND: giá trị boolean 0/1, tôi thì thường sử dụng các từ như IS, FLAG;\nN: chỉ các dạng thông tin có thể đếm (count) được;\nAMT: chỉ các dạng thông tin có thể tổng, thường đề cập đến currency;\nVAL: cũng là số nhưng không thể tổng được (không có ý nghĩa), ví dụ như kinh độ, vĩ độ;\nDT: ngày;\nTM: giờ hoặc ngày giờ;\nCAT: category\n\nCũng tùy vào dữ liệu, có thể thêm các cụm từ nhất định đề đề cập đến thông tin dữ liệu đó mang lại, ví dụ ADD cho address."
   },
   {
     "objectID": "blog/2024-06-05-cnac/index.html#level-2-đối-tượng-chủ-đề",
@@ -1516,7 +1509,7 @@
     "href": "blog/2024-06-05-cnac/index.html#level-3-n-chi-tiết",
     "title": "Về quy ước đặt tên dữ liệu",
     "section": "Level 3-n: Chi tiết",
-    "text": "Level 3-n: Chi tiết\nHai tầng trên về cơ bản đã cho phép chúng ta mô tả được cột thông tin, chúng đều thể hiện được thuộc tính của chủ thể. Ví dụ:\n\n\nAMT_TRIP: giá trị deal của Trip;\n\nADD_DESTINATION: Điểm đến của trip.\n\nTuy nhiên tùy vào từng use case, chúng ta hoàn toàn có thể mở rộng được về cả hai phía. Ví dụ:\n\nVề phía trước: khi làm việc với nhiều layer dữ liệu, ta có thể dùng RAW, STAGING, DW, DL, DM, etc\n\nVề phía sau: DAY hoặc MONTH cho N_DURATION, VND hoặc USD cho currency AMT.\n\nMiễn là có một quy chuẩn, và nó đủ đơn giản để sử dụng."
+    "text": "Level 3-n: Chi tiết\nHai tầng trên về cơ bản đã cho phép chúng ta mô tả được cột thông tin, chúng đều thể hiện được thuộc tính của chủ thể. Ví dụ:\n\nAMT_TRIP: giá trị deal của Trip;\nADD_DESTINATION: Điểm đến của trip.\n\nTuy nhiên tùy vào từng use case, chúng ta hoàn toàn có thể mở rộng được về cả hai phía. Ví dụ:\n\nVề phía trước: khi làm việc với nhiều layer dữ liệu, ta có thể dùng RAW, STAGING, DW, DL, DM, etc\n\nVề phía sau: DAY hoặc MONTH cho N_DURATION, VND hoặc USD cho currency AMT.\n\nMiễn là có một quy chuẩn, và nó đủ đơn giản để sử dụng."
   },
   {
     "objectID": "blog/2024-06-05-cnac/index.html#kết-hợp-chúng-lại",
@@ -1536,15 +1529,15 @@
     "objectID": "blog/2024-06-05-cnac/index.html#r---base-data.table",
     "href": "blog/2024-06-05-cnac/index.html#r---base-data.table",
     "title": "Về quy ước đặt tên dữ liệu",
-    "section": "R - base & data.table\n",
-    "text": "R - base & data.table\n\nsử dụng base::grep để tìm tất cả các columns bắt đầu bằng AMT_\n\ncols_n &lt;- grep(\"^AMT_\", names(trip_data), value = TRUE)\nprint(cols_n)\n\n[1] \"AMT_ACCOMMODATION_COST\"  \"AMT_TRANSPORTATION_COST\"\n\n\nsử dụng vector để lưu các cột chúng ta muốn group by:\n\ncols_grp &lt;- c(\"CAT_TRAVELER_NATIONALITY\")\n\nchúng ta có thể dùng vector này trong stats::aggregate\nhoặc trong data.table"
+    "section": "R - base & data.table",
+    "text": "R - base & data.table\nsử dụng base::grep để tìm tất cả các columns bắt đầu bằng AMT_\n\ncols_n &lt;- grep(\"^AMT_\", names(trip_data), value = TRUE)\nprint(cols_n)\n\n[1] \"AMT_ACCOMMODATION_COST\"  \"AMT_TRANSPORTATION_COST\"\n\n\nsử dụng vector để lưu các cột chúng ta muốn group by:\n\ncols_grp &lt;- c(\"CAT_TRAVELER_NATIONALITY\")\n\nchúng ta có thể dùng vector này trong stats::aggregate\nhoặc trong data.table"
   },
   {
     "objectID": "blog/2024-06-05-cnac/index.html#python-pandas",
     "href": "blog/2024-06-05-cnac/index.html#python-pandas",
     "title": "Về quy ước đặt tên dữ liệu",
-    "section": "python pandas\n",
-    "text": "python pandas\n\ntương tự trong python, sử dụng list comprehension:\n```{python}\n\nimport pandas as pd\ncols_n   = [vbl for vbl in trip_data.columns if vbl[0:2] == 'AMT_']\ncols_grp = [\"CAT_TRAVELER_NATIONALITY\"]\ntrip_data.groupby(cols_grp)[cols_n].sum()\n```"
+    "section": "python pandas",
+    "text": "python pandas\ntương tự trong python, sử dụng list comprehension:\n```{python}\n\nimport pandas as pd\ncols_n   = [vbl for vbl in trip_data.columns if vbl[0:2] == 'AMT_']\ncols_grp = [\"CAT_TRAVELER_NATIONALITY\"]\ntrip_data.groupby(cols_grp)[cols_n].sum()\n```"
   },
   {
     "objectID": "blog/2024-06-05-cnac/index.html#concept-map",

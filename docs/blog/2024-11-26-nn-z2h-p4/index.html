@@ -2478,477 +2478,523 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb56-410"><a href="#cb56-410"></a>W1 <span class="op">=</span> torch.randn((block_size <span class="op">*</span> n_emb, n_hidden),      generator<span class="op">=</span>g)  <span class="op">*</span> (<span class="dv">5</span><span class="op">/</span><span class="dv">3</span>) <span class="op">/</span> ((block_size <span class="op">*</span> n_emb)<span class="op">**</span><span class="fl">0.5</span>) <span class="co"># * 0.2</span></span>
 <span id="cb56-411"><a href="#cb56-411"></a><span class="in">```</span></span>
 <span id="cb56-412"><a href="#cb56-412"></a></span>
-<span id="cb56-413"><a href="#cb56-413"></a>::: {.callout-note title="Why 5/3?"}</span>
-<span id="cb56-414"><a href="#cb56-414"></a>A comment in his video explain why <span class="in">`5/3`</span> is recommended, it comes from the avg of $<span class="co">[</span><span class="ot">\tanh(x)</span><span class="co">]</span>^2$ where $x$ is distributed as a Gaussian:</span>
-<span id="cb56-415"><a href="#cb56-415"></a></span>
-<span id="cb56-416"><a href="#cb56-416"></a>$\int_{-\infty}^{\infty} \frac{<span class="co">[</span><span class="ot">\tanh(x)</span><span class="co">]</span>^2 \exp(-\frac{x^2}{2})}{\sqrt{2\pi}} \, dx \approx 0.39$</span>
-<span id="cb56-417"><a href="#cb56-417"></a></span>
-<span id="cb56-418"><a href="#cb56-418"></a><span class="at">&gt; The square root of this value is how much the tanh squeezes the variance of the incoming variable: 0.39 ** .5 ~= 0.63 ~= 3/5 (hence 5/3 is just an approximation of the exact gain).</span></span>
-<span id="cb56-419"><a href="#cb56-419"></a></span>
-<span id="cb56-420"><a href="#cb56-420"></a>:::</span>
-<span id="cb56-421"><a href="#cb56-421"></a></span>
-<span id="cb56-422"><a href="#cb56-422"></a>In this case is roughly <span class="in">`0.3`</span>, re-train and although the loss only improved so insignificant (because previously we set it to be <span class="in">`0.2`</span> - very close), but we've parameterized this hyper-constant.</span>
-<span id="cb56-423"><a href="#cb56-423"></a></span>
-<span id="cb56-424"><a href="#cb56-424"></a><span class="fu">## batch normalization</span></span>
-<span id="cb56-425"><a href="#cb56-425"></a></span>
-<span id="cb56-426"><a href="#cb56-426"></a>As discussed before, we dont want the <span class="in">`h_pre_act`</span> to be way too small (\~is not doing anything) or too large (\~saturated), we want it to just roughly follow the standardized Gaussian Distribution (ie. mean equal to 0, std equal to 1).</span>
-<span id="cb56-427"><a href="#cb56-427"></a></span>
-<span id="cb56-428"><a href="#cb56-428"></a>We've done it at the initialization, *why don't we just normalize the hidden states to be unit Gaussian*? in batch normalization, this can be achieved by 4 steps, demonstrated with our case:</span>
-<span id="cb56-429"><a href="#cb56-429"></a></span>
-<span id="cb56-432"><a href="#cb56-432"></a><span class="in">```{python}</span></span>
-<span id="cb56-433"><a href="#cb56-433"></a><span class="co">#| eval: false</span></span>
-<span id="cb56-434"><a href="#cb56-434"></a><span class="co"># 1. mini-batch mean</span></span>
-<span id="cb56-435"><a href="#cb56-435"></a>hpa_mean <span class="op">=</span> h_pre_act.mean(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb56-436"><a href="#cb56-436"></a><span class="co"># 2. mini-batch variance / standard deviation</span></span>
-<span id="cb56-437"><a href="#cb56-437"></a>hpa_std <span class="op">=</span> h_pre_act.std(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb56-438"><a href="#cb56-438"></a><span class="co"># 3. normalize</span></span>
-<span id="cb56-439"><a href="#cb56-439"></a>h_pre_act <span class="op">=</span> (h_pre_act <span class="op">-</span> hpa_mean) <span class="op">/</span> hpa_std</span>
-<span id="cb56-440"><a href="#cb56-440"></a><span class="co"># 4. scale and shift</span></span>
-<span id="cb56-441"><a href="#cb56-441"></a><span class="co"># multiply by a "gain" then "shift" it with a bias</span></span>
-<span id="cb56-442"><a href="#cb56-442"></a>bngain <span class="op">=</span> torch.ones((<span class="dv">1</span>, n_hidden))</span>
-<span id="cb56-443"><a href="#cb56-443"></a>bnbias <span class="op">=</span> torch.zeros((<span class="dv">1</span>, n_hidden))</span>
-<span id="cb56-444"><a href="#cb56-444"></a>h_pre_act <span class="op">=</span> bngain <span class="op">*</span> h_pre_act <span class="op">+</span> bnbias</span>
-<span id="cb56-445"><a href="#cb56-445"></a><span class="in">```</span></span>
-<span id="cb56-446"><a href="#cb56-446"></a></span>
-<span id="cb56-447"><a href="#cb56-447"></a>We modified our code accordingly and re-run the code, actually this time the model did not improve much. Because actually this is very **simple and shallow** neural network. We also notice that the training loop now is slower than before, because the calculation volumn is bigger. Batch Normalization also unexpectedly comes up with a side effect, the forward and backward pass of any input now also depend on the mini-batch, not just itself (because of `mean()`/`std()`). This effect is suprisingly a good thing and acts as a **regularizer**.</span>
-<span id="cb56-448"><a href="#cb56-448"></a></span>
-<span id="cb56-449"><a href="#cb56-449"></a>There are also non-coupling regularizers such as: Linear Normalization, Layer Normalization, Group Normalization.</span>
-<span id="cb56-450"><a href="#cb56-450"></a></span>
-<span id="cb56-451"><a href="#cb56-451"></a>One othering to consider is in the deployment/testing phase, we dont want to use the batch norm calculated by a mini-batch. Instead we want to use the mean and standard deviation from the whole training data set:</span>
-<span id="cb56-452"><a href="#cb56-452"></a></span>
-<span id="cb56-455"><a href="#cb56-455"></a><span class="in">```{python}</span></span>
-<span id="cb56-456"><a href="#cb56-456"></a><span class="co">#| eval: false</span></span>
-<span id="cb56-457"><a href="#cb56-457"></a><span class="co"># calibrate the batch norm after training</span></span>
-<span id="cb56-458"><a href="#cb56-458"></a></span>
-<span id="cb56-459"><a href="#cb56-459"></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb56-460"><a href="#cb56-460"></a>    <span class="co"># pass the training set through</span></span>
-<span id="cb56-461"><a href="#cb56-461"></a>    emb <span class="op">=</span> C[x_train]</span>
-<span id="cb56-462"><a href="#cb56-462"></a>    embcat <span class="op">=</span> emb.view(<span class="op">-</span><span class="dv">1</span>, emb.shape[<span class="dv">1</span>] <span class="op">*</span> emb.shape[<span class="dv">2</span>])</span>
-<span id="cb56-463"><a href="#cb56-463"></a>    hpreact <span class="op">=</span> embcat <span class="op">@</span> W1 <span class="op">+</span> b1</span>
-<span id="cb56-464"><a href="#cb56-464"></a>    <span class="co"># measure the mean/std over the entire training set</span></span>
-<span id="cb56-465"><a href="#cb56-465"></a>    bnmean <span class="op">=</span> hpreact.mean(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb56-466"><a href="#cb56-466"></a>    bnstd <span class="op">=</span> hpreact.std(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb56-467"><a href="#cb56-467"></a><span class="in">```</span></span>
+<span id="cb56-413"><a href="#cb56-413"></a>In this case is roughly <span class="in">`0.3`</span>, re-train and although the loss only improved so insignificant (because previously we set it to be <span class="in">`0.2`</span> - very close), but we've parameterized this hyper-constant.</span>
+<span id="cb56-414"><a href="#cb56-414"></a></span>
+<span id="cb56-415"><a href="#cb56-415"></a><span class="fu">## batch normalization</span></span>
+<span id="cb56-416"><a href="#cb56-416"></a></span>
+<span id="cb56-417"><a href="#cb56-417"></a>As discussed before, we dont want the <span class="in">`h_pre_act`</span> to be way too small (\~is not doing anything) or too large (\~saturated), we want it to just roughly follow the standardized Gaussian Distribution (ie. mean equal to 0, std equal to 1).</span>
+<span id="cb56-418"><a href="#cb56-418"></a></span>
+<span id="cb56-419"><a href="#cb56-419"></a>We've done it at the initialization, *why don't we just normalize the hidden states to be unit Gaussian*? in batch normalization, this can be achieved by 4 steps, demonstrated with our case:</span>
+<span id="cb56-420"><a href="#cb56-420"></a></span>
+<span id="cb56-423"><a href="#cb56-423"></a><span class="in">```{python}</span></span>
+<span id="cb56-424"><a href="#cb56-424"></a><span class="co">#| eval: false</span></span>
+<span id="cb56-425"><a href="#cb56-425"></a><span class="co"># 1. mini-batch mean</span></span>
+<span id="cb56-426"><a href="#cb56-426"></a>hpa_mean <span class="op">=</span> h_pre_act.mean(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb56-427"><a href="#cb56-427"></a><span class="co"># 2. mini-batch variance / standard deviation</span></span>
+<span id="cb56-428"><a href="#cb56-428"></a>hpa_std <span class="op">=</span> h_pre_act.std(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb56-429"><a href="#cb56-429"></a><span class="co"># 3. normalize</span></span>
+<span id="cb56-430"><a href="#cb56-430"></a>h_pre_act <span class="op">=</span> (h_pre_act <span class="op">-</span> hpa_mean) <span class="op">/</span> hpa_std</span>
+<span id="cb56-431"><a href="#cb56-431"></a><span class="co"># 4. scale and shift</span></span>
+<span id="cb56-432"><a href="#cb56-432"></a><span class="co"># multiply by a "gain" then "shift" it with a bias</span></span>
+<span id="cb56-433"><a href="#cb56-433"></a>bngain <span class="op">=</span> torch.ones((<span class="dv">1</span>, n_hidden))</span>
+<span id="cb56-434"><a href="#cb56-434"></a>bnbias <span class="op">=</span> torch.zeros((<span class="dv">1</span>, n_hidden))</span>
+<span id="cb56-435"><a href="#cb56-435"></a>h_pre_act <span class="op">=</span> bngain <span class="op">*</span> h_pre_act <span class="op">+</span> bnbias</span>
+<span id="cb56-436"><a href="#cb56-436"></a><span class="in">```</span></span>
+<span id="cb56-437"><a href="#cb56-437"></a></span>
+<span id="cb56-438"><a href="#cb56-438"></a>We modified our code accordingly and re-run the code, actually this time the model did not improve much. Because actually this is very **simple and shallow** neural network. We also notice that the training loop now is slower than before, because the calculation volumn is bigger. Batch Normalization also unexpectedly comes up with a side effect, the forward and backward pass of any input now also depend on the mini-batch, not just itself (because of `mean()`/`std()`). This effect is suprisingly a good thing and acts as a **regularizer**.</span>
+<span id="cb56-439"><a href="#cb56-439"></a></span>
+<span id="cb56-440"><a href="#cb56-440"></a>There are also non-coupling regularizers such as: Linear Normalization, Layer Normalization, Group Normalization.</span>
+<span id="cb56-441"><a href="#cb56-441"></a></span>
+<span id="cb56-442"><a href="#cb56-442"></a>One othering to consider is in the deployment/testing phase, we dont want to use the batch norm calculated by a mini-batch. Instead we want to use the mean and standard deviation from the whole training data set:</span>
+<span id="cb56-443"><a href="#cb56-443"></a></span>
+<span id="cb56-446"><a href="#cb56-446"></a><span class="in">```{python}</span></span>
+<span id="cb56-447"><a href="#cb56-447"></a><span class="co">#| eval: false</span></span>
+<span id="cb56-448"><a href="#cb56-448"></a><span class="co"># calibrate the batch norm after training</span></span>
+<span id="cb56-449"><a href="#cb56-449"></a></span>
+<span id="cb56-450"><a href="#cb56-450"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb56-451"><a href="#cb56-451"></a>    <span class="co"># pass the training set through</span></span>
+<span id="cb56-452"><a href="#cb56-452"></a>    emb <span class="op">=</span> C[x_train]</span>
+<span id="cb56-453"><a href="#cb56-453"></a>    embcat <span class="op">=</span> emb.view(<span class="op">-</span><span class="dv">1</span>, emb.shape[<span class="dv">1</span>] <span class="op">*</span> emb.shape[<span class="dv">2</span>])</span>
+<span id="cb56-454"><a href="#cb56-454"></a>    hpreact <span class="op">=</span> embcat <span class="op">@</span> W1 <span class="op">+</span> b1</span>
+<span id="cb56-455"><a href="#cb56-455"></a>    <span class="co"># measure the mean/std over the entire training set</span></span>
+<span id="cb56-456"><a href="#cb56-456"></a>    bnmean <span class="op">=</span> hpreact.mean(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb56-457"><a href="#cb56-457"></a>    bnstd <span class="op">=</span> hpreact.std(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb56-458"><a href="#cb56-458"></a><span class="in">```</span></span>
+<span id="cb56-459"><a href="#cb56-459"></a></span>
+<span id="cb56-460"><a href="#cb56-460"></a>Rather, we can also use the running mean and standard deviation as implemented below which will give close estimates. Remaining 2 notes on the BN are:</span>
+<span id="cb56-461"><a href="#cb56-461"></a></span>
+<span id="cb56-462"><a href="#cb56-462"></a><span class="ss">1.  </span>Dividing zeros: we add a $\epsilon$ value to the **variance** to avoid. We do not include this here as it likely not to happen with out example;</span>
+<span id="cb56-463"><a href="#cb56-463"></a><span class="ss">2.  </span>The bias <span class="in">`b1`</span> will be subtracting in BN calculation, we will notice the <span class="in">`b1.grad`</span> will be zeros as it does not impact any other calculation. Thus when using the BN, for layer before like weight, we should remove the bias. The <span class="in">`bnbias`</span> now will be incharge for biasing the distributions.</span>
+<span id="cb56-464"><a href="#cb56-464"></a></span>
+<span id="cb56-465"><a href="#cb56-465"></a><span class="fu">## real example: `resnet50` walkthrough</span></span>
+<span id="cb56-466"><a href="#cb56-466"></a></span>
+<span id="cb56-467"><a href="#cb56-467"></a>The code AK presented here: <span class="ot">&lt;https://github.com/pytorch/vision/blob/main/torchvision/models/resnet.py#L108&gt;</span></span>
 <span id="cb56-468"><a href="#cb56-468"></a></span>
-<span id="cb56-469"><a href="#cb56-469"></a>Rather, we can also use the running mean and standard deviation as implemented below which will give close estimates. Remaining 2 notes on the BN are:</span>
+<span id="cb56-469"><a href="#cb56-469"></a><span class="al">![The architecture of ResNet-50 model.](resnet50.png)</span></span>
 <span id="cb56-470"><a href="#cb56-470"></a></span>
-<span id="cb56-471"><a href="#cb56-471"></a><span class="ss">1.  </span>Dividing zeros: we add a $\epsilon$ value to the **variance** to avoid. We do not include this here as it likely not to happen with out example;</span>
-<span id="cb56-472"><a href="#cb56-472"></a><span class="ss">2.  </span>The bias <span class="in">`b1`</span> will be subtracting in BN calculation, we will notice the <span class="in">`b1.grad`</span> will be zeros as it does not impact any other calculation. Thus when using the BN, for layer before like weight, we should remove the bias. The <span class="in">`bnbias`</span> now will be incharge for biasing the distributions.</span>
-<span id="cb56-473"><a href="#cb56-473"></a></span>
-<span id="cb56-474"><a href="#cb56-474"></a><span class="fu">## real example: `resnet50` walkthrough</span></span>
-<span id="cb56-475"><a href="#cb56-475"></a></span>
-<span id="cb56-476"><a href="#cb56-476"></a>The code AK presented here: <span class="ot">&lt;https://github.com/pytorch/vision/blob/main/torchvision/models/resnet.py#L108&gt;</span></span>
-<span id="cb56-477"><a href="#cb56-477"></a></span>
-<span id="cb56-478"><a href="#cb56-478"></a><span class="al">![The architecture of ResNet-50 model.](resnet50.png)</span></span>
-<span id="cb56-479"><a href="#cb56-479"></a></span>
-<span id="cb56-480"><a href="#cb56-480"></a><span class="fu">## summary of the lecture</span></span>
-<span id="cb56-481"><a href="#cb56-481"></a></span>
-<span id="cb56-482"><a href="#cb56-482"></a>Understand the activations (non-linearity) and gradients is crucial when training deep / large neural networks, in part 1 we have observed some issue and come up with many solutions:</span>
-<span id="cb56-483"><a href="#cb56-483"></a></span>
-<span id="cb56-484"><a href="#cb56-484"></a><span class="ss">1.  </span>Confidently wrong of network at init leads to hookey stick for loss in training loop: adding multipliers to <span class="in">`logits`</span>'s weights and biases;</span>
-<span id="cb56-485"><a href="#cb56-485"></a><span class="ss">2.  </span>Flat-tails distribution or saturated <span class="in">`tanh`</span>: Kaiming init;</span>
-<span id="cb56-486"><a href="#cb56-486"></a><span class="ss">3.  </span>Normalization of the hidden states: introduction to BN.</span>
-<span id="cb56-487"><a href="#cb56-487"></a></span>
-<span id="cb56-488"><a href="#cb56-488"></a>Our final code in part 1 (un-fold to see), <span class="in">`# 👈`</span> indicates a change:</span>
-<span id="cb56-489"><a href="#cb56-489"></a></span>
-<span id="cb56-492"><a href="#cb56-492"></a><span class="in">```{python}</span></span>
-<span id="cb56-493"><a href="#cb56-493"></a><span class="co">#| code-fold: true</span></span>
-<span id="cb56-494"><a href="#cb56-494"></a>block_size <span class="op">=</span> <span class="dv">3</span></span>
-<span id="cb56-495"><a href="#cb56-495"></a></span>
-<span id="cb56-496"><a href="#cb56-496"></a><span class="co"># MLP revisited</span></span>
-<span id="cb56-497"><a href="#cb56-497"></a>n_emb <span class="op">=</span> <span class="dv">10</span> <span class="co"># no of dimensions of the embedding space.</span></span>
-<span id="cb56-498"><a href="#cb56-498"></a>n_hidden <span class="op">=</span> <span class="dv">200</span> <span class="co"># size of the hidden - tanh layer</span></span>
-<span id="cb56-499"><a href="#cb56-499"></a></span>
-<span id="cb56-500"><a href="#cb56-500"></a><span class="co"># Lookup table - 10 dimensional space</span></span>
-<span id="cb56-501"><a href="#cb56-501"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>) <span class="co"># for reproductivity</span></span>
-<span id="cb56-502"><a href="#cb56-502"></a>C <span class="op">=</span> torch.randn((vocab_size, n_emb),                  generator<span class="op">=</span>g)</span>
-<span id="cb56-503"><a href="#cb56-503"></a></span>
-<span id="cb56-504"><a href="#cb56-504"></a><span class="co"># Layer 1 - tanh - 300 neurons</span></span>
-<span id="cb56-505"><a href="#cb56-505"></a>W1 <span class="op">=</span> torch.randn((block_size <span class="op">*</span> n_emb, n_hidden),      generator<span class="op">=</span>g) <span class="op">*</span> (<span class="dv">5</span><span class="op">/</span><span class="dv">3</span>) <span class="op">/</span> ((block_size <span class="op">*</span> n_emb)<span class="op">**</span><span class="fl">0.5</span>) <span class="co"># * 0.2       # 👈</span></span>
-<span id="cb56-506"><a href="#cb56-506"></a><span class="co"># b1 = torch.randn(n_hidden,                            generator=g) * 0.01       # 👈</span></span>
-<span id="cb56-507"><a href="#cb56-507"></a></span>
-<span id="cb56-508"><a href="#cb56-508"></a><span class="co"># Layer 2 - softmax</span></span>
-<span id="cb56-509"><a href="#cb56-509"></a>W2 <span class="op">=</span> torch.randn((n_hidden, vocab_size),              generator<span class="op">=</span>g) <span class="op">*</span> <span class="fl">0.01</span>       <span class="co"># 👈</span></span>
-<span id="cb56-510"><a href="#cb56-510"></a>b2 <span class="op">=</span> torch.randn(vocab_size,                          generator<span class="op">=</span>g) <span class="op">*</span> <span class="dv">0</span>          <span class="co"># 👈</span></span>
-<span id="cb56-511"><a href="#cb56-511"></a></span>
-<span id="cb56-512"><a href="#cb56-512"></a><span class="co"># Batch Normalization gain and bias</span></span>
-<span id="cb56-513"><a href="#cb56-513"></a>bngain <span class="op">=</span> torch.ones((<span class="dv">1</span>, n_hidden))                                              <span class="co"># 👈</span></span>
-<span id="cb56-514"><a href="#cb56-514"></a>bnbias <span class="op">=</span> torch.zeros((<span class="dv">1</span>, n_hidden))                                             <span class="co"># 👈</span></span>
-<span id="cb56-515"><a href="#cb56-515"></a></span>
-<span id="cb56-516"><a href="#cb56-516"></a><span class="co"># Add running mean/std</span></span>
-<span id="cb56-517"><a href="#cb56-517"></a>bnmean_running <span class="op">=</span> torch.zeros((<span class="dv">1</span>, n_hidden))                             <span class="co"># 👈</span></span>
-<span id="cb56-518"><a href="#cb56-518"></a>bnstd_running <span class="op">=</span> torch.ones((<span class="dv">1</span>, n_hidden))                               <span class="co"># 👈</span></span>
-<span id="cb56-519"><a href="#cb56-519"></a></span>
-<span id="cb56-520"><a href="#cb56-520"></a><span class="co"># All params (deleted b1)</span></span>
-<span id="cb56-521"><a href="#cb56-521"></a>parameters <span class="op">=</span> [C, W1, W2, b2, bngain, bnbias]                                <span class="co"># 👈</span></span>
-<span id="cb56-522"><a href="#cb56-522"></a><span class="bu">print</span>(<span class="st">"No of params: "</span>, <span class="bu">sum</span>(p.nelement() <span class="cf">for</span> p <span class="kw">in</span> parameters))</span>
-<span id="cb56-523"><a href="#cb56-523"></a></span>
-<span id="cb56-524"><a href="#cb56-524"></a><span class="co"># Pre-training</span></span>
-<span id="cb56-525"><a href="#cb56-525"></a><span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
-<span id="cb56-526"><a href="#cb56-526"></a>    p.requires_grad <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb56-527"><a href="#cb56-527"></a></span>
-<span id="cb56-528"><a href="#cb56-528"></a><span class="co"># Optimization</span></span>
-<span id="cb56-529"><a href="#cb56-529"></a>max_steps <span class="op">=</span> <span class="dv">200_000</span></span>
-<span id="cb56-530"><a href="#cb56-530"></a>batch_size <span class="op">=</span> <span class="dv">32</span></span>
-<span id="cb56-531"><a href="#cb56-531"></a></span>
-<span id="cb56-532"><a href="#cb56-532"></a><span class="co"># Stats holders</span></span>
-<span id="cb56-533"><a href="#cb56-533"></a>lossi <span class="op">=</span> []</span>
-<span id="cb56-534"><a href="#cb56-534"></a></span>
-<span id="cb56-535"><a href="#cb56-535"></a><span class="co"># Training on Xtr, Ytr</span></span>
-<span id="cb56-536"><a href="#cb56-536"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(max_steps):</span>
-<span id="cb56-537"><a href="#cb56-537"></a></span>
-<span id="cb56-538"><a href="#cb56-538"></a>    <span class="co"># minibatch construct      </span></span>
-<span id="cb56-539"><a href="#cb56-539"></a>    ix <span class="op">=</span> torch.randint(<span class="dv">0</span>, Xtr.shape[<span class="dv">0</span>], (batch_size,)) </span>
-<span id="cb56-540"><a href="#cb56-540"></a>    Xb, Yb <span class="op">=</span> Xtr[ix], Ytr[ix] <span class="co"># batch X, Y</span></span>
-<span id="cb56-541"><a href="#cb56-541"></a></span>
-<span id="cb56-542"><a href="#cb56-542"></a>    <span class="co"># forward pass:</span></span>
-<span id="cb56-543"><a href="#cb56-543"></a>    emb <span class="op">=</span> C[Xb] <span class="co"># embed the characters into vectors   </span></span>
-<span id="cb56-544"><a href="#cb56-544"></a>    emb_cat <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) <span class="co"># concatenate the vectors</span></span>
-<span id="cb56-545"><a href="#cb56-545"></a>    <span class="co"># Linear layer</span></span>
-<span id="cb56-546"><a href="#cb56-546"></a>    h_pre_act <span class="op">=</span> emb_cat <span class="op">@</span> W1 <span class="co"># + b1 # hidden layer pre-activation                               # 👈</span></span>
-<span id="cb56-547"><a href="#cb56-547"></a>    <span class="co"># BatchNorm layer</span></span>
-<span id="cb56-548"><a href="#cb56-548"></a>    bnmeani <span class="op">=</span> h_pre_act.mean(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>)                                                   <span class="co"># 👈</span></span>
-<span id="cb56-549"><a href="#cb56-549"></a>    bnstdi <span class="op">=</span> h_pre_act.std(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>)                                                     <span class="co"># 👈</span></span>
-<span id="cb56-550"><a href="#cb56-550"></a>    h_pre_act <span class="op">=</span> bngain <span class="op">*</span> ((h_pre_act <span class="op">-</span> bnmeani) <span class="op">/</span> bnstdi) <span class="op">+</span> bnbias                              <span class="co"># 👈</span></span>
-<span id="cb56-551"><a href="#cb56-551"></a>    <span class="co"># Updating running mean and std (this runs outside the training loop)</span></span>
-<span id="cb56-552"><a href="#cb56-552"></a>    <span class="cf">with</span> torch.no_grad():                                                                       <span class="co"># 👈</span></span>
-<span id="cb56-553"><a href="#cb56-553"></a>        bnmean_running <span class="op">=</span> <span class="fl">0.999</span> <span class="op">*</span> bnmean_running <span class="op">+</span> <span class="fl">0.001</span> <span class="op">*</span> bnmeani                               <span class="co"># 👈</span></span>
-<span id="cb56-554"><a href="#cb56-554"></a>        bnstd_running <span class="op">=</span> <span class="fl">0.999</span> <span class="op">*</span> bnstd_running <span class="op">+</span> <span class="fl">0.001</span> <span class="op">*</span> bnstdi                                  <span class="co"># 👈</span></span>
-<span id="cb56-555"><a href="#cb56-555"></a>    <span class="co"># Non-linearity</span></span>
-<span id="cb56-556"><a href="#cb56-556"></a>    h <span class="op">=</span> torch.tanh(h_pre_act) <span class="co"># hidden layer</span></span>
-<span id="cb56-557"><a href="#cb56-557"></a>    logits <span class="op">=</span> h <span class="op">@</span> W2 <span class="op">+</span> b2 <span class="co"># output layer</span></span>
-<span id="cb56-558"><a href="#cb56-558"></a>    loss <span class="op">=</span> F.cross_entropy(logits, Yb) <span class="co"># loss function</span></span>
-<span id="cb56-559"><a href="#cb56-559"></a></span>
-<span id="cb56-560"><a href="#cb56-560"></a>    <span class="co"># backward pass:</span></span>
-<span id="cb56-561"><a href="#cb56-561"></a>    <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
-<span id="cb56-562"><a href="#cb56-562"></a>        p.grad <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb56-563"><a href="#cb56-563"></a>    loss.backward()</span>
-<span id="cb56-564"><a href="#cb56-564"></a></span>
-<span id="cb56-565"><a href="#cb56-565"></a>    <span class="co"># update</span></span>
-<span id="cb56-566"><a href="#cb56-566"></a>    lr <span class="op">=</span> <span class="fl">0.1</span> <span class="cf">if</span> i <span class="op">&lt;=</span> max_steps <span class="op">/</span> <span class="dv">2</span> <span class="cf">else</span> <span class="fl">0.01</span> <span class="co"># step learning rate decay</span></span>
-<span id="cb56-567"><a href="#cb56-567"></a>    <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
-<span id="cb56-568"><a href="#cb56-568"></a>        p.data <span class="op">+=</span> <span class="op">-</span> lr <span class="op">*</span> p.grad</span>
-<span id="cb56-569"><a href="#cb56-569"></a></span>
-<span id="cb56-570"><a href="#cb56-570"></a>    <span class="co"># track stats</span></span>
-<span id="cb56-571"><a href="#cb56-571"></a>    <span class="cf">if</span> i <span class="op">%</span> <span class="dv">10000</span> <span class="op">==</span> <span class="dv">0</span>: <span class="co"># print once every while</span></span>
-<span id="cb56-572"><a href="#cb56-572"></a>      <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">:7d}</span><span class="ss">/</span><span class="sc">{</span>max_steps<span class="sc">:7d}</span><span class="ss">: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
-<span id="cb56-573"><a href="#cb56-573"></a>    lossi.append(loss.log10().item())</span>
-<span id="cb56-574"><a href="#cb56-574"></a><span class="in">```</span></span>
-<span id="cb56-575"><a href="#cb56-575"></a></span>
-<span id="cb56-578"><a href="#cb56-578"></a><span class="in">```{python}</span></span>
-<span id="cb56-579"><a href="#cb56-579"></a>plt.plot(lossi)</span>
-<span id="cb56-580"><a href="#cb56-580"></a><span class="in">```</span></span>
-<span id="cb56-581"><a href="#cb56-581"></a></span>
-<span id="cb56-584"><a href="#cb56-584"></a><span class="in">```{python}</span></span>
-<span id="cb56-585"><a href="#cb56-585"></a><span class="at">@torch.no_grad</span>() <span class="co"># disables gradient tracking</span></span>
-<span id="cb56-586"><a href="#cb56-586"></a><span class="kw">def</span> split_loss(split: <span class="bu">str</span>):</span>
-<span id="cb56-587"><a href="#cb56-587"></a>  x, y <span class="op">=</span> {</span>
-<span id="cb56-588"><a href="#cb56-588"></a>    <span class="st">'train'</span>: (Xtr, Ytr),</span>
-<span id="cb56-589"><a href="#cb56-589"></a>    <span class="st">'val'</span>: (Xdev, Ydev),</span>
-<span id="cb56-590"><a href="#cb56-590"></a>    <span class="st">'test'</span>: (Xte, Yte)</span>
-<span id="cb56-591"><a href="#cb56-591"></a>  }[split]</span>
-<span id="cb56-592"><a href="#cb56-592"></a>  emb <span class="op">=</span> C[x]</span>
-<span id="cb56-593"><a href="#cb56-593"></a>  emb_cat <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) </span>
-<span id="cb56-594"><a href="#cb56-594"></a>  h_pre_act <span class="op">=</span> emb_cat <span class="op">@</span> W1 <span class="op">+</span> b1                                                                                         <span class="co"># 👈 </span></span>
-<span id="cb56-595"><a href="#cb56-595"></a>  <span class="co"># h_pre_act = bngain * ((h_pre_act - h_pre_act.mean(0, keepdim=True)) / h_pre_act.std(0, keepdim=True)) + bnbias      # 👈</span></span>
-<span id="cb56-596"><a href="#cb56-596"></a>  <span class="co"># h_pre_act = bngain * ((h_pre_act - bnmean) / bnstd) + bnbias                                                        # 👈</span></span>
-<span id="cb56-597"><a href="#cb56-597"></a>  h_pre_act <span class="op">=</span> bngain <span class="op">*</span> ((h_pre_act <span class="op">-</span> bnmean_running) <span class="op">/</span> bnstd_running) <span class="op">+</span> bnbias                                          <span class="co"># 👈</span></span>
-<span id="cb56-598"><a href="#cb56-598"></a>  h <span class="op">=</span> torch.tanh(h_pre_act) </span>
-<span id="cb56-599"><a href="#cb56-599"></a>  logits <span class="op">=</span> h <span class="op">@</span> W2 <span class="op">+</span> b2</span>
-<span id="cb56-600"><a href="#cb56-600"></a>  loss <span class="op">=</span> F.cross_entropy(logits, y)</span>
-<span id="cb56-601"><a href="#cb56-601"></a>  <span class="bu">print</span>(split, loss.item())</span>
-<span id="cb56-602"><a href="#cb56-602"></a></span>
-<span id="cb56-603"><a href="#cb56-603"></a>split_loss(<span class="st">'train'</span>)</span>
-<span id="cb56-604"><a href="#cb56-604"></a>split_loss(<span class="st">'val'</span>)</span>
-<span id="cb56-605"><a href="#cb56-605"></a><span class="in">```</span></span>
-<span id="cb56-606"><a href="#cb56-606"></a></span>
-<span id="cb56-607"><a href="#cb56-607"></a><span class="fu">### loss logs</span></span>
-<span id="cb56-608"><a href="#cb56-608"></a></span>
-<span id="cb56-609"><a href="#cb56-609"></a>The numbers somehow are approximate, I don't know why my Thinkpad-E14 gave different results when running codes multiple times 😂.</span>
-<span id="cb56-610"><a href="#cb56-610"></a></span>
-<span id="cb56-611"><a href="#cb56-611"></a>+--------------+------------------------------------------------------------+--------------------------+</span>
-<span id="cb56-612"><a href="#cb56-612"></a>| Step         | What we did                                                | Loss we got (accum)      |</span>
-<span id="cb56-613"><a href="#cb56-613"></a>+==============+============================================================+==========================+</span>
-<span id="cb56-614"><a href="#cb56-614"></a>| 1            | original                                                   | train 2.1169614791870117 |</span>
-<span id="cb56-615"><a href="#cb56-615"></a>|              |                                                            |                          |</span>
-<span id="cb56-616"><a href="#cb56-616"></a>|              |                                                            | val 2.1623435020446777   |</span>
-<span id="cb56-617"><a href="#cb56-617"></a>+--------------+------------------------------------------------------------+--------------------------+</span>
-<span id="cb56-618"><a href="#cb56-618"></a>| 2            | fixed softmax confidently wrong                            | train 2.0666463375091553 |</span>
-<span id="cb56-619"><a href="#cb56-619"></a>|              |                                                            |                          |</span>
-<span id="cb56-620"><a href="#cb56-620"></a>|              |                                                            | val 2.1468191146850586   |</span>
-<span id="cb56-621"><a href="#cb56-621"></a>+--------------+------------------------------------------------------------+--------------------------+</span>
-<span id="cb56-622"><a href="#cb56-622"></a>| 3            | fixed <span class="in">`tanh`</span> layer too saturated at init                   | train 2.033477544784546  |</span>
-<span id="cb56-623"><a href="#cb56-623"></a>|              |                                                            |                          |</span>
-<span id="cb56-624"><a href="#cb56-624"></a>|              |                                                            | val 2.115907907485962    |</span>
-<span id="cb56-625"><a href="#cb56-625"></a>+--------------+------------------------------------------------------------+--------------------------+</span>
-<span id="cb56-626"><a href="#cb56-626"></a>| 4            | used semi principle "kaiming init" instead of hacking init | train 2.038902997970581  |</span>
-<span id="cb56-627"><a href="#cb56-627"></a>|              |                                                            |                          |</span>
-<span id="cb56-628"><a href="#cb56-628"></a>|              |                                                            | val 2.1138899326324463   |</span>
-<span id="cb56-629"><a href="#cb56-629"></a>+--------------+------------------------------------------------------------+--------------------------+</span>
-<span id="cb56-630"><a href="#cb56-630"></a>| 5            | added batch norm layer                                     | train 2.0662825107574463 |</span>
-<span id="cb56-631"><a href="#cb56-631"></a>|              |                                                            |                          |</span>
-<span id="cb56-632"><a href="#cb56-632"></a>|              |                                                            | val 2.1201331615448      |</span>
-<span id="cb56-633"><a href="#cb56-633"></a>+--------------+------------------------------------------------------------+--------------------------+</span>
-<span id="cb56-634"><a href="#cb56-634"></a></span>
-<span id="cb56-635"><a href="#cb56-635"></a>: Loss logs {.striped .hover}</span>
+<span id="cb56-471"><a href="#cb56-471"></a><span class="fu">## summary of the lecture</span></span>
+<span id="cb56-472"><a href="#cb56-472"></a></span>
+<span id="cb56-473"><a href="#cb56-473"></a>Understand the activations (non-linearity) and gradients is crucial when training deep / large neural networks, in part 1 we have observed some issue and come up with many solutions:</span>
+<span id="cb56-474"><a href="#cb56-474"></a></span>
+<span id="cb56-475"><a href="#cb56-475"></a><span class="ss">1.  </span>Confidently wrong of network at init leads to hookey stick for loss in training loop: adding multipliers to <span class="in">`logits`</span>'s weights and biases;</span>
+<span id="cb56-476"><a href="#cb56-476"></a><span class="ss">2.  </span>Flat-tails distribution or saturated <span class="in">`tanh`</span>: Kaiming init;</span>
+<span id="cb56-477"><a href="#cb56-477"></a><span class="ss">3.  </span>Normalization of the hidden states: introduction to BN.</span>
+<span id="cb56-478"><a href="#cb56-478"></a></span>
+<span id="cb56-479"><a href="#cb56-479"></a>Our final code in part 1 (un-fold to see), <span class="in">`# 👈`</span> indicates a change:</span>
+<span id="cb56-480"><a href="#cb56-480"></a></span>
+<span id="cb56-483"><a href="#cb56-483"></a><span class="in">```{python}</span></span>
+<span id="cb56-484"><a href="#cb56-484"></a><span class="co">#| code-fold: true</span></span>
+<span id="cb56-485"><a href="#cb56-485"></a>block_size <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb56-486"><a href="#cb56-486"></a></span>
+<span id="cb56-487"><a href="#cb56-487"></a><span class="co"># MLP revisited</span></span>
+<span id="cb56-488"><a href="#cb56-488"></a>n_emb <span class="op">=</span> <span class="dv">10</span> <span class="co"># no of dimensions of the embedding space.</span></span>
+<span id="cb56-489"><a href="#cb56-489"></a>n_hidden <span class="op">=</span> <span class="dv">200</span> <span class="co"># size of the hidden - tanh layer</span></span>
+<span id="cb56-490"><a href="#cb56-490"></a></span>
+<span id="cb56-491"><a href="#cb56-491"></a><span class="co"># Lookup table - 10 dimensional space</span></span>
+<span id="cb56-492"><a href="#cb56-492"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>) <span class="co"># for reproductivity</span></span>
+<span id="cb56-493"><a href="#cb56-493"></a>C <span class="op">=</span> torch.randn((vocab_size, n_emb),                  generator<span class="op">=</span>g)</span>
+<span id="cb56-494"><a href="#cb56-494"></a></span>
+<span id="cb56-495"><a href="#cb56-495"></a><span class="co"># Layer 1 - tanh - 300 neurons</span></span>
+<span id="cb56-496"><a href="#cb56-496"></a>W1 <span class="op">=</span> torch.randn((block_size <span class="op">*</span> n_emb, n_hidden),      generator<span class="op">=</span>g) <span class="op">*</span> (<span class="dv">5</span><span class="op">/</span><span class="dv">3</span>) <span class="op">/</span> ((block_size <span class="op">*</span> n_emb)<span class="op">**</span><span class="fl">0.5</span>) <span class="co"># * 0.2       # 👈</span></span>
+<span id="cb56-497"><a href="#cb56-497"></a><span class="co"># b1 = torch.randn(n_hidden,                            generator=g) * 0.01       # 👈</span></span>
+<span id="cb56-498"><a href="#cb56-498"></a></span>
+<span id="cb56-499"><a href="#cb56-499"></a><span class="co"># Layer 2 - softmax</span></span>
+<span id="cb56-500"><a href="#cb56-500"></a>W2 <span class="op">=</span> torch.randn((n_hidden, vocab_size),              generator<span class="op">=</span>g) <span class="op">*</span> <span class="fl">0.01</span>       <span class="co"># 👈</span></span>
+<span id="cb56-501"><a href="#cb56-501"></a>b2 <span class="op">=</span> torch.randn(vocab_size,                          generator<span class="op">=</span>g) <span class="op">*</span> <span class="dv">0</span>          <span class="co"># 👈</span></span>
+<span id="cb56-502"><a href="#cb56-502"></a></span>
+<span id="cb56-503"><a href="#cb56-503"></a><span class="co"># Batch Normalization gain and bias</span></span>
+<span id="cb56-504"><a href="#cb56-504"></a>bngain <span class="op">=</span> torch.ones((<span class="dv">1</span>, n_hidden))                                              <span class="co"># 👈</span></span>
+<span id="cb56-505"><a href="#cb56-505"></a>bnbias <span class="op">=</span> torch.zeros((<span class="dv">1</span>, n_hidden))                                             <span class="co"># 👈</span></span>
+<span id="cb56-506"><a href="#cb56-506"></a></span>
+<span id="cb56-507"><a href="#cb56-507"></a><span class="co"># Add running mean/std</span></span>
+<span id="cb56-508"><a href="#cb56-508"></a>bnmean_running <span class="op">=</span> torch.zeros((<span class="dv">1</span>, n_hidden))                             <span class="co"># 👈</span></span>
+<span id="cb56-509"><a href="#cb56-509"></a>bnstd_running <span class="op">=</span> torch.ones((<span class="dv">1</span>, n_hidden))                               <span class="co"># 👈</span></span>
+<span id="cb56-510"><a href="#cb56-510"></a></span>
+<span id="cb56-511"><a href="#cb56-511"></a><span class="co"># All params (deleted b1)</span></span>
+<span id="cb56-512"><a href="#cb56-512"></a>parameters <span class="op">=</span> [C, W1, W2, b2, bngain, bnbias]                                <span class="co"># 👈</span></span>
+<span id="cb56-513"><a href="#cb56-513"></a><span class="bu">print</span>(<span class="st">"No of params: "</span>, <span class="bu">sum</span>(p.nelement() <span class="cf">for</span> p <span class="kw">in</span> parameters))</span>
+<span id="cb56-514"><a href="#cb56-514"></a></span>
+<span id="cb56-515"><a href="#cb56-515"></a><span class="co"># Pre-training</span></span>
+<span id="cb56-516"><a href="#cb56-516"></a><span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb56-517"><a href="#cb56-517"></a>    p.requires_grad <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb56-518"><a href="#cb56-518"></a></span>
+<span id="cb56-519"><a href="#cb56-519"></a><span class="co"># Optimization</span></span>
+<span id="cb56-520"><a href="#cb56-520"></a>max_steps <span class="op">=</span> <span class="dv">200_000</span></span>
+<span id="cb56-521"><a href="#cb56-521"></a>batch_size <span class="op">=</span> <span class="dv">32</span></span>
+<span id="cb56-522"><a href="#cb56-522"></a></span>
+<span id="cb56-523"><a href="#cb56-523"></a><span class="co"># Stats holders</span></span>
+<span id="cb56-524"><a href="#cb56-524"></a>lossi <span class="op">=</span> []</span>
+<span id="cb56-525"><a href="#cb56-525"></a></span>
+<span id="cb56-526"><a href="#cb56-526"></a><span class="co"># Training on Xtr, Ytr</span></span>
+<span id="cb56-527"><a href="#cb56-527"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(max_steps):</span>
+<span id="cb56-528"><a href="#cb56-528"></a></span>
+<span id="cb56-529"><a href="#cb56-529"></a>    <span class="co"># minibatch construct      </span></span>
+<span id="cb56-530"><a href="#cb56-530"></a>    ix <span class="op">=</span> torch.randint(<span class="dv">0</span>, Xtr.shape[<span class="dv">0</span>], (batch_size,)) </span>
+<span id="cb56-531"><a href="#cb56-531"></a>    Xb, Yb <span class="op">=</span> Xtr[ix], Ytr[ix] <span class="co"># batch X, Y</span></span>
+<span id="cb56-532"><a href="#cb56-532"></a></span>
+<span id="cb56-533"><a href="#cb56-533"></a>    <span class="co"># forward pass:</span></span>
+<span id="cb56-534"><a href="#cb56-534"></a>    emb <span class="op">=</span> C[Xb] <span class="co"># embed the characters into vectors   </span></span>
+<span id="cb56-535"><a href="#cb56-535"></a>    emb_cat <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) <span class="co"># concatenate the vectors</span></span>
+<span id="cb56-536"><a href="#cb56-536"></a>    <span class="co"># Linear layer</span></span>
+<span id="cb56-537"><a href="#cb56-537"></a>    h_pre_act <span class="op">=</span> emb_cat <span class="op">@</span> W1 <span class="co"># + b1 # hidden layer pre-activation                               # 👈</span></span>
+<span id="cb56-538"><a href="#cb56-538"></a>    <span class="co"># BatchNorm layer</span></span>
+<span id="cb56-539"><a href="#cb56-539"></a>    bnmeani <span class="op">=</span> h_pre_act.mean(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>)                                                   <span class="co"># 👈</span></span>
+<span id="cb56-540"><a href="#cb56-540"></a>    bnstdi <span class="op">=</span> h_pre_act.std(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>)                                                     <span class="co"># 👈</span></span>
+<span id="cb56-541"><a href="#cb56-541"></a>    h_pre_act <span class="op">=</span> bngain <span class="op">*</span> ((h_pre_act <span class="op">-</span> bnmeani) <span class="op">/</span> bnstdi) <span class="op">+</span> bnbias                              <span class="co"># 👈</span></span>
+<span id="cb56-542"><a href="#cb56-542"></a>    <span class="co"># Updating running mean and std (this runs outside the training loop)</span></span>
+<span id="cb56-543"><a href="#cb56-543"></a>    <span class="cf">with</span> torch.no_grad():                                                                       <span class="co"># 👈</span></span>
+<span id="cb56-544"><a href="#cb56-544"></a>        bnmean_running <span class="op">=</span> <span class="fl">0.999</span> <span class="op">*</span> bnmean_running <span class="op">+</span> <span class="fl">0.001</span> <span class="op">*</span> bnmeani                               <span class="co"># 👈</span></span>
+<span id="cb56-545"><a href="#cb56-545"></a>        bnstd_running <span class="op">=</span> <span class="fl">0.999</span> <span class="op">*</span> bnstd_running <span class="op">+</span> <span class="fl">0.001</span> <span class="op">*</span> bnstdi                                  <span class="co"># 👈</span></span>
+<span id="cb56-546"><a href="#cb56-546"></a>    <span class="co"># Non-linearity</span></span>
+<span id="cb56-547"><a href="#cb56-547"></a>    h <span class="op">=</span> torch.tanh(h_pre_act) <span class="co"># hidden layer</span></span>
+<span id="cb56-548"><a href="#cb56-548"></a>    logits <span class="op">=</span> h <span class="op">@</span> W2 <span class="op">+</span> b2 <span class="co"># output layer</span></span>
+<span id="cb56-549"><a href="#cb56-549"></a>    loss <span class="op">=</span> F.cross_entropy(logits, Yb) <span class="co"># loss function</span></span>
+<span id="cb56-550"><a href="#cb56-550"></a></span>
+<span id="cb56-551"><a href="#cb56-551"></a>    <span class="co"># backward pass:</span></span>
+<span id="cb56-552"><a href="#cb56-552"></a>    <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb56-553"><a href="#cb56-553"></a>        p.grad <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb56-554"><a href="#cb56-554"></a>    loss.backward()</span>
+<span id="cb56-555"><a href="#cb56-555"></a></span>
+<span id="cb56-556"><a href="#cb56-556"></a>    <span class="co"># update</span></span>
+<span id="cb56-557"><a href="#cb56-557"></a>    lr <span class="op">=</span> <span class="fl">0.1</span> <span class="cf">if</span> i <span class="op">&lt;=</span> max_steps <span class="op">/</span> <span class="dv">2</span> <span class="cf">else</span> <span class="fl">0.01</span> <span class="co"># step learning rate decay</span></span>
+<span id="cb56-558"><a href="#cb56-558"></a>    <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb56-559"><a href="#cb56-559"></a>        p.data <span class="op">+=</span> <span class="op">-</span> lr <span class="op">*</span> p.grad</span>
+<span id="cb56-560"><a href="#cb56-560"></a></span>
+<span id="cb56-561"><a href="#cb56-561"></a>    <span class="co"># track stats</span></span>
+<span id="cb56-562"><a href="#cb56-562"></a>    <span class="cf">if</span> i <span class="op">%</span> <span class="dv">10000</span> <span class="op">==</span> <span class="dv">0</span>: <span class="co"># print once every while</span></span>
+<span id="cb56-563"><a href="#cb56-563"></a>      <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">:7d}</span><span class="ss">/</span><span class="sc">{</span>max_steps<span class="sc">:7d}</span><span class="ss">: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb56-564"><a href="#cb56-564"></a>    lossi.append(loss.log10().item())</span>
+<span id="cb56-565"><a href="#cb56-565"></a><span class="in">```</span></span>
+<span id="cb56-566"><a href="#cb56-566"></a></span>
+<span id="cb56-569"><a href="#cb56-569"></a><span class="in">```{python}</span></span>
+<span id="cb56-570"><a href="#cb56-570"></a>plt.plot(lossi)</span>
+<span id="cb56-571"><a href="#cb56-571"></a><span class="in">```</span></span>
+<span id="cb56-572"><a href="#cb56-572"></a></span>
+<span id="cb56-575"><a href="#cb56-575"></a><span class="in">```{python}</span></span>
+<span id="cb56-576"><a href="#cb56-576"></a><span class="at">@torch.no_grad</span>() <span class="co"># disables gradient tracking</span></span>
+<span id="cb56-577"><a href="#cb56-577"></a><span class="kw">def</span> split_loss(split: <span class="bu">str</span>):</span>
+<span id="cb56-578"><a href="#cb56-578"></a>  x, y <span class="op">=</span> {</span>
+<span id="cb56-579"><a href="#cb56-579"></a>    <span class="st">'train'</span>: (Xtr, Ytr),</span>
+<span id="cb56-580"><a href="#cb56-580"></a>    <span class="st">'val'</span>: (Xdev, Ydev),</span>
+<span id="cb56-581"><a href="#cb56-581"></a>    <span class="st">'test'</span>: (Xte, Yte)</span>
+<span id="cb56-582"><a href="#cb56-582"></a>  }[split]</span>
+<span id="cb56-583"><a href="#cb56-583"></a>  emb <span class="op">=</span> C[x]</span>
+<span id="cb56-584"><a href="#cb56-584"></a>  emb_cat <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) </span>
+<span id="cb56-585"><a href="#cb56-585"></a>  h_pre_act <span class="op">=</span> emb_cat <span class="op">@</span> W1 <span class="op">+</span> b1                                                                                         <span class="co"># 👈 </span></span>
+<span id="cb56-586"><a href="#cb56-586"></a>  <span class="co"># h_pre_act = bngain * ((h_pre_act - h_pre_act.mean(0, keepdim=True)) / h_pre_act.std(0, keepdim=True)) + bnbias      # 👈</span></span>
+<span id="cb56-587"><a href="#cb56-587"></a>  <span class="co"># h_pre_act = bngain * ((h_pre_act - bnmean) / bnstd) + bnbias                                                        # 👈</span></span>
+<span id="cb56-588"><a href="#cb56-588"></a>  h_pre_act <span class="op">=</span> bngain <span class="op">*</span> ((h_pre_act <span class="op">-</span> bnmean_running) <span class="op">/</span> bnstd_running) <span class="op">+</span> bnbias                                          <span class="co"># 👈</span></span>
+<span id="cb56-589"><a href="#cb56-589"></a>  h <span class="op">=</span> torch.tanh(h_pre_act) </span>
+<span id="cb56-590"><a href="#cb56-590"></a>  logits <span class="op">=</span> h <span class="op">@</span> W2 <span class="op">+</span> b2</span>
+<span id="cb56-591"><a href="#cb56-591"></a>  loss <span class="op">=</span> F.cross_entropy(logits, y)</span>
+<span id="cb56-592"><a href="#cb56-592"></a>  <span class="bu">print</span>(split, loss.item())</span>
+<span id="cb56-593"><a href="#cb56-593"></a></span>
+<span id="cb56-594"><a href="#cb56-594"></a>split_loss(<span class="st">'train'</span>)</span>
+<span id="cb56-595"><a href="#cb56-595"></a>split_loss(<span class="st">'val'</span>)</span>
+<span id="cb56-596"><a href="#cb56-596"></a><span class="in">```</span></span>
+<span id="cb56-597"><a href="#cb56-597"></a></span>
+<span id="cb56-598"><a href="#cb56-598"></a><span class="fu">### loss logs</span></span>
+<span id="cb56-599"><a href="#cb56-599"></a></span>
+<span id="cb56-600"><a href="#cb56-600"></a>The numbers somehow are approximate, I don't know why my Thinkpad-E14 gave different results when running codes multiple times 😂.</span>
+<span id="cb56-601"><a href="#cb56-601"></a></span>
+<span id="cb56-602"><a href="#cb56-602"></a>+--------------+------------------------------------------------------------+--------------------------+</span>
+<span id="cb56-603"><a href="#cb56-603"></a>| Step         | What we did                                                | Loss we got (accum)      |</span>
+<span id="cb56-604"><a href="#cb56-604"></a>+==============+============================================================+==========================+</span>
+<span id="cb56-605"><a href="#cb56-605"></a>| 1            | original                                                   | train 2.1169614791870117 |</span>
+<span id="cb56-606"><a href="#cb56-606"></a>|              |                                                            |                          |</span>
+<span id="cb56-607"><a href="#cb56-607"></a>|              |                                                            | val 2.1623435020446777   |</span>
+<span id="cb56-608"><a href="#cb56-608"></a>+--------------+------------------------------------------------------------+--------------------------+</span>
+<span id="cb56-609"><a href="#cb56-609"></a>| 2            | fixed softmax confidently wrong                            | train 2.0666463375091553 |</span>
+<span id="cb56-610"><a href="#cb56-610"></a>|              |                                                            |                          |</span>
+<span id="cb56-611"><a href="#cb56-611"></a>|              |                                                            | val 2.1468191146850586   |</span>
+<span id="cb56-612"><a href="#cb56-612"></a>+--------------+------------------------------------------------------------+--------------------------+</span>
+<span id="cb56-613"><a href="#cb56-613"></a>| 3            | fixed <span class="in">`tanh`</span> layer too saturated at init                   | train 2.033477544784546  |</span>
+<span id="cb56-614"><a href="#cb56-614"></a>|              |                                                            |                          |</span>
+<span id="cb56-615"><a href="#cb56-615"></a>|              |                                                            | val 2.115907907485962    |</span>
+<span id="cb56-616"><a href="#cb56-616"></a>+--------------+------------------------------------------------------------+--------------------------+</span>
+<span id="cb56-617"><a href="#cb56-617"></a>| 4            | used semi principle "kaiming init" instead of hacking init | train 2.038902997970581  |</span>
+<span id="cb56-618"><a href="#cb56-618"></a>|              |                                                            |                          |</span>
+<span id="cb56-619"><a href="#cb56-619"></a>|              |                                                            | val 2.1138899326324463   |</span>
+<span id="cb56-620"><a href="#cb56-620"></a>+--------------+------------------------------------------------------------+--------------------------+</span>
+<span id="cb56-621"><a href="#cb56-621"></a>| 5            | added batch norm layer                                     | train 2.0662825107574463 |</span>
+<span id="cb56-622"><a href="#cb56-622"></a>|              |                                                            |                          |</span>
+<span id="cb56-623"><a href="#cb56-623"></a>|              |                                                            | val 2.1201331615448      |</span>
+<span id="cb56-624"><a href="#cb56-624"></a>+--------------+------------------------------------------------------------+--------------------------+</span>
+<span id="cb56-625"><a href="#cb56-625"></a></span>
+<span id="cb56-626"><a href="#cb56-626"></a>: Loss logs {.striped .hover}</span>
+<span id="cb56-627"><a href="#cb56-627"></a></span>
+<span id="cb56-628"><a href="#cb56-628"></a>Sample from the model - again</span>
+<span id="cb56-629"><a href="#cb56-629"></a></span>
+<span id="cb56-632"><a href="#cb56-632"></a><span class="in">```{python}</span></span>
+<span id="cb56-633"><a href="#cb56-633"></a><span class="co">#| code-fold: true</span></span>
+<span id="cb56-634"><a href="#cb56-634"></a><span class="co"># sample from the model</span></span>
+<span id="cb56-635"><a href="#cb56-635"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span> <span class="op">+</span> <span class="dv">10</span>)</span>
 <span id="cb56-636"><a href="#cb56-636"></a></span>
-<span id="cb56-637"><a href="#cb56-637"></a>Sample from the model - again</span>
-<span id="cb56-638"><a href="#cb56-638"></a></span>
-<span id="cb56-641"><a href="#cb56-641"></a><span class="in">```{python}</span></span>
-<span id="cb56-642"><a href="#cb56-642"></a><span class="co">#| code-fold: true</span></span>
-<span id="cb56-643"><a href="#cb56-643"></a><span class="co"># sample from the model</span></span>
-<span id="cb56-644"><a href="#cb56-644"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span> <span class="op">+</span> <span class="dv">10</span>)</span>
-<span id="cb56-645"><a href="#cb56-645"></a></span>
-<span id="cb56-646"><a href="#cb56-646"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20</span>):</span>
-<span id="cb56-647"><a href="#cb56-647"></a>    </span>
-<span id="cb56-648"><a href="#cb56-648"></a>    out <span class="op">=</span> []</span>
-<span id="cb56-649"><a href="#cb56-649"></a>    context <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> block_size <span class="co"># initialize with all ...</span></span>
-<span id="cb56-650"><a href="#cb56-650"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
-<span id="cb56-651"><a href="#cb56-651"></a>      <span class="co"># forward pass the neural net</span></span>
-<span id="cb56-652"><a href="#cb56-652"></a>      emb <span class="op">=</span> C[torch.tensor([context])] <span class="co"># (1,block_size,n_embd)</span></span>
-<span id="cb56-653"><a href="#cb56-653"></a>      h <span class="op">=</span> torch.tanh(emb.view(<span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>) <span class="op">@</span> W1)</span>
-<span id="cb56-654"><a href="#cb56-654"></a>      logits <span class="op">=</span> h <span class="op">@</span> W2 <span class="op">+</span> b2</span>
-<span id="cb56-655"><a href="#cb56-655"></a>      probs <span class="op">=</span> F.softmax(logits, dim<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb56-656"><a href="#cb56-656"></a>      <span class="co"># sample from the distribution</span></span>
-<span id="cb56-657"><a href="#cb56-657"></a>      ix <span class="op">=</span> torch.multinomial(probs, num_samples<span class="op">=</span><span class="dv">1</span>, generator<span class="op">=</span>g).item()</span>
-<span id="cb56-658"><a href="#cb56-658"></a>      <span class="co"># shift the context window and track the samples</span></span>
-<span id="cb56-659"><a href="#cb56-659"></a>      context <span class="op">=</span> context[<span class="dv">1</span>:] <span class="op">+</span> [ix]</span>
-<span id="cb56-660"><a href="#cb56-660"></a>      out.append(ix)</span>
-<span id="cb56-661"><a href="#cb56-661"></a>      <span class="co"># if we sample the special '.' token, break</span></span>
-<span id="cb56-662"><a href="#cb56-662"></a>      <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb56-663"><a href="#cb56-663"></a>        <span class="cf">break</span></span>
-<span id="cb56-664"><a href="#cb56-664"></a>    </span>
-<span id="cb56-665"><a href="#cb56-665"></a>    <span class="bu">print</span>(<span class="st">''</span>.join(itos[i] <span class="cf">for</span> i <span class="kw">in</span> out)) <span class="co"># decode and print the generated word</span></span>
-<span id="cb56-666"><a href="#cb56-666"></a><span class="in">```</span></span>
-<span id="cb56-667"><a href="#cb56-667"></a></span>
-<span id="cb56-668"><a href="#cb56-668"></a><span class="fu"># Part 2: PyTorch-ifying the code, and train a deeper network</span></span>
-<span id="cb56-669"><a href="#cb56-669"></a></span>
-<span id="cb56-670"><a href="#cb56-670"></a>Below is PyTorch-ified code by Andrej, some comment input by me:</span>
-<span id="cb56-673"><a href="#cb56-673"></a><span class="in">```{python}</span></span>
-<span id="cb56-674"><a href="#cb56-674"></a><span class="co"># Let's train a deeper network</span></span>
-<span id="cb56-675"><a href="#cb56-675"></a><span class="co"># The classes we create here are the same API as nn.Module in PyTorch</span></span>
+<span id="cb56-637"><a href="#cb56-637"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20</span>):</span>
+<span id="cb56-638"><a href="#cb56-638"></a>    </span>
+<span id="cb56-639"><a href="#cb56-639"></a>    out <span class="op">=</span> []</span>
+<span id="cb56-640"><a href="#cb56-640"></a>    context <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> block_size <span class="co"># initialize with all ...</span></span>
+<span id="cb56-641"><a href="#cb56-641"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb56-642"><a href="#cb56-642"></a>      <span class="co"># forward pass the neural net</span></span>
+<span id="cb56-643"><a href="#cb56-643"></a>      emb <span class="op">=</span> C[torch.tensor([context])] <span class="co"># (1,block_size,n_embd)</span></span>
+<span id="cb56-644"><a href="#cb56-644"></a>      h <span class="op">=</span> torch.tanh(emb.view(<span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>) <span class="op">@</span> W1)</span>
+<span id="cb56-645"><a href="#cb56-645"></a>      logits <span class="op">=</span> h <span class="op">@</span> W2 <span class="op">+</span> b2</span>
+<span id="cb56-646"><a href="#cb56-646"></a>      probs <span class="op">=</span> F.softmax(logits, dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb56-647"><a href="#cb56-647"></a>      <span class="co"># sample from the distribution</span></span>
+<span id="cb56-648"><a href="#cb56-648"></a>      ix <span class="op">=</span> torch.multinomial(probs, num_samples<span class="op">=</span><span class="dv">1</span>, generator<span class="op">=</span>g).item()</span>
+<span id="cb56-649"><a href="#cb56-649"></a>      <span class="co"># shift the context window and track the samples</span></span>
+<span id="cb56-650"><a href="#cb56-650"></a>      context <span class="op">=</span> context[<span class="dv">1</span>:] <span class="op">+</span> [ix]</span>
+<span id="cb56-651"><a href="#cb56-651"></a>      out.append(ix)</span>
+<span id="cb56-652"><a href="#cb56-652"></a>      <span class="co"># if we sample the special '.' token, break</span></span>
+<span id="cb56-653"><a href="#cb56-653"></a>      <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb56-654"><a href="#cb56-654"></a>        <span class="cf">break</span></span>
+<span id="cb56-655"><a href="#cb56-655"></a>    </span>
+<span id="cb56-656"><a href="#cb56-656"></a>    <span class="bu">print</span>(<span class="st">''</span>.join(itos[i] <span class="cf">for</span> i <span class="kw">in</span> out)) <span class="co"># decode and print the generated word</span></span>
+<span id="cb56-657"><a href="#cb56-657"></a><span class="in">```</span></span>
+<span id="cb56-658"><a href="#cb56-658"></a></span>
+<span id="cb56-659"><a href="#cb56-659"></a><span class="fu"># Part 2: PyTorch-ifying the code, and train a deeper network</span></span>
+<span id="cb56-660"><a href="#cb56-660"></a></span>
+<span id="cb56-661"><a href="#cb56-661"></a>Below is PyTorch-ified code by Andrej, some comments inputted by me:</span>
+<span id="cb56-662"><a href="#cb56-662"></a></span>
+<span id="cb56-665"><a href="#cb56-665"></a><span class="in">```{python}</span></span>
+<span id="cb56-666"><a href="#cb56-666"></a><span class="co"># Let's train a deeper network</span></span>
+<span id="cb56-667"><a href="#cb56-667"></a><span class="co"># The classes we create here are the same API as nn.Module in PyTorch</span></span>
+<span id="cb56-668"><a href="#cb56-668"></a></span>
+<span id="cb56-669"><a href="#cb56-669"></a><span class="kw">class</span> Linear:</span>
+<span id="cb56-670"><a href="#cb56-670"></a>    <span class="co">"""</span></span>
+<span id="cb56-671"><a href="#cb56-671"></a><span class="co">    Simplifying Pytorch Linear Layer: https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear</span></span>
+<span id="cb56-672"><a href="#cb56-672"></a><span class="co">    """</span></span>
+<span id="cb56-673"><a href="#cb56-673"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, fan_in, fan_out, bias<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb56-674"><a href="#cb56-674"></a>        <span class="va">self</span>.weight <span class="op">=</span> torch.randn((fan_in, fan_out), generator<span class="op">=</span>g) <span class="op">/</span> fan_in<span class="op">**</span><span class="fl">0.5</span></span>
+<span id="cb56-675"><a href="#cb56-675"></a>        <span class="va">self</span>.bias <span class="op">=</span> torch.zeros(fan_out) <span class="cf">if</span> bias <span class="cf">else</span> <span class="va">None</span></span>
 <span id="cb56-676"><a href="#cb56-676"></a></span>
-<span id="cb56-677"><a href="#cb56-677"></a><span class="kw">class</span> Linear:</span>
-<span id="cb56-678"><a href="#cb56-678"></a>    <span class="co">"""</span></span>
-<span id="cb56-679"><a href="#cb56-679"></a><span class="co">    Simplifying Pytorch Linear Layer: https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear</span></span>
-<span id="cb56-680"><a href="#cb56-680"></a><span class="co">    """</span></span>
-<span id="cb56-681"><a href="#cb56-681"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, fan_in, fan_out, bias<span class="op">=</span><span class="va">True</span>):</span>
-<span id="cb56-682"><a href="#cb56-682"></a>        <span class="va">self</span>.weight <span class="op">=</span> torch.randn((fan_in, fan_out), generator<span class="op">=</span>g) <span class="op">/</span> fan_in<span class="op">**</span><span class="fl">0.5</span></span>
-<span id="cb56-683"><a href="#cb56-683"></a>        <span class="va">self</span>.bias <span class="op">=</span> torch.zeros(fan_out) <span class="cf">if</span> bias <span class="cf">else</span> <span class="va">None</span></span>
-<span id="cb56-684"><a href="#cb56-684"></a></span>
-<span id="cb56-685"><a href="#cb56-685"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
-<span id="cb56-686"><a href="#cb56-686"></a>        <span class="va">self</span>.out <span class="op">=</span> x <span class="op">@</span> <span class="va">self</span>.weight</span>
-<span id="cb56-687"><a href="#cb56-687"></a>        <span class="cf">if</span> <span class="va">self</span>.bias <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
-<span id="cb56-688"><a href="#cb56-688"></a>            <span class="va">self</span>.out <span class="op">+=</span> <span class="va">self</span>.bias</span>
-<span id="cb56-689"><a href="#cb56-689"></a>        <span class="cf">return</span> <span class="va">self</span>.out</span>
-<span id="cb56-690"><a href="#cb56-690"></a></span>
-<span id="cb56-691"><a href="#cb56-691"></a>    <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
-<span id="cb56-692"><a href="#cb56-692"></a>        <span class="cf">return</span> [<span class="va">self</span>.weight] <span class="op">+</span> ([] <span class="cf">if</span> <span class="va">self</span>.bias <span class="kw">is</span> <span class="va">None</span> <span class="cf">else</span> [<span class="va">self</span>.bias])</span>
-<span id="cb56-693"><a href="#cb56-693"></a></span>
-<span id="cb56-694"><a href="#cb56-694"></a></span>
-<span id="cb56-695"><a href="#cb56-695"></a><span class="kw">class</span> BatchNorm1d:</span>
-<span id="cb56-696"><a href="#cb56-696"></a>    <span class="co">"""</span></span>
-<span id="cb56-697"><a href="#cb56-697"></a><span class="co">    Simplifying Pytorch BatchNorm1D: https://pytorch.org/docs/stable/generated/torch.nn.BatchNorm1d.html</span></span>
-<span id="cb56-698"><a href="#cb56-698"></a><span class="co">    """</span> </span>
-<span id="cb56-699"><a href="#cb56-699"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim, eps<span class="op">=</span><span class="fl">1e-5</span>, momentum<span class="op">=</span><span class="fl">0.1</span>):</span>
-<span id="cb56-700"><a href="#cb56-700"></a>        <span class="va">self</span>.eps <span class="op">=</span> eps</span>
-<span id="cb56-701"><a href="#cb56-701"></a>        <span class="va">self</span>.momentum <span class="op">=</span> momentum</span>
-<span id="cb56-702"><a href="#cb56-702"></a>        <span class="va">self</span>.training <span class="op">=</span> <span class="va">True</span> <span class="co"># to differentiate usage of class in training or evaluation (using running mean/std)</span></span>
-<span id="cb56-703"><a href="#cb56-703"></a>        <span class="co"># parameters (trained with backprop)</span></span>
-<span id="cb56-704"><a href="#cb56-704"></a>        <span class="va">self</span>.gamma <span class="op">=</span> torch.ones(dim) <span class="co"># gain</span></span>
-<span id="cb56-705"><a href="#cb56-705"></a>        <span class="va">self</span>.beta <span class="op">=</span> torch.zeros(dim) <span class="co"># bias</span></span>
-<span id="cb56-706"><a href="#cb56-706"></a>        <span class="co"># buffers (trained with a running 'momentum update')</span></span>
-<span id="cb56-707"><a href="#cb56-707"></a>        <span class="va">self</span>.running_mean <span class="op">=</span> torch.zeros(dim)</span>
-<span id="cb56-708"><a href="#cb56-708"></a>        <span class="va">self</span>.running_var <span class="op">=</span> torch.ones(dim)</span>
-<span id="cb56-709"><a href="#cb56-709"></a></span>
-<span id="cb56-710"><a href="#cb56-710"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
-<span id="cb56-711"><a href="#cb56-711"></a>        <span class="co"># calculate the forward pass</span></span>
-<span id="cb56-712"><a href="#cb56-712"></a>        <span class="cf">if</span> <span class="va">self</span>.training:</span>
-<span id="cb56-713"><a href="#cb56-713"></a>            xmean <span class="op">=</span> x.mean(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>) <span class="co"># batch mean</span></span>
-<span id="cb56-714"><a href="#cb56-714"></a>            xvar <span class="op">=</span> x.var(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>) <span class="co"># batch variance, follow the paper exactly</span></span>
-<span id="cb56-715"><a href="#cb56-715"></a>        <span class="cf">else</span>:</span>
-<span id="cb56-716"><a href="#cb56-716"></a>            xmean <span class="op">=</span> <span class="va">self</span>.running_mean</span>
-<span id="cb56-717"><a href="#cb56-717"></a>            xvar <span class="op">=</span> <span class="va">self</span>.running_var</span>
-<span id="cb56-718"><a href="#cb56-718"></a>        xhat <span class="op">=</span> (x <span class="op">-</span> xmean) <span class="op">/</span> torch.sqrt(xvar <span class="op">+</span> <span class="va">self</span>.eps) <span class="co"># normalize to unit variance</span></span>
-<span id="cb56-719"><a href="#cb56-719"></a>        <span class="va">self</span>.out <span class="op">=</span> <span class="va">self</span>.gamma <span class="op">*</span> xhat <span class="op">+</span> <span class="va">self</span>.beta <span class="co"># to tracking and visualizing data later on, PyTorch does not have this</span></span>
-<span id="cb56-720"><a href="#cb56-720"></a>        <span class="co"># update the buffers</span></span>
-<span id="cb56-721"><a href="#cb56-721"></a>        <span class="cf">if</span> <span class="va">self</span>.training:</span>
-<span id="cb56-722"><a href="#cb56-722"></a>            <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb56-723"><a href="#cb56-723"></a>                <span class="va">self</span>.running_mean <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> <span class="va">self</span>.momentum) <span class="op">*</span> <span class="va">self</span>.running_mean <span class="op">+</span> <span class="va">self</span>.momentum <span class="op">*</span> xmean</span>
-<span id="cb56-724"><a href="#cb56-724"></a>                <span class="va">self</span>.running_var <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> <span class="va">self</span>.momentum) <span class="op">*</span> <span class="va">self</span>.running_var <span class="op">+</span> <span class="va">self</span>.momentum <span class="op">*</span> xvar</span>
-<span id="cb56-725"><a href="#cb56-725"></a>        <span class="cf">return</span> <span class="va">self</span>.out</span>
-<span id="cb56-726"><a href="#cb56-726"></a></span>
-<span id="cb56-727"><a href="#cb56-727"></a>    <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
-<span id="cb56-728"><a href="#cb56-728"></a>        <span class="cf">return</span> [<span class="va">self</span>.gamma, <span class="va">self</span>.beta]</span>
-<span id="cb56-729"><a href="#cb56-729"></a></span>
-<span id="cb56-730"><a href="#cb56-730"></a><span class="kw">class</span> Tanh:</span>
-<span id="cb56-731"><a href="#cb56-731"></a>    <span class="co">"""</span></span>
-<span id="cb56-732"><a href="#cb56-732"></a><span class="co">    Just calculate the Tanh, just PyTorch: https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html</span></span>
-<span id="cb56-733"><a href="#cb56-733"></a><span class="co">    """</span></span>
-<span id="cb56-734"><a href="#cb56-734"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
-<span id="cb56-735"><a href="#cb56-735"></a>        <span class="va">self</span>.out <span class="op">=</span> torch.tanh(x)</span>
-<span id="cb56-736"><a href="#cb56-736"></a>        <span class="cf">return</span> <span class="va">self</span>.out</span>
-<span id="cb56-737"><a href="#cb56-737"></a>    <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
-<span id="cb56-738"><a href="#cb56-738"></a>        <span class="cf">return</span> []</span>
-<span id="cb56-739"><a href="#cb56-739"></a></span>
-<span id="cb56-740"><a href="#cb56-740"></a>n_embd <span class="op">=</span> <span class="dv">10</span> <span class="co"># the dimensionality of the character embedding vectors</span></span>
-<span id="cb56-741"><a href="#cb56-741"></a>n_hidden <span class="op">=</span> <span class="dv">100</span> <span class="co"># the number of neurons in the hidden layer of the MLP</span></span>
-<span id="cb56-742"><a href="#cb56-742"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>) <span class="co"># for reproducibility</span></span>
-<span id="cb56-743"><a href="#cb56-743"></a></span>
-<span id="cb56-744"><a href="#cb56-744"></a>C <span class="op">=</span> torch.randn((vocab_size, n_embd),            generator<span class="op">=</span>g)</span>
-<span id="cb56-745"><a href="#cb56-745"></a></span>
-<span id="cb56-746"><a href="#cb56-746"></a>layers <span class="op">=</span> [</span>
-<span id="cb56-747"><a href="#cb56-747"></a>    Linear(n_embd <span class="op">*</span> block_size, n_hidden), Tanh(),</span>
-<span id="cb56-748"><a href="#cb56-748"></a>    Linear(           n_hidden, n_hidden), Tanh(),</span>
-<span id="cb56-749"><a href="#cb56-749"></a>    Linear(           n_hidden, n_hidden), Tanh(),</span>
-<span id="cb56-750"><a href="#cb56-750"></a>    Linear(           n_hidden, n_hidden), Tanh(),</span>
-<span id="cb56-751"><a href="#cb56-751"></a>    Linear(           n_hidden, n_hidden), Tanh(),</span>
-<span id="cb56-752"><a href="#cb56-752"></a>    Linear(           n_hidden, vocab_size),</span>
-<span id="cb56-753"><a href="#cb56-753"></a>]</span>
+<span id="cb56-677"><a href="#cb56-677"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
+<span id="cb56-678"><a href="#cb56-678"></a>        <span class="va">self</span>.out <span class="op">=</span> x <span class="op">@</span> <span class="va">self</span>.weight</span>
+<span id="cb56-679"><a href="#cb56-679"></a>        <span class="cf">if</span> <span class="va">self</span>.bias <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb56-680"><a href="#cb56-680"></a>            <span class="va">self</span>.out <span class="op">+=</span> <span class="va">self</span>.bias</span>
+<span id="cb56-681"><a href="#cb56-681"></a>        <span class="cf">return</span> <span class="va">self</span>.out</span>
+<span id="cb56-682"><a href="#cb56-682"></a></span>
+<span id="cb56-683"><a href="#cb56-683"></a>    <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
+<span id="cb56-684"><a href="#cb56-684"></a>        <span class="cf">return</span> [<span class="va">self</span>.weight] <span class="op">+</span> ([] <span class="cf">if</span> <span class="va">self</span>.bias <span class="kw">is</span> <span class="va">None</span> <span class="cf">else</span> [<span class="va">self</span>.bias])</span>
+<span id="cb56-685"><a href="#cb56-685"></a></span>
+<span id="cb56-686"><a href="#cb56-686"></a></span>
+<span id="cb56-687"><a href="#cb56-687"></a><span class="kw">class</span> BatchNorm1d:</span>
+<span id="cb56-688"><a href="#cb56-688"></a>    <span class="co">"""</span></span>
+<span id="cb56-689"><a href="#cb56-689"></a><span class="co">    Simplifying Pytorch BatchNorm1D: https://pytorch.org/docs/stable/generated/torch.nn.BatchNorm1d.html</span></span>
+<span id="cb56-690"><a href="#cb56-690"></a><span class="co">    """</span> </span>
+<span id="cb56-691"><a href="#cb56-691"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim, eps<span class="op">=</span><span class="fl">1e-5</span>, momentum<span class="op">=</span><span class="fl">0.1</span>):</span>
+<span id="cb56-692"><a href="#cb56-692"></a>        <span class="va">self</span>.eps <span class="op">=</span> eps</span>
+<span id="cb56-693"><a href="#cb56-693"></a>        <span class="va">self</span>.momentum <span class="op">=</span> momentum</span>
+<span id="cb56-694"><a href="#cb56-694"></a>        <span class="va">self</span>.training <span class="op">=</span> <span class="va">True</span> <span class="co"># to differentiate usage of class in training or evaluation (using running mean/std)</span></span>
+<span id="cb56-695"><a href="#cb56-695"></a>        <span class="co"># parameters (trained with backprop)</span></span>
+<span id="cb56-696"><a href="#cb56-696"></a>        <span class="va">self</span>.gamma <span class="op">=</span> torch.ones(dim) <span class="co"># gain</span></span>
+<span id="cb56-697"><a href="#cb56-697"></a>        <span class="va">self</span>.beta <span class="op">=</span> torch.zeros(dim) <span class="co"># bias</span></span>
+<span id="cb56-698"><a href="#cb56-698"></a>        <span class="co"># buffers (trained with a running 'momentum update')</span></span>
+<span id="cb56-699"><a href="#cb56-699"></a>        <span class="va">self</span>.running_mean <span class="op">=</span> torch.zeros(dim)</span>
+<span id="cb56-700"><a href="#cb56-700"></a>        <span class="va">self</span>.running_var <span class="op">=</span> torch.ones(dim)</span>
+<span id="cb56-701"><a href="#cb56-701"></a></span>
+<span id="cb56-702"><a href="#cb56-702"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
+<span id="cb56-703"><a href="#cb56-703"></a>        <span class="co"># calculate the forward pass</span></span>
+<span id="cb56-704"><a href="#cb56-704"></a>        <span class="cf">if</span> <span class="va">self</span>.training:</span>
+<span id="cb56-705"><a href="#cb56-705"></a>            xmean <span class="op">=</span> x.mean(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>) <span class="co"># batch mean</span></span>
+<span id="cb56-706"><a href="#cb56-706"></a>            xvar <span class="op">=</span> x.var(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>) <span class="co"># batch variance, follow the paper exactly</span></span>
+<span id="cb56-707"><a href="#cb56-707"></a>        <span class="cf">else</span>:</span>
+<span id="cb56-708"><a href="#cb56-708"></a>            xmean <span class="op">=</span> <span class="va">self</span>.running_mean</span>
+<span id="cb56-709"><a href="#cb56-709"></a>            xvar <span class="op">=</span> <span class="va">self</span>.running_var</span>
+<span id="cb56-710"><a href="#cb56-710"></a>        xhat <span class="op">=</span> (x <span class="op">-</span> xmean) <span class="op">/</span> torch.sqrt(xvar <span class="op">+</span> <span class="va">self</span>.eps) <span class="co"># normalize to unit variance</span></span>
+<span id="cb56-711"><a href="#cb56-711"></a>        <span class="va">self</span>.out <span class="op">=</span> <span class="va">self</span>.gamma <span class="op">*</span> xhat <span class="op">+</span> <span class="va">self</span>.beta <span class="co"># to tracking and visualizing data later on, PyTorch does not have this</span></span>
+<span id="cb56-712"><a href="#cb56-712"></a>        <span class="co"># update the buffers</span></span>
+<span id="cb56-713"><a href="#cb56-713"></a>        <span class="cf">if</span> <span class="va">self</span>.training:</span>
+<span id="cb56-714"><a href="#cb56-714"></a>            <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb56-715"><a href="#cb56-715"></a>                <span class="va">self</span>.running_mean <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> <span class="va">self</span>.momentum) <span class="op">*</span> <span class="va">self</span>.running_mean <span class="op">+</span> <span class="va">self</span>.momentum <span class="op">*</span> xmean</span>
+<span id="cb56-716"><a href="#cb56-716"></a>                <span class="va">self</span>.running_var <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> <span class="va">self</span>.momentum) <span class="op">*</span> <span class="va">self</span>.running_var <span class="op">+</span> <span class="va">self</span>.momentum <span class="op">*</span> xvar</span>
+<span id="cb56-717"><a href="#cb56-717"></a>        <span class="cf">return</span> <span class="va">self</span>.out</span>
+<span id="cb56-718"><a href="#cb56-718"></a></span>
+<span id="cb56-719"><a href="#cb56-719"></a>    <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
+<span id="cb56-720"><a href="#cb56-720"></a>        <span class="cf">return</span> [<span class="va">self</span>.gamma, <span class="va">self</span>.beta]</span>
+<span id="cb56-721"><a href="#cb56-721"></a></span>
+<span id="cb56-722"><a href="#cb56-722"></a><span class="kw">class</span> Tanh:</span>
+<span id="cb56-723"><a href="#cb56-723"></a>    <span class="co">"""</span></span>
+<span id="cb56-724"><a href="#cb56-724"></a><span class="co">    Just calculate the Tanh, just PyTorch: https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html</span></span>
+<span id="cb56-725"><a href="#cb56-725"></a><span class="co">    """</span></span>
+<span id="cb56-726"><a href="#cb56-726"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
+<span id="cb56-727"><a href="#cb56-727"></a>        <span class="va">self</span>.out <span class="op">=</span> torch.tanh(x)</span>
+<span id="cb56-728"><a href="#cb56-728"></a>        <span class="cf">return</span> <span class="va">self</span>.out</span>
+<span id="cb56-729"><a href="#cb56-729"></a>    <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
+<span id="cb56-730"><a href="#cb56-730"></a>        <span class="cf">return</span> []</span>
+<span id="cb56-731"><a href="#cb56-731"></a></span>
+<span id="cb56-732"><a href="#cb56-732"></a>n_embd <span class="op">=</span> <span class="dv">10</span> <span class="co"># the dimensionality of the character embedding vectors</span></span>
+<span id="cb56-733"><a href="#cb56-733"></a>n_hidden <span class="op">=</span> <span class="dv">100</span> <span class="co"># the number of neurons in the hidden layer of the MLP</span></span>
+<span id="cb56-734"><a href="#cb56-734"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span>) <span class="co"># for reproducibility</span></span>
+<span id="cb56-735"><a href="#cb56-735"></a></span>
+<span id="cb56-736"><a href="#cb56-736"></a>C <span class="op">=</span> torch.randn((vocab_size, n_embd),            generator<span class="op">=</span>g)</span>
+<span id="cb56-737"><a href="#cb56-737"></a></span>
+<span id="cb56-738"><a href="#cb56-738"></a>layers <span class="op">=</span> [</span>
+<span id="cb56-739"><a href="#cb56-739"></a>    Linear(n_embd <span class="op">*</span> block_size, n_hidden), Tanh(),</span>
+<span id="cb56-740"><a href="#cb56-740"></a>    Linear(           n_hidden, n_hidden), Tanh(),</span>
+<span id="cb56-741"><a href="#cb56-741"></a>    Linear(           n_hidden, n_hidden), Tanh(),</span>
+<span id="cb56-742"><a href="#cb56-742"></a>    Linear(           n_hidden, n_hidden), Tanh(),</span>
+<span id="cb56-743"><a href="#cb56-743"></a>    Linear(           n_hidden, n_hidden), Tanh(),</span>
+<span id="cb56-744"><a href="#cb56-744"></a>    Linear(           n_hidden, vocab_size),</span>
+<span id="cb56-745"><a href="#cb56-745"></a>]</span>
+<span id="cb56-746"><a href="#cb56-746"></a></span>
+<span id="cb56-747"><a href="#cb56-747"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb56-748"><a href="#cb56-748"></a>    <span class="co"># last layer: make less confident</span></span>
+<span id="cb56-749"><a href="#cb56-749"></a>    layers[<span class="op">-</span><span class="dv">1</span>].weight <span class="op">*=</span> <span class="fl">0.1</span></span>
+<span id="cb56-750"><a href="#cb56-750"></a>    <span class="co"># all other layers: apply gain</span></span>
+<span id="cb56-751"><a href="#cb56-751"></a>    <span class="cf">for</span> layer <span class="kw">in</span> layers[:<span class="op">-</span><span class="dv">1</span>]:</span>
+<span id="cb56-752"><a href="#cb56-752"></a>        <span class="cf">if</span> <span class="bu">isinstance</span>(layer, Linear):</span>
+<span id="cb56-753"><a href="#cb56-753"></a>            layer.weight <span class="op">*=</span> <span class="dv">5</span><span class="op">/</span><span class="dv">3</span></span>
 <span id="cb56-754"><a href="#cb56-754"></a></span>
-<span id="cb56-755"><a href="#cb56-755"></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb56-756"><a href="#cb56-756"></a>    <span class="co"># last layer: make less confident</span></span>
-<span id="cb56-757"><a href="#cb56-757"></a>    layers[<span class="op">-</span><span class="dv">1</span>].weight <span class="op">*=</span> <span class="fl">0.1</span></span>
-<span id="cb56-758"><a href="#cb56-758"></a>    <span class="co"># all other layers: apply gain</span></span>
-<span id="cb56-759"><a href="#cb56-759"></a>    <span class="cf">for</span> layer <span class="kw">in</span> layers[:<span class="op">-</span><span class="dv">1</span>]:</span>
-<span id="cb56-760"><a href="#cb56-760"></a>        <span class="cf">if</span> <span class="bu">isinstance</span>(layer, Linear):</span>
-<span id="cb56-761"><a href="#cb56-761"></a>            layer.weight <span class="op">*=</span> <span class="dv">5</span><span class="op">/</span><span class="dv">3</span></span>
-<span id="cb56-762"><a href="#cb56-762"></a></span>
-<span id="cb56-763"><a href="#cb56-763"></a>parameters <span class="op">=</span> [C] <span class="op">+</span> [p <span class="cf">for</span> layer <span class="kw">in</span> layers <span class="cf">for</span> p <span class="kw">in</span> layer.parameters()]</span>
-<span id="cb56-764"><a href="#cb56-764"></a><span class="bu">print</span>(<span class="bu">sum</span>(p.nelement() <span class="cf">for</span> p <span class="kw">in</span> parameters)) <span class="co"># number of parameters in total</span></span>
-<span id="cb56-765"><a href="#cb56-765"></a><span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
-<span id="cb56-766"><a href="#cb56-766"></a>    p.requires_grad <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb56-767"><a href="#cb56-767"></a><span class="in">```</span></span>
-<span id="cb56-768"><a href="#cb56-768"></a></span>
-<span id="cb56-771"><a href="#cb56-771"></a><span class="in">```{python}</span></span>
-<span id="cb56-772"><a href="#cb56-772"></a><span class="co"># same optimization as last time</span></span>
-<span id="cb56-773"><a href="#cb56-773"></a>max_steps <span class="op">=</span> <span class="dv">200000</span></span>
-<span id="cb56-774"><a href="#cb56-774"></a>batch_size <span class="op">=</span> <span class="dv">32</span></span>
-<span id="cb56-775"><a href="#cb56-775"></a>lossi <span class="op">=</span> []</span>
-<span id="cb56-776"><a href="#cb56-776"></a>ud <span class="op">=</span> []</span>
-<span id="cb56-777"><a href="#cb56-777"></a></span>
-<span id="cb56-778"><a href="#cb56-778"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(max_steps):</span>
-<span id="cb56-779"><a href="#cb56-779"></a>  </span>
-<span id="cb56-780"><a href="#cb56-780"></a>    <span class="co"># minibatch construct</span></span>
-<span id="cb56-781"><a href="#cb56-781"></a>    ix <span class="op">=</span> torch.randint(<span class="dv">0</span>, Xtr.shape[<span class="dv">0</span>], (batch_size,), generator<span class="op">=</span>g)</span>
-<span id="cb56-782"><a href="#cb56-782"></a>    Xb, Yb <span class="op">=</span> Xtr[ix], Ytr[ix] <span class="co"># batch X,Y</span></span>
-<span id="cb56-783"><a href="#cb56-783"></a></span>
-<span id="cb56-784"><a href="#cb56-784"></a>    <span class="co"># forward pass</span></span>
-<span id="cb56-785"><a href="#cb56-785"></a>    emb <span class="op">=</span> C[Xb] <span class="co"># embed the characters into vectors</span></span>
-<span id="cb56-786"><a href="#cb56-786"></a>    x <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) <span class="co"># concatenate the vectors</span></span>
-<span id="cb56-787"><a href="#cb56-787"></a>    <span class="cf">for</span> layer <span class="kw">in</span> layers:</span>
-<span id="cb56-788"><a href="#cb56-788"></a>        x <span class="op">=</span> layer(x)</span>
-<span id="cb56-789"><a href="#cb56-789"></a>    loss <span class="op">=</span> F.cross_entropy(x, Yb) <span class="co"># loss function</span></span>
-<span id="cb56-790"><a href="#cb56-790"></a></span>
-<span id="cb56-791"><a href="#cb56-791"></a>    <span class="co"># backward pass</span></span>
-<span id="cb56-792"><a href="#cb56-792"></a>    <span class="cf">for</span> layer <span class="kw">in</span> layers:</span>
-<span id="cb56-793"><a href="#cb56-793"></a>        layer.out.retain_grad() <span class="co"># AFTER_DEBUG: would take out retain_graph</span></span>
-<span id="cb56-794"><a href="#cb56-794"></a>    <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
-<span id="cb56-795"><a href="#cb56-795"></a>        p.grad <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb56-796"><a href="#cb56-796"></a>    loss.backward()</span>
-<span id="cb56-797"><a href="#cb56-797"></a></span>
-<span id="cb56-798"><a href="#cb56-798"></a>    <span class="co"># update</span></span>
-<span id="cb56-799"><a href="#cb56-799"></a>    lr <span class="op">=</span> <span class="fl">0.1</span> <span class="cf">if</span> i <span class="op">&lt;</span> <span class="dv">150000</span> <span class="cf">else</span> <span class="fl">0.01</span> <span class="co"># step learning rate decay</span></span>
-<span id="cb56-800"><a href="#cb56-800"></a>    <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
-<span id="cb56-801"><a href="#cb56-801"></a>        p.data <span class="op">+=</span> <span class="op">-</span>lr <span class="op">*</span> p.grad</span>
-<span id="cb56-802"><a href="#cb56-802"></a></span>
-<span id="cb56-803"><a href="#cb56-803"></a>    <span class="co"># track stats</span></span>
-<span id="cb56-804"><a href="#cb56-804"></a>    <span class="cf">if</span> i <span class="op">%</span> <span class="dv">10000</span> <span class="op">==</span> <span class="dv">0</span>: <span class="co"># print every once in a while</span></span>
-<span id="cb56-805"><a href="#cb56-805"></a>        <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">:7d}</span><span class="ss">/</span><span class="sc">{</span>max_steps<span class="sc">:7d}</span><span class="ss">: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
-<span id="cb56-806"><a href="#cb56-806"></a>    lossi.append(loss.log10().item())</span>
-<span id="cb56-807"><a href="#cb56-807"></a>    <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb56-808"><a href="#cb56-808"></a>        ud.append([((lr<span class="op">*</span>p.grad).std() <span class="op">/</span> p.data.std()).log10().item() <span class="cf">for</span> p <span class="kw">in</span> parameters])</span>
-<span id="cb56-809"><a href="#cb56-809"></a></span>
-<span id="cb56-810"><a href="#cb56-810"></a>    <span class="cf">break</span></span>
-<span id="cb56-811"><a href="#cb56-811"></a>    <span class="co"># if i &gt;= 1000:</span></span>
-<span id="cb56-812"><a href="#cb56-812"></a>    <span class="co">#     break # AFTER_DEBUG: would take out obviously to run full optimization</span></span>
-<span id="cb56-813"><a href="#cb56-813"></a><span class="in">```</span></span>
-<span id="cb56-814"><a href="#cb56-814"></a></span>
-<span id="cb56-815"><a href="#cb56-815"></a><span class="fu">## viz #1: forward pass activations statistics</span></span>
-<span id="cb56-816"><a href="#cb56-816"></a></span>
-<span id="cb56-819"><a href="#cb56-819"></a><span class="in">```{python}</span></span>
-<span id="cb56-820"><a href="#cb56-820"></a><span class="co"># visualize histograms</span></span>
-<span id="cb56-821"><a href="#cb56-821"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">4</span>)) <span class="co"># width and height of the plot</span></span>
-<span id="cb56-822"><a href="#cb56-822"></a>legends <span class="op">=</span> []</span>
-<span id="cb56-823"><a href="#cb56-823"></a><span class="cf">for</span> i, layer <span class="kw">in</span> <span class="bu">enumerate</span>(layers[:<span class="op">-</span><span class="dv">1</span>]): <span class="co"># note: exclude the output layer</span></span>
-<span id="cb56-824"><a href="#cb56-824"></a>  <span class="cf">if</span> <span class="bu">isinstance</span>(layer, Tanh):</span>
-<span id="cb56-825"><a href="#cb56-825"></a>    t <span class="op">=</span> layer.out</span>
-<span id="cb56-826"><a href="#cb56-826"></a>    <span class="bu">print</span>(<span class="st">'layer </span><span class="sc">%d</span><span class="st"> (</span><span class="sc">%10s</span><span class="st">): mean </span><span class="sc">%+.2f</span><span class="st">, std </span><span class="sc">%.2f</span><span class="st">, saturated: </span><span class="sc">%.2f%%</span><span class="st">'</span> <span class="op">%</span> (i, layer.__class__.<span class="va">__name__</span>, t.mean(), t.std(), (t.<span class="bu">abs</span>() <span class="op">&gt;</span> <span class="fl">0.97</span>).<span class="bu">float</span>().mean()<span class="op">*</span><span class="dv">100</span>))</span>
-<span id="cb56-827"><a href="#cb56-827"></a>    hy, hx <span class="op">=</span> torch.histogram(t, density<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb56-828"><a href="#cb56-828"></a>    plt.plot(hx[:<span class="op">-</span><span class="dv">1</span>].detach(), hy.detach())</span>
-<span id="cb56-829"><a href="#cb56-829"></a>    legends.append(<span class="ss">f'layer </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>layer<span class="sc">.</span>__class__<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb56-830"><a href="#cb56-830"></a>plt.legend(legends)<span class="op">;</span></span>
-<span id="cb56-831"><a href="#cb56-831"></a>plt.title(<span class="st">'activation distribution'</span>)</span>
-<span id="cb56-832"><a href="#cb56-832"></a><span class="in">```</span></span>
-<span id="cb56-833"><a href="#cb56-833"></a></span>
-<span id="cb56-834"><a href="#cb56-834"></a><span class="fu">## viz #2: backward pass gradient statistics</span></span>
-<span id="cb56-835"><a href="#cb56-835"></a></span>
-<span id="cb56-838"><a href="#cb56-838"></a><span class="in">```{python}</span></span>
-<span id="cb56-839"><a href="#cb56-839"></a><span class="co"># visualize histograms</span></span>
-<span id="cb56-840"><a href="#cb56-840"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">4</span>)) <span class="co"># width and height of the plot</span></span>
-<span id="cb56-841"><a href="#cb56-841"></a>legends <span class="op">=</span> []</span>
-<span id="cb56-842"><a href="#cb56-842"></a><span class="cf">for</span> i, layer <span class="kw">in</span> <span class="bu">enumerate</span>(layers[:<span class="op">-</span><span class="dv">1</span>]): <span class="co"># note: exclude the output layer</span></span>
-<span id="cb56-843"><a href="#cb56-843"></a>  <span class="cf">if</span> <span class="bu">isinstance</span>(layer, Tanh):</span>
-<span id="cb56-844"><a href="#cb56-844"></a>    t <span class="op">=</span> layer.out.grad</span>
-<span id="cb56-845"><a href="#cb56-845"></a>    <span class="bu">print</span>(<span class="st">'layer </span><span class="sc">%d</span><span class="st"> (</span><span class="sc">%10s</span><span class="st">): mean </span><span class="sc">%+f</span><span class="st">, std </span><span class="sc">%e</span><span class="st">'</span> <span class="op">%</span> (i, layer.__class__.<span class="va">__name__</span>, t.mean(), t.std()))</span>
-<span id="cb56-846"><a href="#cb56-846"></a>    hy, hx <span class="op">=</span> torch.histogram(t, density<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb56-847"><a href="#cb56-847"></a>    plt.plot(hx[:<span class="op">-</span><span class="dv">1</span>].detach(), hy.detach())</span>
-<span id="cb56-848"><a href="#cb56-848"></a>    legends.append(<span class="ss">f'layer </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>layer<span class="sc">.</span>__class__<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb56-849"><a href="#cb56-849"></a>plt.legend(legends)<span class="op">;</span></span>
-<span id="cb56-850"><a href="#cb56-850"></a>plt.title(<span class="st">'gradient distribution'</span>)</span>
-<span id="cb56-851"><a href="#cb56-851"></a><span class="in">```</span></span>
-<span id="cb56-852"><a href="#cb56-852"></a></span>
-<span id="cb56-853"><a href="#cb56-853"></a><span class="fu">## the fully linear case of no non-linearities</span></span>
-<span id="cb56-854"><a href="#cb56-854"></a></span>
-<span id="cb56-855"><a href="#cb56-855"></a><span class="at">&gt; Training Neural Network is like balancing a pencil on a finger</span></span>
+<span id="cb56-755"><a href="#cb56-755"></a>parameters <span class="op">=</span> [C] <span class="op">+</span> [p <span class="cf">for</span> layer <span class="kw">in</span> layers <span class="cf">for</span> p <span class="kw">in</span> layer.parameters()]</span>
+<span id="cb56-756"><a href="#cb56-756"></a><span class="bu">print</span>(<span class="bu">sum</span>(p.nelement() <span class="cf">for</span> p <span class="kw">in</span> parameters)) <span class="co"># number of parameters in total</span></span>
+<span id="cb56-757"><a href="#cb56-757"></a><span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb56-758"><a href="#cb56-758"></a>    p.requires_grad <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb56-759"><a href="#cb56-759"></a><span class="in">```</span></span>
+<span id="cb56-760"><a href="#cb56-760"></a></span>
+<span id="cb56-763"><a href="#cb56-763"></a><span class="in">```{python}</span></span>
+<span id="cb56-764"><a href="#cb56-764"></a><span class="co"># same optimization as last time</span></span>
+<span id="cb56-765"><a href="#cb56-765"></a>max_steps <span class="op">=</span> <span class="dv">200000</span></span>
+<span id="cb56-766"><a href="#cb56-766"></a>batch_size <span class="op">=</span> <span class="dv">32</span></span>
+<span id="cb56-767"><a href="#cb56-767"></a>lossi <span class="op">=</span> []</span>
+<span id="cb56-768"><a href="#cb56-768"></a>ud <span class="op">=</span> []</span>
+<span id="cb56-769"><a href="#cb56-769"></a></span>
+<span id="cb56-770"><a href="#cb56-770"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(max_steps):</span>
+<span id="cb56-771"><a href="#cb56-771"></a>  </span>
+<span id="cb56-772"><a href="#cb56-772"></a>    <span class="co"># minibatch construct</span></span>
+<span id="cb56-773"><a href="#cb56-773"></a>    ix <span class="op">=</span> torch.randint(<span class="dv">0</span>, Xtr.shape[<span class="dv">0</span>], (batch_size,), generator<span class="op">=</span>g)</span>
+<span id="cb56-774"><a href="#cb56-774"></a>    Xb, Yb <span class="op">=</span> Xtr[ix], Ytr[ix] <span class="co"># batch X,Y</span></span>
+<span id="cb56-775"><a href="#cb56-775"></a></span>
+<span id="cb56-776"><a href="#cb56-776"></a>    <span class="co"># forward pass</span></span>
+<span id="cb56-777"><a href="#cb56-777"></a>    emb <span class="op">=</span> C[Xb] <span class="co"># embed the characters into vectors</span></span>
+<span id="cb56-778"><a href="#cb56-778"></a>    x <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) <span class="co"># concatenate the vectors</span></span>
+<span id="cb56-779"><a href="#cb56-779"></a>    <span class="cf">for</span> layer <span class="kw">in</span> layers:</span>
+<span id="cb56-780"><a href="#cb56-780"></a>        x <span class="op">=</span> layer(x)</span>
+<span id="cb56-781"><a href="#cb56-781"></a>    loss <span class="op">=</span> F.cross_entropy(x, Yb) <span class="co"># loss function</span></span>
+<span id="cb56-782"><a href="#cb56-782"></a></span>
+<span id="cb56-783"><a href="#cb56-783"></a>    <span class="co"># backward pass</span></span>
+<span id="cb56-784"><a href="#cb56-784"></a>    <span class="cf">for</span> layer <span class="kw">in</span> layers:</span>
+<span id="cb56-785"><a href="#cb56-785"></a>        layer.out.retain_grad() <span class="co"># AFTER_DEBUG: would take out retain_graph</span></span>
+<span id="cb56-786"><a href="#cb56-786"></a>    <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb56-787"><a href="#cb56-787"></a>        p.grad <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb56-788"><a href="#cb56-788"></a>    loss.backward()</span>
+<span id="cb56-789"><a href="#cb56-789"></a></span>
+<span id="cb56-790"><a href="#cb56-790"></a>    <span class="co"># update</span></span>
+<span id="cb56-791"><a href="#cb56-791"></a>    lr <span class="op">=</span> <span class="fl">0.1</span> <span class="cf">if</span> i <span class="op">&lt;</span> <span class="dv">150000</span> <span class="cf">else</span> <span class="fl">0.01</span> <span class="co"># step learning rate decay</span></span>
+<span id="cb56-792"><a href="#cb56-792"></a>    <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
+<span id="cb56-793"><a href="#cb56-793"></a>        p.data <span class="op">+=</span> <span class="op">-</span>lr <span class="op">*</span> p.grad</span>
+<span id="cb56-794"><a href="#cb56-794"></a></span>
+<span id="cb56-795"><a href="#cb56-795"></a>    <span class="co"># track stats</span></span>
+<span id="cb56-796"><a href="#cb56-796"></a>    <span class="cf">if</span> i <span class="op">%</span> <span class="dv">10000</span> <span class="op">==</span> <span class="dv">0</span>: <span class="co"># print every once in a while</span></span>
+<span id="cb56-797"><a href="#cb56-797"></a>        <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">:7d}</span><span class="ss">/</span><span class="sc">{</span>max_steps<span class="sc">:7d}</span><span class="ss">: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb56-798"><a href="#cb56-798"></a>    lossi.append(loss.log10().item())</span>
+<span id="cb56-799"><a href="#cb56-799"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb56-800"><a href="#cb56-800"></a>        ud.append([((lr<span class="op">*</span>p.grad).std() <span class="op">/</span> p.data.std()).log10().item() <span class="cf">for</span> p <span class="kw">in</span> parameters])</span>
+<span id="cb56-801"><a href="#cb56-801"></a></span>
+<span id="cb56-802"><a href="#cb56-802"></a>    <span class="cf">break</span></span>
+<span id="cb56-803"><a href="#cb56-803"></a>    <span class="co"># if i &gt;= 1000:</span></span>
+<span id="cb56-804"><a href="#cb56-804"></a>    <span class="co">#     break # AFTER_DEBUG: would take out obviously to run full optimization</span></span>
+<span id="cb56-805"><a href="#cb56-805"></a><span class="in">```</span></span>
+<span id="cb56-806"><a href="#cb56-806"></a></span>
+<span id="cb56-807"><a href="#cb56-807"></a><span class="fu">## viz #1: forward pass activations statistics</span></span>
+<span id="cb56-808"><a href="#cb56-808"></a></span>
+<span id="cb56-811"><a href="#cb56-811"></a><span class="in">```{python}</span></span>
+<span id="cb56-812"><a href="#cb56-812"></a><span class="co"># visualize histograms</span></span>
+<span id="cb56-813"><a href="#cb56-813"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">4</span>)) <span class="co"># width and height of the plot</span></span>
+<span id="cb56-814"><a href="#cb56-814"></a>legends <span class="op">=</span> []</span>
+<span id="cb56-815"><a href="#cb56-815"></a><span class="cf">for</span> i, layer <span class="kw">in</span> <span class="bu">enumerate</span>(layers[:<span class="op">-</span><span class="dv">1</span>]): <span class="co"># note: exclude the output layer</span></span>
+<span id="cb56-816"><a href="#cb56-816"></a>  <span class="cf">if</span> <span class="bu">isinstance</span>(layer, Tanh):</span>
+<span id="cb56-817"><a href="#cb56-817"></a>    t <span class="op">=</span> layer.out</span>
+<span id="cb56-818"><a href="#cb56-818"></a>    <span class="bu">print</span>(<span class="st">'layer </span><span class="sc">%d</span><span class="st"> (</span><span class="sc">%10s</span><span class="st">): mean </span><span class="sc">%+.2f</span><span class="st">, std </span><span class="sc">%.2f</span><span class="st">, saturated: </span><span class="sc">%.2f%%</span><span class="st">'</span> <span class="op">%</span> (i, layer.__class__.<span class="va">__name__</span>, t.mean(), t.std(), (t.<span class="bu">abs</span>() <span class="op">&gt;</span> <span class="fl">0.97</span>).<span class="bu">float</span>().mean()<span class="op">*</span><span class="dv">100</span>))</span>
+<span id="cb56-819"><a href="#cb56-819"></a>    hy, hx <span class="op">=</span> torch.histogram(t, density<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb56-820"><a href="#cb56-820"></a>    plt.plot(hx[:<span class="op">-</span><span class="dv">1</span>].detach(), hy.detach())</span>
+<span id="cb56-821"><a href="#cb56-821"></a>    legends.append(<span class="ss">f'layer </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>layer<span class="sc">.</span>__class__<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb56-822"><a href="#cb56-822"></a>plt.legend(legends)<span class="op">;</span></span>
+<span id="cb56-823"><a href="#cb56-823"></a>plt.title(<span class="st">'activation distribution'</span>)</span>
+<span id="cb56-824"><a href="#cb56-824"></a><span class="in">```</span></span>
+<span id="cb56-825"><a href="#cb56-825"></a></span>
+<span id="cb56-826"><a href="#cb56-826"></a>If we set the gain to <span class="in">`1`</span>, the std is shrinking, and the saturations is coming to zeros, due to the first layer is pretty decent, but the next ones are shrinking to zero because of the <span class="in">`tanh()`</span> - a squashing function.</span>
+<span id="cb56-827"><a href="#cb56-827"></a></span>
+<span id="cb56-828"><a href="#cb56-828"></a><span class="in">``` md</span></span>
+<span id="cb56-829"><a href="#cb56-829"></a>layer 1 (      Tanh): mean -0.02, std 0.62, saturated: 3.50%</span>
+<span id="cb56-830"><a href="#cb56-830"></a>layer 3 (      Tanh): mean -0.00, std 0.48, saturated: 0.03%</span>
+<span id="cb56-831"><a href="#cb56-831"></a>layer 5 (      Tanh): mean +0.00, std 0.41, saturated: 0.06%</span>
+<span id="cb56-832"><a href="#cb56-832"></a>layer 7 (      Tanh): mean +0.00, std 0.35, saturated: 0.00%</span>
+<span id="cb56-833"><a href="#cb56-833"></a>layer 9 (      Tanh): mean -0.02, std 0.32, saturated: 0.00%</span>
+<span id="cb56-834"><a href="#cb56-834"></a>Text(0.5, 1.0, 'activation distribution')</span>
+<span id="cb56-835"><a href="#cb56-835"></a><span class="in">```</span></span>
+<span id="cb56-836"><a href="#cb56-836"></a></span>
+<span id="cb56-837"><a href="#cb56-837"></a><span class="al">![If the gain is 1](viz1_gain1.png)</span></span>
+<span id="cb56-838"><a href="#cb56-838"></a></span>
+<span id="cb56-839"><a href="#cb56-839"></a>But if we set the gain is far too high, let's say <span class="in">`3`</span>, we can see the saturations is too high.</span>
+<span id="cb56-840"><a href="#cb56-840"></a></span>
+<span id="cb56-841"><a href="#cb56-841"></a><span class="in">``` md</span></span>
+<span id="cb56-842"><a href="#cb56-842"></a>layer 1 (      Tanh): mean -0.03, std 0.85, saturated: 47.66%</span>
+<span id="cb56-843"><a href="#cb56-843"></a>layer 3 (      Tanh): mean +0.00, std 0.84, saturated: 40.47%</span>
+<span id="cb56-844"><a href="#cb56-844"></a>layer 5 (      Tanh): mean -0.01, std 0.84, saturated: 42.38%</span>
+<span id="cb56-845"><a href="#cb56-845"></a>layer 7 (      Tanh): mean -0.01, std 0.84, saturated: 42.00%</span>
+<span id="cb56-846"><a href="#cb56-846"></a>layer 9 (      Tanh): mean -0.03, std 0.84, saturated: 42.41%</span>
+<span id="cb56-847"><a href="#cb56-847"></a>Text(0.5, 1.0, 'activation distribution')</span>
+<span id="cb56-848"><a href="#cb56-848"></a><span class="in">```</span></span>
+<span id="cb56-849"><a href="#cb56-849"></a></span>
+<span id="cb56-850"><a href="#cb56-850"></a><span class="al">![If the gain is 3](viz1_gain3.png)</span></span>
+<span id="cb56-851"><a href="#cb56-851"></a></span>
+<span id="cb56-852"><a href="#cb56-852"></a>So <span class="in">`5/3`</span> is a nice one, balancing the std and saturation.</span>
+<span id="cb56-853"><a href="#cb56-853"></a></span>
+<span id="cb56-854"><a href="#cb56-854"></a>::: {.callout-note title="Why 5/3?"}</span>
+<span id="cb56-855"><a href="#cb56-855"></a>A comment in his video explains why <span class="in">`5/3`</span> is recommended, it comes from the avg of $<span class="co">[</span><span class="ot">\tanh(x)</span><span class="co">]</span>^2$ where $x$ is distributed as a Gaussian:</span>
 <span id="cb56-856"><a href="#cb56-856"></a></span>
-<span id="cb56-857"><a href="#cb56-857"></a><span class="fu">## viz #3: parameter activation and gradient statistics</span></span>
+<span id="cb56-857"><a href="#cb56-857"></a>$\int_{-\infty}^{\infty} \frac{<span class="co">[</span><span class="ot">\tanh(x)</span><span class="co">]</span>^2 \exp(-\frac{x^2}{2})}{\sqrt{2\pi}} \, dx \approx 0.39$</span>
 <span id="cb56-858"><a href="#cb56-858"></a></span>
-<span id="cb56-861"><a href="#cb56-861"></a><span class="in">```{python}</span></span>
-<span id="cb56-862"><a href="#cb56-862"></a><span class="co"># visualize histograms</span></span>
-<span id="cb56-863"><a href="#cb56-863"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">4</span>)) <span class="co"># width and height of the plot</span></span>
-<span id="cb56-864"><a href="#cb56-864"></a>legends <span class="op">=</span> []</span>
-<span id="cb56-865"><a href="#cb56-865"></a><span class="cf">for</span> i,p <span class="kw">in</span> <span class="bu">enumerate</span>(parameters):</span>
-<span id="cb56-866"><a href="#cb56-866"></a>  t <span class="op">=</span> p.grad</span>
-<span id="cb56-867"><a href="#cb56-867"></a>  <span class="cf">if</span> p.ndim <span class="op">==</span> <span class="dv">2</span>:</span>
-<span id="cb56-868"><a href="#cb56-868"></a>    <span class="bu">print</span>(<span class="st">'weight </span><span class="sc">%10s</span><span class="st"> | mean </span><span class="sc">%+f</span><span class="st"> | std </span><span class="sc">%e</span><span class="st"> | grad:data ratio </span><span class="sc">%e</span><span class="st">'</span> <span class="op">%</span> (<span class="bu">tuple</span>(p.shape), t.mean(), t.std(), t.std() <span class="op">/</span> p.std()))</span>
-<span id="cb56-869"><a href="#cb56-869"></a>    hy, hx <span class="op">=</span> torch.histogram(t, density<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb56-870"><a href="#cb56-870"></a>    plt.plot(hx[:<span class="op">-</span><span class="dv">1</span>].detach(), hy.detach())</span>
-<span id="cb56-871"><a href="#cb56-871"></a>    legends.append(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span><span class="bu">tuple</span>(p.shape)<span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb56-872"><a href="#cb56-872"></a>plt.legend(legends)</span>
-<span id="cb56-873"><a href="#cb56-873"></a>plt.title(<span class="st">'weights gradient distribution'</span>)<span class="op">;</span></span>
-<span id="cb56-874"><a href="#cb56-874"></a><span class="in">```</span></span>
-<span id="cb56-875"><a href="#cb56-875"></a></span>
-<span id="cb56-876"><a href="#cb56-876"></a><span class="fu">## viz #4: update: data ratio over time</span></span>
-<span id="cb56-877"><a href="#cb56-877"></a></span>
-<span id="cb56-880"><a href="#cb56-880"></a><span class="in">```{python}</span></span>
-<span id="cb56-881"><a href="#cb56-881"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">4</span>))</span>
-<span id="cb56-882"><a href="#cb56-882"></a>legends <span class="op">=</span> []</span>
-<span id="cb56-883"><a href="#cb56-883"></a><span class="cf">for</span> i,p <span class="kw">in</span> <span class="bu">enumerate</span>(parameters):</span>
-<span id="cb56-884"><a href="#cb56-884"></a>  <span class="cf">if</span> p.ndim <span class="op">==</span> <span class="dv">2</span>:</span>
-<span id="cb56-885"><a href="#cb56-885"></a>    plt.plot([ud[j][i] <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ud))])</span>
-<span id="cb56-886"><a href="#cb56-886"></a>    legends.append(<span class="st">'param </span><span class="sc">%d</span><span class="st">'</span> <span class="op">%</span> i)</span>
-<span id="cb56-887"><a href="#cb56-887"></a>plt.plot([<span class="dv">0</span>, <span class="bu">len</span>(ud)], [<span class="op">-</span><span class="dv">3</span>, <span class="op">-</span><span class="dv">3</span>], <span class="st">'k'</span>) <span class="co"># these ratios should be ~1e-3, indicate on plot</span></span>
-<span id="cb56-888"><a href="#cb56-888"></a>plt.legend(legends)<span class="op">;</span></span>
-<span id="cb56-889"><a href="#cb56-889"></a><span class="in">```</span></span>
-<span id="cb56-890"><a href="#cb56-890"></a></span>
-<span id="cb56-891"><a href="#cb56-891"></a><span class="fu">## bringing back batchnorm, looking at the visualizations</span></span>
-<span id="cb56-892"><a href="#cb56-892"></a></span>
-<span id="cb56-893"><a href="#cb56-893"></a><span class="fu">## summary of the lecture for real this time</span></span>
-<span id="cb56-894"><a href="#cb56-894"></a></span>
-<span id="cb56-895"><a href="#cb56-895"></a><span class="fu">## Exercises:</span></span>
-<span id="cb56-896"><a href="#cb56-896"></a></span>
-<span id="cb56-897"><a href="#cb56-897"></a><span class="ss">-   </span>E01: I did not get around to seeing what happens when you initialize all weights and biases to zero. Try this and train the neural net. You might think either that 1) the network trains just fine or 2) the network doesn't train at all, but actually it is 3) the network trains but only partially, and achieves a pretty bad final performance. Inspect the gradients and activations to figure out what is happening and why the network is only partially training, and what part is being trained exactly.</span>
-<span id="cb56-898"><a href="#cb56-898"></a><span class="ss">-   </span>E02: BatchNorm, unlike other normalization layers like LayerNorm/GroupNorm etc. has the big advantage that after training, the batchnorm gamma/beta can be "folded into" the weights of the preceeding Linear layers, effectively erasing the need to forward it at test time. Set up a small 3-layer MLP with batchnorms, train the network, then "fold" the batchnorm gamma/beta into the preceeding Linear layer's W,b by creating a new W2, b2 and erasing the batch norm. Verify that this gives the same forward pass during inference. i.e. we see that the batchnorm is there just for stabilizing the training, and can be thrown out after training is done! pretty cool.</span>
-<span id="cb56-899"><a href="#cb56-899"></a></span>
-<span id="cb56-900"><a href="#cb56-900"></a><span class="fu"># resources:</span></span>
-<span id="cb56-901"><a href="#cb56-901"></a></span>
-<span id="cb56-902"><a href="#cb56-902"></a><span class="ss">1.  </span>other people learn from AK like me: <span class="ot">&lt;https://bedirtapkan.com/posts/blog_posts/karpathy_3_makemore_activations/&gt;</span>; <span class="ot">&lt;https://skeptric.com/index.html#category=makemore&gt;</span> - a replicate (?) with more OOPs on another dataset;</span>
-<span id="cb56-903"><a href="#cb56-903"></a><span class="ss">2.  </span>some good papers recommended by Andrej:</span>
-<span id="cb56-904"><a href="#cb56-904"></a><span class="ss">    -   </span>"Kaiming init" paper: <span class="ot">&lt;https://arxiv.org/abs/1502.01852&gt;</span>;</span>
-<span id="cb56-905"><a href="#cb56-905"></a><span class="ss">    -   </span>BatchNorm paper: <span class="ot">&lt;https://arxiv.org/abs/1502.03167&gt;</span>;</span>
-<span id="cb56-906"><a href="#cb56-906"></a><span class="ss">    -   </span>Bengio et al. 2003 MLP language model paper (pdf): <span class="ot">&lt;https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf&gt;</span>;</span>
-<span id="cb56-907"><a href="#cb56-907"></a><span class="ss">    -   </span>Good paper illustrating some of the problems with batchnorm in practice: <span class="ot">&lt;https://arxiv.org/abs/2105.07576&gt;</span>.</span>
+<span id="cb56-859"><a href="#cb56-859"></a><span class="at">&gt; The square root of this value is how much the tanh squeezes the variance of the incoming variable: 0.39 </span><span class="sc">\*\*</span><span class="at"> .5 \~= 0.63 \~= 3/5 (hence 5/3 is just an approximation of the exact gain).</span></span>
+<span id="cb56-860"><a href="#cb56-860"></a><span class="at">:::</span></span>
+<span id="cb56-861"><a href="#cb56-861"></a></span>
+<span id="cb56-862"><a href="#cb56-862"></a><span class="fu">## viz #2: backward pass gradient statistics</span></span>
+<span id="cb56-863"><a href="#cb56-863"></a></span>
+<span id="cb56-864"><a href="#cb56-864"></a>Similarly, we can do the samething with gradients. With the setting of gain as <span class="in">`5/3`</span>, the distribution of gradients through layers quite the same.</span>
+<span id="cb56-865"><a href="#cb56-865"></a></span>
+<span id="cb56-868"><a href="#cb56-868"></a><span class="in">```{python}</span></span>
+<span id="cb56-869"><a href="#cb56-869"></a><span class="co"># visualize histograms</span></span>
+<span id="cb56-870"><a href="#cb56-870"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">4</span>)) <span class="co"># width and height of the plot</span></span>
+<span id="cb56-871"><a href="#cb56-871"></a>legends <span class="op">=</span> []</span>
+<span id="cb56-872"><a href="#cb56-872"></a><span class="cf">for</span> i, layer <span class="kw">in</span> <span class="bu">enumerate</span>(layers[:<span class="op">-</span><span class="dv">1</span>]): <span class="co"># note: exclude the output layer</span></span>
+<span id="cb56-873"><a href="#cb56-873"></a>  <span class="cf">if</span> <span class="bu">isinstance</span>(layer, Tanh):</span>
+<span id="cb56-874"><a href="#cb56-874"></a>    t <span class="op">=</span> layer.out.grad</span>
+<span id="cb56-875"><a href="#cb56-875"></a>    <span class="bu">print</span>(<span class="st">'layer </span><span class="sc">%d</span><span class="st"> (</span><span class="sc">%10s</span><span class="st">): mean </span><span class="sc">%+f</span><span class="st">, std </span><span class="sc">%e</span><span class="st">'</span> <span class="op">%</span> (i, layer.__class__.<span class="va">__name__</span>, t.mean(), t.std()))</span>
+<span id="cb56-876"><a href="#cb56-876"></a>    hy, hx <span class="op">=</span> torch.histogram(t, density<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb56-877"><a href="#cb56-877"></a>    plt.plot(hx[:<span class="op">-</span><span class="dv">1</span>].detach(), hy.detach())</span>
+<span id="cb56-878"><a href="#cb56-878"></a>    legends.append(<span class="ss">f'layer </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>layer<span class="sc">.</span>__class__<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb56-879"><a href="#cb56-879"></a>plt.legend(legends)<span class="op">;</span></span>
+<span id="cb56-880"><a href="#cb56-880"></a>plt.title(<span class="st">'gradient distribution'</span>)</span>
+<span id="cb56-881"><a href="#cb56-881"></a><span class="in">```</span></span>
+<span id="cb56-882"><a href="#cb56-882"></a></span>
+<span id="cb56-883"><a href="#cb56-883"></a><span class="fu">## the fully linear case of no non-linearities</span></span>
+<span id="cb56-884"><a href="#cb56-884"></a></span>
+<span id="cb56-885"><a href="#cb56-885"></a>Now imagine if we remove the <span class="in">`tanh`</span> from all layers:</span>
+<span id="cb56-886"><a href="#cb56-886"></a></span>
+<span id="cb56-889"><a href="#cb56-889"></a><span class="in">```{python}</span></span>
+<span id="cb56-890"><a href="#cb56-890"></a><span class="co">#| eval: false</span></span>
+<span id="cb56-891"><a href="#cb56-891"></a>layers <span class="op">=</span> [</span>
+<span id="cb56-892"><a href="#cb56-892"></a>  Linear(n_embd <span class="op">*</span> block_size, n_hidden), <span class="co">#Tanh(),</span></span>
+<span id="cb56-893"><a href="#cb56-893"></a>  Linear(           n_hidden, n_hidden), <span class="co">#Tanh(),</span></span>
+<span id="cb56-894"><a href="#cb56-894"></a>  Linear(           n_hidden, n_hidden), <span class="co">#Tanh(),</span></span>
+<span id="cb56-895"><a href="#cb56-895"></a>  Linear(           n_hidden, n_hidden), <span class="co">#Tanh(),</span></span>
+<span id="cb56-896"><a href="#cb56-896"></a>  Linear(           n_hidden, n_hidden), <span class="co">#Tanh(),</span></span>
+<span id="cb56-897"><a href="#cb56-897"></a>  Linear(           n_hidden, vocab_size),</span>
+<span id="cb56-898"><a href="#cb56-898"></a>]</span>
+<span id="cb56-899"><a href="#cb56-899"></a><span class="in">```</span></span>
+<span id="cb56-900"><a href="#cb56-900"></a></span>
+<span id="cb56-901"><a href="#cb56-901"></a>The recommend gain now for Linear is <span class="in">`1`</span>. But no matter of how many Linear Layers you stacked up, you'll always get linear network, which will greatly limit the capacity of the neural nets.</span>
+<span id="cb56-902"><a href="#cb56-902"></a></span>
+<span id="cb56-903"><a href="#cb56-903"></a><span class="at">&gt; Training Neural Network is like balancing a pencil on a finger</span></span>
+<span id="cb56-904"><a href="#cb56-904"></a></span>
+<span id="cb56-905"><a href="#cb56-905"></a><span class="fu">## viz #3: parameter activation and gradient statistics</span></span>
+<span id="cb56-906"><a href="#cb56-906"></a></span>
+<span id="cb56-909"><a href="#cb56-909"></a><span class="in">```{python}</span></span>
+<span id="cb56-910"><a href="#cb56-910"></a><span class="co"># visualize histograms</span></span>
+<span id="cb56-911"><a href="#cb56-911"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">4</span>)) <span class="co"># width and height of the plot</span></span>
+<span id="cb56-912"><a href="#cb56-912"></a>legends <span class="op">=</span> []</span>
+<span id="cb56-913"><a href="#cb56-913"></a><span class="cf">for</span> i,p <span class="kw">in</span> <span class="bu">enumerate</span>(parameters):</span>
+<span id="cb56-914"><a href="#cb56-914"></a>  t <span class="op">=</span> p.grad</span>
+<span id="cb56-915"><a href="#cb56-915"></a>  <span class="cf">if</span> p.ndim <span class="op">==</span> <span class="dv">2</span>:</span>
+<span id="cb56-916"><a href="#cb56-916"></a>    <span class="bu">print</span>(<span class="st">'weight </span><span class="sc">%10s</span><span class="st"> | mean </span><span class="sc">%+f</span><span class="st"> | std </span><span class="sc">%e</span><span class="st"> | grad:data ratio </span><span class="sc">%e</span><span class="st">'</span> <span class="op">%</span> (<span class="bu">tuple</span>(p.shape), t.mean(), t.std(), t.std() <span class="op">/</span> p.std()))</span>
+<span id="cb56-917"><a href="#cb56-917"></a>    hy, hx <span class="op">=</span> torch.histogram(t, density<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb56-918"><a href="#cb56-918"></a>    plt.plot(hx[:<span class="op">-</span><span class="dv">1</span>].detach(), hy.detach())</span>
+<span id="cb56-919"><a href="#cb56-919"></a>    legends.append(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span><span class="bu">tuple</span>(p.shape)<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb56-920"><a href="#cb56-920"></a>plt.legend(legends)</span>
+<span id="cb56-921"><a href="#cb56-921"></a>plt.title(<span class="st">'weights gradient distribution'</span>)<span class="op">;</span></span>
+<span id="cb56-922"><a href="#cb56-922"></a><span class="in">```</span></span>
+<span id="cb56-923"><a href="#cb56-923"></a></span>
+<span id="cb56-924"><a href="#cb56-924"></a><span class="fu">## viz #4: update: data ratio over time</span></span>
+<span id="cb56-925"><a href="#cb56-925"></a></span>
+<span id="cb56-928"><a href="#cb56-928"></a><span class="in">```{python}</span></span>
+<span id="cb56-929"><a href="#cb56-929"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">4</span>))</span>
+<span id="cb56-930"><a href="#cb56-930"></a>legends <span class="op">=</span> []</span>
+<span id="cb56-931"><a href="#cb56-931"></a><span class="cf">for</span> i,p <span class="kw">in</span> <span class="bu">enumerate</span>(parameters):</span>
+<span id="cb56-932"><a href="#cb56-932"></a>  <span class="cf">if</span> p.ndim <span class="op">==</span> <span class="dv">2</span>:</span>
+<span id="cb56-933"><a href="#cb56-933"></a>    plt.plot([ud[j][i] <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ud))])</span>
+<span id="cb56-934"><a href="#cb56-934"></a>    legends.append(<span class="st">'param </span><span class="sc">%d</span><span class="st">'</span> <span class="op">%</span> i)</span>
+<span id="cb56-935"><a href="#cb56-935"></a>plt.plot([<span class="dv">0</span>, <span class="bu">len</span>(ud)], [<span class="op">-</span><span class="dv">3</span>, <span class="op">-</span><span class="dv">3</span>], <span class="st">'k'</span>) <span class="co"># these ratios should be ~1e-3, indicate on plot</span></span>
+<span id="cb56-936"><a href="#cb56-936"></a>plt.legend(legends)<span class="op">;</span></span>
+<span id="cb56-937"><a href="#cb56-937"></a><span class="in">```</span></span>
+<span id="cb56-938"><a href="#cb56-938"></a></span>
+<span id="cb56-939"><a href="#cb56-939"></a><span class="fu">## bringing back batchnorm, looking at the visualizations</span></span>
+<span id="cb56-940"><a href="#cb56-940"></a></span>
+<span id="cb56-941"><a href="#cb56-941"></a><span class="fu">## summary of the lecture for real this time</span></span>
+<span id="cb56-942"><a href="#cb56-942"></a></span>
+<span id="cb56-943"><a href="#cb56-943"></a><span class="fu">## Exercises:</span></span>
+<span id="cb56-944"><a href="#cb56-944"></a></span>
+<span id="cb56-945"><a href="#cb56-945"></a><span class="ss">-   </span>E01: I did not get around to seeing what happens when you initialize all weights and biases to zero. Try this and train the neural net. You might think either that 1) the network trains just fine or 2) the network doesn't train at all, but actually it is 3) the network trains but only partially, and achieves a pretty bad final performance. Inspect the gradients and activations to figure out what is happening and why the network is only partially training, and what part is being trained exactly.</span>
+<span id="cb56-946"><a href="#cb56-946"></a><span class="ss">-   </span>E02: BatchNorm, unlike other normalization layers like LayerNorm/GroupNorm etc. has the big advantage that after training, the batchnorm gamma/beta can be "folded into" the weights of the preceeding Linear layers, effectively erasing the need to forward it at test time. Set up a small 3-layer MLP with batchnorms, train the network, then "fold" the batchnorm gamma/beta into the preceeding Linear layer's W,b by creating a new W2, b2 and erasing the batch norm. Verify that this gives the same forward pass during inference. i.e. we see that the batchnorm is there just for stabilizing the training, and can be thrown out after training is done! pretty cool.</span>
+<span id="cb56-947"><a href="#cb56-947"></a></span>
+<span id="cb56-948"><a href="#cb56-948"></a><span class="fu"># resources:</span></span>
+<span id="cb56-949"><a href="#cb56-949"></a></span>
+<span id="cb56-950"><a href="#cb56-950"></a><span class="ss">1.  </span>other people learn from AK like me: <span class="ot">&lt;https://bedirtapkan.com/posts/blog_posts/karpathy_3_makemore_activations/&gt;</span>; <span class="ot">&lt;https://skeptric.com/index.html#category=makemore&gt;</span> - a replicate (?) with more OOPs on another dataset;</span>
+<span id="cb56-951"><a href="#cb56-951"></a><span class="ss">2.  </span>some good papers recommended by Andrej:</span>
+<span id="cb56-952"><a href="#cb56-952"></a><span class="ss">    -   </span>"Kaiming init" paper: <span class="ot">&lt;https://arxiv.org/abs/1502.01852&gt;</span>;</span>
+<span id="cb56-953"><a href="#cb56-953"></a><span class="ss">    -   </span>BatchNorm paper: <span class="ot">&lt;https://arxiv.org/abs/1502.03167&gt;</span>;</span>
+<span id="cb56-954"><a href="#cb56-954"></a><span class="ss">    -   </span>Bengio et al. 2003 MLP language model paper (pdf): <span class="ot">&lt;https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf&gt;</span>;</span>
+<span id="cb56-955"><a href="#cb56-955"></a><span class="ss">    -   </span>Good paper illustrating some of the problems with batchnorm in practice: <span class="ot">&lt;https://arxiv.org/abs/2105.07576&gt;</span>.</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
