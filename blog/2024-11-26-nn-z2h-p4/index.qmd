@@ -1,4 +1,5 @@
 ---
+qua---
 title: "NN-Z2H Lesson 4: Building makemore part 4 - Activations & Gradients, BatchNorm"
 description: "dive into the internals of MLPs, scrutinize the statistics of the forward pass activations, backward pass gradients, understand the health of your deep network, introduce batch normalization"
 author:
@@ -571,7 +572,7 @@ The numbers somehow are approximate, I don't know why my Thinkpad-E14 gave diffe
 |              |                                                            | val 2.1201331615448      |
 +--------------+------------------------------------------------------------+--------------------------+
 
-: Loss logs {tbl-colwidths="[10,40,50]" .striped .hover}
+: Loss logs {tbl-colwidths="\[10,40,50\]" .striped .hover}
 
 # Part 2: PyTorch-ifying the code, and train a deeper network
 
@@ -815,9 +816,10 @@ But you'll end up getting a pure linear network. No matter of how many Linear La
 
 We can also visualize the distribution of paramaters, here below only weight for simplicity (ignoring gamma, beta, etc...). We observed mean, std, and the grad to data ratio (to see how much the data will be updated).
 
-Problem for the last layer is shown in code output below, the weights on last layer are 10 times bigger than previous ones, and the grad to data ratio is too high. 
+Problem for the last layer is shown in code output below, the weights on last layer are 10 times bigger than previous ones, and the grad to data ratio is too high.
 
 We can try run 1st 1000 training loops and this can be slight reduced, but since we are using a simple optimizer SGD rather than modern one like Adam, it is still problematic.
+
 ```{python}
 #| fig-width: 8
 #| fig-height: 3
@@ -838,6 +840,7 @@ plt.title('weights gradient distribution');
 ## viz #4: update data ratio over time
 
 The grad to data above ratio is at the end not really informative (only at one point in time), what matter is actual amount which we change the data in these tensors (over time). AK introduce a tracking list `ud` (update to data). This calculates the ratio between (std) of the grad to the data of parameters (and `log10()` for a nicer viz) **without context of gradient**. We try run 1000 times and check
+
 ```{python}
 #| fig-width: 8
 #| fig-height: 3
@@ -885,9 +888,9 @@ layers = [
 
 ## summary of the lecture for real this time
 
-1. Intruduction of Batch Normalization - the 1st one of modern innovation to stablize Deep NN training;
-2. PyTorch-ifying code;
-3. Introduction to some diagnostic tools that we can use to verify the network is in good state dynamically.
+1.  Intruduction of Batch Normalization - the 1st one of modern innovation to stablize Deep NN training;
+2.  PyTorch-ifying code;
+3.  Introduction to some diagnostic tools that we can use to verify the network is in good state dynamically.
 
 What he did not try to improve here is the loss of the network. It's now somehow bottleneck not by the Optimization, but by the Context Length he suspect.
 
@@ -1071,4 +1074,4 @@ for _ in range(20):
     -   BatchNorm paper: <https://arxiv.org/abs/1502.03167>;
     -   Bengio et al. 2003 MLP language model paper (pdf): <https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf>;
     -   Good paper illustrating some of the problems with batchnorm in practice: <https://arxiv.org/abs/2105.07576>.
-3. Notebook: <https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part3_bn.ipynb>
+3.  Notebook: <https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part3_bn.ipynb>
