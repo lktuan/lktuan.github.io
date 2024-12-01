@@ -10,7 +10,2039 @@
 <atom:link href="https://lktuan.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>This is Tuan&#39;s blog</description>
 <generator>quarto-1.4.554</generator>
-<lastBuildDate>Mon, 25 Nov 2024 17:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 01 Dec 2024 17:00:00 GMT</lastBuildDate>
+<item>
+  <title>NN-Z2H Lesson 5: Building makemore part 4 - Becoming a Backprop Ninja</title>
+  <dc:creator>Tuan Le Khac</dc:creator>
+  <link>https://lktuan.github.io/blog/2024-12-02-nn-z2h-p5/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<div class="callout callout-style-default callout-important callout-titled" title="This is not orginal content!">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+This is not orginal content!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This is my study notes / codes along with Andrej Karpathy’s “<a href="https://www.youtube.com/watch?v=VMj-3S1tku0&amp;list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ">Neural Networks: Zero to Hero</a>” series.</p>
+</div>
+</div>
+<section id="intro-why-you-should-care-fun-history" class="level1">
+<h1>intro: why you should care &amp; fun history</h1>
+<p>In previous lecture, we’re introduced to some common issues with our “shallow” neural network and how to fix with the initialization setting and Batch Normalization. We’re also learnt some diagnostic tools to observe <em>forward pass activations</em>, <em>backward pass gradients</em>, and <em>weights update</em>, and calibrate the training loop. In this lacture, we aim to replace this line of code:</p>
+<div id="d71cd365" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1">... loss.backward() ...</span></code></pre></div>
+</details>
+</div>
+<p>with from-scratch-code. It’s basically identical to <code>MicroGrad</code>, but on <em>Tensor</em> rather than <em>Scalar</em>. Why?</p>
+<blockquote class="blockquote">
+<p>The problem with Backpropagation is that it is a <a href="https://en.wikipedia.org/wiki/Leaky_abstraction">leaky abstraction</a>. – Andrej Karpathy</p>
+</blockquote>
+<p>readmore: <a href="https://karpathy.medium.com/yes-you-should-understand-backprop-e2f06eab496b" class="uri">https://karpathy.medium.com/yes-you-should-understand-backprop-e2f06eab496b</a>, and <a href="https://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html" class="uri">https://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html</a></p>
+<p>inshort, to effectively debug neural network, we should be deeply understanding how back propagation work under the hood.</p>
+</section>
+<section id="starter-code" class="level1">
+<h1>starter code</h1>
+<section id="import-libraries" class="level2">
+<h2 class="anchored" data-anchor-id="import-libraries">import libraries:</h2>
+<div id="077bbbc3" class="cell" data-execution_count="2">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> torch</span>
+<span id="cb2-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> torch.nn.functional <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> F</span>
+<span id="cb2-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> matplotlib.pyplot <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> plt</span>
+<span id="cb2-4"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%</span>matplotlib inline</span></code></pre></div>
+</details>
+</div>
+</section>
+<section id="read-data" class="level2">
+<h2 class="anchored" data-anchor-id="read-data">read data:</h2>
+<div id="b55dfc86" class="cell" data-execution_count="3">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pandas <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pd</span>
+<span id="cb3-2"></span>
+<span id="cb3-3">url <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://raw.githubusercontent.com/karpathy/makemore/refs/heads/master/names.txt"</span></span>
+<span id="cb3-4">words <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.read_csv(url, header<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>).iloc[:, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>].tolist()</span>
+<span id="cb3-5">words[:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span>]</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>['emma', 'olivia', 'ava', 'isabella', 'sophia', 'charlotte', 'mia', 'amelia']</code></pre>
+</div>
+</div>
+</section>
+<section id="build-vocab" class="level2">
+<h2 class="anchored" data-anchor-id="build-vocab">build vocab:</h2>
+<div id="0c7ecb8a" class="cell" data-execution_count="4">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># build the vocabulary of characters and mapping to/from integer</span></span>
+<span id="cb5-2">chars <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sorted</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">list</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">set</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">''</span>.join(words))))</span>
+<span id="cb5-3">stoi <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> {s:i<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> i, s <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">enumerate</span>(chars)}</span>
+<span id="cb5-4">stoi[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'.'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span></span>
+<span id="cb5-5">itos <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> {i: s <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> s, i <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> stoi.items()}</span>
+<span id="cb5-6">vocab_size <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(itos)</span>
+<span id="cb5-7"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(itos)</span>
+<span id="cb5-8"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(vocab_size)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>{1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e', 6: 'f', 7: 'g', 8: 'h', 9: 'i', 10: 'j', 11: 'k', 12: 'l', 13: 'm', 14: 'n', 15: 'o', 16: 'p', 17: 'q', 18: 'r', 19: 's', 20: 't', 21: 'u', 22: 'v', 23: 'w', 24: 'x', 25: 'y', 26: 'z', 0: '.'}
+27</code></pre>
+</div>
+</div>
+</section>
+<section id="build-dataset-splits-identical-to-previous-so-i-folded-it" class="level2">
+<h2 class="anchored" data-anchor-id="build-dataset-splits-identical-to-previous-so-i-folded-it">build dataset splits (identical to previous so I folded it):</h2>
+<div id="cbf41baf" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1">block_size <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># context length: how many characters do we take to predict the next one.</span></span>
+<span id="cb7-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># build the dataset</span></span>
+<span id="cb7-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> buid_dataset(words):</span>
+<span id="cb7-4">    X, Y <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [], []</span>
+<span id="cb7-5"></span>
+<span id="cb7-6">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> w <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> words:</span>
+<span id="cb7-7">        context <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> block_size</span>
+<span id="cb7-8">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> ch <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> w <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'.'</span>:</span>
+<span id="cb7-9">            ix <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> stoi[ch]</span>
+<span id="cb7-10">            X.append(context)</span>
+<span id="cb7-11">            Y.append(ix)</span>
+<span id="cb7-12">            context <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> context[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>:] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> [ix]</span>
+<span id="cb7-13"></span>
+<span id="cb7-14">    X <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.tensor(X)</span>
+<span id="cb7-15">    Y <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.tensor(Y)</span>
+<span id="cb7-16">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(X.shape, Y.shape)</span>
+<span id="cb7-17">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span> X, Y</span>
+<span id="cb7-18"></span>
+<span id="cb7-19"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> random</span>
+<span id="cb7-20">random.seed(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">42</span>)</span>
+<span id="cb7-21">random.shuffle(words)</span>
+<span id="cb7-22">n1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">int</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(words))</span>
+<span id="cb7-23">n2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">int</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.9</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(words))</span>
+<span id="cb7-24"></span>
+<span id="cb7-25">Xtr, Ytr <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> buid_dataset(words[:n1])        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 80#</span></span>
+<span id="cb7-26">Xdev, Ydev <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> buid_dataset(words[n1:n2])    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 10%</span></span>
+<span id="cb7-27">Xte, Yte <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> buid_dataset(words[n2:])        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 10%</span></span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>torch.Size([182625, 3]) torch.Size([182625])
+torch.Size([22655, 3]) torch.Size([22655])
+torch.Size([22866, 3]) torch.Size([22866])</code></pre>
+</div>
+</div>
+</section>
+<section id="utility-function-we-will-use-later-when-comparing-manual-gradients-to-pytorch-gradients." class="level2">
+<h2 class="anchored" data-anchor-id="utility-function-we-will-use-later-when-comparing-manual-gradients-to-pytorch-gradients.">utility function we will use later when comparing manual gradients to PyTorch gradients.</h2>
+<div id="ceefb53f" class="cell" data-execution_count="6">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">def</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(s, dt, t):</span>
+<span id="cb9-2">  ex <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">all</span>(dt <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> t.grad).item()</span>
+<span id="cb9-3">  app <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.allclose(dt, t.grad)</span>
+<span id="cb9-4">  maxdiff <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (dt <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> t.grad).<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">abs</span>().<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">max</span>().item()</span>
+<span id="cb9-5">  <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>s<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:15s}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> | exact: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">str</span>(ex)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:5s}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> | approximate: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">str</span>(app)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:5s}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> | maxdiff: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>maxdiff<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'</span>)</span></code></pre></div>
+</details>
+</div>
+</section>
+<section id="network-construction" class="level2">
+<h2 class="anchored" data-anchor-id="network-construction">network construction:</h2>
+<div id="19c1e9dd" class="cell" data-execution_count="7">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1">n_embd <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the dimensionality of the character embedding vectors</span></span>
+<span id="cb10-2">n_hidden <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">64</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the number of neurons in the hidden layer of the MLP</span></span>
+<span id="cb10-3"></span>
+<span id="cb10-4">g <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.Generator().manual_seed(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2147483647</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># for reproducibility</span></span>
+<span id="cb10-5">C  <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randn((vocab_size, n_embd),            generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g)</span>
+<span id="cb10-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Layer 1</span></span>
+<span id="cb10-7">W1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randn((n_embd <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> block_size, n_hidden), generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>((n_embd <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> block_size)<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>)</span>
+<span id="cb10-8">b1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randn(n_hidden,                        generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># using b1 just for fun, it's useless because of BN</span></span>
+<span id="cb10-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Layer 2</span></span>
+<span id="cb10-10">W2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randn((n_hidden, vocab_size),          generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span></span>
+<span id="cb10-11">b2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randn(vocab_size,                      generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span></span>
+<span id="cb10-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># BatchNorm parameters</span></span>
+<span id="cb10-13">bngain <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randn((<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, n_hidden))<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span></span>
+<span id="cb10-14">bnbias <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randn((<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, n_hidden))<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span></span>
+<span id="cb10-15"></span>
+<span id="cb10-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Note: I am initializating many of these parameters in non-standard ways</span></span>
+<span id="cb10-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># because sometimes initializating with e.g. all zeros could mask an incorrect</span></span>
+<span id="cb10-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># implementation of the backward pass.</span></span>
+<span id="cb10-19"></span>
+<span id="cb10-20">parameters <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [C, W1, b1, W2, b2, bngain, bnbias]</span>
+<span id="cb10-21"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>(p.nelement() <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> p <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> parameters)) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># number of parameters in total</span></span>
+<span id="cb10-22"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> p <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> parameters:</span>
+<span id="cb10-23">  p.requires_grad <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span></span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>4137</code></pre>
+</div>
+</div>
+</section>
+<section id="mini-batch-construction" class="level2">
+<h2 class="anchored" data-anchor-id="mini-batch-construction">mini-batch construction:</h2>
+<div id="5d9610d8" class="cell" data-execution_count="8">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1">batch_size <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32</span></span>
+<span id="cb12-2">n <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> batch_size <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># a shorter variable also, for convenience</span></span>
+<span id="cb12-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># construct a minibatch</span></span>
+<span id="cb12-4">ix <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randint(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, Xtr.shape[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>], (batch_size,), generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g)</span>
+<span id="cb12-5">Xb, Yb <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Xtr[ix], Ytr[ix] <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># batch X,Y</span></span></code></pre></div>
+</details>
+</div>
+</section>
+<section id="forward-pass-chunkated-into-smaller-steps-that-are-possible-to-backward-one-at-a-time." class="level2">
+<h2 class="anchored" data-anchor-id="forward-pass-chunkated-into-smaller-steps-that-are-possible-to-backward-one-at-a-time.">forward pass, “chunkated” into smaller steps that are possible to backward one at a time.</h2>
+<div id="f17e1cdb" class="cell" data-execution_count="9">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1">emb <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> C[Xb] <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># embed the characters into vectors</span></span>
+<span id="cb13-2">embcat <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> emb.view(emb.shape[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>], <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># concatenate the vectors</span></span>
+<span id="cb13-3"></span>
+<span id="cb13-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Linear layer 1</span></span>
+<span id="cb13-5">hprebn <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> embcat <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> W1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> b1 <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># hidden layer pre-activation</span></span>
+<span id="cb13-6"></span>
+<span id="cb13-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># BatchNorm layer</span></span>
+<span id="cb13-8">bnmeani <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>n<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>hprebn.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, keepdim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb13-9">bndiff <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> hprebn <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> bnmeani</span>
+<span id="cb13-10">bndiff2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> bndiff<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span></span>
+<span id="cb13-11">bnvar <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>(n<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>(bndiff2).<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, keepdim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># note: Bessel's correction (dividing by n-1, not n)</span></span>
+<span id="cb13-12">bnvar_inv <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (bnvar <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1e-5</span>)<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span></span>
+<span id="cb13-13">bnraw <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> bndiff <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> bnvar_inv</span>
+<span id="cb13-14">hpreact <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> bngain <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> bnraw <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> bnbias</span>
+<span id="cb13-15"></span>
+<span id="cb13-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Non-linearity</span></span>
+<span id="cb13-17">h <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.tanh(hpreact) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># hidden layer</span></span>
+<span id="cb13-18"></span>
+<span id="cb13-19"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Linear layer 2</span></span>
+<span id="cb13-20">logits <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> h <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> W2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> b2 <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># output layer</span></span>
+<span id="cb13-21"></span>
+<span id="cb13-22"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># cross entropy loss (same as F.cross_entropy(logits, Yb)), Kullback–Leibler divergence</span></span>
+<span id="cb13-23">logit_maxes <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> logits.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">max</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, keepdim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>).values</span>
+<span id="cb13-24">norm_logits <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> logits <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> logit_maxes <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># subtract max for numerical stability</span></span>
+<span id="cb13-25">counts <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> norm_logits.exp()</span>
+<span id="cb13-26">counts_sum <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> counts.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, keepdims<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb13-27">counts_sum_inv <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> counts_sum<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># if I use (1.0 / counts_sum) instead then I can't get backprop to be bit exact...</span></span>
+<span id="cb13-28">probs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> counts <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> counts_sum_inv</span>
+<span id="cb13-29">logprobs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> probs.log()</span>
+<span id="cb13-30">loss <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>logprobs[<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(n), Yb].mean()</span>
+<span id="cb13-31"></span>
+<span id="cb13-32"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># PyTorch backward pass</span></span>
+<span id="cb13-33"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> p <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> parameters:</span>
+<span id="cb13-34">  p.grad <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span></span>
+<span id="cb13-35"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> t <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> [logprobs, probs, counts, counts_sum, counts_sum_inv, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># afaik there is no cleaner way</span></span>
+<span id="cb13-36">          norm_logits, logit_maxes, logits, h, hpreact, bnraw,</span>
+<span id="cb13-37">         bnvar_inv, bnvar, bndiff2, bndiff, hprebn, bnmeani,</span>
+<span id="cb13-38">         embcat, emb]:</span>
+<span id="cb13-39">  t.retain_grad()</span>
+<span id="cb13-40"></span>
+<span id="cb13-41">hprebn.retain_grad() <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Tuan added this line since code above does not ensure hprebn's grad to be retained.</span></span>
+<span id="cb13-42"></span>
+<span id="cb13-43">loss.backward()</span>
+<span id="cb13-44">loss</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>tensor(3.3691, grad_fn=&lt;NegBackward0&gt;)</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="exercise-1-backproping-the-atomic-compute-graph" class="level1">
+<h1>exercise 1: backproping the atomic compute graph</h1>
+<div id="5b858db6" class="cell" data-execution_count="10">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="annotated-cell-10" style="background: #f1f3f5;"><pre class="sourceCode numberSource python code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode python"><span id="annotated-cell-10-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Exercise 1: backprop through the whole thing manually, </span></span>
+<span id="annotated-cell-10-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># backpropagating through exactly all of the variables </span></span>
+<span id="annotated-cell-10-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># as they are defined in the forward pass above, one by one</span></span>
+<span id="annotated-cell-10-4"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Cross entropy loss"</span>.upper())</span>
+<span id="annotated-cell-10-5">dlogprobs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.zeros_like(logprobs) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># create zeros tensor with same size</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="1">1</button><span id="annotated-cell-10-6" class="code-annotation-target">dlogprobs[<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(n), Yb] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> n</span>
+<span id="annotated-cell-10-7"></span>
+<span id="annotated-cell-10-8">dprobs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.zeros_like(probs) </span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="2">2</button><span id="annotated-cell-10-9" class="code-annotation-target">dprobs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> probs) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> dlogprobs</span>
+<span id="annotated-cell-10-10"></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="3">3</button><span id="annotated-cell-10-11" class="code-annotation-target">dcounts_sum_inv <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (counts <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> dprobs).<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, keepdim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="annotated-cell-10-12"></span>
+<span id="annotated-cell-10-13">dcounts_sum <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> counts_sum<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> dcounts_sum_inv</span>
+<span id="annotated-cell-10-14"></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="4">4</button><span id="annotated-cell-10-15" class="code-annotation-target">dcounts <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.ones_like(counts) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> dcounts_sum <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> counts_sum_inv <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> dprobs</span>
+<span id="annotated-cell-10-16"></span>
+<span id="annotated-cell-10-17">dnorm_logits <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (norm_logits.exp()) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> dcounts <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># = counts * dcounts</span></span>
+<span id="annotated-cell-10-18"></span>
+<span id="annotated-cell-10-19">dlogit_maxes <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> dnorm_logits).<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, keepdim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># broadcasting, again</span></span>
+<span id="annotated-cell-10-20"></span>
+<span id="annotated-cell-10-21"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'logprobs'</span>, dlogprobs, logprobs)</span>
+<span id="annotated-cell-10-22"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'probs'</span>, dprobs, probs)</span>
+<span id="annotated-cell-10-23"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'counts_sum_inv'</span>, dcounts_sum_inv, counts_sum_inv)</span>
+<span id="annotated-cell-10-24"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'counts_sum'</span>, dcounts_sum, counts_sum)</span>
+<span id="annotated-cell-10-25"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'counts'</span>, dcounts, counts)</span>
+<span id="annotated-cell-10-26"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'norm_logits'</span>, dnorm_logits, norm_logits)</span>
+<span id="annotated-cell-10-27"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'logit_maxes'</span>, dlogit_maxes, logit_maxes)</span>
+<span id="annotated-cell-10-28"></span>
+<span id="annotated-cell-10-29"></span>
+<span id="annotated-cell-10-30">dlogits <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (dnorm_logits.clone() </span>
+<span id="annotated-cell-10-31">          <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> F.one_hot( logits.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">max</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>).indices, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># broadcasting, again</span></span>
+<span id="annotated-cell-10-32">                        num_classes<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>logits.shape[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="5">5</button><span id="annotated-cell-10-33" class="code-annotation-target">                        ) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> dlogit_maxes)</span>
+<span id="annotated-cell-10-34"></span>
+<span id="annotated-cell-10-35"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Layer 2 with Linear and Non-linearity tanh"</span>.upper())</span>
+<span id="annotated-cell-10-36">dh <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>  dlogits <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> W2.T</span>
+<span id="annotated-cell-10-37">dW2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> h.T <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> dlogits</span>
+<span id="annotated-cell-10-38">db2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> dlogits.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># sum by column, vertical, to eliminate the 0-index dim</span></span>
+<span id="annotated-cell-10-39"></span>
+<span id="annotated-cell-10-40"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'logits'</span>, dlogits, logits)</span>
+<span id="annotated-cell-10-41"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'h'</span>, dh, h)</span>
+<span id="annotated-cell-10-42"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'W2'</span>, dW2, W2)</span>
+<span id="annotated-cell-10-43"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'b2'</span>, db2, b2)</span>
+<span id="annotated-cell-10-44"></span>
+<span id="annotated-cell-10-45"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Batch Norm layer"</span>.upper())</span>
+<span id="annotated-cell-10-46">dhpreact <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> h<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> dh <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># output of the tanh, square</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="6">6</button><span id="annotated-cell-10-47" class="code-annotation-target">dbngain <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (bnraw <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> dhpreact).<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, keepdim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="annotated-cell-10-48">dbnbias <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> dhpreact.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, keepdim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="annotated-cell-10-49">dbnraw <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> bngain <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> dhpreact</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="7">7</button><span id="annotated-cell-10-50" class="code-annotation-target">dbnvar_inv <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (bndiff <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> dbnraw).<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, keepdim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="annotated-cell-10-51">dbnvar <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> (bnvar <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1e-5</span>)<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.5</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> dbnvar_inv</span>
+<span id="annotated-cell-10-52">dbndiff2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>(n<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> torch.ones_like(bndiff2) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> dbnvar</span>
+<span id="annotated-cell-10-53">dbndiff <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> bnvar_inv <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> dbnraw <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> bndiff <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> dbndiff2</span>
+<span id="annotated-cell-10-54">dbnmeani <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> torch.ones_like(dbndiff) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> dbndiff).<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)</span>
+<span id="annotated-cell-10-55"></span>
+<span id="annotated-cell-10-56"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'hpreact'</span>, dhpreact, hpreact)</span>
+<span id="annotated-cell-10-57"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bngain'</span>, dbngain, bngain)</span>
+<span id="annotated-cell-10-58"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bnbias'</span>, dbnbias, bnbias)</span>
+<span id="annotated-cell-10-59"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bnraw'</span>, dbnraw, bnraw)</span>
+<span id="annotated-cell-10-60"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bnvar_inv'</span>, dbnvar_inv, bnvar_inv)</span>
+<span id="annotated-cell-10-61"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bnvar'</span>, dbnvar, bnvar)</span>
+<span id="annotated-cell-10-62"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bndiff2'</span>, dbndiff2, bndiff2)</span>
+<span id="annotated-cell-10-63"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bndiff'</span>, dbndiff, bndiff)</span>
+<span id="annotated-cell-10-64"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bnmeani'</span>, dbnmeani, bnmeani)</span>
+<span id="annotated-cell-10-65"></span>
+<span id="annotated-cell-10-66"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Linear layer 1"</span>.upper())</span>
+<span id="annotated-cell-10-67"></span>
+<span id="annotated-cell-10-68">dhprebn <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> dbndiff.clone() <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> (<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>n <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> (torch.ones_like(hprebn) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> dbnmeani))</span>
+<span id="annotated-cell-10-69">dembcat <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> dhprebn <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> W1.T</span>
+<span id="annotated-cell-10-70">dW1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> embcat.T <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> dhprebn</span>
+<span id="annotated-cell-10-71">db1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> dhprebn.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, keepdim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="8">8</button><span id="annotated-cell-10-72" class="code-annotation-target">demb <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> dembcat.view(emb.shape)</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="9">9</button><span id="annotated-cell-10-73" class="code-annotation-target">dC <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.zeros_like(C)</span>
+<span id="annotated-cell-10-74"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> k <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(Xb.shape[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]): <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># iterate all elements of the Xb</span></span>
+<span id="annotated-cell-10-75">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> j <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(Xb.shape[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]):</span>
+<span id="annotated-cell-10-76">    ix <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Xb[k,j]</span>
+<span id="annotated-cell-10-77">    dC[ix] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+=</span> demb[k,j]</span>
+<span id="annotated-cell-10-78"></span>
+<span id="annotated-cell-10-79"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Method 2</span></span>
+<span id="annotated-cell-10-80">dC <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.zeros_like(C)</span>
+<span id="annotated-cell-10-81">dC.index_add_(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, Xb.view(<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>), demb.view(<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>))</span>
+<span id="annotated-cell-10-82"></span>
+<span id="annotated-cell-10-83"></span>
+<span id="annotated-cell-10-84"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'hprebn'</span>, dhprebn, hprebn)</span>
+<span id="annotated-cell-10-85"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'embcat'</span>, dembcat, embcat)</span>
+<span id="annotated-cell-10-86"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'W1'</span>, dW1, W1)</span>
+<span id="annotated-cell-10-87"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'b1'</span>, db1, b1)</span>
+<span id="annotated-cell-10-88"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'emb'</span>, demb, emb)</span>
+<span id="annotated-cell-10-89"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">cmp</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'C'</span>, dC, C)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div>
+</details>
+<div class="cell-annotation">
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-10" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-10" data-code-lines="6" data-code-annotation="1"><code>dlogprobs</code>: <code>logprobs</code> is an (32, 27) array - contains log probabilities of every character in 27 vocab for 32 output. <code>loss</code> just indexes (<code>(range(n), Yb)</code>) to pick out the corresponding numbers of the ground trues, then do mean (<code>1 / n</code>) and get negative (<code>-</code>). So the grad for each element that had been picked out is <code>-1/n</code>, while for others is <code>0</code>;</span>
+</dd>
+<dt data-target-cell="annotated-cell-10" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-10" data-code-lines="9" data-code-annotation="2"><code>dprobs</code>: d/dx log(x) is just <code>1/x</code> - local derivative, then multiply by next leaf grad <code>dlogprobs</code>, element wise;</span>
+</dd>
+<dt data-target-cell="annotated-cell-10" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-10" data-code-lines="11" data-code-annotation="3"><code>dcounts_sum_inv</code>: should be <code>counts * dprobs</code> according to chainrule. But remember <code>counts.shape</code> is (32, 27), and <code>counts_sum_inv.shape</code> is (32, 1), then there is <strong>broadcasting</strong> to 27 columns. <code>counts_sum_inv</code> is being used multiple times in the topo/diagram -&gt; we need to sum them (grad) up. We do it by columns so <code>Keepdim=True</code>;</span>
+</dd>
+<dt data-target-cell="annotated-cell-10" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-10" data-code-lines="15" data-code-annotation="4"><code>dcount</code>: was used in 2 expression, so it would be the sum of (1) <code>counts_sum_inv * dprobs</code> - same with <code>dcounts_sum_inv</code> by symmetry, and (2) <code>torch.ones_like(counts) * dcounts_sum</code> - the gradient flow from <code>dcounts_sum</code> equally, and equal to <code>1</code>;</span>
+</dd>
+<dt data-target-cell="annotated-cell-10" data-target-annotation="5">5</dt>
+<dd>
+<span data-code-cell="annotated-cell-10" data-code-lines="33" data-code-annotation="5"><code>dlogits</code>: sum of 2 flows, the 2nd one for <code>max()</code> operations -&gt; gradient should be the <code>1</code> for those max elements, the remain would be <code>0</code>;</span>
+</dd>
+<dt data-target-cell="annotated-cell-10" data-target-annotation="6">6</dt>
+<dd>
+<span data-code-cell="annotated-cell-10" data-code-lines="47" data-code-annotation="6">Notice the <strong>vertical broadcasting</strong> of <code>bngain</code> and <code>bnbias</code>;</span>
+</dd>
+<dt data-target-cell="annotated-cell-10" data-target-annotation="7">7</dt>
+<dd>
+<span data-code-cell="annotated-cell-10" data-code-lines="50" data-code-annotation="7">Need to sum up vertically because <code>bnvar_inv</code> is (1, 64) while 2 multipliers are (32, 64);</span>
+</dd>
+<dt data-target-cell="annotated-cell-10" data-target-annotation="8">8</dt>
+<dd>
+<span data-code-cell="annotated-cell-10" data-code-lines="72" data-code-annotation="8">Undo the concatenation;</span>
+</dd>
+<dt data-target-cell="annotated-cell-10" data-target-annotation="9">9</dt>
+<dd>
+<span data-code-cell="annotated-cell-10" data-code-lines="73" data-code-annotation="9">Undo the indexing: <code>emb.shape = (32, 3, 10)</code>, <code>C.shape = (27, 10)</code>, <code>Xb.shape = (32, 3)</code>.</span>
+</dd>
+</dl>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>CROSS ENTROPY LOSS
+logprobs        | exact: True  | approximate: True  | maxdiff: 0.0
+probs           | exact: True  | approximate: True  | maxdiff: 0.0
+counts_sum_inv  | exact: True  | approximate: True  | maxdiff: 0.0
+counts_sum      | exact: True  | approximate: True  | maxdiff: 0.0
+counts          | exact: True  | approximate: True  | maxdiff: 0.0
+norm_logits     | exact: True  | approximate: True  | maxdiff: 0.0
+logit_maxes     | exact: True  | approximate: True  | maxdiff: 0.0
+LAYER 2 WITH LINEAR AND NON-LINEARITY TANH
+logits          | exact: True  | approximate: True  | maxdiff: 0.0
+h               | exact: True  | approximate: True  | maxdiff: 0.0
+W2              | exact: True  | approximate: True  | maxdiff: 0.0
+b2              | exact: True  | approximate: True  | maxdiff: 0.0
+BATCH NORM LAYER
+hpreact         | exact: True  | approximate: True  | maxdiff: 0.0
+bngain          | exact: True  | approximate: True  | maxdiff: 0.0
+bnbias          | exact: True  | approximate: True  | maxdiff: 0.0
+bnraw           | exact: True  | approximate: True  | maxdiff: 0.0
+bnvar_inv       | exact: True  | approximate: True  | maxdiff: 0.0
+bnvar           | exact: True  | approximate: True  | maxdiff: 0.0
+bndiff2         | exact: True  | approximate: True  | maxdiff: 0.0
+bndiff          | exact: True  | approximate: True  | maxdiff: 0.0
+bnmeani         | exact: True  | approximate: True  | maxdiff: 0.0
+LINEAR LAYER 1
+hprebn          | exact: True  | approximate: True  | maxdiff: 0.0
+embcat          | exact: True  | approximate: True  | maxdiff: 0.0
+W1              | exact: True  | approximate: True  | maxdiff: 0.0
+b1              | exact: True  | approximate: True  | maxdiff: 0.0
+emb             | exact: True  | approximate: True  | maxdiff: 0.0
+C               | exact: True  | approximate: True  | maxdiff: 0.0</code></pre>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-12-02-nn-z2h-p5/explain_matrix_mult_grad.png" class="img-fluid figure-img"></p>
+<figcaption>Andrej inductive reasoning, explains how to get a derivative from matrix multiplication.</figcaption>
+</figure>
+</div>
+<p>Given the matrix mult expression <img src="https://latex.codecogs.com/png.latex?d%20=%20a%20@%20b%20+%20c">, we have:</p>
+<ul>
+<li><img src="https://latex.codecogs.com/png.latex?%5Cfrac%7B%5Cpartial%20L%7D%7B%5Cpartial%20%5Cmathbf%7Ba%7D%7D%20=%20%5Cfrac%7B%5Cpartial%20L%7D%7B%5Cpartial%20%5Cmathbf%7Bd%7D%7D%20@%20%5Cmathbf%7Bb%7D%5ET"></li>
+<li><img src="https://latex.codecogs.com/png.latex?%5Cfrac%7B%5Cpartial%20L%7D%7B%5Cpartial%20%5Cmathbf%7Bb%7D%7D%20=%20%5Cmathbf%7Ba%7D%5ET%20@%20%5Cfrac%7B%5Cpartial%20L%7D%7B%5Cpartial%20%5Cmathbf%7Bd%7D%7D"></li>
+<li><img src="https://latex.codecogs.com/png.latex?%5Cfrac%7B%5Cpartial%20L%7D%7B%5Cpartial%20%5Cmathbf%7Bc%7D%7D%20=%20%5Cfrac%7B%5Cpartial%20L%7D%7B%5Cpartial%20%5Cmathbf%7Bd%7D%7D.sum(0)"></li>
+</ul>
+</section>
+<section id="brief-digression-bessels-correction-in-batchnorm" class="level1">
+<h1>brief digression: bessel’s correction in batchnorm</h1>
+<p>The paper of Batch Norm inconsistantly mentioned that:</p>
+<ul>
+<li>they used biased variance for training;</li>
+<li>and used un-biased variance for inference.</li>
+</ul>
+<p>We train on small mini-batch, so should be using un-biased variance. PyTorch, since implemented what exactly paper wrote, has this discrepancy.</p>
+</section>
+<section id="exercise-2-cross-entropy-loss-backward-pass" class="level1">
+<h1>exercise 2: cross entropy loss backward pass</h1>
+<div id="bf53c260" class="cell" data-execution_count="11">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Exercise 2: backprop through cross_entropy but all in one go</span></span>
+<span id="cb16-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># to complete this challenge look at the mathematical expression of the loss,</span></span>
+<span id="cb16-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># take the derivative, simplify the expression, and just write it out</span></span>
+<span id="cb16-4"></span>
+<span id="cb16-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># forward pass</span></span>
+<span id="cb16-6"></span>
+<span id="cb16-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># before:</span></span>
+<span id="cb16-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># logit_maxes = logits.max(1, keepdim=True).values</span></span>
+<span id="cb16-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># norm_logits = logits - logit_maxes # subtract max for numerical stability</span></span>
+<span id="cb16-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># counts = norm_logits.exp()</span></span>
+<span id="cb16-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># counts_sum = counts.sum(1, keepdims=True)</span></span>
+<span id="cb16-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># counts_sum_inv = counts_sum**-1 # if I use (1.0 / counts_sum) instead then I can't get backprop to be bit exact...</span></span>
+<span id="cb16-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># probs = counts * counts_sum_inv</span></span>
+<span id="cb16-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># logprobs = probs.log()</span></span>
+<span id="cb16-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># loss = -logprobs[range(n), Yb].mean()</span></span>
+<span id="cb16-16"></span>
+<span id="cb16-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># now:</span></span>
+<span id="cb16-18">loss_fast <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> F.cross_entropy(logits, Yb)</span>
+<span id="cb16-19"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(loss_fast.item(), <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'diff:'</span>, (loss_fast <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> loss).item())</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>3.369058609008789 diff: 2.384185791015625e-07</code></pre>
+</div>
+</div>
+</section>
+<section id="exercise-3-batch-norm-layer-backward-pass" class="level1">
+<h1>exercise 3: batch norm layer backward pass</h1>
+<div id="354db475" class="cell" data-execution_count="12">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Exercise 3: backprop through batchnorm but all in one go</span></span>
+<span id="cb18-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># to complete this challenge look at the mathematical expression of the output of batchnorm,</span></span>
+<span id="cb18-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># take the derivative w.r.t. its input, simplify the expression, and just write it out</span></span>
+<span id="cb18-4"></span>
+<span id="cb18-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># forward pass</span></span>
+<span id="cb18-6"></span>
+<span id="cb18-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># before:</span></span>
+<span id="cb18-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># bnmeani = 1/n*hprebn.sum(0, keepdim=True)</span></span>
+<span id="cb18-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># bndiff = hprebn - bnmeani</span></span>
+<span id="cb18-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># bndiff2 = bndiff**2</span></span>
+<span id="cb18-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># bnvar = 1/(n-1)*(bndiff2).sum(0, keepdim=True) # note: Bessel's correction (dividing by n-1, not n)</span></span>
+<span id="cb18-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># bnvar_inv = (bnvar + 1e-5)**-0.5</span></span>
+<span id="cb18-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># bnraw = bndiff * bnvar_inv</span></span>
+<span id="cb18-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># hpreact = bngain * bnraw + bnbias</span></span>
+<span id="cb18-15"></span>
+<span id="cb18-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># now:</span></span>
+<span id="cb18-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># hpreact_fast = bngain * (hprebn - hprebn.mean(0, keepdim=True)) / torch.sqrt(hprebn.var(0, keepdim=True, unbiased=True) + 1e-5) + bnbias</span></span>
+<span id="cb18-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># print('max diff:', (hpreact_fast - hpreact).abs().max())</span></span></code></pre></div>
+</details>
+</div>
+<div id="9cb39d66" class="cell" data-execution_count="13">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># backward pass</span></span>
+<span id="cb19-2"></span>
+<span id="cb19-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># before we had:</span></span>
+<span id="cb19-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># dbnraw = bngain * dhpreact</span></span>
+<span id="cb19-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># dbndiff = bnvar_inv * dbnraw</span></span>
+<span id="cb19-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># dbnvar_inv = (bndiff * dbnraw).sum(0, keepdim=True)</span></span>
+<span id="cb19-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># dbnvar = (-0.5*(bnvar + 1e-5)**-1.5) * dbnvar_inv</span></span>
+<span id="cb19-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># dbndiff2 = (1.0/(n-1))*torch.ones_like(bndiff2) * dbnvar</span></span>
+<span id="cb19-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># dbndiff += (2*bndiff) * dbndiff2</span></span>
+<span id="cb19-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># dhprebn = dbndiff.clone()</span></span>
+<span id="cb19-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># dbnmeani = (-dbndiff).sum(0)</span></span>
+<span id="cb19-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># dhprebn += 1.0/n * (torch.ones_like(hprebn) * dbnmeani)</span></span>
+<span id="cb19-13"></span>
+<span id="cb19-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># calculate dhprebn given dhpreact (i.e. backprop through the batchnorm)</span></span>
+<span id="cb19-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (you'll also need to use some of the variables from the forward pass up above)</span></span>
+<span id="cb19-16"></span>
+<span id="cb19-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># dhprebn = bngain*bnvar_inv/n * (n*dhpreact - dhpreact.sum(0) - n/(n-1)*bnraw*(dhpreact*bnraw).sum(0))</span></span>
+<span id="cb19-18"></span>
+<span id="cb19-19"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># cmp('hprebn', dhprebn, hprebn) # I can only get approximate to be true, my maxdiff is 9e-10</span></span></code></pre></div>
+</details>
+</div>
+</section>
+<section id="exercise-4-putting-it-all-together" class="level1">
+<h1>exercise 4: putting it all together</h1>
+<div id="9ef6d105" class="cell" data-execution_count="14">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Exercise 4: putting it all together!</span></span>
+<span id="cb20-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Train the MLP neural net with your own backward pass</span></span>
+<span id="cb20-3"></span>
+<span id="cb20-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># init</span></span>
+<span id="cb20-5">n_embd <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the dimensionality of the character embedding vectors</span></span>
+<span id="cb20-6">n_hidden <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">200</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the number of neurons in the hidden layer of the MLP</span></span>
+<span id="cb20-7"></span>
+<span id="cb20-8">g <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.Generator().manual_seed(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2147483647</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># for reproducibility</span></span>
+<span id="cb20-9">C  <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randn((vocab_size, n_embd),            generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g)</span>
+<span id="cb20-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Layer 1</span></span>
+<span id="cb20-11">W1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randn((n_embd <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> block_size, n_hidden), generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>((n_embd <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> block_size)<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>)</span>
+<span id="cb20-12">b1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randn(n_hidden,                        generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span></span>
+<span id="cb20-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Layer 2</span></span>
+<span id="cb20-14">W2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randn((n_hidden, vocab_size),          generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span></span>
+<span id="cb20-15">b2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randn(vocab_size,                      generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span></span>
+<span id="cb20-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># BatchNorm parameters</span></span>
+<span id="cb20-17">bngain <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randn((<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, n_hidden))<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span></span>
+<span id="cb20-18">bnbias <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randn((<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, n_hidden))<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span></span>
+<span id="cb20-19"></span>
+<span id="cb20-20">parameters <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [C, W1, b1, W2, b2, bngain, bnbias]</span>
+<span id="cb20-21"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>(p.nelement() <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> p <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> parameters)) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># number of parameters in total</span></span>
+<span id="cb20-22"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> p <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> parameters:</span>
+<span id="cb20-23">  p.requires_grad <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span></span>
+<span id="cb20-24"></span>
+<span id="cb20-25"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># same optimization as last time</span></span>
+<span id="cb20-26">max_steps <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">200000</span></span>
+<span id="cb20-27">batch_size <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32</span></span>
+<span id="cb20-28">n <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> batch_size <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># convenience</span></span>
+<span id="cb20-29">lossi <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> []</span>
+<span id="cb20-30"></span>
+<span id="cb20-31"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># use this context manager for efficiency once your backward pass is written (</span><span class="al" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">TODO</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb20-32"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">with</span> torch.no_grad():</span>
+<span id="cb20-33"></span>
+<span id="cb20-34">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># kick off optimization</span></span>
+<span id="cb20-35">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(max_steps):</span>
+<span id="cb20-36"></span>
+<span id="cb20-37">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># minibatch construct</span></span>
+<span id="cb20-38">    ix <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randint(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, Xtr.shape[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>], (batch_size,), generator<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>g)</span>
+<span id="cb20-39">    Xb, Yb <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Xtr[ix], Ytr[ix] <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># batch X,Y</span></span>
+<span id="cb20-40"></span>
+<span id="cb20-41">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># forward pass</span></span>
+<span id="cb20-42">    emb <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> C[Xb] <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># embed the characters into vectors</span></span>
+<span id="cb20-43">    embcat <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> emb.view(emb.shape[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>], <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># concatenate the vectors</span></span>
+<span id="cb20-44">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Linear layer</span></span>
+<span id="cb20-45">    hprebn <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> embcat <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> W1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> b1 <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># hidden layer pre-activation</span></span>
+<span id="cb20-46">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># BatchNorm layer</span></span>
+<span id="cb20-47">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># -------------------------------------------------------------</span></span>
+<span id="cb20-48">    bnmean <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> hprebn.mean(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, keepdim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb20-49">    bnvar <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> hprebn.var(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, keepdim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>, unbiased<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb20-50">    bnvar_inv <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (bnvar <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1e-5</span>)<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span></span>
+<span id="cb20-51">    bnraw <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (hprebn <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> bnmean) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> bnvar_inv</span>
+<span id="cb20-52">    hpreact <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> bngain <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> bnraw <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> bnbias</span>
+<span id="cb20-53">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># -------------------------------------------------------------</span></span>
+<span id="cb20-54">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Non-linearity</span></span>
+<span id="cb20-55">    h <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.tanh(hpreact) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># hidden layer</span></span>
+<span id="cb20-56">    logits <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> h <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> W2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> b2 <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># output layer</span></span>
+<span id="cb20-57">    loss <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> F.cross_entropy(logits, Yb) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># loss function</span></span>
+<span id="cb20-58"></span>
+<span id="cb20-59">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># backward pass</span></span>
+<span id="cb20-60">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> p <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> parameters:</span>
+<span id="cb20-61">      p.grad <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span></span>
+<span id="cb20-62">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#loss.backward() # use this for correctness comparisons, delete it later!</span></span>
+<span id="cb20-63"></span>
+<span id="cb20-64">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># manual backprop! #swole_doge_meme</span></span>
+<span id="cb20-65">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ------------------</span></span>
+<span id="cb20-66">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># My code to be here</span></span>
+<span id="cb20-67">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ------------------</span></span>
+<span id="cb20-68"></span>
+<span id="cb20-69">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># update</span></span>
+<span id="cb20-70">    lr <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> i <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100000</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.01</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># step learning rate decay</span></span>
+<span id="cb20-71">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> p, grad <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">zip</span>(parameters, grads):</span>
+<span id="cb20-72">      <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#p.data += -lr * p.grad # old way of cheems doge (using PyTorch grad from .backward())</span></span>
+<span id="cb20-73">      p.data <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+=</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>lr <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> grad <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># new way of swole doge </span><span class="al" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">TODO</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">: enable</span></span>
+<span id="cb20-74"></span>
+<span id="cb20-75">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># track stats</span></span>
+<span id="cb20-76">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> i <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10000</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>: <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># print every once in a while</span></span>
+<span id="cb20-77">      <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f'</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>i<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:7d}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">/</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>max_steps<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:7d}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>loss<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>item()<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:.4f}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'</span>)</span>
+<span id="cb20-78">    lossi.append(loss.log10().item())</span>
+<span id="cb20-79"></span>
+<span id="cb20-80">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#   if i &gt;= 100: # </span><span class="al" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">TODO</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">: delete early breaking when you're ready to train the full net</span></span>
+<span id="cb20-81">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#     break</span></span></code></pre></div>
+</details>
+</div>
+</section>
+<section id="outro" class="level1">
+<h1>outro</h1>
+</section>
+<section id="resources" class="level1">
+<h1>resources</h1>
+<ol type="1">
+<li>Notebook: <a href="https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part4_backprop.ipynb" class="uri">https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part4_backprop.ipynb</a>;</li>
+<li>Colab notebook: <a href="https://colab.research.google.com/drive/1WV2oi2fh9XXyldh02wupFQX0wh5ZC-z-?usp=sharing" class="uri">https://colab.research.google.com/drive/1WV2oi2fh9XXyldh02wupFQX0wh5ZC-z-?usp=sharing</a></li>
+</ol>
+
+
+<!-- -->
+
+</section>
+
+ ]]></description>
+  <category>til</category>
+  <category>python</category>
+  <category>andrej karpathy</category>
+  <category>nn-z2h</category>
+  <category>neural networks</category>
+  <category>backpropagation</category>
+  <guid>https://lktuan.github.io/blog/2024-12-02-nn-z2h-p5/</guid>
+  <pubDate>Sun, 01 Dec 2024 17:00:00 GMT</pubDate>
+  <media:content url="https://lktuan.github.io/blog/2024-12-02-nn-z2h-p5/backprop_ninja.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>NN-Z2H Lesson 4: Building makemore part 3 - Activations &amp; Gradients, BatchNorm</title>
   <dc:creator>Tuan Le Khac</dc:creator>
@@ -27492,207 +29524,6 @@ font-style: inherit;">return</span> b58check_address</span></code></pre></div>
   <guid>https://lktuan.github.io/blog/2024-06-10-python-bitcoin/</guid>
   <pubDate>Sun, 09 Jun 2024 17:00:00 GMT</pubDate>
   <media:content url="https://lktuan.github.io/blog/2024-06-10-python-bitcoin/python_bitcoin.png" medium="image" type="image/png" height="81" width="144"/>
-</item>
-<item>
-  <title>TIL: Xử lý dynamic-ragged array trong Excel</title>
-  <dc:creator>Tuan Le Khac</dc:creator>
-  <link>https://lktuan.github.io/blog/2024-06-06-excel-blambda/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="problem-statement" class="level1">
-<h1>Problem statement</h1>
-<p>TIL: Hôm nay mình thử giải một <a href="https://www.linkedin.com/posts/owenhprice_data-analytics-sql-activity-7204129483144986624-R73I">challenge</a> của bác <a href="https://www.linkedin.com/in/owenhprice/">Owen Price</a>. Bác là Microsoft MVP, master ở khía cạnh xử lí, làm sạch, thậm chí là tối ưu việc xử lí đó trong Excel, trang blog của bác là <a href="https://www.flexyourdata.com/">FLEX YOUR DATA</a>, mình học được rất nhiều cách sử dụng formulas, đặc biệt là các hàm mới từ <code>LAMBDA()</code>, <code>MAP()</code>, <code>REDUCE()</code> cho đến gần đây là <strong>Python in Excel</strong>, <code>GROUPBY()</code>, <code>PIVOTBY</code>, và các hàm <code>REGEX_()</code>.</p>
-<p>Nội dung challenge là, với <strong>một phần</strong> (1000 records) của bộ dữ liệu <a href="https://citibikenyc.com/system-data">Citi Bike</a>, trong đó chứa hai cột <code>start_station_name</code>, <code>end_station_name</code>, mỗi cột lại chứa thông tin các “station” ~ trạm, liệt kê 5 <strong>địa chỉ</strong> cùng số lần xuất hiện với số lượng lớn nhất!. Hình dưới là 10 dòng đầu tiên của dữ liệu.</p>
-<div>
-
-</div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://lktuan.github.io/blog/2024-06-06-excel-blambda/data.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption>10 dòng đầu tiên của dữ liệu</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<p>Well lúc đầu mình nghĩ nó cũng đơn giản 😂, thậm chí cũng không hiểu tại sao mỗi start hoặc end station lại có <em>hai station</em>, cách nhau bởi ký tự <code>&amp;</code> (space before &amp; after). Mình lập tức đưa ra lời giải như sau:</p>
-<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb1-1">=LET(</span>
-<span id="cb1-2">    _d, " &amp; ",</span>
-<span id="cb1-3">    _all_records, TOCOL(</span>
-<span id="cb1-4">        BYROW(</span>
-<span id="cb1-5">            BYROW(</span>
-<span id="cb1-6">                _tbl_CityBike[[start_station_name]:[end_station_name]],</span>
-<span id="cb1-7">                LAMBDA(x, TEXTJOIN(_d, TRUE, x))</span>
-<span id="cb1-8">            ),</span>
-<span id="cb1-9">        LAMBDA(x, TEXTSPLIT(x, _d))</span>
-<span id="cb1-10">        )</span>
-<span id="cb1-11">    ),</span>
-<span id="cb1-12">    _stations, UNIQUE(_all_records),</span>
-<span id="cb1-13">    _cnt, BYROW(</span>
-<span id="cb1-14">        --(_stations = TRANSPOSE(_all_records)), </span>
-<span id="cb1-15">        // "--" equals to "+" will convert the boolean TRUE/FALSE to value 1/0</span>
-<span id="cb1-16">        LAMBDA(x, SUM(x))</span>
-<span id="cb1-17">    ),</span>
-<span id="cb1-18">    TAKE(SORTBY(HSTACK(_stations, _cnt), _cnt, -1), 5, )</span>
-<span id="cb1-19">)</span></code></pre></div>
-<p>Kết quả:</p>
-<div>
-
-</div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://lktuan.github.io/blog/2024-06-06-excel-blambda/my_initial_result.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption>Kết quả đầu tiên của mình</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<p>Đối chiếu với các kết quả của những người tham gia khách thì nó sai! Ý tưởng của mình là đầu tiên với mỗi hàng, join chúng lại với <code>&amp;</code> (<code>_d</code>), sau đó lại split chúng ra với cùng <code>_d</code> đó, từ đó có được danh sách occurence của tất cả các <strong>địa chỉ</strong>. Tuy nhiên mình nhận ra dữ liệu trả về cho <code>_all_records</code> bị thiếu sót. Lý do là các trạm (station) thường là các giao lộ, kết hợp từ hai địa chỉ với dấu <code>&amp;</code>, tuy nhiên có một số trạm lại nằm trên một con đường. Và vì chất lượng dữ liệu, cũng có một số station là <code>null</code>. Hàm <code>TOCOL()</code> là hàm mảng xử lí các mảng con nhận được từ <code>BYROW(...,LAMBDA(...,TEXTSPLIT()))</code>, các mảng con này có độ dài <strong>không đều</strong>, dẫn đến <code>TOCOL()</code> chỉ take record đầu tiên của mỗi mảng con, trả về <code>_all_records</code> chỉ gồm <em>1000 dòng dữ liệu</em>.</p>
-<div>
-
-</div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://lktuan.github.io/blog/2024-06-06-excel-blambda/special_data_points.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption>Các điểm dữ liệu đặc biệt</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="solution" class="level1 page-columns page-full">
-<h1>Solution</h1>
-<div class="page-columns page-full"><p>Các mảng lởm chởm hay ragged/jagged array là các mảng gồm các mảng con có độ dài không đều nhau.  Excel <strong>không thể</strong> merge các bảng có kích cỡ không bằng nhau.</p><div class="no-row-height column-margin column-container"><span class="margin-aside">In computer science, a <strong>jagged array</strong>, also known as a <strong>ragged array</strong>, or <strong>irregular array</strong>, is an array of arrays of which the member arrays can be of different lengths, producing rows of jagged edges when visualized as output. In contrast, two-dimensional arrays are always rectangular, so jagged arrays should not be confused with multidimensional arrays, but the former is often used to emulate the latter. <a href="https://en.wikipedia.org/wiki/Jagged_array#:~:text=In%20computer%20science%2C%20a%20jagged,edges%20when%20visualized%20as%20output.">Wiki</a></span></div></div>
-<p>Một <a href="https://www.linkedin.com/feed/update/urn:li:activity:7204129483144986624?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7204129483144986624%2C7204309739827044353%29&amp;dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287204309739827044353%2Curn%3Ali%3Aactivity%3A7204129483144986624%29">comment</a> đưa mình tới hàm <a href="https://gist.github.com/ncalm/0e72b08272ec14f411e8aaa763c0c0b5"><code>BLAMBDAλ()</code></a> của bác MVP <a href="https://www.linkedin.com/in/peterbartholomew/">Peter Bartholemew</a> và <a href="https://www.linkedin.com/pulse/excel-lambda-spotlight-bisected-map-bmap%2525CE%2525BB-owen-price/">bài giải thích</a> của Owen Price.</p>
-<div>
-
-</div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://lktuan.github.io/blog/2024-06-06-excel-blambda/g4g_ragged_array.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption>Ragged or Jagged array, photo credit to <a href="https://www.geeksforgeeks.org/jagged-array-in-java/">Geeks for Geeks</a></figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<p>Và lời giải đúng, được dựa trên ý tưởng của <code>BLAMBDAλ()</code> là:</p>
-<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb2-1">=LET(</span>
-<span id="cb2-2">    B, LAMBDA(B, v,</span>
-<span id="cb2-3">        LET(</span>
-<span id="cb2-4">            n, ROWS(v),</span>
-<span id="cb2-5">            IF(</span>
-<span id="cb2-6">                n &gt; 1,</span>
-<span id="cb2-7">                VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))),</span>
-<span id="cb2-8">                TEXTSPLIT(TEXTJOIN(" &amp; ", , v), , " &amp; ")</span>
-<span id="cb2-9">            )</span>
-<span id="cb2-10">        )</span>
-<span id="cb2-11">    ),</span>
-<span id="cb2-12">    str, B(B, CHOOSECOLS(_tbl_CityBike, 4, 5)),</span>
-<span id="cb2-13">    _u_str, UNIQUE(str),</span>
-<span id="cb2-14">    _cnt, BYROW(--(_u_str = TRANSPOSE(str)), LAMBDA(x, SUM(x))),</span>
-<span id="cb2-15">    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)</span>
-<span id="cb2-16">)</span></code></pre></div>
-<p>Nếu sử dụng <code>GROUPBY()</code> thì việc tính toán cuối cùng sẽ gọn hơn, tuy nhiên vào thời điểm viết bài, hàm này vẫn chưa được MS đưa lên 365 Production mà chỉ ở kênh Insider.</p>
-<p>Kết quả cuối cùng:</p>
-<div>
-
-</div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://lktuan.github.io/blog/2024-06-06-excel-blambda/final_result.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption>Kết quả đúng</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="blambdaλ" class="level1">
-<h1><code>BLAMBDAλ()</code></h1>
-<p>Nguyên văn mục đích của <code>BLAMBDAλ()</code> của Peter:</p>
-<blockquote class="blockquote">
-<p>Recursively bisects an array and applies a function to the leaf nodes. Useful for when the result of the Fnλ(leaf) calls are not of equal length. As such, BMAPλ can produce ragged arrays.</p>
-</blockquote>
-<p>Owen cũng nhận xét là hàm này “more computationally efficient” so với <a href="https://gist.github.com/ncalm/ef7ed953571eec1475c291948aa2dbc3"><code>STACKER()</code></a> của ổng. Chi tiết về ý tưởng hàm gốc có thể tham khảo ở các link trên, giờ mình sẽ tìm hiểu <code>BLAMBDAλ()</code> được áp dụng cho use case này.</p>
-<p>Đầu tiên <code>B()</code> (stands for Bisected) là một hàm recursive:</p>
-<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb3-1">B = LAMBDA(B, v,</span>
-<span id="cb3-2">        LET(</span>
-<span id="cb3-3">            n, ROWS(v),</span>
-<span id="cb3-4">            IF(</span>
-<span id="cb3-5">                n &gt; 1,</span>
-<span id="cb3-6">                VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))),</span>
-<span id="cb3-7">                TEXTSPLIT(TEXTJOIN(" &amp; ", , v), , " &amp; ")</span>
-<span id="cb3-8">            )</span>
-<span id="cb3-9">        )</span>
-<span id="cb3-10">    )</span></code></pre></div>
-<p>Trong đó:</p>
-<ul>
-<li><code>n</code> là số dòng của <code>v</code> ~ mảng cần tính toán</li>
-<li>nếu <code>n</code> &gt; 1, trả về kết hợp <code>VSTACK()</code> khi hàm <code>B()</code> được áp dụng cho hai nửa của mảng <code>v</code>, <code>TAKE()</code> sẽ lấy “phân nửa” đầu tiên, <code>DROP()</code> sẽ bỏ đi phân nửa đầu tiên ~ nghĩa là lấy phân nửa thứ 2 (lưu ý rằng hai hàm này đều lấy số nguyên nhỏ hơn gần nhất của <code>n / 2</code>, do đó không cần lấy phần nguyên bằng <code>QUOTIENT(n,2)</code> như hàm gốc của Peter).</li>
-<li>khi n = 1, nghĩa là với mỗi phần tử của mảng <code>v</code>, thực hiện động tác <code>TEXTSPLIT(TEXTJOIN(...))</code> ~ trước hết join hai cột rồi sau đó split.</li>
-<li>hàm này đệ quy và sẽ <code>VSTACK()</code> tất cả các mảng dọc sinh từ việc <code>TEXTSPLIT()</code> kết quả của <code>TEXTJOIN()</code> hai cột trên mỗi dòng của mảng <code>v</code>.</li>
-</ul>
-<p>Mình cũng thử viết lại hàm <code>B()</code>, thay đổi một chút ~ thay vì thực hiện trên 1 mảng 2 cột mình cố gắng chuyển mảng <code>v</code> thành một cột, tuy nhiên chưa thành công 😪 <strong>(chưa hiểu tại sao)</strong>:</p>
-<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb4-1">=LET(</span>
-<span id="cb4-2">    B, LAMBDA(B, v,</span>
-<span id="cb4-3">        LET(</span>
-<span id="cb4-4">            n, ROWS(v),</span>
-<span id="cb4-5">            IF(n &gt; 1, VSTACK(B(B, TAKE(v, n / 2)), B(B, DROP(v, n / 2))), TEXTSPLIT(v, " &amp; "))</span>
-<span id="cb4-6">        )</span>
-<span id="cb4-7">    ),</span>
-<span id="cb4-8">    _data, VSTACK(_tbl_CityBike[start_station_name], _tbl_CityBike[end_station_name]),</span>
-<span id="cb4-9">    str, B(B, FILTER(_data, LEN(_data) &gt; 0)),</span>
-<span id="cb4-10">    _u_str, UNIQUE(str),</span>
-<span id="cb4-11">    _cnt, BYROW(--(_u_str = TRANSPOSE(str)), LAMBDA(x, SUM(x))),</span>
-<span id="cb4-12">    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)</span>
-<span id="cb4-13">)</span></code></pre></div>
-<section id="edit-sau-khi-mày-mò-thêm-sửa-lỗi-cho-giải-pháp-trên-mình-back-to-basic-với-lời-giải-sau" class="level2">
-<h2 class="anchored" data-anchor-id="edit-sau-khi-mày-mò-thêm-sửa-lỗi-cho-giải-pháp-trên-mình-back-to-basic-với-lời-giải-sau">🚀 Edit: sau khi mày mò thêm sửa lỗi cho giải pháp trên mình back to basic với lời giải sau:</h2>
-<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb5-1">=LET(</span>
-<span id="cb5-2">    _data, TOCOL(_tbl_CityBike[[start_station_name]:[end_station_name]], 3),</span>
-<span id="cb5-3">    _str, DROP(REDUCE("", _data, LAMBDA(a, x, VSTACK(a, TEXTSPLIT(x, , " &amp; ")))), 1),</span>
-<span id="cb5-4">    _u_str, UNIQUE(_str),</span>
-<span id="cb5-5">    _cnt, BYROW(--(_u_str = TRANSPOSE(_str)), LAMBDA(x, SUM(x))),</span>
-<span id="cb5-6">    TAKE(SORTBY(HSTACK(_u_str, _cnt), _cnt, -1), 5)</span>
-<span id="cb5-7">)</span></code></pre></div>
-<p>Tất nhiên tốc độ xử lí sẽ chậm hơn <code>BLAMBDAλ()</code> - O_log(n), giải pháp này duyệt qua từng phần tử, nên BigO là O(n)</p>
-<p>Thanks Peter &amp; Owen for this great use of recursion presented in such a concise manner.</p>
-
-
-<!-- -->
-
-</section>
-</section>
-
- ]]></description>
-  <category>excel</category>
-  <category>lambda</category>
-  <category>til</category>
-  <guid>https://lktuan.github.io/blog/2024-06-06-excel-blambda/</guid>
-  <pubDate>Wed, 05 Jun 2024 17:00:00 GMT</pubDate>
-  <media:content url="https://lktuan.github.io/blog/2024-06-06-excel-blambda/excel-lambda.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
