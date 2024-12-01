@@ -1,6 +1,6 @@
 ---
 title: "NN-Z2H Lesson 5: Building makemore part 4 - Becoming a Backprop Ninja"
-description: "Become swole doge: build a 2-layer MLP and deep dive to how gradients flow backwards with cross entropy loss, 2nd linear layer, tanh, batchnorm, 1st linear layer, and the embedding table."
+description: "Become swole doge: build a 2-layer MLP and deep dive to how gradients flow backwards with `cross entropy loss`, 2nd linear layer, `tanh`, `batchnorm`, 1st linear layer, and the `embedding table`."
 author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
@@ -8,7 +8,7 @@ categories: [til, python, andrej karpathy, nn-z2h, neural networks, backpropagat
 date: 12-02-2024
 date-modified: 12-02-2024
 image: backprop_ninja.jpg
-draft: true
+draft: false
 format:
   html:
     code-overflow: wrap
@@ -16,6 +16,10 @@ format:
     code-fold: show
     code-annotations: hover
 ---
+
+::: {.callout-important title="This is not orginal content!"}
+This is my study notes / codes along with Andrej Karpathy's "[Neural Networks: Zero to Hero](https://www.youtube.com/watch?v=VMj-3S1tku0&list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ)" series.
+:::
 
 # intro: why you should care & fun history
 
@@ -147,8 +151,10 @@ Xb, Yb = Xtr[ix], Ytr[ix] # batch X,Y
 ```{python}
 emb = C[Xb] # embed the characters into vectors
 embcat = emb.view(emb.shape[0], -1) # concatenate the vectors
+
 # Linear layer 1
 hprebn = embcat @ W1 + b1 # hidden layer pre-activation
+
 # BatchNorm layer
 bnmeani = 1/n*hprebn.sum(0, keepdim=True)
 bndiff = hprebn - bnmeani
@@ -157,11 +163,14 @@ bnvar = 1/(n-1)*(bndiff2).sum(0, keepdim=True) # note: Bessel's correction (divi
 bnvar_inv = (bnvar + 1e-5)**-0.5
 bnraw = bndiff * bnvar_inv
 hpreact = bngain * bnraw + bnbias
+
 # Non-linearity
 h = torch.tanh(hpreact) # hidden layer
+
 # Linear layer 2
 logits = h @ W2 + b2 # output layer
-# cross entropy loss (same as F.cross_entropy(logits, Yb))
+
+# cross entropy loss (same as F.cross_entropy(logits, Yb)), Kullback–Leibler divergence
 logit_maxes = logits.max(1, keepdim=True).values
 norm_logits = logits - logit_maxes # subtract max for numerical stability
 counts = norm_logits.exp()
@@ -179,45 +188,133 @@ for t in [logprobs, probs, counts, counts_sum, counts_sum_inv, # afaik there is 
          bnvar_inv, bnvar, bndiff2, bndiff, hprebn, bnmeani,
          embcat, emb]:
   t.retain_grad()
+
+hprebn.retain_grad() # Tuan added this line since code above does not ensure hprebn's grad to be retained.
+
 loss.backward()
 loss
 ```
+
 # exercise 1: backproping the atomic compute graph
 
 ```{python}
 # Exercise 1: backprop through the whole thing manually, 
 # backpropagating through exactly all of the variables 
 # as they are defined in the forward pass above, one by one
-    
-# cmp('logprobs', dlogprobs, logprobs)
-# cmp('probs', dprobs, probs)
-# cmp('counts_sum_inv', dcounts_sum_inv, counts_sum_inv)
-# cmp('counts_sum', dcounts_sum, counts_sum)
-# cmp('counts', dcounts, counts)
-# cmp('norm_logits', dnorm_logits, norm_logits)
-# cmp('logit_maxes', dlogit_maxes, logit_maxes)
-# cmp('logits', dlogits, logits)
-# cmp('h', dh, h)
-# cmp('W2', dW2, W2)
-# cmp('b2', db2, b2)
-# cmp('hpreact', dhpreact, hpreact)
-# cmp('bngain', dbngain, bngain)
-# cmp('bnbias', dbnbias, bnbias)
-# cmp('bnraw', dbnraw, bnraw)
-# cmp('bnvar_inv', dbnvar_inv, bnvar_inv)
-# cmp('bnvar', dbnvar, bnvar)
-# cmp('bndiff2', dbndiff2, bndiff2)
-# cmp('bndiff', dbndiff, bndiff)
-# cmp('bnmeani', dbnmeani, bnmeani)
-# cmp('hprebn', dhprebn, hprebn)
-# cmp('embcat', dembcat, embcat)
-# cmp('W1', dW1, W1)
-# cmp('b1', db1, b1)
-# cmp('emb', demb, emb)
-# cmp('C', dC, C)
+print("Cross entropy loss".upper())
+dlogprobs = torch.zeros_like(logprobs) # create zeros tensor with same size
+dlogprobs[range(n), Yb] = - 1.0 / n # <1>
+
+dprobs = torch.zeros_like(probs) 
+dprobs = (1.0 / probs) * dlogprobs # <2>
+
+dcounts_sum_inv = (counts * dprobs).sum(1, keepdim=True) # <3>
+
+dcounts_sum = (-1 * counts_sum**-2) * dcounts_sum_inv
+
+dcounts = torch.ones_like(counts) * dcounts_sum + counts_sum_inv * dprobs # <4>
+
+dnorm_logits = (norm_logits.exp()) * dcounts # = counts * dcounts
+
+dlogit_maxes = (- dnorm_logits).sum(1, keepdim=True) # broadcasting, again
+
+cmp('logprobs', dlogprobs, logprobs)
+cmp('probs', dprobs, probs)
+cmp('counts_sum_inv', dcounts_sum_inv, counts_sum_inv)
+cmp('counts_sum', dcounts_sum, counts_sum)
+cmp('counts', dcounts, counts)
+cmp('norm_logits', dnorm_logits, norm_logits)
+cmp('logit_maxes', dlogit_maxes, logit_maxes)
+
+
+dlogits = (dnorm_logits.clone() 
+          + F.one_hot( logits.max(1).indices, # broadcasting, again
+                        num_classes=logits.shape[1]
+                        ) * dlogit_maxes) # <5>
+
+print("Layer 2 with Linear and Non-linearity tanh".upper())
+dh =  dlogits @ W2.T
+dW2 = h.T @ dlogits
+db2 = dlogits.sum(0) # sum by column, vertical, to eliminate the 0-index dim
+
+cmp('logits', dlogits, logits)
+cmp('h', dh, h)
+cmp('W2', dW2, W2)
+cmp('b2', db2, b2)
+
+print("Batch Norm layer".upper())
+dhpreact = (1 - h**2) * dh # output of the tanh, square
+dbngain = (bnraw * dhpreact).sum(0, keepdim=True) # <6>
+dbnbias = dhpreact.sum(0, keepdim=True)
+dbnraw = bngain * dhpreact
+dbnvar_inv = (bndiff * dbnraw).sum(0, keepdim=True) # <7>
+dbnvar = (-0.5 * (bnvar + 1e-5)**-1.5) * dbnvar_inv
+dbndiff2 = 1/(n-1) * torch.ones_like(bndiff2) * dbnvar
+dbndiff = bnvar_inv * dbnraw + 2 * bndiff * dbndiff2
+dbnmeani = (- torch.ones_like(dbndiff) * dbndiff).sum(0)
+
+cmp('hpreact', dhpreact, hpreact)
+cmp('bngain', dbngain, bngain)
+cmp('bnbias', dbnbias, bnbias)
+cmp('bnraw', dbnraw, bnraw)
+cmp('bnvar_inv', dbnvar_inv, bnvar_inv)
+cmp('bnvar', dbnvar, bnvar)
+cmp('bndiff2', dbndiff2, bndiff2)
+cmp('bndiff', dbndiff, bndiff)
+cmp('bnmeani', dbnmeani, bnmeani)
+
+print("Linear layer 1".upper())
+
+dhprebn = dbndiff.clone() + (1.0/n * (torch.ones_like(hprebn) * dbnmeani))
+dembcat = dhprebn @ W1.T
+dW1 = embcat.T @ dhprebn
+db1 = dhprebn.sum(0, keepdim=True)
+demb = dembcat.view(emb.shape)                         # <8>
+dC = torch.zeros_like(C)                               # <9>
+for k in range(Xb.shape[0]): # iterate all elements of the Xb
+  for j in range(Xb.shape[1]):
+    ix = Xb[k,j]
+    dC[ix] += demb[k,j]
+
+# Method 2
+dC = torch.zeros_like(C)
+dC.index_add_(0, Xb.view(-1), demb.view(-1, 10))
+
+
+cmp('hprebn', dhprebn, hprebn)
+cmp('embcat', dembcat, embcat)
+cmp('W1', dW1, W1)
+cmp('b1', db1, b1)
+cmp('emb', demb, emb)
+cmp('C', dC, C)
 ```
 
+1. `dlogprobs`: `logprobs` is an (32, 27) array - contains log probabilities of every character in 27 vocab for 32 output. `loss` just indexes (`(range(n), Yb)`) to pick out the corresponding numbers of the ground trues, then do mean (`1 / n`) and get negative (`-`). So the grad for each element that had been picked out is `-1/n`, while for others is `0`;
+2. `dprobs`: d/dx log(x) is just `1/x` - local derivative, then multiply by next leaf grad `dlogprobs`, element wise;
+3. `dcounts_sum_inv`: should be `counts * dprobs` according to chainrule. But remember `counts.shape` is (32, 27), and `counts_sum_inv.shape` is (32, 1), then there is **broadcasting** to 27 columns. `counts_sum_inv` is being used multiple times in the topo/diagram -> we need to sum them (grad) up. We do it by columns so `Keepdim=True`;
+4. `dcount`: was used in 2 expression, so it would be the sum of (1) `counts_sum_inv * dprobs` - same with `dcounts_sum_inv` by symmetry, and (2) `torch.ones_like(counts) * dcounts_sum` - the gradient flow from `dcounts_sum` equally, and equal to `1`;
+5. `dlogits`: sum of 2 flows, the 2nd one for `max()` operations -> gradient should be the `1` for those max elements, the remain would be `0`;
+6. Notice the **vertical broadcasting** of `bngain` and `bnbias`;
+7. Need to sum up vertically because `bnvar_inv` is (1, 64) while 2 multipliers are (32, 64);
+8. Undo the concatenation;
+9. Undo the indexing: `emb.shape = (32, 3, 10)`, `C.shape = (27, 10)`, `Xb.shape = (32, 3)`.
+
+![Andrej inductive reasoning, explains how to get a derivative from matrix multiplication.](explain_matrix_mult_grad.png)
+
+Given the matrix mult expression $d = a @ b + c$, we have:
+
+- $\frac{\partial L}{\partial \mathbf{a}} = \frac{\partial L}{\partial \mathbf{d}} @ \mathbf{b}^T$
+- $\frac{\partial L}{\partial \mathbf{b}} = \mathbf{a}^T @ \frac{\partial L}{\partial \mathbf{d}}$
+- $\frac{\partial L}{\partial \mathbf{c}} = \frac{\partial L}{\partial \mathbf{d}}.sum(0)$
+
 # brief digression: bessel’s correction in batchnorm
+
+The paper of Batch Norm inconsistantly mentioned that:
+
+- they used biased variance for training;
+- and used un-biased variance for inference.
+
+We train on small mini-batch, so should be using un-biased variance. PyTorch, since implemented what exactly paper wrote, has this discrepancy.
 
 # exercise 2: cross entropy loss backward pass
 
@@ -239,6 +336,8 @@ loss
 # loss = -logprobs[range(n), Yb].mean()
 
 # now:
+loss_fast = F.cross_entropy(logits, Yb)
+print(loss_fast.item(), 'diff:', (loss_fast - loss).item())
 ```
 
 # exercise 3: batch norm layer backward pass
@@ -259,6 +358,9 @@ loss
 # bnraw = bndiff * bnvar_inv
 # hpreact = bngain * bnraw + bnbias
 
+# now:
+# hpreact_fast = bngain * (hprebn - hprebn.mean(0, keepdim=True)) / torch.sqrt(hprebn.var(0, keepdim=True, unbiased=True) + 1e-5) + bnbias
+# print('max diff:', (hpreact_fast - hpreact).abs().max())
 ```
 
 ```{python}
@@ -278,11 +380,15 @@ loss
 # calculate dhprebn given dhpreact (i.e. backprop through the batchnorm)
 # (you'll also need to use some of the variables from the forward pass up above)
 
+# dhprebn = bngain*bnvar_inv/n * (n*dhpreact - dhpreact.sum(0) - n/(n-1)*bnraw*(dhpreact*bnraw).sum(0))
+
+# cmp('hprebn', dhprebn, hprebn) # I can only get approximate to be true, my maxdiff is 9e-10
 ```
 
 # exercise 4: putting it all together
 
 ```{python}
+#| eval: false
 # Exercise 4: putting it all together!
 # Train the MLP neural net with your own backward pass
 
@@ -347,33 +453,9 @@ with torch.no_grad():
     #loss.backward() # use this for correctness comparisons, delete it later!
 
     # manual backprop! #swole_doge_meme
-    # -----------------
-    dlogits = F.softmax(logits, 1)
-    dlogits[range(n), Yb] -= 1
-    dlogits /= n
-    # 2nd layer backprop
-    dh = dlogits @ W2.T
-    dW2 = h.T @ dlogits
-    db2 = dlogits.sum(0)
-    # tanh
-    dhpreact = (1.0 - h**2) * dh
-    # batchnorm backprop
-    dbngain = (bnraw * dhpreact).sum(0, keepdim=True)
-    dbnbias = dhpreact.sum(0, keepdim=True)
-    dhprebn = bngain*bnvar_inv/n * (n*dhpreact - dhpreact.sum(0) - n/(n-1)*bnraw*(dhpreact*bnraw).sum(0))
-    # 1st layer
-    dembcat = dhprebn @ W1.T
-    dW1 = embcat.T @ dhprebn
-    db1 = dhprebn.sum(0)
-    # embedding
-    demb = dembcat.view(emb.shape)
-    dC = torch.zeros_like(C)
-    for k in range(Xb.shape[0]):
-      for j in range(Xb.shape[1]):
-        ix = Xb[k,j]
-        dC[ix] += demb[k,j]
-    grads = [dC, dW1, db1, dW2, db2, dbngain, dbnbias]
-    # -----------------
+    # ------------------
+    # My code to be here
+    # ------------------
 
     # update
     lr = 0.1 if i < 100000 else 0.01 # step learning rate decay
