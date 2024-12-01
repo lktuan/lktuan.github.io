@@ -1,6 +1,5 @@
 ---
-qua---
-title: "NN-Z2H Lesson 4: Building makemore part 4 - Activations & Gradients, BatchNorm"
+title: "NN-Z2H Lesson 4: Building makemore part 3 - Activations & Gradients, BatchNorm"
 description: "dive into the internals of MLPs, scrutinize the statistics of the forward pass activations, backward pass gradients, understand the health of your deep network, introduce batch normalization"
 author:
   - name: "Tuan Le Khac"
@@ -119,7 +118,7 @@ for p in parameters:
 
 ```{python}
 # Optimization
-max_steps = 200_000
+max_steps = 50_000 #200_000
 batch_size = 32
 
 # Stats holders
@@ -226,7 +225,7 @@ parameters = [C, W1, b1, W2, b2]
 for p in parameters:
     p.requires_grad = True
 # Optimization
-max_steps = 200_000
+max_steps = 50_000 #200_000
 batch_size = 32
 # Training on Xtr, Ytr
 for i in range(max_steps):
@@ -470,7 +469,7 @@ for p in parameters:
     p.requires_grad = True
 
 # Optimization
-max_steps = 200_000
+max_steps = 50_000 #200_000
 batch_size = 32
 
 # Stats holders
@@ -721,10 +720,8 @@ for i in range(max_steps):
 ## viz #1: forward pass activations statistics
 
 ```{python}
-#| fig-width: 8
-#| fig-height: 3
 # visualize histograms
-plt.figure(figsize=(20, 4)) # width and height of the plot
+plt.figure(figsize=(11, 3)) # width and height of the plot
 legends = []
 for i, layer in enumerate(layers[:-1]): # note: exclude the output layer
   if isinstance(layer, Tanh):
@@ -778,10 +775,8 @@ $\int_{-\infty}^{\infty} \frac{[\tanh(x)]^2 \exp(-\frac{x^2}{2})}{\sqrt{2\pi}} \
 Similarly, we can do the same thing with gradients. With the setting of gain as `5/3`, the distribution of gradients through layers quite the same. Layer by layer, the value of gradients will be shrank close to zero, the distributions would be more and more peak, so the gain here will help expanding those distributions.
 
 ```{python}
-#| fig-width: 8
-#| fig-height: 3
 # visualize histograms
-plt.figure(figsize=(20, 4)) # width and height of the plot
+plt.figure(figsize=(11, 3)) # width and height of the plot
 legends = []
 for i, layer in enumerate(layers[:-1]): # note: exclude the output layer
   if isinstance(layer, Tanh):
@@ -821,10 +816,8 @@ Problem for the last layer is shown in code output below, the weights on last la
 We can try run 1st 1000 training loops and this can be slight reduced, but since we are using a simple optimizer SGD rather than modern one like Adam, it is still problematic.
 
 ```{python}
-#| fig-width: 8
-#| fig-height: 3
 # visualize histograms
-plt.figure(figsize=(20, 4)) # width and height of the plot
+plt.figure(figsize=(11, 3)) # width and height of the plot
 legends = []
 for i,p in enumerate(parameters):
   t = p.grad
@@ -839,12 +832,11 @@ plt.title('weights gradient distribution');
 
 ## viz #4: update data ratio over time
 
-The grad to data above ratio is at the end not really informative (only at one point in time), what matter is actual amount which we change the data in these tensors (over time). AK introduce a tracking list `ud` (update to data). This calculates the ratio between (std) of the grad to the data of parameters (and `log10()` for a nicer viz) **without context of gradient**. We try run 1000 times and check
+The grad to data above ratio is at the end not really informative (only at one point in time), what matter is actual amount which we change the data in these tensors (over time). AK introduce a tracking list `ud` (update to data). This calculates the ratio between (std) of the grad to the data of parameters (and `log10()` for a nicer viz) **without context of gradient**.
 
 ```{python}
-#| fig-width: 8
-#| fig-height: 3
-plt.figure(figsize=(20, 4))
+#| eval: false
+plt.figure(figsize=(11, 3))
 legends = []
 for i,p in enumerate(parameters):
   if p.ndim == 2:
@@ -853,6 +845,10 @@ for i,p in enumerate(parameters):
 plt.plot([0, len(ud)], [-3, -3], 'k') # these ratios should be ~1e-3, indicate on plot
 plt.legend(legends);
 ```
+
+Below is the visualization from data collected after 1000 training loops:
+
+![Viz 4 1000](viz4_1000times.png)
 
 Recall what we did to the last layer, avoiding over confidence, so the pink line looks different among others. In general, the learning process are good, if we change the learning rate to `0.0001`, the chart looks much worse.
 
@@ -1060,6 +1056,8 @@ for _ in range(20):
     
     print(''.join(itos[i] for i in out)) # decode and print the generated word
 ```
+
+Happy learning!
 
 ## Exercises:
 
