@@ -434,6 +434,7 @@ Below is the image of Batch Norm algorithm:
 ![Batch Normalization algo, [source](https://arxiv.org/abs/1502.03167)](bn_algo.png)
 
 And this is flowchart
+
 ```{mermaid}
 flowchart LR
 
@@ -456,8 +457,6 @@ We will need to calculate `dL/dx` given `dL/dy`, we will calculate by hand rever
 2.  normalize: `dL/dsigma = -1/2 * gamma * SUM[dL/dy * (x - mu) * (sigma^2 + eps)^(-3/2)]`;
 3.  normalize & mini-batch variance: `dL/dmu = - SUM[dL/dy * gamma * (sigma^2 + eps)^(-1/2)]`, this is path (3.1), we can prove that path (3.2) equal to zero - since `mu` is average of `x`, we can think of change in `mu` will be eliminated by `x` itself w.r.t. `L`;
 4.  given all the gradients above, we just write the expressions down and do some transformation, this is the final: `dL/dx = gamma * (sigma^2 + eps)^(-1/2) / m { [m * dL/dy] - SUMj[dL/dy] - m/(m-1) * x_hat * SUMj[dL/dy * x_hat]}`, where `m` is mini-batch size (in our data is `n`)
-
-
 
 ```{python}
 # backward pass
@@ -484,7 +483,6 @@ cmp('hprebn', dhprebn, hprebn) # I can only get approximate to be true, my maxdi
 # exercise 4: putting it all together
 
 ```{python}
-#| eval: false
 # Exercise 4: putting it all together!
 # Train the MLP neural net with your own backward pass
 
@@ -604,6 +602,7 @@ for p,g in zip(parameters, grads):
 ```
 
 Calibrate the batch norm at the end of training:
+
 ```{python}
 with torch.no_grad():
   # pass the training set through
@@ -616,6 +615,7 @@ with torch.no_grad():
 ```
 
 Evaluate train and val loss:
+
 ```{python}
 @torch.no_grad() # this decorator disables gradient tracking
 def split_loss(split):
@@ -640,6 +640,7 @@ split_loss('val')
 Similar to what we achieved before!
 
 Sample from model:
+
 ```{python}
 # sample from the model
 g = torch.Generator().manual_seed(2147483647 + 10)
