@@ -1,0 +1,235 @@
+---
+title: "Advanced SQL"
+description: "SQL things that I wish I could know earlier."
+author:
+  - name: "Tuan Le Khac"
+    url: https://lktuan.github.io/
+categories: [til, sql] 
+date: 12-06-2024
+date-modified: 12-06-2024
+image: wavenet.png
+draft: false
+format:
+  html:
+    engine: knitr
+    code-overflow: wrap
+    code-tools: true
+    code-fold: show
+    code-annotations: hover
+execute: 
+  eval: false
+---
+
+This is my note/workaround for the article "[25 SQL tips to level up your data engineering skills](https://www.startdataengineering.com/post/n-sql-tips-de/)" by Start Data Engineering, authored by [Joseph Machado](https://github.com/josephmachado).
+
+# setup
+
+Joseph provided a ready-to-go project regarding this advanced SQL transformation topics in this [repo](https://github.com/josephmachado/adv_data_transformation_in_sql). We can either run it in the Github codespace or in our local machine with minimal setup.
+
+I just simply create a SQL session with the TPC-H database along this session of this Quarto Notebook to practice.
+
+We use the TPC-H database for demonstration:
+
+![The TPC-H Schema, source: [TPC Benchmark H Standard Specification](https://www.tpc.org/tpc_documents_current_versions/pdf/tpc-h_v2.17.1.pdf)](sample-data-tpch-schema.png)
+
+# #1 handy functions for data wrangling
+
+## #1.1 `QUALIFY`
+
+We use `QUALIFY` to filter the output column of `WINDOW` function without creating more CTEs/Subqueries. It's not available in many traditional/on-prem RDBMS (MySQL, Oracle, MSSQL, PostgreSQL) but available in mordern/cloud-based databases (Snowflake, BigQuery, Databricks, MS Fabric, Teradata).
+
+```{sql}
+SELECT
+    o_orderkey, 
+    o_totalprice, 
+    RANK() OVER (ORDER BY o_totalprice DESC) AS price_rank -- rank the order by `o_totalprice` in desc
+FROM orders
+QUALIFY price_rank <= 10; -- filter top 10
+/* would need a CTE or Sub-query without QUALIFY */
+```
+![output - first 10 rows](1_qualify.png)
+
+## #1.2 `DISTINCT ON`
+
+Orginated from PostgreSQL, now support by some cloud-based like Snowflake but not in MySQL, SQL Server, Oracle, `DISTINCT ON` allows us to get 1 detailed row (first or last) for a particular partition.
+
+```{sql}
+SELECT DISTINCT ON (o_custkey) -- distinct only `o_custkey`
+    o_custkey, 
+    o_orderdate, 
+    o_totalprice
+FROM orders
+ORDER BY o_custkey, o_orderdate DESC; -- make sure to get the latest order by `o_orderdate`
+```
+![output - first 10 rows](2_distinct_on.png)
+
+## #1.3 This can also be done with `ROW_NUMBER()` + `QUALIFY`:
+
+```{sql}
+SELECT 
+    o_custkey, 
+    o_orderdate, 
+    o_totalprice,
+    ROW_NUMBER() OVER (PARTITION BY o_custkey ORDER BY o_orderdate DESC) AS rn
+FROM orders
+QUALIFY rn = 1
+ORDER BY o_custkey DESC; -- ROW_NUMBER() shuffle the order of the data
+```
+![output - first 10 rows](3_rn_qualify.png)
+
+## #1.4 `STRUCT_PACK()`
+
+`STRUCT_PACK()` is a function primarily associated with DuckDB:
+
+- Creates a compact, binary representation of multiple values;
+- Allows you to pack different data types into a single column;
+- Useful for data compression and efficient storage.
+
+Below picture depicts how struct works:
+
+![struct packing](struck_pack.png)
+
+```{sql}
+WITH order_struct AS (
+    SELECT 
+        o_orderkey,
+        STRUCT_PACK(o_orderdate, o_totalprice, o_orderkey) AS order_info
+    FROM orders
+)
+SELECT 
+    MIN(order_info) AS min_order_date, -- get min of information from left to right
+    MAX(order_info) AS max_order_date_price -- get of information from left to right, 
+    -- if there are many txn in that latest day, get the transaction with max price
+FROM order_struct;
+```
+![output](4_struct.png)
+
+## #1.5 `BOOL_OR()` & `BOOL_AND()`
+
+`BOOL_OR()` & `BOOL_AND()` allows you to check a logical statement along all rows of a columns, supported in PostgreSQL, Snowflake, DuckDB, BigQuery, Databricks:
+
+```{sql}
+SELECT 
+    o_custkey, 
+    BOOL_OR(cast(o_shippriority as boolean)) AS has_atleast_one_priority_order, -- check whether AT LEAST 1 order of that customer has Is Priority = True
+    BOOL_AND(cast(o_shippriority as boolean)) AS has_all_priority_order -- check whether ALL orders of that customer has Is Priority = True
+FROM orders
+GROUP BY o_custkey;
+```
+![output - first 10 rows](5_bool_or_and.png)
+
+## #1.6 `EXCLUDE`
+
+When you want to select all (`*`) columns excet few ones:
+
+```{sql}
+SELECT * EXCLUDE (o_orderdate, o_totalprice)
+FROM orders;
+```
+
+## #1.7 `GROUP BY ALL` saves the day
+
+Repeating all the columns listed in the `SELECT` statement in `GROUP BY` is annoying, just use `ALL`:
+
+```{sql}
+SELECT 
+    o_orderkey, 
+    o_custkey, 
+    o_orderstatus, 
+    SUM(o_totalprice) AS total_price
+FROM orders
+GROUP BY ALL;
+```
+
+## #1.8 `COUNT_IF()`
+
+Filter over rows in specific column:
+
+```{sql}
+SELECT 
+    o_custkey, 
+    COUNT_IF(o_totalprice > 100000) AS high_value_orders, 
+    -- equivalent to SUM(CASE WHEN o_totalprice > 100000 THEN 1 ELSE 0 END)
+    COUNT(o_totalprice) as all_orders
+FROM orders
+GROUP BY o_custkey;
+```
+![output - first 10 rows](8_count_if.png)
+
+## #1.9 `STRING_AGG()`
+
+Concatenate rows of string in a `GROUP BY` statement:
+
+```{sql}
+SELECT STRING_AGG(c_name, ', ') AS customer_names
+FROM customer;
+```
+
+## #1.10 Null handling with `COALESCE()`
+
+Handling null value in a column with value from another column or default value:
+
+```{sql}
+WITH fake_orders AS (
+    SELECT 1 AS o_orderkey, 100 AS o_totalprice, NULL AS discount
+    UNION ALL
+    SELECT 2 AS o_orderkey, 200 AS o_totalprice, 20 AS discount
+    UNION ALL
+    SELECT 3 AS o_orderkey, 300 AS o_totalprice, NULL AS discount
+)
+SELECT 
+    o_orderkey, 
+    o_totalprice, 
+    discount,
+    COALESCE(discount, o_totalprice * 0.10) AS final_discount
+FROM fake_orders;
+```
+![output](10_coalesce.png)
+
+## #1.11 `GENERATE_SERIES()`
+
+This helps you generate a sequence/series of data over a range with an interval for data simulation or joining with other tables.
+
+```{sql}
+SELECT *
+FROM generate_series(1, 10);
+```
+![output](11a_gen.png)
+
+```{sql}
+SELECT *
+FROM generate_series('2024-01-01'::DATE, '2024-01-10'::DATE, INTERVAL 1 DAY);
+```
+![output](11b_gen.png)
+
+## #1.12 `UNNEST()`
+
+```{sql}
+WITH nested_data AS (
+    SELECT 1 AS id, [10, 20, 30] AS values
+    UNION ALL
+    SELECT 2 AS id, [40, 50] AS values
+)
+SELECT 
+    id, 
+    UNNEST(values) AS flattened_value
+FROM nested_data;
+```
+
+# #2 `SET` operations
+# #3 macros
+# #4 jinja2
+# #5 metadata
+# #6 de-duplicate
+# #7 `JOIN`s that you've never ever seen before
+# #8 use cases
+# resource
+
+1. Article by Start Data Engineering: <https://www.startdataengineering.com/post/n-sql-tips-de/>;
+2. Repo and workbook: [...concepts/sql_tips/sql_tips.ipynb](https://github.com/josephmachado/adv_data_transformation_in_sql/blob/main/concepts/sql_tips/sql_tips.ipynb)
+
+```{r}
+#| eval: true
+#| code-fold: true
+cat("I added this R code chunk and somehow knitr engine successfully rendered SQL formatting block code.\nWorkaround: https://github.com/quarto-dev/quarto-cli/issues/2137")
+```
