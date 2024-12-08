@@ -118,7 +118,7 @@ GROUP BY o_custkey;
 ```
 ![output - first 10 rows](5_bool_or_and.png)
 
-## #1.6 `EXCLUDE`
+## #1.6 `EXCLUDE()`
 
 When you want to select all (`*`) columns excet few ones:
 
@@ -188,7 +188,7 @@ FROM fake_orders;
 
 ## #1.11 `GENERATE_SERIES()`
 
-This helps you generate a sequence/series of data over a range with an interval for data simulation or joining with other tables.
+This helps you generate a sequence/series of data over a range with an interval which facilitating data simulation or joining with other tables.
 
 ```{sql}
 SELECT *
@@ -204,6 +204,8 @@ FROM generate_series('2024-01-01'::DATE, '2024-01-10'::DATE, INTERVAL 1 DAY);
 
 ## #1.12 `UNNEST()`
 
+Unpacking data wrapped in JSON array or list `[...]` using `UNNEST()`: 
+
 ```{sql}
 WITH nested_data AS (
     SELECT 1 AS id, [10, 20, 30] AS values
@@ -215,8 +217,34 @@ SELECT
     UNNEST(values) AS flattened_value
 FROM nested_data;
 ```
+![output](12_unnest.png)
 
 # #2 `SET` operations
+
+## #2.1 `EXISTS`
+
+`EXISTS` is used to test for the existence of rows in a subquery, return TRUE if any row in the subquery returned. I think it's often used for logic check to correlate queries.
+
+It checks the existence like `INNER JOIN` but does not join full rows or select columns from the subquery.
+
+```{sql}
+SELECT 
+    c_custkey, 
+    c_name
+FROM customer 
+WHERE EXISTS (
+    SELECT o_orderkey
+    FROM orders
+    WHERE 1=1
+    -- AND o_totalprice > 5000000 -- Return customer who has at least 1 order with total price > 500k
+    AND o_custkey = c_custkey  -- Return customer who has at least 1 order
+);
+```
+
+## #2.2 `INTERCEPT`
+
+## #2.3 `EXCEPT`
+
 # #3 macros
 # #4 jinja2
 # #5 metadata
