@@ -228,7 +228,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#this-can-also-be-done-with-row_number-qualify" id="toc-this-can-also-be-done-with-row_number-qualify" class="nav-link" data-scroll-target="#this-can-also-be-done-with-row_number-qualify">#1.3 This can also be done with <code>ROW_NUMBER()</code> + <code>QUALIFY</code>:</a></li>
   <li><a href="#struct_pack" id="toc-struct_pack" class="nav-link" data-scroll-target="#struct_pack">#1.4 <code>STRUCT_PACK()</code></a></li>
   <li><a href="#bool_or-bool_and" id="toc-bool_or-bool_and" class="nav-link" data-scroll-target="#bool_or-bool_and">#1.5 <code>BOOL_OR()</code> &amp; <code>BOOL_AND()</code></a></li>
-  <li><a href="#exclude" id="toc-exclude" class="nav-link" data-scroll-target="#exclude">#1.6 <code>EXCLUDE</code></a></li>
+  <li><a href="#exclude" id="toc-exclude" class="nav-link" data-scroll-target="#exclude">#1.6 <code>EXCLUDE()</code></a></li>
   <li><a href="#group-by-all-saves-the-day" id="toc-group-by-all-saves-the-day" class="nav-link" data-scroll-target="#group-by-all-saves-the-day">#1.7 <code>GROUP BY ALL</code> saves the day</a></li>
   <li><a href="#count_if" id="toc-count_if" class="nav-link" data-scroll-target="#count_if">#1.8 <code>COUNT_IF()</code></a></li>
   <li><a href="#string_agg" id="toc-string_agg" class="nav-link" data-scroll-target="#string_agg">#1.9 <code>STRING_AGG()</code></a></li>
@@ -237,21 +237,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#unnest" id="toc-unnest" class="nav-link" data-scroll-target="#unnest">#1.12 <code>UNNEST()</code></a></li>
   </ul>
 </li>
-  <li><a href="#set-operations" id="toc-set-operations" class="nav-link" data-scroll-target="#set-operations">#2 <code>SET</code> operations</a></li>
+  <li>
+<a href="#set-operations" id="toc-set-operations" class="nav-link" data-scroll-target="#set-operations">#2 <code>SET</code> operations</a>
+  <ul class="collapse">
+<li><a href="#exists" id="toc-exists" class="nav-link" data-scroll-target="#exists">#2.1 <code>EXISTS</code></a></li>
+  <li><a href="#intersect" id="toc-intersect" class="nav-link" data-scroll-target="#intersect">#2.2 <code>INTERSECT</code></a></li>
+  <li><a href="#except" id="toc-except" class="nav-link" data-scroll-target="#except">#2.3 <code>EXCEPT</code></a></li>
+  </ul>
+</li>
   <li><a href="#macros" id="toc-macros" class="nav-link" data-scroll-target="#macros">#3 macros</a></li>
   <li><a href="#jinja2" id="toc-jinja2" class="nav-link" data-scroll-target="#jinja2">#4 jinja2</a></li>
   <li><a href="#metadata" id="toc-metadata" class="nav-link" data-scroll-target="#metadata">#5 metadata</a></li>
   <li><a href="#de-duplicate" id="toc-de-duplicate" class="nav-link" data-scroll-target="#de-duplicate">#6 de-duplicate</a></li>
-  <li><a href="#joins-that-youve-never-ever-seen-before" id="toc-joins-that-youve-never-ever-seen-before" class="nav-link" data-scroll-target="#joins-that-youve-never-ever-seen-before">#7 <code>JOIN</code>s that you’ve never ever seen before</a></li>
-  <li><a href="#use-cases" id="toc-use-cases" class="nav-link" data-scroll-target="#use-cases">#8 use cases</a></li>
+  <li>
+<a href="#joins-that-youve-never-ever-seen-before" id="toc-joins-that-youve-never-ever-seen-before" class="nav-link" data-scroll-target="#joins-that-youve-never-ever-seen-before">#7 <code>JOIN</code>s that you’ve never ever seen before</a>
+  <ul class="collapse">
+<li><a href="#asof-join" id="toc-asof-join" class="nav-link" data-scroll-target="#asof-join">#7.1 <code>ASOF JOIN</code></a></li>
+  <li><a href="#anti-join" id="toc-anti-join" class="nav-link" data-scroll-target="#anti-join">#7.2 <code>ANTI JOIN</code></a></li>
+  <li><a href="#lateral-join" id="toc-lateral-join" class="nav-link" data-scroll-target="#lateral-join">#7.3 <code>LATERAL JOIN</code></a></li>
+  </ul>
+</li>
+  <li>
+<a href="#use-cases" id="toc-use-cases" class="nav-link" data-scroll-target="#use-cases">#8 use cases</a>
+  <ul class="collapse">
+<li><a href="#pivot" id="toc-pivot" class="nav-link" data-scroll-target="#pivot">#8.1 <code>PIVOT</code></a></li>
+  <li><a href="#cube" id="toc-cube" class="nav-link" data-scroll-target="#cube">#8.1 <code>CUBE</code></a></li>
+  </ul>
+</li>
   <li><a href="#resource" id="toc-resource" class="nav-link" data-scroll-target="#resource">resource</a></li>
   </ul></nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content"><p>This is my note/workaround for the article “<a href="https://www.startdataengineering.com/post/n-sql-tips-de/">25 SQL tips to level up your data engineering skills</a>” by Start Data Engineering, authored by <a href="https://github.com/josephmachado">Joseph Machado</a>.</p>
 <section id="setup" class="level1"><h1>setup</h1>
-<p>Joseph provided a ready-to-go project regarding this advanced SQL transformation topics in this <a href="https://github.com/josephmachado/adv_data_transformation_in_sql">repo</a>. We can either run it in the Github codespace or in our local machine with minimal setup.</p>
-<p>I just simply create a SQL session with the TPC-H database along this session of this Quarto Notebook to practice.</p>
+<p>Joseph provided a ready-to-go project regarding this advanced SQL transformation topics in this <a href="https://github.com/josephmachado/adv_data_transformation_in_sql">repo</a> using <strong>DuckDB</strong> in <strong>Jupyter Notebook</strong>. We can either run it in the Github codespace or in our local machine with minimal setup.</p>
 <p>We use the TPC-H database for demonstration:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="sample-data-tpch-schema.png" class="img-fluid figure-img"></p>
@@ -354,7 +373,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <figure class="figure"><p><img src="5_bool_or_and.png" class="img-fluid figure-img"></p>
 <figcaption>output - first 10 rows</figcaption></figure>
 </div>
-</section><section id="exclude" class="level2"><h2 class="anchored" data-anchor-id="exclude">#1.6 <code>EXCLUDE</code>
+</section><section id="exclude" class="level2"><h2 class="anchored" data-anchor-id="exclude">#1.6 <code>EXCLUDE()</code>
 </h2>
 <p>When you want to select all (<code>*</code>) columns excet few ones:</p>
 <div class="cell">
@@ -424,7 +443,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section><section id="generate_series" class="level2"><h2 class="anchored" data-anchor-id="generate_series">#1.11 <code>GENERATE_SERIES()</code>
 </h2>
-<p>This helps you generate a sequence/series of data over a range with an interval for data simulation or joining with other tables.</p>
+<p>This helps you generate a sequence/series of data over a range with an interval which facilitating data simulation or joining with other tables.</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
 <span id="cb11-2"><a href="#cb11-2"></a><span class="kw">FROM</span> generate_series(<span class="dv">1</span>, <span class="dv">10</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -445,6 +464,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section><section id="unnest" class="level2"><h2 class="anchored" data-anchor-id="unnest">#1.12 <code>UNNEST()</code>
 </h2>
+<p>Unpacking data wrapped in JSON array or list <code>[...]</code> using <code>UNNEST()</code>:</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">WITH</span> nested_data <span class="kw">AS</span> (</span>
 <span id="cb13-2"><a href="#cb13-2"></a>    <span class="kw">SELECT</span> <span class="dv">1</span> <span class="kw">AS</span> <span class="kw">id</span>, [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>] <span class="kw">AS</span> <span class="kw">values</span></span>
@@ -457,21 +477,481 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-9"><a href="#cb13-9"></a><span class="kw">FROM</span> nested_data;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="12_unnest.png" class="img-fluid figure-img"></p>
+<figcaption>output</figcaption></figure>
+</div>
 </section></section><section id="set-operations" class="level1"><h1>#2 <code>SET</code> operations</h1>
-</section><section id="macros" class="level1"><h1>#3 macros</h1>
+<section id="exists" class="level2"><h2 class="anchored" data-anchor-id="exists">#2.1 <code>EXISTS</code>
+</h2>
+<p><code>EXISTS</code> is used to test for the existence of rows in a subquery, return TRUE if any row in the subquery returned. I think it’s often used for logic check to correlate queries.</p>
+<p>It checks the existence like <code>INNER JOIN</code> but does not join full rows or select columns from the subquery.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb14-2"><a href="#cb14-2"></a>    c_custkey, </span>
+<span id="cb14-3"><a href="#cb14-3"></a>    c_name</span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="kw">FROM</span> customer </span>
+<span id="cb14-5"><a href="#cb14-5"></a><span class="kw">WHERE</span> <span class="kw">EXISTS</span> (</span>
+<span id="cb14-6"><a href="#cb14-6"></a>    <span class="kw">SELECT</span> o_orderkey</span>
+<span id="cb14-7"><a href="#cb14-7"></a>    <span class="kw">FROM</span> orders</span>
+<span id="cb14-8"><a href="#cb14-8"></a>    <span class="kw">WHERE</span> <span class="dv">1</span><span class="op">=</span><span class="dv">1</span></span>
+<span id="cb14-9"><a href="#cb14-9"></a>    <span class="co">-- AND o_totalprice &gt; 5000000 -- Return customer who has at least 1 order with total price &gt; 500k</span></span>
+<span id="cb14-10"><a href="#cb14-10"></a>    <span class="kw">AND</span> o_custkey <span class="op">=</span> c_custkey  <span class="co">-- Return customer who has at least 1 order</span></span>
+<span id="cb14-11"><a href="#cb14-11"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="intersect" class="level2"><h2 class="anchored" data-anchor-id="intersect">#2.2 <code>INTERSECT</code>
+</h2>
+<p>Below query return all <code>c_custkey</code> that appears in both <code>customer</code> and <code>orders</code> table.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">SELECT</span> c_custkey </span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="kw">FROM</span> customer</span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="kw">INTERSECT</span></span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="kw">SELECT</span> o_custkey </span>
+<span id="cb15-5"><a href="#cb15-5"></a><span class="kw">FROM</span> orders;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="except" class="level2"><h2 class="anchored" data-anchor-id="except">#2.3 <code>EXCEPT</code>
+</h2>
+<p>And the below query return all <code>c_custkey</code> that appears <code>customer</code> <strong>but not in</strong> <code>orders</code> table.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">SELECT</span> c_custkey</span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="kw">FROM</span> customer</span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="kw">EXCEPT</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="kw">SELECT</span> o_custkey</span>
+<span id="cb16-5"><a href="#cb16-5"></a><span class="kw">FROM</span> orders;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Using this, we can perform delta/data diff checking!</p>
+</section></section><section id="macros" class="level1"><h1>#3 macros</h1>
+<p>We can create UDF (User Define Function) or Macros in SQL for abstracting complex logic and reusing it in different parts of the query, this improves both readability and maintainability. When executing, the macros are expanded inline, which avoids the overhead of function calls. Below is a simple function/macro:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">CREATE</span> MACRO percentage(numerator, denominator) <span class="kw">AS</span> (</span>
+<span id="cb17-2"><a href="#cb17-2"></a>    (<span class="fu">CAST</span>(numerator <span class="kw">AS</span> <span class="dt">DOUBLE</span>) <span class="op">/</span> <span class="fu">CAST</span>(denominator <span class="kw">AS</span> <span class="dt">DOUBLE</span>)) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb17-3"><a href="#cb17-3"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section><section id="jinja2" class="level1"><h1>#4 jinja2</h1>
+<blockquote class="blockquote">
+<p><a href="https://pypi.org/project/Jinja2/">Jinja</a> is a fast, expressive, extensible templating engine.</p>
+</blockquote>
+<p>In data engineering, Jinja2 is widely used in:</p>
+<ul>
+<li>
+<p>DBT (Data Build Tool)</p>
+<ul>
+<li>Template SQL transformations</li>
+<li>Parameterize database queries</li>
+<li>Dynamic model generation</li>
+</ul>
+</li>
+<li>
+<p>Airflow</p>
+<ul>
+<li>Dynamic DAG (Directed Acyclic Graph) generation</li>
+<li>Parameterize task configurations</li>
+</ul>
+</li>
+<li>
+<p>Great Expectations</p>
+<ul>
+<li>Configure data validation rules</li>
+<li>Generate dynamic expectations</li>
+</ul>
+</li>
+</ul>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="im">from</span> jinja2 <span class="im">import</span> Template</span>
+<span id="cb18-2"><a href="#cb18-2"></a></span>
+<span id="cb18-3"><a href="#cb18-3"></a><span class="co"># Define a Jinja2 SQL template with a loop</span></span>
+<span id="cb18-4"><a href="#cb18-4"></a>sql_template <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb18-5"><a href="#cb18-5"></a><span class="st">SELECT o_orderkey, o_custkey, o_totalprice</span></span>
+<span id="cb18-6"><a href="#cb18-6"></a><span class="st">FROM orders</span></span>
+<span id="cb18-7"><a href="#cb18-7"></a><span class="st">WHERE o_totalprice &gt; </span><span class="sc">{{</span><span class="st"> price_threshold </span><span class="sc">}}</span></span>
+<span id="cb18-8"><a href="#cb18-8"></a><span class="st">{</span><span class="sc">% i</span><span class="st">f customer_keys %}</span></span>
+<span id="cb18-9"><a href="#cb18-9"></a><span class="st">  AND o_custkey IN (</span></span>
+<span id="cb18-10"><a href="#cb18-10"></a><span class="st">    {</span><span class="sc">% f</span><span class="st">or custkey in customer_keys %}</span></span>
+<span id="cb18-11"><a href="#cb18-11"></a><span class="st">      </span><span class="sc">{{</span><span class="st"> custkey </span><span class="sc">}}</span><span class="st">{</span><span class="sc">% i</span><span class="st">f not loop.last %}, {</span><span class="sc">% e</span><span class="st">ndif %}</span></span>
+<span id="cb18-12"><a href="#cb18-12"></a><span class="st">    {</span><span class="sc">% e</span><span class="st">ndfor %}</span></span>
+<span id="cb18-13"><a href="#cb18-13"></a><span class="st">  )</span></span>
+<span id="cb18-14"><a href="#cb18-14"></a><span class="st">{</span><span class="sc">% e</span><span class="st">ndif %}</span></span>
+<span id="cb18-15"><a href="#cb18-15"></a><span class="st">ORDER BY o_totalprice DESC;</span></span>
+<span id="cb18-16"><a href="#cb18-16"></a><span class="st">"""</span></span>
+<span id="cb18-17"><a href="#cb18-17"></a></span>
+<span id="cb18-18"><a href="#cb18-18"></a><span class="co"># Render the template with dynamic parameters</span></span>
+<span id="cb18-19"><a href="#cb18-19"></a>template <span class="op">=</span> Template(sql_template)</span>
+<span id="cb18-20"><a href="#cb18-20"></a><span class="co"># Parameters to be passed to the template</span></span>
+<span id="cb18-21"><a href="#cb18-21"></a>params <span class="op">=</span> {</span>
+<span id="cb18-22"><a href="#cb18-22"></a>    <span class="st">"price_threshold"</span>: <span class="dv">20000</span>,</span>
+<span id="cb18-23"><a href="#cb18-23"></a>    <span class="st">"customer_keys"</span>: [<span class="dv">1001</span>, <span class="dv">1002</span>, <span class="dv">1003</span>]  <span class="co"># A list of customer keys to filter on</span></span>
+<span id="cb18-24"><a href="#cb18-24"></a>}</span>
+<span id="cb18-25"><a href="#cb18-25"></a><span class="co"># Render the SQL query (do not execute, just generate SQL)</span></span>
+<span id="cb18-26"><a href="#cb18-26"></a>rendered_sql <span class="op">=</span> template.render(params)</span>
+<span id="cb18-27"><a href="#cb18-27"></a></span>
+<span id="cb18-28"><a href="#cb18-28"></a><span class="bu">print</span>(rendered_sql)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>And the query be generated:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">SELECT</span> o_orderkey, o_custkey, o_totalprice</span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="kw">FROM</span> orders</span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="kw">WHERE</span> o_totalprice <span class="op">&gt;</span> <span class="dv">20000</span></span>
+<span id="cb19-4"><a href="#cb19-4"></a></span>
+<span id="cb19-5"><a href="#cb19-5"></a>  <span class="kw">AND</span> o_custkey <span class="kw">IN</span> (</span>
+<span id="cb19-6"><a href="#cb19-6"></a>    </span>
+<span id="cb19-7"><a href="#cb19-7"></a>      <span class="dv">1001</span>, </span>
+<span id="cb19-8"><a href="#cb19-8"></a>    </span>
+<span id="cb19-9"><a href="#cb19-9"></a>      <span class="dv">1002</span>, </span>
+<span id="cb19-10"><a href="#cb19-10"></a>    </span>
+<span id="cb19-11"><a href="#cb19-11"></a>      <span class="dv">1003</span></span>
+<span id="cb19-12"><a href="#cb19-12"></a>    </span>
+<span id="cb19-13"><a href="#cb19-13"></a>  )</span>
+<span id="cb19-14"><a href="#cb19-14"></a></span>
+<span id="cb19-15"><a href="#cb19-15"></a><span class="kw">ORDER</span> <span class="kw">BY</span> o_totalprice <span class="kw">DESC</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section><section id="metadata" class="level1"><h1>#5 metadata</h1>
+<p>The database documentation is normally stored in the <code>information_schema</code>, the first schema that created in DB:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb20-1"><a href="#cb20-1"></a><span class="co">-- Information about our tables are stored here</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="kw">SELECT</span> schema_name,</span>
+<span id="cb20-3"><a href="#cb20-3"></a>    view_name</span>
+<span id="cb20-4"><a href="#cb20-4"></a>    <span class="kw">FROM</span> duckdb_views();</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="information_schema.png" class="img-fluid figure-img"></p>
+<figcaption>output - first 10 rows</figcaption></figure>
+</div>
+<p>Dive into the table <code>tables</code>:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">SELECT</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>table_catalog, table_schema, table_name </span>
+<span id="cb21-3"><a href="#cb21-3"></a><span class="kw">from</span> information_schema.<span class="kw">tables</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="information_schema_table.png" class="img-fluid figure-img"></p>
+<figcaption>output - first 10 rows</figcaption></figure>
+</div>
+<p>Other useful query for DB admin in DuckDB:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb22-1"><a href="#cb22-1"></a><span class="co">-- database level settings</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> duckdb_settings();</span>
+<span id="cb22-3"><a href="#cb22-3"></a></span>
+<span id="cb22-4"><a href="#cb22-4"></a><span class="co">-- list of all tables in our DuckDB </span></span>
+<span id="cb22-5"><a href="#cb22-5"></a><span class="kw">SELECT</span> schema_name,</span>
+<span id="cb22-6"><a href="#cb22-6"></a>    table_name</span>
+<span id="cb22-7"><a href="#cb22-7"></a>    <span class="kw">FROM</span> duckdb_tables();</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section><section id="de-duplicate" class="level1"><h1>#6 de-duplicate</h1>
+<p>We can use UPSERT (or MERGE INTO) - INsert new data and UPdate existing data. The syntaxes vary among DBs:</p>
+<ul>
+<li>PostgreSQL: <code>INSERT ... ON CONFLICT</code>
+</li>
+<li>MySQL: <code>INSERT ... ON DUPLICATE KEY UPDATE</code>
+</li>
+<li>SQLite: <code>INSERT OR REPLACE</code>
+</li>
+<li>SQL Server: <code>MERGE</code> statement</li>
+<li>Oracle: <code>MERGE</code> statement</li>
+</ul>
+<p>For eg., in DuckDB:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">EXISTS</span> dim_customer_scd2;</span>
+<span id="cb23-2"><a href="#cb23-2"></a><span class="co">-- Create a Slowly Changing Dimension (SCD Type 2) table for customer</span></span>
+<span id="cb23-3"><a href="#cb23-3"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> dim_customer_scd2 (</span>
+<span id="cb23-4"><a href="#cb23-4"></a>    c_custkey <span class="dt">INTEGER</span> <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb23-5"><a href="#cb23-5"></a>    c_name <span class="dt">VARCHAR</span>,</span>
+<span id="cb23-6"><a href="#cb23-6"></a>    c_address <span class="dt">VARCHAR</span>,</span>
+<span id="cb23-7"><a href="#cb23-7"></a>    c_nationkey <span class="dt">INTEGER</span>,</span>
+<span id="cb23-8"><a href="#cb23-8"></a>    c_phone <span class="dt">VARCHAR</span>,</span>
+<span id="cb23-9"><a href="#cb23-9"></a>    c_acctbal <span class="dt">DOUBLE</span>,</span>
+<span id="cb23-10"><a href="#cb23-10"></a>    c_mktsegment <span class="dt">VARCHAR</span>,</span>
+<span id="cb23-11"><a href="#cb23-11"></a>    c_comment <span class="dt">VARCHAR</span>,</span>
+<span id="cb23-12"><a href="#cb23-12"></a>    valid_from <span class="dt">DATE</span>,</span>
+<span id="cb23-13"><a href="#cb23-13"></a>    valid_to <span class="dt">DATE</span>,</span>
+<span id="cb23-14"><a href="#cb23-14"></a>    is_current <span class="dt">BOOLEAN</span></span>
+<span id="cb23-15"><a href="#cb23-15"></a>);</span>
+<span id="cb23-16"><a href="#cb23-16"></a></span>
+<span id="cb23-17"><a href="#cb23-17"></a><span class="co">-- Insert current data from the TPCH customer table into the SCD2 table</span></span>
+<span id="cb23-18"><a href="#cb23-18"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> dim_customer_scd2</span>
+<span id="cb23-19"><a href="#cb23-19"></a><span class="kw">SELECT</span> </span>
+<span id="cb23-20"><a href="#cb23-20"></a>    c_custkey, </span>
+<span id="cb23-21"><a href="#cb23-21"></a>    c_name, </span>
+<span id="cb23-22"><a href="#cb23-22"></a>    c_address, </span>
+<span id="cb23-23"><a href="#cb23-23"></a>    c_nationkey, </span>
+<span id="cb23-24"><a href="#cb23-24"></a>    c_phone, </span>
+<span id="cb23-25"><a href="#cb23-25"></a>    c_acctbal, </span>
+<span id="cb23-26"><a href="#cb23-26"></a>    c_mktsegment, </span>
+<span id="cb23-27"><a href="#cb23-27"></a>    c_comment,</span>
+<span id="cb23-28"><a href="#cb23-28"></a>    <span class="st">'2024-10-17'</span> <span class="kw">AS</span> valid_from,</span>
+<span id="cb23-29"><a href="#cb23-29"></a>    <span class="kw">NULL</span> <span class="kw">AS</span> valid_to,  <span class="co">-- NULL means it's the current active record</span></span>
+<span id="cb23-30"><a href="#cb23-30"></a>    <span class="kw">TRUE</span> <span class="kw">AS</span> is_current</span>
+<span id="cb23-31"><a href="#cb23-31"></a><span class="kw">FROM</span> customer;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>This query create a new SCD2 table and UPSERT data into it. When managing a table, we can handle (INSERT or UPDATE) like this:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb24-1"><a href="#cb24-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> dim_customer_scd2 (</span>
+<span id="cb24-2"><a href="#cb24-2"></a>    c_custkey, </span>
+<span id="cb24-3"><a href="#cb24-3"></a>    c_name, </span>
+<span id="cb24-4"><a href="#cb24-4"></a>    c_address, </span>
+<span id="cb24-5"><a href="#cb24-5"></a>    c_nationkey, </span>
+<span id="cb24-6"><a href="#cb24-6"></a>    c_phone, </span>
+<span id="cb24-7"><a href="#cb24-7"></a>    c_acctbal, </span>
+<span id="cb24-8"><a href="#cb24-8"></a>    c_mktsegment, </span>
+<span id="cb24-9"><a href="#cb24-9"></a>    c_comment, </span>
+<span id="cb24-10"><a href="#cb24-10"></a>    valid_from, </span>
+<span id="cb24-11"><a href="#cb24-11"></a>    valid_to, </span>
+<span id="cb24-12"><a href="#cb24-12"></a>    is_current</span>
+<span id="cb24-13"><a href="#cb24-13"></a>)</span>
+<span id="cb24-14"><a href="#cb24-14"></a><span class="kw">VALUES</span></span>
+<span id="cb24-15"><a href="#cb24-15"></a>    (<span class="dv">1</span>, <span class="st">'Customer#000000001'</span>, <span class="st">'New Address 1'</span>, <span class="dv">15</span>, <span class="st">'25-989-741-2988'</span>, <span class="fl">711.56</span>, <span class="st">'BUILDING'</span>, <span class="st">'comment1'</span>, <span class="st">'2024-10-18'</span>, <span class="kw">NULL</span>, <span class="kw">TRUE</span>),</span>
+<span id="cb24-16"><a href="#cb24-16"></a>    (<span class="dv">2</span>, <span class="st">'Customer#000000002'</span>, <span class="st">'New Address 2'</span>, <span class="dv">18</span>, <span class="st">'12-423-790-3665'</span>, <span class="fl">879.49</span>, <span class="st">'FURNITURE'</span>, <span class="st">'comment2'</span>, <span class="st">'2024-10-18'</span>, <span class="kw">NULL</span>, <span class="kw">TRUE</span>),</span>
+<span id="cb24-17"><a href="#cb24-17"></a>    (<span class="dv">1501</span>, <span class="st">'Customer#000001501'</span>, <span class="st">'New Address 1501'</span>, <span class="dv">24</span>, <span class="st">'11-345-678-9012'</span>, <span class="fl">500.50</span>, <span class="st">'MACHINERY'</span>, <span class="st">'comment1501'</span>, <span class="st">'2024-10-18'</span>, <span class="kw">NULL</span>, <span class="kw">TRUE</span>),</span>
+<span id="cb24-18"><a href="#cb24-18"></a>    (<span class="dv">1502</span>, <span class="st">'Customer#000001502'</span>, <span class="st">'New Address 1502'</span>, <span class="dv">21</span>, <span class="st">'22-456-789-0123'</span>, <span class="fl">600.75</span>, <span class="st">'AUTOMOBILE'</span>, <span class="st">'comment1502'</span>, <span class="st">'2024-10-18'</span>, <span class="kw">NULL</span>, <span class="kw">TRUE</span>)</span>
+<span id="cb24-19"><a href="#cb24-19"></a><span class="kw">ON</span> CONFLICT (c_custkey) DO </span>
+<span id="cb24-20"><a href="#cb24-20"></a><span class="co">-- Handle existing customers (Customer#000000001 and Customer#000000002) for SCD Type 2</span></span>
+<span id="cb24-21"><a href="#cb24-21"></a><span class="kw">UPDATE</span> <span class="kw">SET</span> valid_to <span class="op">=</span> EXCLUDED.valid_from, is_current <span class="op">=</span> <span class="kw">FALSE</span></span>
+<span id="cb24-22"><a href="#cb24-22"></a><span class="kw">WHERE</span> dim_customer_scd2.c_custkey <span class="op">=</span> EXCLUDED.c_custkey <span class="kw">AND</span> dim_customer_scd2.is_current <span class="op">=</span> <span class="kw">TRUE</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section><section id="joins-that-youve-never-ever-seen-before" class="level1"><h1>#7 <code>JOIN</code>s that you’ve never ever seen before</h1>
-</section><section id="use-cases" class="level1"><h1>#8 use cases</h1>
-</section><section id="resource" class="level1"><h1>resource</h1>
+<section id="asof-join" class="level2"><h2 class="anchored" data-anchor-id="asof-join">#7.1 <code>ASOF JOIN</code>
+</h2>
+<p>An ASOF JOIN (As-Of Join) is a time-series specific join operation that matches rows based on the closest timestamp, typically used in financial and time-series data analysis.</p>
+<ul>
+<li>
+<p>Key characteristics:</p>
+<ul>
+<li>Matches each row from one table to the most recent row in another table by time</li>
+<li>Useful for tracking historical state changes</li>
+<li>Common in financial databases and time-series analysis</li>
+</ul>
+</li>
+<li>
+<p>Example use case:</p>
+<ul>
+<li>Joining stock prices with trading orders</li>
+<li>Matching historical prices at the nearest timestamp</li>
+<li>Tracking changes in reference data over time</li>
+</ul>
+</li>
+</ul>
+<p>For eg. “<strong>give me the value of the property as of this time</strong>”:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">WITH</span> stock_prices <span class="kw">AS</span> (</span>
+<span id="cb25-2"><a href="#cb25-2"></a>    <span class="kw">SELECT</span> <span class="st">'APPL'</span> <span class="kw">AS</span> ticker, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:00:00'</span> <span class="kw">AS</span> <span class="ot">"when"</span>, <span class="dv">1</span> <span class="kw">AS</span> price</span>
+<span id="cb25-3"><a href="#cb25-3"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb25-4"><a href="#cb25-4"></a>    <span class="kw">SELECT</span> <span class="st">'APPL'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:01:00'</span>, <span class="dv">2</span></span>
+<span id="cb25-5"><a href="#cb25-5"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb25-6"><a href="#cb25-6"></a>    <span class="kw">SELECT</span> <span class="st">'APPL'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:02:00'</span>, <span class="dv">3</span></span>
+<span id="cb25-7"><a href="#cb25-7"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb25-8"><a href="#cb25-8"></a>    <span class="kw">SELECT</span> <span class="st">'MSFT'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:00:00'</span>, <span class="dv">1</span></span>
+<span id="cb25-9"><a href="#cb25-9"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb25-10"><a href="#cb25-10"></a>    <span class="kw">SELECT</span> <span class="st">'MSFT'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:01:00'</span>, <span class="dv">2</span></span>
+<span id="cb25-11"><a href="#cb25-11"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb25-12"><a href="#cb25-12"></a>    <span class="kw">SELECT</span> <span class="st">'MSFT'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:02:00'</span>, <span class="dv">3</span></span>
+<span id="cb25-13"><a href="#cb25-13"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb25-14"><a href="#cb25-14"></a>    <span class="kw">SELECT</span> <span class="st">'GOOG'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:00:00'</span>, <span class="dv">1</span></span>
+<span id="cb25-15"><a href="#cb25-15"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb25-16"><a href="#cb25-16"></a>    <span class="kw">SELECT</span> <span class="st">'GOOG'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:01:00'</span>, <span class="dv">2</span></span>
+<span id="cb25-17"><a href="#cb25-17"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb25-18"><a href="#cb25-18"></a>    <span class="kw">SELECT</span> <span class="st">'GOOG'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:02:00'</span>, <span class="dv">3</span></span>
+<span id="cb25-19"><a href="#cb25-19"></a>),</span>
+<span id="cb25-20"><a href="#cb25-20"></a>portfolio_holdings <span class="kw">AS</span> (</span>
+<span id="cb25-21"><a href="#cb25-21"></a>    <span class="kw">SELECT</span> <span class="st">'APPL'</span> <span class="kw">AS</span> ticker, <span class="dt">TIMESTAMP</span> <span class="st">'2000-12-31 23:59:30'</span> <span class="kw">AS</span> <span class="ot">"when"</span>, <span class="fl">5.16</span> <span class="kw">AS</span> shares</span>
+<span id="cb25-22"><a href="#cb25-22"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb25-23"><a href="#cb25-23"></a>    <span class="kw">SELECT</span> <span class="st">'APPL'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:00:30'</span>, <span class="fl">2.94</span></span>
+<span id="cb25-24"><a href="#cb25-24"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb25-25"><a href="#cb25-25"></a>    <span class="kw">SELECT</span> <span class="st">'APPL'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:01:30'</span>, <span class="fl">24.13</span></span>
+<span id="cb25-26"><a href="#cb25-26"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb25-27"><a href="#cb25-27"></a>    <span class="kw">SELECT</span> <span class="st">'GOOG'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2000-12-31 23:59:30'</span>, <span class="fl">9.33</span></span>
+<span id="cb25-28"><a href="#cb25-28"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb25-29"><a href="#cb25-29"></a>    <span class="kw">SELECT</span> <span class="st">'GOOG'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:00:30'</span>, <span class="fl">23.45</span></span>
+<span id="cb25-30"><a href="#cb25-30"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb25-31"><a href="#cb25-31"></a>    <span class="kw">SELECT</span> <span class="st">'GOOG'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:01:30'</span>, <span class="fl">10.58</span></span>
+<span id="cb25-32"><a href="#cb25-32"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb25-33"><a href="#cb25-33"></a>    <span class="kw">SELECT</span> <span class="st">'DATA'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2000-12-31 23:59:30'</span>, <span class="fl">6.65</span></span>
+<span id="cb25-34"><a href="#cb25-34"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb25-35"><a href="#cb25-35"></a>    <span class="kw">SELECT</span> <span class="st">'DATA'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:00:30'</span>, <span class="fl">17.95</span></span>
+<span id="cb25-36"><a href="#cb25-36"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb25-37"><a href="#cb25-37"></a>    <span class="kw">SELECT</span> <span class="st">'DATA'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:01:30'</span>, <span class="fl">18.37</span></span>
+<span id="cb25-38"><a href="#cb25-38"></a>)</span>
+<span id="cb25-39"><a href="#cb25-39"></a><span class="kw">SELECT</span> h.ticker,</span>
+<span id="cb25-40"><a href="#cb25-40"></a>    h.<span class="cf">when</span>,</span>
+<span id="cb25-41"><a href="#cb25-41"></a>    p.<span class="cf">when</span> <span class="kw">as</span> stock_price_ts,</span>
+<span id="cb25-42"><a href="#cb25-42"></a>    price,</span>
+<span id="cb25-43"><a href="#cb25-43"></a>    shares,</span>
+<span id="cb25-44"><a href="#cb25-44"></a>    price <span class="op">*</span> shares <span class="kw">AS</span> <span class="fu">value</span></span>
+<span id="cb25-45"><a href="#cb25-45"></a><span class="kw">FROM</span> portfolio_holdings h</span>
+<span id="cb25-46"><a href="#cb25-46"></a>ASOF <span class="kw">JOIN</span> stock_prices p</span>
+<span id="cb25-47"><a href="#cb25-47"></a>       <span class="kw">ON</span> h.ticker <span class="op">=</span> p.ticker</span>
+<span id="cb25-48"><a href="#cb25-48"></a>      <span class="kw">AND</span> h.<span class="cf">when</span> <span class="op">&gt;=</span> p.<span class="cf">when</span></span>
+<span id="cb25-49"><a href="#cb25-49"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="dv">1</span>, <span class="dv">2</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="asof_join.png" class="img-fluid figure-img"></p>
+<figcaption>output</figcaption></figure>
+</div>
+<p>Without <code>ASOF JOIN</code>, we must use a WINDOW function to achieve this.</p>
+</section><section id="anti-join" class="level2"><h2 class="anchored" data-anchor-id="anti-join">#7.2 <code>ANTI JOIN</code>
+</h2>
+<p>The pattern is to get rows in one table that are not in another table:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">SELECT</span> c.c_custkey</span>
+<span id="cb26-2"><a href="#cb26-2"></a><span class="kw">FROM</span> customer c</span>
+<span id="cb26-3"><a href="#cb26-3"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> orders o</span>
+<span id="cb26-4"><a href="#cb26-4"></a><span class="kw">ON</span> c.c_custkey <span class="op">=</span> o.o_custkey</span>
+<span id="cb26-5"><a href="#cb26-5"></a><span class="kw">WHERE</span> o.o_custkey <span class="kw">IS</span> <span class="kw">NULL</span></span>
+<span id="cb26-6"><a href="#cb26-6"></a><span class="kw">ORDER</span> <span class="kw">BY</span> c.c_custkey</span>
+<span id="cb26-7"><a href="#cb26-7"></a><span class="kw">LIMIT</span> <span class="dv">5</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Some DBs have native support for <code>ANTI JOIN</code>:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">SELECT</span> c.c_custkey</span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="kw">FROM</span> customer c</span>
+<span id="cb27-3"><a href="#cb27-3"></a>ANTI <span class="kw">JOIN</span> orders o</span>
+<span id="cb27-4"><a href="#cb27-4"></a><span class="kw">ON</span> c.c_custkey <span class="op">=</span> o.o_custkey</span>
+<span id="cb27-5"><a href="#cb27-5"></a><span class="kw">ORDER</span> <span class="kw">BY</span> c.c_custkey</span>
+<span id="cb27-6"><a href="#cb27-6"></a><span class="kw">LIMIT</span> <span class="dv">5</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="lateral-join" class="level2"><h2 class="anchored" data-anchor-id="lateral-join">#7.3 <code>LATERAL JOIN</code>
+</h2>
+<p>LATERAL JOIN is a powerful SQL join type that allows a subquery in the FROM clause to reference columns from preceding tables in the same FROM clause.</p>
+<ul>
+<li>Enables per-row dynamic subqueries</li>
+<li>Allows correlated subqueries in the FROM clause</li>
+<li>Supported in PostgreSQL, BigQuery, some other modern databases</li>
+</ul>
+<p>For e.g, for each row in the orders table (<code>o</code>), the subquery in the LATERAL JOIN selects line items (<code>l</code>) that match certain conditions.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb28-1"><a href="#cb28-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb28-2"><a href="#cb28-2"></a>    o.o_orderkey, </span>
+<span id="cb28-3"><a href="#cb28-3"></a>    o.o_totalprice, </span>
+<span id="cb28-4"><a href="#cb28-4"></a>    l.l_linenumber,</span>
+<span id="cb28-5"><a href="#cb28-5"></a>    l.l_extendedprice</span>
+<span id="cb28-6"><a href="#cb28-6"></a><span class="kw">FROM</span> orders o,</span>
+<span id="cb28-7"><a href="#cb28-7"></a>LATERAL (</span>
+<span id="cb28-8"><a href="#cb28-8"></a>    <span class="kw">SELECT</span> l.l_linenumber,</span>
+<span id="cb28-9"><a href="#cb28-9"></a>    l_extendedprice</span>
+<span id="cb28-10"><a href="#cb28-10"></a>    <span class="kw">FROM</span> lineitem l</span>
+<span id="cb28-11"><a href="#cb28-11"></a>    <span class="kw">WHERE</span> l.l_orderkey <span class="op">=</span> o.o_orderkey</span>
+<span id="cb28-12"><a href="#cb28-12"></a>    <span class="kw">AND</span> l.l_linenumber <span class="op">&lt;=</span> <span class="dv">2</span></span>
+<span id="cb28-13"><a href="#cb28-13"></a>    <span class="kw">AND</span> l.l_extendedprice <span class="op">&lt;</span> (o.o_totalprice <span class="op">/</span> <span class="dv">2</span>)</span>
+<span id="cb28-14"><a href="#cb28-14"></a>) <span class="kw">AS</span> l</span>
+<span id="cb28-15"><a href="#cb28-15"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="dv">1</span>, <span class="dv">3</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="lateral_join_1.png" class="img-fluid figure-img"></p>
+<figcaption>output - first 10 rows</figcaption></figure>
+</div>
+<p>For each row in the orders table (<code>o</code>), the subquery in the LATERAL JOIN counts the number of line items (<code>lineitem_count</code>) related to that order.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb29-1"><a href="#cb29-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb29-2"><a href="#cb29-2"></a>    o.o_orderkey, </span>
+<span id="cb29-3"><a href="#cb29-3"></a>    o.o_totalprice, </span>
+<span id="cb29-4"><a href="#cb29-4"></a>    l.lineitem_count</span>
+<span id="cb29-5"><a href="#cb29-5"></a><span class="kw">FROM</span> orders o,</span>
+<span id="cb29-6"><a href="#cb29-6"></a>LATERAL (</span>
+<span id="cb29-7"><a href="#cb29-7"></a>    <span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> lineitem_count</span>
+<span id="cb29-8"><a href="#cb29-8"></a>    <span class="kw">FROM</span> lineitem l</span>
+<span id="cb29-9"><a href="#cb29-9"></a>    <span class="kw">WHERE</span> l.l_orderkey <span class="op">=</span> o.o_orderkey</span>
+<span id="cb29-10"><a href="#cb29-10"></a>) <span class="kw">AS</span> l;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="lateral_join_2.png" class="img-fluid figure-img"></p>
+<figcaption>output - first 10 rows</figcaption></figure>
+</div>
+</section></section><section id="use-cases" class="level1"><h1>#8 use cases</h1>
+<p>Some real business use cases:</p>
+<section id="pivot" class="level2"><h2 class="anchored" data-anchor-id="pivot">#8.1 <code>PIVOT</code>
+</h2>
+<p>We often want to change a value of a column into individual columns, we can use <code>CASE ... WHEN ...</code>:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb30-1"><a href="#cb30-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb30-2"><a href="#cb30-2"></a>    o_custkey,</span>
+<span id="cb30-3"><a href="#cb30-3"></a>    <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> o_orderstatus <span class="op">=</span> <span class="st">'F'</span> <span class="cf">THEN</span> o_totalprice <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span>) <span class="kw">AS</span> fulfilled_total,</span>
+<span id="cb30-4"><a href="#cb30-4"></a>    <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> o_orderstatus <span class="op">=</span> <span class="st">'O'</span> <span class="cf">THEN</span> o_totalprice <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span>) <span class="kw">AS</span> open_total,</span>
+<span id="cb30-5"><a href="#cb30-5"></a>    <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> o_orderstatus <span class="op">=</span> <span class="st">'P'</span> <span class="cf">THEN</span> o_totalprice <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span>) <span class="kw">AS</span> pending_total</span>
+<span id="cb30-6"><a href="#cb30-6"></a><span class="kw">FROM</span> orders</span>
+<span id="cb30-7"><a href="#cb30-7"></a><span class="kw">GROUP</span> <span class="kw">BY</span> o_custkey</span>
+<span id="cb30-8"><a href="#cb30-8"></a><span class="kw">ORDER</span> <span class="kw">BY</span> o_custkey;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>But also leverage <code>PIVOT</code>:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb31-1"><a href="#cb31-1"></a><span class="kw">FROM</span> orders</span>
+<span id="cb31-2"><a href="#cb31-2"></a>PIVOT (</span>
+<span id="cb31-3"><a href="#cb31-3"></a>    <span class="fu">sum</span>(o_totalprice)</span>
+<span id="cb31-4"><a href="#cb31-4"></a>    <span class="cf">FOR</span></span>
+<span id="cb31-5"><a href="#cb31-5"></a>        o_orderstatus <span class="kw">IN</span> (<span class="st">'F'</span>, <span class="st">'O'</span>, <span class="st">'P'</span>)</span>
+<span id="cb31-6"><a href="#cb31-6"></a>    <span class="kw">GROUP</span> <span class="kw">BY</span> o_custkey</span>
+<span id="cb31-7"><a href="#cb31-7"></a>)</span>
+<span id="cb31-8"><a href="#cb31-8"></a>    <span class="kw">ORDER</span> <span class="kw">BY</span> o_custkey;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="pivot.png" class="img-fluid figure-img"></p>
+<figcaption>output - first 10 rows</figcaption></figure>
+</div>
+</section><section id="cube" class="level2"><h2 class="anchored" data-anchor-id="cube">#8.1 <code>CUBE</code>
+</h2>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb32-1"><a href="#cb32-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb32-2"><a href="#cb32-2"></a>    o_orderpriority,</span>
+<span id="cb32-3"><a href="#cb32-3"></a>    o_orderstatus,</span>
+<span id="cb32-4"><a href="#cb32-4"></a>    <span class="fu">EXTRACT</span>(<span class="dt">YEAR</span> <span class="kw">FROM</span> o_orderdate) <span class="kw">AS</span> order_year,</span>
+<span id="cb32-5"><a href="#cb32-5"></a>    <span class="fu">SUM</span>(o_totalprice) <span class="kw">AS</span> total_sales</span>
+<span id="cb32-6"><a href="#cb32-6"></a><span class="kw">FROM</span> orders</span>
+<span id="cb32-7"><a href="#cb32-7"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">CUBE</span> (o_orderpriority, o_orderstatus, order_year)</span>
+<span id="cb32-8"><a href="#cb32-8"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="cube.png" class="img-fluid figure-img"></p>
+<figcaption>output - first 10 rows</figcaption></figure>
+</div>
+<ul>
+<li>
+<code>CUBE (o_custkey, o_orderstatus, order_year)</code>: This will group the data and calculate subtotals and grand totals for all possible combinations of <code>o_custkey</code>, <code>o_orderstatus</code>, and <code>order_year</code>.</li>
+<li>It will generate all combinations of the grouping columns, including:
+<ul>
+<li>Grouping by just o_custkey</li>
+<li>Grouping by just o_orderstatus</li>
+<li>Grouping by just order_year</li>
+<li>Grouping by all three together</li>
+<li>Grouping by pairs of columns</li>
+<li>A grand total (no grouping by any column)</li>
+<li>
+<code>SUM(o_totalprice)</code>: For each combination of groupings, it sums the total order price.</li>
+</ul>
+</li>
+</ul>
+<p>Use cases:</p>
+<blockquote class="blockquote">
+<ol type="1">
+<li>OLAP Reporting: CUBE is commonly used in OLAP scenarios where you need to analyze data from multiple perspectives. For instance, you may want to generate reports that show total sales by customer, by order status, by year, and all possible combinations of these dimensions.</li>
+<li>Sales Analysis: In sales analysis, CUBE can help create pivot-like summaries that show how different attributes (e.g., region, product, time period) contribute to the overall sales.</li>
+<li>Financial Reports: Financial departments often use CUBE to calculate totals and subtotals across dimensions like departments, time periods, and account categories, making it easier to prepare comprehensive financial reports.</li>
+</ol>
+</blockquote>
+<p>Happy learning!</p>
+</section></section><section id="resource" class="level1"><h1>resource</h1>
 <ol type="1">
 <li>Article by Start Data Engineering: <a href="https://www.startdataengineering.com/post/n-sql-tips-de/" class="uri">https://www.startdataengineering.com/post/n-sql-tips-de/</a>;</li>
 <li>Repo and workbook: <a href="https://github.com/josephmachado/adv_data_transformation_in_sql/blob/main/concepts/sql_tips/sql_tips.ipynb">…concepts/sql_tips/sql_tips.ipynb</a>
 </li>
 </ol>
 <div class="cell">
-<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="fu">cat</span>(<span class="st">"I added this R code chunk and somehow knitr engine successfully rendered SQL formatting block code.</span><span class="sc">\n</span><span class="st">Workaround: https://github.com/quarto-dev/quarto-cli/issues/2137"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="fu">cat</span>(<span class="st">"I added this R code chunk and somehow knitr engine successfully rendered SQL formatting block code.</span><span class="sc">\n</span><span class="st">Workaround: https://github.com/quarto-dev/quarto-cli/issues/2137"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>I added this R code chunk and somehow knitr engine successfully rendered SQL formatting block code.
 Workaround: https://github.com/quarto-dev/quarto-cli/issues/2137</code></pre>
@@ -1124,241 +1604,684 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb16" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb16-1"><a href="#cb16-1"></a><span class="co">---</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a><span class="an">title:</span><span class="co"> "Advanced SQL"</span></span>
-<span id="cb16-3"><a href="#cb16-3"></a><span class="an">description:</span><span class="co"> "SQL things that I wish I could know earlier."</span></span>
-<span id="cb16-4"><a href="#cb16-4"></a><span class="an">author:</span></span>
-<span id="cb16-5"><a href="#cb16-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
-<span id="cb16-6"><a href="#cb16-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
-<span id="cb16-7"><a href="#cb16-7"></a><span class="an">categories:</span><span class="co"> [til, sql] </span></span>
-<span id="cb16-8"><a href="#cb16-8"></a><span class="an">date:</span><span class="co"> 12-06-2024</span></span>
-<span id="cb16-9"><a href="#cb16-9"></a><span class="an">date-modified:</span><span class="co"> 12-06-2024</span></span>
-<span id="cb16-10"><a href="#cb16-10"></a><span class="an">image:</span><span class="co"> wavenet.png</span></span>
-<span id="cb16-11"><a href="#cb16-11"></a><span class="an">draft:</span><span class="co"> false</span></span>
-<span id="cb16-12"><a href="#cb16-12"></a><span class="an">format:</span></span>
-<span id="cb16-13"><a href="#cb16-13"></a><span class="co">  html:</span></span>
-<span id="cb16-14"><a href="#cb16-14"></a><span class="co">    engine: knitr</span></span>
-<span id="cb16-15"><a href="#cb16-15"></a><span class="co">    code-overflow: wrap</span></span>
-<span id="cb16-16"><a href="#cb16-16"></a><span class="co">    code-tools: true</span></span>
-<span id="cb16-17"><a href="#cb16-17"></a><span class="co">    code-fold: show</span></span>
-<span id="cb16-18"><a href="#cb16-18"></a><span class="co">    code-annotations: hover</span></span>
-<span id="cb16-19"><a href="#cb16-19"></a><span class="an">execute:</span><span class="co"> </span></span>
-<span id="cb16-20"><a href="#cb16-20"></a><span class="co">  eval: false</span></span>
-<span id="cb16-21"><a href="#cb16-21"></a><span class="co">---</span></span>
-<span id="cb16-22"><a href="#cb16-22"></a></span>
-<span id="cb16-23"><a href="#cb16-23"></a>This is my note/workaround for the article "<span class="co">[</span><span class="ot">25 SQL tips to level up your data engineering skills</span><span class="co">](https://www.startdataengineering.com/post/n-sql-tips-de/)</span>" by Start Data Engineering, authored by <span class="co">[</span><span class="ot">Joseph Machado</span><span class="co">](https://github.com/josephmachado)</span>.</span>
-<span id="cb16-24"><a href="#cb16-24"></a></span>
-<span id="cb16-25"><a href="#cb16-25"></a><span class="fu"># setup</span></span>
-<span id="cb16-26"><a href="#cb16-26"></a></span>
-<span id="cb16-27"><a href="#cb16-27"></a>Joseph provided a ready-to-go project regarding this advanced SQL transformation topics in this <span class="co">[</span><span class="ot">repo</span><span class="co">](https://github.com/josephmachado/adv_data_transformation_in_sql)</span>. We can either run it in the Github codespace or in our local machine with minimal setup.</span>
-<span id="cb16-28"><a href="#cb16-28"></a></span>
-<span id="cb16-29"><a href="#cb16-29"></a>I just simply create a SQL session with the TPC-H database along this session of this Quarto Notebook to practice.</span>
-<span id="cb16-30"><a href="#cb16-30"></a></span>
-<span id="cb16-31"><a href="#cb16-31"></a>We use the TPC-H database for demonstration:</span>
-<span id="cb16-32"><a href="#cb16-32"></a></span>
-<span id="cb16-33"><a href="#cb16-33"></a>!<span class="co">[</span><span class="ot">The TPC-H Schema, source: [TPC Benchmark H Standard Specification](https://www.tpc.org/tpc_documents_current_versions/pdf/tpc-h_v2.17.1.pdf)</span><span class="co">](sample-data-tpch-schema.png)</span></span>
-<span id="cb16-34"><a href="#cb16-34"></a></span>
-<span id="cb16-35"><a href="#cb16-35"></a><span class="fu"># #1 handy functions for data wrangling</span></span>
-<span id="cb16-36"><a href="#cb16-36"></a></span>
-<span id="cb16-37"><a href="#cb16-37"></a><span class="fu">## #1.1 `QUALIFY`</span></span>
-<span id="cb16-38"><a href="#cb16-38"></a></span>
-<span id="cb16-39"><a href="#cb16-39"></a>We use <span class="in">`QUALIFY`</span> to filter the output column of <span class="in">`WINDOW`</span> function without creating more CTEs/Subqueries. It's not available in many traditional/on-prem RDBMS (MySQL, Oracle, MSSQL, PostgreSQL) but available in mordern/cloud-based databases (Snowflake, BigQuery, Databricks, MS Fabric, Teradata).</span>
-<span id="cb16-40"><a href="#cb16-40"></a></span>
-<span id="cb16-43"><a href="#cb16-43"></a><span class="in">```{sql}</span></span>
-<span id="cb16-44"><a href="#cb16-44"></a><span class="kw">SELECT</span></span>
-<span id="cb16-45"><a href="#cb16-45"></a>    o_orderkey, </span>
-<span id="cb16-46"><a href="#cb16-46"></a>    o_totalprice, </span>
-<span id="cb16-47"><a href="#cb16-47"></a>    RANK() OVER (<span class="kw">ORDER</span> <span class="kw">BY</span> o_totalprice <span class="kw">DESC</span>) <span class="kw">AS</span> price_rank <span class="co">-- rank the order by `o_totalprice` in desc</span></span>
-<span id="cb16-48"><a href="#cb16-48"></a><span class="kw">FROM</span> orders</span>
-<span id="cb16-49"><a href="#cb16-49"></a>QUALIFY price_rank <span class="op">&lt;=</span> <span class="dv">10</span>; <span class="co">-- filter top 10</span></span>
-<span id="cb16-50"><a href="#cb16-50"></a><span class="co">/* would need a CTE or Sub-query without QUALIFY */</span></span>
-<span id="cb16-51"><a href="#cb16-51"></a><span class="in">```</span></span>
-<span id="cb16-52"><a href="#cb16-52"></a><span class="al">![output - first 10 rows](1_qualify.png)</span></span>
-<span id="cb16-53"><a href="#cb16-53"></a></span>
-<span id="cb16-54"><a href="#cb16-54"></a><span class="fu">## #1.2 `DISTINCT ON`</span></span>
-<span id="cb16-55"><a href="#cb16-55"></a></span>
-<span id="cb16-56"><a href="#cb16-56"></a>Orginated from PostgreSQL, now support by some cloud-based like Snowflake but not in MySQL, SQL Server, Oracle, <span class="in">`DISTINCT ON`</span> allows us to get 1 detailed row (first or last) for a particular partition.</span>
-<span id="cb16-57"><a href="#cb16-57"></a></span>
-<span id="cb16-60"><a href="#cb16-60"></a><span class="in">```{sql}</span></span>
-<span id="cb16-61"><a href="#cb16-61"></a><span class="kw">SELECT</span> <span class="kw">DISTINCT</span> <span class="kw">ON</span> (o_custkey) <span class="co">-- distinct only `o_custkey`</span></span>
-<span id="cb16-62"><a href="#cb16-62"></a>    o_custkey, </span>
-<span id="cb16-63"><a href="#cb16-63"></a>    o_orderdate, </span>
-<span id="cb16-64"><a href="#cb16-64"></a>    o_totalprice</span>
-<span id="cb16-65"><a href="#cb16-65"></a><span class="kw">FROM</span> orders</span>
-<span id="cb16-66"><a href="#cb16-66"></a><span class="kw">ORDER</span> <span class="kw">BY</span> o_custkey, o_orderdate <span class="kw">DESC</span>; <span class="co">-- make sure to get the latest order by `o_orderdate`</span></span>
-<span id="cb16-67"><a href="#cb16-67"></a><span class="in">```</span></span>
-<span id="cb16-68"><a href="#cb16-68"></a><span class="al">![output - first 10 rows](2_distinct_on.png)</span></span>
-<span id="cb16-69"><a href="#cb16-69"></a></span>
-<span id="cb16-70"><a href="#cb16-70"></a><span class="fu">## #1.3 This can also be done with `ROW_NUMBER()` + `QUALIFY`:</span></span>
-<span id="cb16-71"><a href="#cb16-71"></a></span>
-<span id="cb16-74"><a href="#cb16-74"></a><span class="in">```{sql}</span></span>
-<span id="cb16-75"><a href="#cb16-75"></a><span class="kw">SELECT</span> </span>
-<span id="cb16-76"><a href="#cb16-76"></a>    o_custkey, </span>
-<span id="cb16-77"><a href="#cb16-77"></a>    o_orderdate, </span>
-<span id="cb16-78"><a href="#cb16-78"></a>    o_totalprice,</span>
-<span id="cb16-79"><a href="#cb16-79"></a>    ROW_NUMBER() OVER (PARTITION <span class="kw">BY</span> o_custkey <span class="kw">ORDER</span> <span class="kw">BY</span> o_orderdate <span class="kw">DESC</span>) <span class="kw">AS</span> rn</span>
-<span id="cb16-80"><a href="#cb16-80"></a><span class="kw">FROM</span> orders</span>
-<span id="cb16-81"><a href="#cb16-81"></a>QUALIFY rn <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb16-82"><a href="#cb16-82"></a><span class="kw">ORDER</span> <span class="kw">BY</span> o_custkey <span class="kw">DESC</span>; <span class="co">-- ROW_NUMBER() shuffle the order of the data</span></span>
-<span id="cb16-83"><a href="#cb16-83"></a><span class="in">```</span></span>
-<span id="cb16-84"><a href="#cb16-84"></a><span class="al">![output - first 10 rows](3_rn_qualify.png)</span></span>
-<span id="cb16-85"><a href="#cb16-85"></a></span>
-<span id="cb16-86"><a href="#cb16-86"></a><span class="fu">## #1.4 `STRUCT_PACK()`</span></span>
-<span id="cb16-87"><a href="#cb16-87"></a></span>
-<span id="cb16-88"><a href="#cb16-88"></a><span class="in">`STRUCT_PACK()`</span> is a function primarily associated with DuckDB:</span>
-<span id="cb16-89"><a href="#cb16-89"></a></span>
-<span id="cb16-90"><a href="#cb16-90"></a><span class="ss">- </span>Creates a compact, binary representation of multiple values;</span>
-<span id="cb16-91"><a href="#cb16-91"></a><span class="ss">- </span>Allows you to pack different data types into a single column;</span>
-<span id="cb16-92"><a href="#cb16-92"></a><span class="ss">- </span>Useful for data compression and efficient storage.</span>
-<span id="cb16-93"><a href="#cb16-93"></a></span>
-<span id="cb16-94"><a href="#cb16-94"></a>Below picture depicts how struct works:</span>
-<span id="cb16-95"><a href="#cb16-95"></a></span>
-<span id="cb16-96"><a href="#cb16-96"></a><span class="al">![struct packing](struck_pack.png)</span></span>
-<span id="cb16-97"><a href="#cb16-97"></a></span>
-<span id="cb16-100"><a href="#cb16-100"></a><span class="in">```{sql}</span></span>
-<span id="cb16-101"><a href="#cb16-101"></a><span class="kw">WITH</span> order_struct <span class="kw">AS</span> (</span>
-<span id="cb16-102"><a href="#cb16-102"></a>    <span class="kw">SELECT</span> </span>
-<span id="cb16-103"><a href="#cb16-103"></a>        o_orderkey,</span>
-<span id="cb16-104"><a href="#cb16-104"></a>        STRUCT_PACK(o_orderdate, o_totalprice, o_orderkey) <span class="kw">AS</span> order_info</span>
-<span id="cb16-105"><a href="#cb16-105"></a>    <span class="kw">FROM</span> orders</span>
-<span id="cb16-106"><a href="#cb16-106"></a>)</span>
-<span id="cb16-107"><a href="#cb16-107"></a><span class="kw">SELECT</span> </span>
-<span id="cb16-108"><a href="#cb16-108"></a>    <span class="fu">MIN</span>(order_info) <span class="kw">AS</span> min_order_date, <span class="co">-- get min of information from left to right</span></span>
-<span id="cb16-109"><a href="#cb16-109"></a>    <span class="fu">MAX</span>(order_info) <span class="kw">AS</span> max_order_date_price <span class="co">-- get of information from left to right, </span></span>
-<span id="cb16-110"><a href="#cb16-110"></a>    <span class="co">-- if there are many txn in that latest day, get the transaction with max price</span></span>
-<span id="cb16-111"><a href="#cb16-111"></a><span class="kw">FROM</span> order_struct;</span>
-<span id="cb16-112"><a href="#cb16-112"></a><span class="in">```</span></span>
-<span id="cb16-113"><a href="#cb16-113"></a><span class="al">![output](4_struct.png)</span></span>
-<span id="cb16-114"><a href="#cb16-114"></a></span>
-<span id="cb16-115"><a href="#cb16-115"></a><span class="fu">## #1.5 `BOOL_OR()` &amp; `BOOL_AND()`</span></span>
-<span id="cb16-116"><a href="#cb16-116"></a></span>
-<span id="cb16-117"><a href="#cb16-117"></a><span class="in">`BOOL_OR()`</span> &amp; <span class="in">`BOOL_AND()`</span> allows you to check a logical statement along all rows of a columns, supported in PostgreSQL, Snowflake, DuckDB, BigQuery, Databricks:</span>
-<span id="cb16-118"><a href="#cb16-118"></a></span>
-<span id="cb16-121"><a href="#cb16-121"></a><span class="in">```{sql}</span></span>
-<span id="cb16-122"><a href="#cb16-122"></a><span class="kw">SELECT</span> </span>
-<span id="cb16-123"><a href="#cb16-123"></a>    o_custkey, </span>
-<span id="cb16-124"><a href="#cb16-124"></a>    BOOL_OR(<span class="fu">cast</span>(o_shippriority <span class="kw">as</span> <span class="dt">boolean</span>)) <span class="kw">AS</span> has_atleast_one_priority_order, <span class="co">-- check whether AT LEAST 1 order of that customer has Is Priority = True</span></span>
-<span id="cb16-125"><a href="#cb16-125"></a>    BOOL_AND(<span class="fu">cast</span>(o_shippriority <span class="kw">as</span> <span class="dt">boolean</span>)) <span class="kw">AS</span> has_all_priority_order <span class="co">-- check whether ALL orders of that customer has Is Priority = True</span></span>
-<span id="cb16-126"><a href="#cb16-126"></a><span class="kw">FROM</span> orders</span>
-<span id="cb16-127"><a href="#cb16-127"></a><span class="kw">GROUP</span> <span class="kw">BY</span> o_custkey;</span>
-<span id="cb16-128"><a href="#cb16-128"></a><span class="in">```</span></span>
-<span id="cb16-129"><a href="#cb16-129"></a><span class="al">![output - first 10 rows](5_bool_or_and.png)</span></span>
-<span id="cb16-130"><a href="#cb16-130"></a></span>
-<span id="cb16-131"><a href="#cb16-131"></a><span class="fu">## #1.6 `EXCLUDE`</span></span>
-<span id="cb16-132"><a href="#cb16-132"></a></span>
-<span id="cb16-133"><a href="#cb16-133"></a>When you want to select all (<span class="in">`*`</span>) columns excet few ones:</span>
-<span id="cb16-134"><a href="#cb16-134"></a></span>
-<span id="cb16-137"><a href="#cb16-137"></a><span class="in">```{sql}</span></span>
-<span id="cb16-138"><a href="#cb16-138"></a><span class="kw">SELECT</span> <span class="op">*</span> EXCLUDE (o_orderdate, o_totalprice)</span>
-<span id="cb16-139"><a href="#cb16-139"></a><span class="kw">FROM</span> orders;</span>
-<span id="cb16-140"><a href="#cb16-140"></a><span class="in">```</span></span>
-<span id="cb16-141"><a href="#cb16-141"></a></span>
-<span id="cb16-142"><a href="#cb16-142"></a><span class="fu">## #1.7 `GROUP BY ALL` saves the day</span></span>
-<span id="cb16-143"><a href="#cb16-143"></a></span>
-<span id="cb16-144"><a href="#cb16-144"></a>Repeating all the columns listed in the <span class="in">`SELECT`</span> statement in <span class="in">`GROUP BY`</span> is annoying, just use <span class="in">`ALL`</span>:</span>
-<span id="cb16-145"><a href="#cb16-145"></a></span>
-<span id="cb16-148"><a href="#cb16-148"></a><span class="in">```{sql}</span></span>
-<span id="cb16-149"><a href="#cb16-149"></a><span class="kw">SELECT</span> </span>
-<span id="cb16-150"><a href="#cb16-150"></a>    o_orderkey, </span>
-<span id="cb16-151"><a href="#cb16-151"></a>    o_custkey, </span>
-<span id="cb16-152"><a href="#cb16-152"></a>    o_orderstatus, </span>
-<span id="cb16-153"><a href="#cb16-153"></a>    <span class="fu">SUM</span>(o_totalprice) <span class="kw">AS</span> total_price</span>
-<span id="cb16-154"><a href="#cb16-154"></a><span class="kw">FROM</span> orders</span>
-<span id="cb16-155"><a href="#cb16-155"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">ALL</span>;</span>
-<span id="cb16-156"><a href="#cb16-156"></a><span class="in">```</span></span>
-<span id="cb16-157"><a href="#cb16-157"></a></span>
-<span id="cb16-158"><a href="#cb16-158"></a><span class="fu">## #1.8 `COUNT_IF()`</span></span>
-<span id="cb16-159"><a href="#cb16-159"></a></span>
-<span id="cb16-160"><a href="#cb16-160"></a>Filter over rows in specific column:</span>
-<span id="cb16-161"><a href="#cb16-161"></a></span>
-<span id="cb16-164"><a href="#cb16-164"></a><span class="in">```{sql}</span></span>
-<span id="cb16-165"><a href="#cb16-165"></a><span class="kw">SELECT</span> </span>
-<span id="cb16-166"><a href="#cb16-166"></a>    o_custkey, </span>
-<span id="cb16-167"><a href="#cb16-167"></a>    COUNT_IF(o_totalprice <span class="op">&gt;</span> <span class="dv">100000</span>) <span class="kw">AS</span> high_value_orders, </span>
-<span id="cb16-168"><a href="#cb16-168"></a>    <span class="co">-- equivalent to SUM(CASE WHEN o_totalprice &gt; 100000 THEN 1 ELSE 0 </span><span class="re">END</span><span class="co">)</span></span>
-<span id="cb16-169"><a href="#cb16-169"></a>    <span class="fu">COUNT</span>(o_totalprice) <span class="kw">as</span> all_orders</span>
-<span id="cb16-170"><a href="#cb16-170"></a><span class="kw">FROM</span> orders</span>
-<span id="cb16-171"><a href="#cb16-171"></a><span class="kw">GROUP</span> <span class="kw">BY</span> o_custkey;</span>
-<span id="cb16-172"><a href="#cb16-172"></a><span class="in">```</span></span>
-<span id="cb16-173"><a href="#cb16-173"></a><span class="al">![output - first 10 rows](8_count_if.png)</span></span>
-<span id="cb16-174"><a href="#cb16-174"></a></span>
-<span id="cb16-175"><a href="#cb16-175"></a><span class="fu">## #1.9 `STRING_AGG()`</span></span>
-<span id="cb16-176"><a href="#cb16-176"></a></span>
-<span id="cb16-177"><a href="#cb16-177"></a>Concatenate rows of string in a <span class="in">`GROUP BY`</span> statement:</span>
-<span id="cb16-178"><a href="#cb16-178"></a></span>
-<span id="cb16-181"><a href="#cb16-181"></a><span class="in">```{sql}</span></span>
-<span id="cb16-182"><a href="#cb16-182"></a><span class="kw">SELECT</span> STRING_AGG(c_name, <span class="st">', '</span>) <span class="kw">AS</span> customer_names</span>
-<span id="cb16-183"><a href="#cb16-183"></a><span class="kw">FROM</span> customer;</span>
-<span id="cb16-184"><a href="#cb16-184"></a><span class="in">```</span></span>
-<span id="cb16-185"><a href="#cb16-185"></a></span>
-<span id="cb16-186"><a href="#cb16-186"></a><span class="fu">## #1.10 Null handling with `COALESCE()`</span></span>
-<span id="cb16-187"><a href="#cb16-187"></a></span>
-<span id="cb16-188"><a href="#cb16-188"></a>Handling null value in a column with value from another column or default value:</span>
-<span id="cb16-189"><a href="#cb16-189"></a></span>
-<span id="cb16-192"><a href="#cb16-192"></a><span class="in">```{sql}</span></span>
-<span id="cb16-193"><a href="#cb16-193"></a><span class="kw">WITH</span> fake_orders <span class="kw">AS</span> (</span>
-<span id="cb16-194"><a href="#cb16-194"></a>    <span class="kw">SELECT</span> <span class="dv">1</span> <span class="kw">AS</span> o_orderkey, <span class="dv">100</span> <span class="kw">AS</span> o_totalprice, <span class="kw">NULL</span> <span class="kw">AS</span> discount</span>
-<span id="cb16-195"><a href="#cb16-195"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
-<span id="cb16-196"><a href="#cb16-196"></a>    <span class="kw">SELECT</span> <span class="dv">2</span> <span class="kw">AS</span> o_orderkey, <span class="dv">200</span> <span class="kw">AS</span> o_totalprice, <span class="dv">20</span> <span class="kw">AS</span> discount</span>
-<span id="cb16-197"><a href="#cb16-197"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
-<span id="cb16-198"><a href="#cb16-198"></a>    <span class="kw">SELECT</span> <span class="dv">3</span> <span class="kw">AS</span> o_orderkey, <span class="dv">300</span> <span class="kw">AS</span> o_totalprice, <span class="kw">NULL</span> <span class="kw">AS</span> discount</span>
-<span id="cb16-199"><a href="#cb16-199"></a>)</span>
-<span id="cb16-200"><a href="#cb16-200"></a><span class="kw">SELECT</span> </span>
-<span id="cb16-201"><a href="#cb16-201"></a>    o_orderkey, </span>
-<span id="cb16-202"><a href="#cb16-202"></a>    o_totalprice, </span>
-<span id="cb16-203"><a href="#cb16-203"></a>    discount,</span>
-<span id="cb16-204"><a href="#cb16-204"></a>    <span class="fu">COALESCE</span>(discount, o_totalprice <span class="op">*</span> <span class="fl">0.10</span>) <span class="kw">AS</span> final_discount</span>
-<span id="cb16-205"><a href="#cb16-205"></a><span class="kw">FROM</span> fake_orders;</span>
-<span id="cb16-206"><a href="#cb16-206"></a><span class="in">```</span></span>
-<span id="cb16-207"><a href="#cb16-207"></a><span class="al">![output](10_coalesce.png)</span></span>
-<span id="cb16-208"><a href="#cb16-208"></a></span>
-<span id="cb16-209"><a href="#cb16-209"></a><span class="fu">## #1.11 `GENERATE_SERIES()`</span></span>
-<span id="cb16-210"><a href="#cb16-210"></a></span>
-<span id="cb16-211"><a href="#cb16-211"></a>This helps you generate a sequence/series of data over a range with an interval for data simulation or joining with other tables.</span>
-<span id="cb16-212"><a href="#cb16-212"></a></span>
-<span id="cb16-215"><a href="#cb16-215"></a><span class="in">```{sql}</span></span>
-<span id="cb16-216"><a href="#cb16-216"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
-<span id="cb16-217"><a href="#cb16-217"></a><span class="kw">FROM</span> generate_series(<span class="dv">1</span>, <span class="dv">10</span>);</span>
-<span id="cb16-218"><a href="#cb16-218"></a><span class="in">```</span></span>
-<span id="cb16-219"><a href="#cb16-219"></a><span class="al">![output](11a_gen.png)</span></span>
-<span id="cb16-220"><a href="#cb16-220"></a></span>
-<span id="cb16-223"><a href="#cb16-223"></a><span class="in">```{sql}</span></span>
-<span id="cb16-224"><a href="#cb16-224"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
-<span id="cb16-225"><a href="#cb16-225"></a><span class="kw">FROM</span> generate_series(<span class="st">'2024-01-01'</span><span class="ch">::</span><span class="dt">DATE</span>, <span class="st">'2024-01-10'</span><span class="ch">::</span><span class="dt">DATE</span>, <span class="kw">INTERVAL</span> <span class="dv">1</span> DAY);</span>
-<span id="cb16-226"><a href="#cb16-226"></a><span class="in">```</span></span>
-<span id="cb16-227"><a href="#cb16-227"></a><span class="al">![output](11b_gen.png)</span></span>
-<span id="cb16-228"><a href="#cb16-228"></a></span>
-<span id="cb16-229"><a href="#cb16-229"></a><span class="fu">## #1.12 `UNNEST()`</span></span>
-<span id="cb16-230"><a href="#cb16-230"></a></span>
-<span id="cb16-233"><a href="#cb16-233"></a><span class="in">```{sql}</span></span>
-<span id="cb16-234"><a href="#cb16-234"></a><span class="kw">WITH</span> nested_data <span class="kw">AS</span> (</span>
-<span id="cb16-235"><a href="#cb16-235"></a>    <span class="kw">SELECT</span> <span class="dv">1</span> <span class="kw">AS</span> id, [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>] <span class="kw">AS</span> <span class="kw">values</span></span>
-<span id="cb16-236"><a href="#cb16-236"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
-<span id="cb16-237"><a href="#cb16-237"></a>    <span class="kw">SELECT</span> <span class="dv">2</span> <span class="kw">AS</span> id, [<span class="dv">40</span>, <span class="dv">50</span>] <span class="kw">AS</span> <span class="kw">values</span></span>
-<span id="cb16-238"><a href="#cb16-238"></a>)</span>
-<span id="cb16-239"><a href="#cb16-239"></a><span class="kw">SELECT</span> </span>
-<span id="cb16-240"><a href="#cb16-240"></a>    id, </span>
-<span id="cb16-241"><a href="#cb16-241"></a>    UNNEST(<span class="kw">values</span>) <span class="kw">AS</span> flattened_value</span>
-<span id="cb16-242"><a href="#cb16-242"></a><span class="kw">FROM</span> nested_data;</span>
-<span id="cb16-243"><a href="#cb16-243"></a><span class="in">```</span></span>
-<span id="cb16-244"><a href="#cb16-244"></a></span>
-<span id="cb16-245"><a href="#cb16-245"></a><span class="fu"># #2 `SET` operations</span></span>
-<span id="cb16-246"><a href="#cb16-246"></a><span class="fu"># #3 macros</span></span>
-<span id="cb16-247"><a href="#cb16-247"></a><span class="fu"># #4 jinja2</span></span>
-<span id="cb16-248"><a href="#cb16-248"></a><span class="fu"># #5 metadata</span></span>
-<span id="cb16-249"><a href="#cb16-249"></a><span class="fu"># #6 de-duplicate</span></span>
-<span id="cb16-250"><a href="#cb16-250"></a><span class="fu"># #7 `JOIN`s that you've never ever seen before</span></span>
-<span id="cb16-251"><a href="#cb16-251"></a><span class="fu"># #8 use cases</span></span>
-<span id="cb16-252"><a href="#cb16-252"></a><span class="fu"># resource</span></span>
-<span id="cb16-253"><a href="#cb16-253"></a></span>
-<span id="cb16-254"><a href="#cb16-254"></a><span class="ss">1. </span>Article by Start Data Engineering: <span class="ot">&lt;https://www.startdataengineering.com/post/n-sql-tips-de/&gt;</span>;</span>
-<span id="cb16-255"><a href="#cb16-255"></a><span class="ss">2. </span>Repo and workbook: <span class="co">[</span><span class="ot">...concepts/sql_tips/sql_tips.ipynb</span><span class="co">](https://github.com/josephmachado/adv_data_transformation_in_sql/blob/main/concepts/sql_tips/sql_tips.ipynb)</span></span>
-<span id="cb16-256"><a href="#cb16-256"></a></span>
-<span id="cb16-259"><a href="#cb16-259"></a><span class="in">```{r}</span></span>
-<span id="cb16-260"><a href="#cb16-260"></a><span class="co">#| eval: true</span></span>
-<span id="cb16-261"><a href="#cb16-261"></a><span class="co">#| code-fold: true</span></span>
-<span id="cb16-262"><a href="#cb16-262"></a><span class="fu">cat</span>(<span class="st">"I added this R code chunk and somehow knitr engine successfully rendered SQL formatting block code.</span><span class="sc">\n</span><span class="st">Workaround: https://github.com/quarto-dev/quarto-cli/issues/2137"</span>)</span>
-<span id="cb16-263"><a href="#cb16-263"></a><span class="in">```</span></span>
+<div class="sourceCode" id="cb35" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb35-1"><a href="#cb35-1"></a><span class="co">---</span></span>
+<span id="cb35-2"><a href="#cb35-2"></a><span class="an">title:</span><span class="co"> "Advanced SQL"</span></span>
+<span id="cb35-3"><a href="#cb35-3"></a><span class="an">description:</span><span class="co"> "SQL things that I wish I could know earlier."</span></span>
+<span id="cb35-4"><a href="#cb35-4"></a><span class="an">author:</span></span>
+<span id="cb35-5"><a href="#cb35-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
+<span id="cb35-6"><a href="#cb35-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
+<span id="cb35-7"><a href="#cb35-7"></a><span class="an">categories:</span><span class="co"> [til, sql] </span></span>
+<span id="cb35-8"><a href="#cb35-8"></a><span class="an">date:</span><span class="co"> 12-06-2024</span></span>
+<span id="cb35-9"><a href="#cb35-9"></a><span class="an">date-modified:</span><span class="co"> 12-06-2024</span></span>
+<span id="cb35-10"><a href="#cb35-10"></a><span class="an">image:</span><span class="co"> duckdb.jpg</span></span>
+<span id="cb35-11"><a href="#cb35-11"></a><span class="an">draft:</span><span class="co"> false</span></span>
+<span id="cb35-12"><a href="#cb35-12"></a><span class="an">format:</span></span>
+<span id="cb35-13"><a href="#cb35-13"></a><span class="co">  html:</span></span>
+<span id="cb35-14"><a href="#cb35-14"></a><span class="co">    engine: knitr</span></span>
+<span id="cb35-15"><a href="#cb35-15"></a><span class="co">    code-overflow: wrap</span></span>
+<span id="cb35-16"><a href="#cb35-16"></a><span class="co">    code-tools: true</span></span>
+<span id="cb35-17"><a href="#cb35-17"></a><span class="co">    code-fold: show</span></span>
+<span id="cb35-18"><a href="#cb35-18"></a><span class="co">    code-annotations: hover</span></span>
+<span id="cb35-19"><a href="#cb35-19"></a><span class="an">execute:</span><span class="co"> </span></span>
+<span id="cb35-20"><a href="#cb35-20"></a><span class="co">  eval: false</span></span>
+<span id="cb35-21"><a href="#cb35-21"></a><span class="co">---</span></span>
+<span id="cb35-22"><a href="#cb35-22"></a></span>
+<span id="cb35-23"><a href="#cb35-23"></a>This is my note/workaround for the article "<span class="co">[</span><span class="ot">25 SQL tips to level up your data engineering skills</span><span class="co">](https://www.startdataengineering.com/post/n-sql-tips-de/)</span>" by Start Data Engineering, authored by <span class="co">[</span><span class="ot">Joseph Machado</span><span class="co">](https://github.com/josephmachado)</span>.</span>
+<span id="cb35-24"><a href="#cb35-24"></a></span>
+<span id="cb35-25"><a href="#cb35-25"></a><span class="fu"># setup</span></span>
+<span id="cb35-26"><a href="#cb35-26"></a></span>
+<span id="cb35-27"><a href="#cb35-27"></a>Joseph provided a ready-to-go project regarding this advanced SQL transformation topics in this <span class="co">[</span><span class="ot">repo</span><span class="co">](https://github.com/josephmachado/adv_data_transformation_in_sql)</span> using **DuckDB** in **Jupyter Notebook**. We can either run it in the Github codespace or in our local machine with minimal setup.</span>
+<span id="cb35-28"><a href="#cb35-28"></a></span>
+<span id="cb35-29"><a href="#cb35-29"></a>We use the TPC-H database for demonstration:</span>
+<span id="cb35-30"><a href="#cb35-30"></a></span>
+<span id="cb35-31"><a href="#cb35-31"></a>!<span class="co">[</span><span class="ot">The TPC-H Schema, source: [TPC Benchmark H Standard Specification](https://www.tpc.org/tpc_documents_current_versions/pdf/tpc-h_v2.17.1.pdf)</span><span class="co">](sample-data-tpch-schema.png)</span></span>
+<span id="cb35-32"><a href="#cb35-32"></a></span>
+<span id="cb35-33"><a href="#cb35-33"></a><span class="fu"># #1 handy functions for data wrangling</span></span>
+<span id="cb35-34"><a href="#cb35-34"></a></span>
+<span id="cb35-35"><a href="#cb35-35"></a><span class="fu">## #1.1 `QUALIFY`</span></span>
+<span id="cb35-36"><a href="#cb35-36"></a></span>
+<span id="cb35-37"><a href="#cb35-37"></a>We use <span class="in">`QUALIFY`</span> to filter the output column of <span class="in">`WINDOW`</span> function without creating more CTEs/Subqueries. It's not available in many traditional/on-prem RDBMS (MySQL, Oracle, MSSQL, PostgreSQL) but available in mordern/cloud-based databases (Snowflake, BigQuery, Databricks, MS Fabric, Teradata).</span>
+<span id="cb35-38"><a href="#cb35-38"></a></span>
+<span id="cb35-41"><a href="#cb35-41"></a><span class="in">```{sql}</span></span>
+<span id="cb35-42"><a href="#cb35-42"></a><span class="kw">SELECT</span></span>
+<span id="cb35-43"><a href="#cb35-43"></a>    o_orderkey, </span>
+<span id="cb35-44"><a href="#cb35-44"></a>    o_totalprice, </span>
+<span id="cb35-45"><a href="#cb35-45"></a>    RANK() OVER (<span class="kw">ORDER</span> <span class="kw">BY</span> o_totalprice <span class="kw">DESC</span>) <span class="kw">AS</span> price_rank <span class="co">-- rank the order by `o_totalprice` in desc</span></span>
+<span id="cb35-46"><a href="#cb35-46"></a><span class="kw">FROM</span> orders</span>
+<span id="cb35-47"><a href="#cb35-47"></a>QUALIFY price_rank <span class="op">&lt;=</span> <span class="dv">10</span>; <span class="co">-- filter top 10</span></span>
+<span id="cb35-48"><a href="#cb35-48"></a><span class="co">/* would need a CTE or Sub-query without QUALIFY */</span></span>
+<span id="cb35-49"><a href="#cb35-49"></a><span class="in">```</span></span>
+<span id="cb35-50"><a href="#cb35-50"></a><span class="al">![output - first 10 rows](1_qualify.png)</span></span>
+<span id="cb35-51"><a href="#cb35-51"></a></span>
+<span id="cb35-52"><a href="#cb35-52"></a><span class="fu">## #1.2 `DISTINCT ON`</span></span>
+<span id="cb35-53"><a href="#cb35-53"></a></span>
+<span id="cb35-54"><a href="#cb35-54"></a>Orginated from PostgreSQL, now support by some cloud-based like Snowflake but not in MySQL, SQL Server, Oracle, <span class="in">`DISTINCT ON`</span> allows us to get 1 detailed row (first or last) for a particular partition.</span>
+<span id="cb35-55"><a href="#cb35-55"></a></span>
+<span id="cb35-58"><a href="#cb35-58"></a><span class="in">```{sql}</span></span>
+<span id="cb35-59"><a href="#cb35-59"></a><span class="kw">SELECT</span> <span class="kw">DISTINCT</span> <span class="kw">ON</span> (o_custkey) <span class="co">-- distinct only `o_custkey`</span></span>
+<span id="cb35-60"><a href="#cb35-60"></a>    o_custkey, </span>
+<span id="cb35-61"><a href="#cb35-61"></a>    o_orderdate, </span>
+<span id="cb35-62"><a href="#cb35-62"></a>    o_totalprice</span>
+<span id="cb35-63"><a href="#cb35-63"></a><span class="kw">FROM</span> orders</span>
+<span id="cb35-64"><a href="#cb35-64"></a><span class="kw">ORDER</span> <span class="kw">BY</span> o_custkey, o_orderdate <span class="kw">DESC</span>; <span class="co">-- make sure to get the latest order by `o_orderdate`</span></span>
+<span id="cb35-65"><a href="#cb35-65"></a><span class="in">```</span></span>
+<span id="cb35-66"><a href="#cb35-66"></a><span class="al">![output - first 10 rows](2_distinct_on.png)</span></span>
+<span id="cb35-67"><a href="#cb35-67"></a></span>
+<span id="cb35-68"><a href="#cb35-68"></a><span class="fu">## #1.3 This can also be done with `ROW_NUMBER()` + `QUALIFY`:</span></span>
+<span id="cb35-69"><a href="#cb35-69"></a></span>
+<span id="cb35-72"><a href="#cb35-72"></a><span class="in">```{sql}</span></span>
+<span id="cb35-73"><a href="#cb35-73"></a><span class="kw">SELECT</span> </span>
+<span id="cb35-74"><a href="#cb35-74"></a>    o_custkey, </span>
+<span id="cb35-75"><a href="#cb35-75"></a>    o_orderdate, </span>
+<span id="cb35-76"><a href="#cb35-76"></a>    o_totalprice,</span>
+<span id="cb35-77"><a href="#cb35-77"></a>    ROW_NUMBER() OVER (PARTITION <span class="kw">BY</span> o_custkey <span class="kw">ORDER</span> <span class="kw">BY</span> o_orderdate <span class="kw">DESC</span>) <span class="kw">AS</span> rn</span>
+<span id="cb35-78"><a href="#cb35-78"></a><span class="kw">FROM</span> orders</span>
+<span id="cb35-79"><a href="#cb35-79"></a>QUALIFY rn <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb35-80"><a href="#cb35-80"></a><span class="kw">ORDER</span> <span class="kw">BY</span> o_custkey <span class="kw">DESC</span>; <span class="co">-- ROW_NUMBER() shuffle the order of the data</span></span>
+<span id="cb35-81"><a href="#cb35-81"></a><span class="in">```</span></span>
+<span id="cb35-82"><a href="#cb35-82"></a><span class="al">![output - first 10 rows](3_rn_qualify.png)</span></span>
+<span id="cb35-83"><a href="#cb35-83"></a></span>
+<span id="cb35-84"><a href="#cb35-84"></a><span class="fu">## #1.4 `STRUCT_PACK()`</span></span>
+<span id="cb35-85"><a href="#cb35-85"></a></span>
+<span id="cb35-86"><a href="#cb35-86"></a><span class="in">`STRUCT_PACK()`</span> is a function primarily associated with DuckDB:</span>
+<span id="cb35-87"><a href="#cb35-87"></a></span>
+<span id="cb35-88"><a href="#cb35-88"></a><span class="ss">- </span>Creates a compact, binary representation of multiple values;</span>
+<span id="cb35-89"><a href="#cb35-89"></a><span class="ss">- </span>Allows you to pack different data types into a single column;</span>
+<span id="cb35-90"><a href="#cb35-90"></a><span class="ss">- </span>Useful for data compression and efficient storage.</span>
+<span id="cb35-91"><a href="#cb35-91"></a></span>
+<span id="cb35-92"><a href="#cb35-92"></a>Below picture depicts how struct works:</span>
+<span id="cb35-93"><a href="#cb35-93"></a></span>
+<span id="cb35-94"><a href="#cb35-94"></a><span class="al">![struct packing](struck_pack.png)</span></span>
+<span id="cb35-95"><a href="#cb35-95"></a></span>
+<span id="cb35-98"><a href="#cb35-98"></a><span class="in">```{sql}</span></span>
+<span id="cb35-99"><a href="#cb35-99"></a><span class="kw">WITH</span> order_struct <span class="kw">AS</span> (</span>
+<span id="cb35-100"><a href="#cb35-100"></a>    <span class="kw">SELECT</span> </span>
+<span id="cb35-101"><a href="#cb35-101"></a>        o_orderkey,</span>
+<span id="cb35-102"><a href="#cb35-102"></a>        STRUCT_PACK(o_orderdate, o_totalprice, o_orderkey) <span class="kw">AS</span> order_info</span>
+<span id="cb35-103"><a href="#cb35-103"></a>    <span class="kw">FROM</span> orders</span>
+<span id="cb35-104"><a href="#cb35-104"></a>)</span>
+<span id="cb35-105"><a href="#cb35-105"></a><span class="kw">SELECT</span> </span>
+<span id="cb35-106"><a href="#cb35-106"></a>    <span class="fu">MIN</span>(order_info) <span class="kw">AS</span> min_order_date, <span class="co">-- get min of information from left to right</span></span>
+<span id="cb35-107"><a href="#cb35-107"></a>    <span class="fu">MAX</span>(order_info) <span class="kw">AS</span> max_order_date_price <span class="co">-- get of information from left to right, </span></span>
+<span id="cb35-108"><a href="#cb35-108"></a>    <span class="co">-- if there are many txn in that latest day, get the transaction with max price</span></span>
+<span id="cb35-109"><a href="#cb35-109"></a><span class="kw">FROM</span> order_struct;</span>
+<span id="cb35-110"><a href="#cb35-110"></a><span class="in">```</span></span>
+<span id="cb35-111"><a href="#cb35-111"></a><span class="al">![output](4_struct.png)</span></span>
+<span id="cb35-112"><a href="#cb35-112"></a></span>
+<span id="cb35-113"><a href="#cb35-113"></a><span class="fu">## #1.5 `BOOL_OR()` &amp; `BOOL_AND()`</span></span>
+<span id="cb35-114"><a href="#cb35-114"></a></span>
+<span id="cb35-115"><a href="#cb35-115"></a><span class="in">`BOOL_OR()`</span> &amp; <span class="in">`BOOL_AND()`</span> allows you to check a logical statement along all rows of a columns, supported in PostgreSQL, Snowflake, DuckDB, BigQuery, Databricks:</span>
+<span id="cb35-116"><a href="#cb35-116"></a></span>
+<span id="cb35-119"><a href="#cb35-119"></a><span class="in">```{sql}</span></span>
+<span id="cb35-120"><a href="#cb35-120"></a><span class="kw">SELECT</span> </span>
+<span id="cb35-121"><a href="#cb35-121"></a>    o_custkey, </span>
+<span id="cb35-122"><a href="#cb35-122"></a>    BOOL_OR(<span class="fu">cast</span>(o_shippriority <span class="kw">as</span> <span class="dt">boolean</span>)) <span class="kw">AS</span> has_atleast_one_priority_order, <span class="co">-- check whether AT LEAST 1 order of that customer has Is Priority = True</span></span>
+<span id="cb35-123"><a href="#cb35-123"></a>    BOOL_AND(<span class="fu">cast</span>(o_shippriority <span class="kw">as</span> <span class="dt">boolean</span>)) <span class="kw">AS</span> has_all_priority_order <span class="co">-- check whether ALL orders of that customer has Is Priority = True</span></span>
+<span id="cb35-124"><a href="#cb35-124"></a><span class="kw">FROM</span> orders</span>
+<span id="cb35-125"><a href="#cb35-125"></a><span class="kw">GROUP</span> <span class="kw">BY</span> o_custkey;</span>
+<span id="cb35-126"><a href="#cb35-126"></a><span class="in">```</span></span>
+<span id="cb35-127"><a href="#cb35-127"></a><span class="al">![output - first 10 rows](5_bool_or_and.png)</span></span>
+<span id="cb35-128"><a href="#cb35-128"></a></span>
+<span id="cb35-129"><a href="#cb35-129"></a><span class="fu">## #1.6 `EXCLUDE()`</span></span>
+<span id="cb35-130"><a href="#cb35-130"></a></span>
+<span id="cb35-131"><a href="#cb35-131"></a>When you want to select all (<span class="in">`*`</span>) columns excet few ones:</span>
+<span id="cb35-132"><a href="#cb35-132"></a></span>
+<span id="cb35-135"><a href="#cb35-135"></a><span class="in">```{sql}</span></span>
+<span id="cb35-136"><a href="#cb35-136"></a><span class="kw">SELECT</span> <span class="op">*</span> EXCLUDE (o_orderdate, o_totalprice)</span>
+<span id="cb35-137"><a href="#cb35-137"></a><span class="kw">FROM</span> orders;</span>
+<span id="cb35-138"><a href="#cb35-138"></a><span class="in">```</span></span>
+<span id="cb35-139"><a href="#cb35-139"></a></span>
+<span id="cb35-140"><a href="#cb35-140"></a><span class="fu">## #1.7 `GROUP BY ALL` saves the day</span></span>
+<span id="cb35-141"><a href="#cb35-141"></a></span>
+<span id="cb35-142"><a href="#cb35-142"></a>Repeating all the columns listed in the <span class="in">`SELECT`</span> statement in <span class="in">`GROUP BY`</span> is annoying, just use <span class="in">`ALL`</span>:</span>
+<span id="cb35-143"><a href="#cb35-143"></a></span>
+<span id="cb35-146"><a href="#cb35-146"></a><span class="in">```{sql}</span></span>
+<span id="cb35-147"><a href="#cb35-147"></a><span class="kw">SELECT</span> </span>
+<span id="cb35-148"><a href="#cb35-148"></a>    o_orderkey, </span>
+<span id="cb35-149"><a href="#cb35-149"></a>    o_custkey, </span>
+<span id="cb35-150"><a href="#cb35-150"></a>    o_orderstatus, </span>
+<span id="cb35-151"><a href="#cb35-151"></a>    <span class="fu">SUM</span>(o_totalprice) <span class="kw">AS</span> total_price</span>
+<span id="cb35-152"><a href="#cb35-152"></a><span class="kw">FROM</span> orders</span>
+<span id="cb35-153"><a href="#cb35-153"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">ALL</span>;</span>
+<span id="cb35-154"><a href="#cb35-154"></a><span class="in">```</span></span>
+<span id="cb35-155"><a href="#cb35-155"></a></span>
+<span id="cb35-156"><a href="#cb35-156"></a><span class="fu">## #1.8 `COUNT_IF()`</span></span>
+<span id="cb35-157"><a href="#cb35-157"></a></span>
+<span id="cb35-158"><a href="#cb35-158"></a>Filter over rows in specific column:</span>
+<span id="cb35-159"><a href="#cb35-159"></a></span>
+<span id="cb35-162"><a href="#cb35-162"></a><span class="in">```{sql}</span></span>
+<span id="cb35-163"><a href="#cb35-163"></a><span class="kw">SELECT</span> </span>
+<span id="cb35-164"><a href="#cb35-164"></a>    o_custkey, </span>
+<span id="cb35-165"><a href="#cb35-165"></a>    COUNT_IF(o_totalprice <span class="op">&gt;</span> <span class="dv">100000</span>) <span class="kw">AS</span> high_value_orders, </span>
+<span id="cb35-166"><a href="#cb35-166"></a>    <span class="co">-- equivalent to SUM(CASE WHEN o_totalprice &gt; 100000 THEN 1 ELSE 0 </span><span class="re">END</span><span class="co">)</span></span>
+<span id="cb35-167"><a href="#cb35-167"></a>    <span class="fu">COUNT</span>(o_totalprice) <span class="kw">as</span> all_orders</span>
+<span id="cb35-168"><a href="#cb35-168"></a><span class="kw">FROM</span> orders</span>
+<span id="cb35-169"><a href="#cb35-169"></a><span class="kw">GROUP</span> <span class="kw">BY</span> o_custkey;</span>
+<span id="cb35-170"><a href="#cb35-170"></a><span class="in">```</span></span>
+<span id="cb35-171"><a href="#cb35-171"></a><span class="al">![output - first 10 rows](8_count_if.png)</span></span>
+<span id="cb35-172"><a href="#cb35-172"></a></span>
+<span id="cb35-173"><a href="#cb35-173"></a><span class="fu">## #1.9 `STRING_AGG()`</span></span>
+<span id="cb35-174"><a href="#cb35-174"></a></span>
+<span id="cb35-175"><a href="#cb35-175"></a>Concatenate rows of string in a <span class="in">`GROUP BY`</span> statement:</span>
+<span id="cb35-176"><a href="#cb35-176"></a></span>
+<span id="cb35-179"><a href="#cb35-179"></a><span class="in">```{sql}</span></span>
+<span id="cb35-180"><a href="#cb35-180"></a><span class="kw">SELECT</span> STRING_AGG(c_name, <span class="st">', '</span>) <span class="kw">AS</span> customer_names</span>
+<span id="cb35-181"><a href="#cb35-181"></a><span class="kw">FROM</span> customer;</span>
+<span id="cb35-182"><a href="#cb35-182"></a><span class="in">```</span></span>
+<span id="cb35-183"><a href="#cb35-183"></a></span>
+<span id="cb35-184"><a href="#cb35-184"></a><span class="fu">## #1.10 Null handling with `COALESCE()`</span></span>
+<span id="cb35-185"><a href="#cb35-185"></a></span>
+<span id="cb35-186"><a href="#cb35-186"></a>Handling null value in a column with value from another column or default value:</span>
+<span id="cb35-187"><a href="#cb35-187"></a></span>
+<span id="cb35-190"><a href="#cb35-190"></a><span class="in">```{sql}</span></span>
+<span id="cb35-191"><a href="#cb35-191"></a><span class="kw">WITH</span> fake_orders <span class="kw">AS</span> (</span>
+<span id="cb35-192"><a href="#cb35-192"></a>    <span class="kw">SELECT</span> <span class="dv">1</span> <span class="kw">AS</span> o_orderkey, <span class="dv">100</span> <span class="kw">AS</span> o_totalprice, <span class="kw">NULL</span> <span class="kw">AS</span> discount</span>
+<span id="cb35-193"><a href="#cb35-193"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-194"><a href="#cb35-194"></a>    <span class="kw">SELECT</span> <span class="dv">2</span> <span class="kw">AS</span> o_orderkey, <span class="dv">200</span> <span class="kw">AS</span> o_totalprice, <span class="dv">20</span> <span class="kw">AS</span> discount</span>
+<span id="cb35-195"><a href="#cb35-195"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-196"><a href="#cb35-196"></a>    <span class="kw">SELECT</span> <span class="dv">3</span> <span class="kw">AS</span> o_orderkey, <span class="dv">300</span> <span class="kw">AS</span> o_totalprice, <span class="kw">NULL</span> <span class="kw">AS</span> discount</span>
+<span id="cb35-197"><a href="#cb35-197"></a>)</span>
+<span id="cb35-198"><a href="#cb35-198"></a><span class="kw">SELECT</span> </span>
+<span id="cb35-199"><a href="#cb35-199"></a>    o_orderkey, </span>
+<span id="cb35-200"><a href="#cb35-200"></a>    o_totalprice, </span>
+<span id="cb35-201"><a href="#cb35-201"></a>    discount,</span>
+<span id="cb35-202"><a href="#cb35-202"></a>    <span class="fu">COALESCE</span>(discount, o_totalprice <span class="op">*</span> <span class="fl">0.10</span>) <span class="kw">AS</span> final_discount</span>
+<span id="cb35-203"><a href="#cb35-203"></a><span class="kw">FROM</span> fake_orders;</span>
+<span id="cb35-204"><a href="#cb35-204"></a><span class="in">```</span></span>
+<span id="cb35-205"><a href="#cb35-205"></a><span class="al">![output](10_coalesce.png)</span></span>
+<span id="cb35-206"><a href="#cb35-206"></a></span>
+<span id="cb35-207"><a href="#cb35-207"></a><span class="fu">## #1.11 `GENERATE_SERIES()`</span></span>
+<span id="cb35-208"><a href="#cb35-208"></a></span>
+<span id="cb35-209"><a href="#cb35-209"></a>This helps you generate a sequence/series of data over a range with an interval which facilitating data simulation or joining with other tables.</span>
+<span id="cb35-210"><a href="#cb35-210"></a></span>
+<span id="cb35-213"><a href="#cb35-213"></a><span class="in">```{sql}</span></span>
+<span id="cb35-214"><a href="#cb35-214"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb35-215"><a href="#cb35-215"></a><span class="kw">FROM</span> generate_series(<span class="dv">1</span>, <span class="dv">10</span>);</span>
+<span id="cb35-216"><a href="#cb35-216"></a><span class="in">```</span></span>
+<span id="cb35-217"><a href="#cb35-217"></a><span class="al">![output](11a_gen.png)</span></span>
+<span id="cb35-218"><a href="#cb35-218"></a></span>
+<span id="cb35-221"><a href="#cb35-221"></a><span class="in">```{sql}</span></span>
+<span id="cb35-222"><a href="#cb35-222"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb35-223"><a href="#cb35-223"></a><span class="kw">FROM</span> generate_series(<span class="st">'2024-01-01'</span><span class="ch">::</span><span class="dt">DATE</span>, <span class="st">'2024-01-10'</span><span class="ch">::</span><span class="dt">DATE</span>, <span class="kw">INTERVAL</span> <span class="dv">1</span> DAY);</span>
+<span id="cb35-224"><a href="#cb35-224"></a><span class="in">```</span></span>
+<span id="cb35-225"><a href="#cb35-225"></a><span class="al">![output](11b_gen.png)</span></span>
+<span id="cb35-226"><a href="#cb35-226"></a></span>
+<span id="cb35-227"><a href="#cb35-227"></a><span class="fu">## #1.12 `UNNEST()`</span></span>
+<span id="cb35-228"><a href="#cb35-228"></a></span>
+<span id="cb35-229"><a href="#cb35-229"></a>Unpacking data wrapped in JSON array or list <span class="in">`[...]`</span> using <span class="in">`UNNEST()`</span>: </span>
+<span id="cb35-230"><a href="#cb35-230"></a></span>
+<span id="cb35-233"><a href="#cb35-233"></a><span class="in">```{sql}</span></span>
+<span id="cb35-234"><a href="#cb35-234"></a><span class="kw">WITH</span> nested_data <span class="kw">AS</span> (</span>
+<span id="cb35-235"><a href="#cb35-235"></a>    <span class="kw">SELECT</span> <span class="dv">1</span> <span class="kw">AS</span> id, [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>] <span class="kw">AS</span> <span class="kw">values</span></span>
+<span id="cb35-236"><a href="#cb35-236"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-237"><a href="#cb35-237"></a>    <span class="kw">SELECT</span> <span class="dv">2</span> <span class="kw">AS</span> id, [<span class="dv">40</span>, <span class="dv">50</span>] <span class="kw">AS</span> <span class="kw">values</span></span>
+<span id="cb35-238"><a href="#cb35-238"></a>)</span>
+<span id="cb35-239"><a href="#cb35-239"></a><span class="kw">SELECT</span> </span>
+<span id="cb35-240"><a href="#cb35-240"></a>    id, </span>
+<span id="cb35-241"><a href="#cb35-241"></a>    UNNEST(<span class="kw">values</span>) <span class="kw">AS</span> flattened_value</span>
+<span id="cb35-242"><a href="#cb35-242"></a><span class="kw">FROM</span> nested_data;</span>
+<span id="cb35-243"><a href="#cb35-243"></a><span class="in">```</span></span>
+<span id="cb35-244"><a href="#cb35-244"></a><span class="al">![output](12_unnest.png)</span></span>
+<span id="cb35-245"><a href="#cb35-245"></a></span>
+<span id="cb35-246"><a href="#cb35-246"></a><span class="fu"># #2 `SET` operations</span></span>
+<span id="cb35-247"><a href="#cb35-247"></a></span>
+<span id="cb35-248"><a href="#cb35-248"></a><span class="fu">## #2.1 `EXISTS`</span></span>
+<span id="cb35-249"><a href="#cb35-249"></a></span>
+<span id="cb35-250"><a href="#cb35-250"></a><span class="in">`EXISTS`</span> is used to test for the existence of rows in a subquery, return TRUE if any row in the subquery returned. I think it's often used for logic check to correlate queries.</span>
+<span id="cb35-251"><a href="#cb35-251"></a></span>
+<span id="cb35-252"><a href="#cb35-252"></a>It checks the existence like <span class="in">`INNER JOIN`</span> but does not join full rows or select columns from the subquery.</span>
+<span id="cb35-253"><a href="#cb35-253"></a></span>
+<span id="cb35-256"><a href="#cb35-256"></a><span class="in">```{sql}</span></span>
+<span id="cb35-257"><a href="#cb35-257"></a><span class="kw">SELECT</span> </span>
+<span id="cb35-258"><a href="#cb35-258"></a>    c_custkey, </span>
+<span id="cb35-259"><a href="#cb35-259"></a>    c_name</span>
+<span id="cb35-260"><a href="#cb35-260"></a><span class="kw">FROM</span> customer </span>
+<span id="cb35-261"><a href="#cb35-261"></a><span class="kw">WHERE</span> <span class="kw">EXISTS</span> (</span>
+<span id="cb35-262"><a href="#cb35-262"></a>    <span class="kw">SELECT</span> o_orderkey</span>
+<span id="cb35-263"><a href="#cb35-263"></a>    <span class="kw">FROM</span> orders</span>
+<span id="cb35-264"><a href="#cb35-264"></a>    <span class="kw">WHERE</span> <span class="dv">1</span><span class="op">=</span><span class="dv">1</span></span>
+<span id="cb35-265"><a href="#cb35-265"></a>    <span class="co">-- AND o_totalprice &gt; 5000000 -- Return customer who has at least 1 order with total price &gt; 500k</span></span>
+<span id="cb35-266"><a href="#cb35-266"></a>    <span class="kw">AND</span> o_custkey <span class="op">=</span> c_custkey  <span class="co">-- Return customer who has at least 1 order</span></span>
+<span id="cb35-267"><a href="#cb35-267"></a>);</span>
+<span id="cb35-268"><a href="#cb35-268"></a><span class="in">```</span></span>
+<span id="cb35-269"><a href="#cb35-269"></a></span>
+<span id="cb35-270"><a href="#cb35-270"></a><span class="fu">## #2.2 `INTERSECT`</span></span>
+<span id="cb35-271"><a href="#cb35-271"></a></span>
+<span id="cb35-272"><a href="#cb35-272"></a>Below query return all <span class="in">`c_custkey`</span> that appears in both <span class="in">`customer`</span> and <span class="in">`orders`</span> table.</span>
+<span id="cb35-273"><a href="#cb35-273"></a></span>
+<span id="cb35-276"><a href="#cb35-276"></a><span class="in">```{sql}</span></span>
+<span id="cb35-277"><a href="#cb35-277"></a><span class="kw">SELECT</span> c_custkey </span>
+<span id="cb35-278"><a href="#cb35-278"></a><span class="kw">FROM</span> customer</span>
+<span id="cb35-279"><a href="#cb35-279"></a>INTERSECT</span>
+<span id="cb35-280"><a href="#cb35-280"></a><span class="kw">SELECT</span> o_custkey </span>
+<span id="cb35-281"><a href="#cb35-281"></a><span class="kw">FROM</span> orders;</span>
+<span id="cb35-282"><a href="#cb35-282"></a><span class="in">```</span></span>
+<span id="cb35-283"><a href="#cb35-283"></a></span>
+<span id="cb35-284"><a href="#cb35-284"></a><span class="fu">## #2.3 `EXCEPT`</span></span>
+<span id="cb35-285"><a href="#cb35-285"></a></span>
+<span id="cb35-286"><a href="#cb35-286"></a>And the below query return all <span class="in">`c_custkey`</span> that appears <span class="in">`customer`</span> **but not in** <span class="in">`orders`</span> table.</span>
+<span id="cb35-287"><a href="#cb35-287"></a></span>
+<span id="cb35-290"><a href="#cb35-290"></a><span class="in">```{sql}</span></span>
+<span id="cb35-291"><a href="#cb35-291"></a><span class="kw">SELECT</span> c_custkey</span>
+<span id="cb35-292"><a href="#cb35-292"></a><span class="kw">FROM</span> customer</span>
+<span id="cb35-293"><a href="#cb35-293"></a>EXCEPT</span>
+<span id="cb35-294"><a href="#cb35-294"></a><span class="kw">SELECT</span> o_custkey</span>
+<span id="cb35-295"><a href="#cb35-295"></a><span class="kw">FROM</span> orders;</span>
+<span id="cb35-296"><a href="#cb35-296"></a><span class="in">```</span></span>
+<span id="cb35-297"><a href="#cb35-297"></a></span>
+<span id="cb35-298"><a href="#cb35-298"></a>Using this, we can perform delta/data diff checking!</span>
+<span id="cb35-299"><a href="#cb35-299"></a></span>
+<span id="cb35-300"><a href="#cb35-300"></a><span class="fu"># #3 macros</span></span>
+<span id="cb35-301"><a href="#cb35-301"></a></span>
+<span id="cb35-302"><a href="#cb35-302"></a>We can create UDF (User Define Function) or Macros in SQL for abstracting complex logic and reusing it in different parts of the query, this improves both readability and maintainability. When executing, the macros are expanded inline, which avoids the overhead of function calls. Below is a simple function/macro:</span>
+<span id="cb35-303"><a href="#cb35-303"></a></span>
+<span id="cb35-306"><a href="#cb35-306"></a><span class="in">```{sql}</span></span>
+<span id="cb35-307"><a href="#cb35-307"></a><span class="kw">CREATE</span> MACRO percentage(numerator, denominator) <span class="kw">AS</span> (</span>
+<span id="cb35-308"><a href="#cb35-308"></a>    (<span class="fu">CAST</span>(numerator <span class="kw">AS</span> <span class="dt">DOUBLE</span>) <span class="op">/</span> <span class="fu">CAST</span>(denominator <span class="kw">AS</span> <span class="dt">DOUBLE</span>)) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb35-309"><a href="#cb35-309"></a>);</span>
+<span id="cb35-310"><a href="#cb35-310"></a><span class="in">```</span></span>
+<span id="cb35-311"><a href="#cb35-311"></a></span>
+<span id="cb35-312"><a href="#cb35-312"></a><span class="fu"># #4 jinja2</span></span>
+<span id="cb35-313"><a href="#cb35-313"></a></span>
+<span id="cb35-314"><a href="#cb35-314"></a><span class="at">&gt; </span><span class="co">[</span><span class="ot">Jinja</span><span class="co">](https://pypi.org/project/Jinja2/)</span><span class="at"> is a fast, expressive, extensible templating engine.</span></span>
+<span id="cb35-315"><a href="#cb35-315"></a></span>
+<span id="cb35-316"><a href="#cb35-316"></a>In data engineering, Jinja2 is widely used in:</span>
+<span id="cb35-317"><a href="#cb35-317"></a></span>
+<span id="cb35-318"><a href="#cb35-318"></a><span class="ss">+ </span>DBT (Data Build Tool)</span>
+<span id="cb35-319"><a href="#cb35-319"></a></span>
+<span id="cb35-320"><a href="#cb35-320"></a><span class="ss">    - </span>Template SQL transformations</span>
+<span id="cb35-321"><a href="#cb35-321"></a><span class="ss">    - </span>Parameterize database queries</span>
+<span id="cb35-322"><a href="#cb35-322"></a><span class="ss">    - </span>Dynamic model generation</span>
+<span id="cb35-323"><a href="#cb35-323"></a></span>
+<span id="cb35-324"><a href="#cb35-324"></a><span class="ss">+ </span>Airflow</span>
+<span id="cb35-325"><a href="#cb35-325"></a></span>
+<span id="cb35-326"><a href="#cb35-326"></a><span class="ss">    - </span>Dynamic DAG (Directed Acyclic Graph) generation</span>
+<span id="cb35-327"><a href="#cb35-327"></a><span class="ss">    - </span>Parameterize task configurations</span>
+<span id="cb35-328"><a href="#cb35-328"></a></span>
+<span id="cb35-329"><a href="#cb35-329"></a><span class="ss">+ </span>Great Expectations</span>
+<span id="cb35-330"><a href="#cb35-330"></a></span>
+<span id="cb35-331"><a href="#cb35-331"></a><span class="ss">    - </span>Configure data validation rules</span>
+<span id="cb35-332"><a href="#cb35-332"></a><span class="ss">    - </span>Generate dynamic expectations</span>
+<span id="cb35-333"><a href="#cb35-333"></a></span>
+<span id="cb35-336"><a href="#cb35-336"></a><span class="in">```{python}</span></span>
+<span id="cb35-337"><a href="#cb35-337"></a><span class="co">#| eval: false</span></span>
+<span id="cb35-338"><a href="#cb35-338"></a><span class="im">from</span> jinja2 <span class="im">import</span> Template</span>
+<span id="cb35-339"><a href="#cb35-339"></a></span>
+<span id="cb35-340"><a href="#cb35-340"></a><span class="co"># Define a Jinja2 SQL template with a loop</span></span>
+<span id="cb35-341"><a href="#cb35-341"></a>sql_template <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb35-342"><a href="#cb35-342"></a><span class="st">SELECT o_orderkey, o_custkey, o_totalprice</span></span>
+<span id="cb35-343"><a href="#cb35-343"></a><span class="st">FROM orders</span></span>
+<span id="cb35-344"><a href="#cb35-344"></a><span class="st">WHERE o_totalprice &gt; </span><span class="sc">{{</span><span class="st"> price_threshold </span><span class="sc">}}</span></span>
+<span id="cb35-345"><a href="#cb35-345"></a><span class="st">{</span><span class="sc">% i</span><span class="st">f customer_keys %}</span></span>
+<span id="cb35-346"><a href="#cb35-346"></a><span class="st">  AND o_custkey IN (</span></span>
+<span id="cb35-347"><a href="#cb35-347"></a><span class="st">    {</span><span class="sc">% f</span><span class="st">or custkey in customer_keys %}</span></span>
+<span id="cb35-348"><a href="#cb35-348"></a><span class="st">      </span><span class="sc">{{</span><span class="st"> custkey </span><span class="sc">}}</span><span class="st">{</span><span class="sc">% i</span><span class="st">f not loop.last %}, {</span><span class="sc">% e</span><span class="st">ndif %}</span></span>
+<span id="cb35-349"><a href="#cb35-349"></a><span class="st">    {</span><span class="sc">% e</span><span class="st">ndfor %}</span></span>
+<span id="cb35-350"><a href="#cb35-350"></a><span class="st">  )</span></span>
+<span id="cb35-351"><a href="#cb35-351"></a><span class="st">{</span><span class="sc">% e</span><span class="st">ndif %}</span></span>
+<span id="cb35-352"><a href="#cb35-352"></a><span class="st">ORDER BY o_totalprice DESC;</span></span>
+<span id="cb35-353"><a href="#cb35-353"></a><span class="st">"""</span></span>
+<span id="cb35-354"><a href="#cb35-354"></a></span>
+<span id="cb35-355"><a href="#cb35-355"></a><span class="co"># Render the template with dynamic parameters</span></span>
+<span id="cb35-356"><a href="#cb35-356"></a>template <span class="op">=</span> Template(sql_template)</span>
+<span id="cb35-357"><a href="#cb35-357"></a><span class="co"># Parameters to be passed to the template</span></span>
+<span id="cb35-358"><a href="#cb35-358"></a>params <span class="op">=</span> {</span>
+<span id="cb35-359"><a href="#cb35-359"></a>    <span class="st">"price_threshold"</span>: <span class="dv">20000</span>,</span>
+<span id="cb35-360"><a href="#cb35-360"></a>    <span class="st">"customer_keys"</span>: [<span class="dv">1001</span>, <span class="dv">1002</span>, <span class="dv">1003</span>]  <span class="co"># A list of customer keys to filter on</span></span>
+<span id="cb35-361"><a href="#cb35-361"></a>}</span>
+<span id="cb35-362"><a href="#cb35-362"></a><span class="co"># Render the SQL query (do not execute, just generate SQL)</span></span>
+<span id="cb35-363"><a href="#cb35-363"></a>rendered_sql <span class="op">=</span> template.render(params)</span>
+<span id="cb35-364"><a href="#cb35-364"></a></span>
+<span id="cb35-365"><a href="#cb35-365"></a><span class="bu">print</span>(rendered_sql)</span>
+<span id="cb35-366"><a href="#cb35-366"></a><span class="in">```</span></span>
+<span id="cb35-367"><a href="#cb35-367"></a></span>
+<span id="cb35-368"><a href="#cb35-368"></a>And the query be generated:</span>
+<span id="cb35-369"><a href="#cb35-369"></a></span>
+<span id="cb35-372"><a href="#cb35-372"></a><span class="in">```{sql}</span></span>
+<span id="cb35-373"><a href="#cb35-373"></a><span class="kw">SELECT</span> o_orderkey, o_custkey, o_totalprice</span>
+<span id="cb35-374"><a href="#cb35-374"></a><span class="kw">FROM</span> orders</span>
+<span id="cb35-375"><a href="#cb35-375"></a><span class="kw">WHERE</span> o_totalprice <span class="op">&gt;</span> <span class="dv">20000</span></span>
+<span id="cb35-376"><a href="#cb35-376"></a></span>
+<span id="cb35-377"><a href="#cb35-377"></a>  <span class="kw">AND</span> o_custkey <span class="kw">IN</span> (</span>
+<span id="cb35-378"><a href="#cb35-378"></a>    </span>
+<span id="cb35-379"><a href="#cb35-379"></a>      <span class="dv">1001</span>, </span>
+<span id="cb35-380"><a href="#cb35-380"></a>    </span>
+<span id="cb35-381"><a href="#cb35-381"></a>      <span class="dv">1002</span>, </span>
+<span id="cb35-382"><a href="#cb35-382"></a>    </span>
+<span id="cb35-383"><a href="#cb35-383"></a>      <span class="dv">1003</span></span>
+<span id="cb35-384"><a href="#cb35-384"></a>    </span>
+<span id="cb35-385"><a href="#cb35-385"></a>  )</span>
+<span id="cb35-386"><a href="#cb35-386"></a></span>
+<span id="cb35-387"><a href="#cb35-387"></a><span class="kw">ORDER</span> <span class="kw">BY</span> o_totalprice <span class="kw">DESC</span>;</span>
+<span id="cb35-388"><a href="#cb35-388"></a><span class="in">```</span></span>
+<span id="cb35-389"><a href="#cb35-389"></a></span>
+<span id="cb35-390"><a href="#cb35-390"></a><span class="fu"># #5 metadata</span></span>
+<span id="cb35-391"><a href="#cb35-391"></a></span>
+<span id="cb35-392"><a href="#cb35-392"></a>The database documentation is normally stored in the <span class="in">`information_schema`</span>, the first schema that created in DB:</span>
+<span id="cb35-393"><a href="#cb35-393"></a></span>
+<span id="cb35-396"><a href="#cb35-396"></a><span class="in">```{sql}</span></span>
+<span id="cb35-397"><a href="#cb35-397"></a><span class="co">-- Information about our tables are stored here</span></span>
+<span id="cb35-398"><a href="#cb35-398"></a><span class="kw">SELECT</span> schema_name,</span>
+<span id="cb35-399"><a href="#cb35-399"></a>    view_name</span>
+<span id="cb35-400"><a href="#cb35-400"></a>    <span class="kw">FROM</span> duckdb_views();</span>
+<span id="cb35-401"><a href="#cb35-401"></a><span class="in">```</span></span>
+<span id="cb35-402"><a href="#cb35-402"></a><span class="al">![output - first 10 rows](information_schema.png)</span></span>
+<span id="cb35-403"><a href="#cb35-403"></a></span>
+<span id="cb35-404"><a href="#cb35-404"></a>Dive into the table <span class="in">`tables`</span>:</span>
+<span id="cb35-405"><a href="#cb35-405"></a></span>
+<span id="cb35-408"><a href="#cb35-408"></a><span class="in">```{sql}</span></span>
+<span id="cb35-409"><a href="#cb35-409"></a><span class="kw">SELECT</span></span>
+<span id="cb35-410"><a href="#cb35-410"></a>table_catalog, table_schema, table_name </span>
+<span id="cb35-411"><a href="#cb35-411"></a><span class="kw">from</span> information_schema<span class="ch">.</span><span class="kw">tables</span>;</span>
+<span id="cb35-412"><a href="#cb35-412"></a><span class="in">```</span></span>
+<span id="cb35-413"><a href="#cb35-413"></a><span class="al">![output - first 10 rows](information_schema_table.png)</span></span>
+<span id="cb35-414"><a href="#cb35-414"></a></span>
+<span id="cb35-415"><a href="#cb35-415"></a>Other useful query for DB admin in DuckDB:</span>
+<span id="cb35-416"><a href="#cb35-416"></a></span>
+<span id="cb35-419"><a href="#cb35-419"></a><span class="in">```{sql}</span></span>
+<span id="cb35-420"><a href="#cb35-420"></a><span class="co">-- database level settings</span></span>
+<span id="cb35-421"><a href="#cb35-421"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> duckdb_settings();</span>
+<span id="cb35-422"><a href="#cb35-422"></a></span>
+<span id="cb35-423"><a href="#cb35-423"></a><span class="co">-- list of all tables in our DuckDB </span></span>
+<span id="cb35-424"><a href="#cb35-424"></a><span class="kw">SELECT</span> schema_name,</span>
+<span id="cb35-425"><a href="#cb35-425"></a>    table_name</span>
+<span id="cb35-426"><a href="#cb35-426"></a>    <span class="kw">FROM</span> duckdb_tables();</span>
+<span id="cb35-427"><a href="#cb35-427"></a><span class="in">```</span></span>
+<span id="cb35-428"><a href="#cb35-428"></a></span>
+<span id="cb35-429"><a href="#cb35-429"></a><span class="fu"># #6 de-duplicate</span></span>
+<span id="cb35-430"><a href="#cb35-430"></a></span>
+<span id="cb35-431"><a href="#cb35-431"></a>We can use UPSERT (or MERGE INTO) - INsert new data and UPdate existing data. The syntaxes vary among DBs:</span>
+<span id="cb35-432"><a href="#cb35-432"></a></span>
+<span id="cb35-433"><a href="#cb35-433"></a><span class="ss">- </span>PostgreSQL: <span class="in">`INSERT ... ON CONFLICT`</span></span>
+<span id="cb35-434"><a href="#cb35-434"></a><span class="ss">- </span>MySQL: <span class="in">`INSERT ... ON DUPLICATE KEY UPDATE`</span></span>
+<span id="cb35-435"><a href="#cb35-435"></a><span class="ss">- </span>SQLite: <span class="in">`INSERT OR REPLACE`</span></span>
+<span id="cb35-436"><a href="#cb35-436"></a><span class="ss">- </span>SQL Server: <span class="in">`MERGE`</span> statement</span>
+<span id="cb35-437"><a href="#cb35-437"></a><span class="ss">- </span>Oracle: <span class="in">`MERGE`</span> statement</span>
+<span id="cb35-438"><a href="#cb35-438"></a></span>
+<span id="cb35-439"><a href="#cb35-439"></a>For eg., in DuckDB:</span>
+<span id="cb35-440"><a href="#cb35-440"></a></span>
+<span id="cb35-443"><a href="#cb35-443"></a><span class="in">```{sql}</span></span>
+<span id="cb35-444"><a href="#cb35-444"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">EXISTS</span> dim_customer_scd2;</span>
+<span id="cb35-445"><a href="#cb35-445"></a><span class="co">-- Create a Slowly Changing Dimension (SCD Type 2) table for customer</span></span>
+<span id="cb35-446"><a href="#cb35-446"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> dim_customer_scd2 (</span>
+<span id="cb35-447"><a href="#cb35-447"></a>    c_custkey <span class="dt">INTEGER</span> <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb35-448"><a href="#cb35-448"></a>    c_name <span class="dt">VARCHAR</span>,</span>
+<span id="cb35-449"><a href="#cb35-449"></a>    c_address <span class="dt">VARCHAR</span>,</span>
+<span id="cb35-450"><a href="#cb35-450"></a>    c_nationkey <span class="dt">INTEGER</span>,</span>
+<span id="cb35-451"><a href="#cb35-451"></a>    c_phone <span class="dt">VARCHAR</span>,</span>
+<span id="cb35-452"><a href="#cb35-452"></a>    c_acctbal <span class="dt">DOUBLE</span>,</span>
+<span id="cb35-453"><a href="#cb35-453"></a>    c_mktsegment <span class="dt">VARCHAR</span>,</span>
+<span id="cb35-454"><a href="#cb35-454"></a>    c_comment <span class="dt">VARCHAR</span>,</span>
+<span id="cb35-455"><a href="#cb35-455"></a>    valid_from <span class="dt">DATE</span>,</span>
+<span id="cb35-456"><a href="#cb35-456"></a>    valid_to <span class="dt">DATE</span>,</span>
+<span id="cb35-457"><a href="#cb35-457"></a>    is_current <span class="dt">BOOLEAN</span></span>
+<span id="cb35-458"><a href="#cb35-458"></a>);</span>
+<span id="cb35-459"><a href="#cb35-459"></a></span>
+<span id="cb35-460"><a href="#cb35-460"></a><span class="co">-- Insert current data from the TPCH customer table into the SCD2 table</span></span>
+<span id="cb35-461"><a href="#cb35-461"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> dim_customer_scd2</span>
+<span id="cb35-462"><a href="#cb35-462"></a><span class="kw">SELECT</span> </span>
+<span id="cb35-463"><a href="#cb35-463"></a>    c_custkey, </span>
+<span id="cb35-464"><a href="#cb35-464"></a>    c_name, </span>
+<span id="cb35-465"><a href="#cb35-465"></a>    c_address, </span>
+<span id="cb35-466"><a href="#cb35-466"></a>    c_nationkey, </span>
+<span id="cb35-467"><a href="#cb35-467"></a>    c_phone, </span>
+<span id="cb35-468"><a href="#cb35-468"></a>    c_acctbal, </span>
+<span id="cb35-469"><a href="#cb35-469"></a>    c_mktsegment, </span>
+<span id="cb35-470"><a href="#cb35-470"></a>    c_comment,</span>
+<span id="cb35-471"><a href="#cb35-471"></a>    <span class="st">'2024-10-17'</span> <span class="kw">AS</span> valid_from,</span>
+<span id="cb35-472"><a href="#cb35-472"></a>    <span class="kw">NULL</span> <span class="kw">AS</span> valid_to,  <span class="co">-- NULL means it's the current active record</span></span>
+<span id="cb35-473"><a href="#cb35-473"></a>    TRUE <span class="kw">AS</span> is_current</span>
+<span id="cb35-474"><a href="#cb35-474"></a><span class="kw">FROM</span> customer;</span>
+<span id="cb35-475"><a href="#cb35-475"></a><span class="in">```</span></span>
+<span id="cb35-476"><a href="#cb35-476"></a></span>
+<span id="cb35-477"><a href="#cb35-477"></a>This query create a new SCD2 table and UPSERT data into it. When managing a table, we can handle (INSERT or UPDATE) like this:</span>
+<span id="cb35-478"><a href="#cb35-478"></a></span>
+<span id="cb35-481"><a href="#cb35-481"></a><span class="in">```{sql}</span></span>
+<span id="cb35-482"><a href="#cb35-482"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> dim_customer_scd2 (</span>
+<span id="cb35-483"><a href="#cb35-483"></a>    c_custkey, </span>
+<span id="cb35-484"><a href="#cb35-484"></a>    c_name, </span>
+<span id="cb35-485"><a href="#cb35-485"></a>    c_address, </span>
+<span id="cb35-486"><a href="#cb35-486"></a>    c_nationkey, </span>
+<span id="cb35-487"><a href="#cb35-487"></a>    c_phone, </span>
+<span id="cb35-488"><a href="#cb35-488"></a>    c_acctbal, </span>
+<span id="cb35-489"><a href="#cb35-489"></a>    c_mktsegment, </span>
+<span id="cb35-490"><a href="#cb35-490"></a>    c_comment, </span>
+<span id="cb35-491"><a href="#cb35-491"></a>    valid_from, </span>
+<span id="cb35-492"><a href="#cb35-492"></a>    valid_to, </span>
+<span id="cb35-493"><a href="#cb35-493"></a>    is_current</span>
+<span id="cb35-494"><a href="#cb35-494"></a>)</span>
+<span id="cb35-495"><a href="#cb35-495"></a><span class="kw">VALUES</span></span>
+<span id="cb35-496"><a href="#cb35-496"></a>    (<span class="dv">1</span>, <span class="st">'Customer#000000001'</span>, <span class="st">'New Address 1'</span>, <span class="dv">15</span>, <span class="st">'25-989-741-2988'</span>, <span class="fl">711.56</span>, <span class="st">'BUILDING'</span>, <span class="st">'comment1'</span>, <span class="st">'2024-10-18'</span>, <span class="kw">NULL</span>, TRUE),</span>
+<span id="cb35-497"><a href="#cb35-497"></a>    (<span class="dv">2</span>, <span class="st">'Customer#000000002'</span>, <span class="st">'New Address 2'</span>, <span class="dv">18</span>, <span class="st">'12-423-790-3665'</span>, <span class="fl">879.49</span>, <span class="st">'FURNITURE'</span>, <span class="st">'comment2'</span>, <span class="st">'2024-10-18'</span>, <span class="kw">NULL</span>, TRUE),</span>
+<span id="cb35-498"><a href="#cb35-498"></a>    (<span class="dv">1501</span>, <span class="st">'Customer#000001501'</span>, <span class="st">'New Address 1501'</span>, <span class="dv">24</span>, <span class="st">'11-345-678-9012'</span>, <span class="fl">500.50</span>, <span class="st">'MACHINERY'</span>, <span class="st">'comment1501'</span>, <span class="st">'2024-10-18'</span>, <span class="kw">NULL</span>, TRUE),</span>
+<span id="cb35-499"><a href="#cb35-499"></a>    (<span class="dv">1502</span>, <span class="st">'Customer#000001502'</span>, <span class="st">'New Address 1502'</span>, <span class="dv">21</span>, <span class="st">'22-456-789-0123'</span>, <span class="fl">600.75</span>, <span class="st">'AUTOMOBILE'</span>, <span class="st">'comment1502'</span>, <span class="st">'2024-10-18'</span>, <span class="kw">NULL</span>, TRUE)</span>
+<span id="cb35-500"><a href="#cb35-500"></a><span class="kw">ON</span> CONFLICT (c_custkey) <span class="cf">DO</span> </span>
+<span id="cb35-501"><a href="#cb35-501"></a><span class="co">-- Handle existing customers (Customer#000000001 and Customer#000000002) for SCD Type 2</span></span>
+<span id="cb35-502"><a href="#cb35-502"></a><span class="kw">UPDATE</span> <span class="kw">SET</span> valid_to <span class="op">=</span> EXCLUDED<span class="ch">.</span>valid_from, is_current <span class="op">=</span> FALSE</span>
+<span id="cb35-503"><a href="#cb35-503"></a><span class="kw">WHERE</span> dim_customer_scd2<span class="ch">.</span>c_custkey <span class="op">=</span> EXCLUDED<span class="ch">.</span>c_custkey <span class="kw">AND</span> dim_customer_scd2<span class="ch">.</span>is_current <span class="op">=</span> TRUE;</span>
+<span id="cb35-504"><a href="#cb35-504"></a><span class="in">```</span></span>
+<span id="cb35-505"><a href="#cb35-505"></a></span>
+<span id="cb35-506"><a href="#cb35-506"></a><span class="fu"># #7 `JOIN`s that you've never ever seen before</span></span>
+<span id="cb35-507"><a href="#cb35-507"></a></span>
+<span id="cb35-508"><a href="#cb35-508"></a><span class="fu">## #7.1 `ASOF JOIN`</span></span>
+<span id="cb35-509"><a href="#cb35-509"></a></span>
+<span id="cb35-510"><a href="#cb35-510"></a>An ASOF JOIN (As-Of Join) is a time-series specific join operation that matches rows based on the closest timestamp, typically used in financial and time-series data analysis.</span>
+<span id="cb35-511"><a href="#cb35-511"></a></span>
+<span id="cb35-512"><a href="#cb35-512"></a><span class="ss">+ </span>Key characteristics:</span>
+<span id="cb35-513"><a href="#cb35-513"></a></span>
+<span id="cb35-514"><a href="#cb35-514"></a><span class="ss">    - </span>Matches each row from one table to the most recent row in another table by time</span>
+<span id="cb35-515"><a href="#cb35-515"></a><span class="ss">    - </span>Useful for tracking historical state changes</span>
+<span id="cb35-516"><a href="#cb35-516"></a><span class="ss">    - </span>Common in financial databases and time-series analysis</span>
+<span id="cb35-517"><a href="#cb35-517"></a></span>
+<span id="cb35-518"><a href="#cb35-518"></a><span class="ss">+ </span>Example use case:</span>
+<span id="cb35-519"><a href="#cb35-519"></a></span>
+<span id="cb35-520"><a href="#cb35-520"></a><span class="ss">    - </span>Joining stock prices with trading orders</span>
+<span id="cb35-521"><a href="#cb35-521"></a><span class="ss">    - </span>Matching historical prices at the nearest timestamp</span>
+<span id="cb35-522"><a href="#cb35-522"></a><span class="ss">    - </span>Tracking changes in reference data over time</span>
+<span id="cb35-523"><a href="#cb35-523"></a></span>
+<span id="cb35-524"><a href="#cb35-524"></a>For eg. "**give me the value of the property as of this time**":</span>
+<span id="cb35-525"><a href="#cb35-525"></a></span>
+<span id="cb35-528"><a href="#cb35-528"></a><span class="in">```{sql}</span></span>
+<span id="cb35-529"><a href="#cb35-529"></a><span class="kw">WITH</span> stock_prices <span class="kw">AS</span> (</span>
+<span id="cb35-530"><a href="#cb35-530"></a>    <span class="kw">SELECT</span> <span class="st">'APPL'</span> <span class="kw">AS</span> ticker, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:00:00'</span> <span class="kw">AS</span> <span class="st">"when"</span>, <span class="dv">1</span> <span class="kw">AS</span> price</span>
+<span id="cb35-531"><a href="#cb35-531"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-532"><a href="#cb35-532"></a>    <span class="kw">SELECT</span> <span class="st">'APPL'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:01:00'</span>, <span class="dv">2</span></span>
+<span id="cb35-533"><a href="#cb35-533"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-534"><a href="#cb35-534"></a>    <span class="kw">SELECT</span> <span class="st">'APPL'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:02:00'</span>, <span class="dv">3</span></span>
+<span id="cb35-535"><a href="#cb35-535"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-536"><a href="#cb35-536"></a>    <span class="kw">SELECT</span> <span class="st">'MSFT'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:00:00'</span>, <span class="dv">1</span></span>
+<span id="cb35-537"><a href="#cb35-537"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-538"><a href="#cb35-538"></a>    <span class="kw">SELECT</span> <span class="st">'MSFT'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:01:00'</span>, <span class="dv">2</span></span>
+<span id="cb35-539"><a href="#cb35-539"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-540"><a href="#cb35-540"></a>    <span class="kw">SELECT</span> <span class="st">'MSFT'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:02:00'</span>, <span class="dv">3</span></span>
+<span id="cb35-541"><a href="#cb35-541"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-542"><a href="#cb35-542"></a>    <span class="kw">SELECT</span> <span class="st">'GOOG'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:00:00'</span>, <span class="dv">1</span></span>
+<span id="cb35-543"><a href="#cb35-543"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-544"><a href="#cb35-544"></a>    <span class="kw">SELECT</span> <span class="st">'GOOG'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:01:00'</span>, <span class="dv">2</span></span>
+<span id="cb35-545"><a href="#cb35-545"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-546"><a href="#cb35-546"></a>    <span class="kw">SELECT</span> <span class="st">'GOOG'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:02:00'</span>, <span class="dv">3</span></span>
+<span id="cb35-547"><a href="#cb35-547"></a>),</span>
+<span id="cb35-548"><a href="#cb35-548"></a>portfolio_holdings <span class="kw">AS</span> (</span>
+<span id="cb35-549"><a href="#cb35-549"></a>    <span class="kw">SELECT</span> <span class="st">'APPL'</span> <span class="kw">AS</span> ticker, <span class="dt">TIMESTAMP</span> <span class="st">'2000-12-31 23:59:30'</span> <span class="kw">AS</span> <span class="st">"when"</span>, <span class="fl">5.16</span> <span class="kw">AS</span> shares</span>
+<span id="cb35-550"><a href="#cb35-550"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-551"><a href="#cb35-551"></a>    <span class="kw">SELECT</span> <span class="st">'APPL'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:00:30'</span>, <span class="fl">2.94</span></span>
+<span id="cb35-552"><a href="#cb35-552"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-553"><a href="#cb35-553"></a>    <span class="kw">SELECT</span> <span class="st">'APPL'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:01:30'</span>, <span class="fl">24.13</span></span>
+<span id="cb35-554"><a href="#cb35-554"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-555"><a href="#cb35-555"></a>    <span class="kw">SELECT</span> <span class="st">'GOOG'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2000-12-31 23:59:30'</span>, <span class="fl">9.33</span></span>
+<span id="cb35-556"><a href="#cb35-556"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-557"><a href="#cb35-557"></a>    <span class="kw">SELECT</span> <span class="st">'GOOG'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:00:30'</span>, <span class="fl">23.45</span></span>
+<span id="cb35-558"><a href="#cb35-558"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-559"><a href="#cb35-559"></a>    <span class="kw">SELECT</span> <span class="st">'GOOG'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:01:30'</span>, <span class="fl">10.58</span></span>
+<span id="cb35-560"><a href="#cb35-560"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-561"><a href="#cb35-561"></a>    <span class="kw">SELECT</span> <span class="st">'DATA'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2000-12-31 23:59:30'</span>, <span class="fl">6.65</span></span>
+<span id="cb35-562"><a href="#cb35-562"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-563"><a href="#cb35-563"></a>    <span class="kw">SELECT</span> <span class="st">'DATA'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:00:30'</span>, <span class="fl">17.95</span></span>
+<span id="cb35-564"><a href="#cb35-564"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb35-565"><a href="#cb35-565"></a>    <span class="kw">SELECT</span> <span class="st">'DATA'</span>, <span class="dt">TIMESTAMP</span> <span class="st">'2001-01-01 00:01:30'</span>, <span class="fl">18.37</span></span>
+<span id="cb35-566"><a href="#cb35-566"></a>)</span>
+<span id="cb35-567"><a href="#cb35-567"></a><span class="kw">SELECT</span> h<span class="ch">.</span>ticker,</span>
+<span id="cb35-568"><a href="#cb35-568"></a>    h<span class="ch">.</span><span class="cf">when</span>,</span>
+<span id="cb35-569"><a href="#cb35-569"></a>    p<span class="ch">.</span><span class="cf">when</span> <span class="kw">as</span> stock_price_ts,</span>
+<span id="cb35-570"><a href="#cb35-570"></a>    price,</span>
+<span id="cb35-571"><a href="#cb35-571"></a>    shares,</span>
+<span id="cb35-572"><a href="#cb35-572"></a>    price <span class="op">*</span> shares <span class="kw">AS</span> value</span>
+<span id="cb35-573"><a href="#cb35-573"></a><span class="kw">FROM</span> portfolio_holdings h</span>
+<span id="cb35-574"><a href="#cb35-574"></a>ASOF <span class="kw">JOIN</span> stock_prices p</span>
+<span id="cb35-575"><a href="#cb35-575"></a>       <span class="kw">ON</span> h<span class="ch">.</span>ticker <span class="op">=</span> p<span class="ch">.</span>ticker</span>
+<span id="cb35-576"><a href="#cb35-576"></a>      <span class="kw">AND</span> h<span class="ch">.</span><span class="cf">when</span> <span class="op">&gt;=</span> p<span class="ch">.</span><span class="cf">when</span></span>
+<span id="cb35-577"><a href="#cb35-577"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="dv">1</span>, <span class="dv">2</span>;</span>
+<span id="cb35-578"><a href="#cb35-578"></a><span class="in">```</span></span>
+<span id="cb35-579"><a href="#cb35-579"></a><span class="al">![output](asof_join.png)</span></span>
+<span id="cb35-580"><a href="#cb35-580"></a></span>
+<span id="cb35-581"><a href="#cb35-581"></a>Without <span class="in">`ASOF JOIN`</span>, we must use a WINDOW function to achieve this.</span>
+<span id="cb35-582"><a href="#cb35-582"></a></span>
+<span id="cb35-583"><a href="#cb35-583"></a><span class="fu">## #7.2 `ANTI JOIN`</span></span>
+<span id="cb35-584"><a href="#cb35-584"></a></span>
+<span id="cb35-585"><a href="#cb35-585"></a>The pattern is to get rows in one table that are not in another table:</span>
+<span id="cb35-586"><a href="#cb35-586"></a></span>
+<span id="cb35-589"><a href="#cb35-589"></a><span class="in">```{sql}</span></span>
+<span id="cb35-590"><a href="#cb35-590"></a><span class="kw">SELECT</span> c<span class="ch">.</span>c_custkey</span>
+<span id="cb35-591"><a href="#cb35-591"></a><span class="kw">FROM</span> customer c</span>
+<span id="cb35-592"><a href="#cb35-592"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> orders o</span>
+<span id="cb35-593"><a href="#cb35-593"></a><span class="kw">ON</span> c<span class="ch">.</span>c_custkey <span class="op">=</span> o<span class="ch">.</span>o_custkey</span>
+<span id="cb35-594"><a href="#cb35-594"></a><span class="kw">WHERE</span> o<span class="ch">.</span>o_custkey <span class="kw">IS</span> <span class="kw">NULL</span></span>
+<span id="cb35-595"><a href="#cb35-595"></a><span class="kw">ORDER</span> <span class="kw">BY</span> c<span class="ch">.</span>c_custkey</span>
+<span id="cb35-596"><a href="#cb35-596"></a><span class="kw">LIMIT</span> <span class="dv">5</span>;</span>
+<span id="cb35-597"><a href="#cb35-597"></a><span class="in">```</span></span>
+<span id="cb35-598"><a href="#cb35-598"></a></span>
+<span id="cb35-599"><a href="#cb35-599"></a>Some DBs have native support for <span class="in">`ANTI JOIN`</span>:</span>
+<span id="cb35-600"><a href="#cb35-600"></a></span>
+<span id="cb35-603"><a href="#cb35-603"></a><span class="in">```{sql}</span></span>
+<span id="cb35-604"><a href="#cb35-604"></a><span class="kw">SELECT</span> c<span class="ch">.</span>c_custkey</span>
+<span id="cb35-605"><a href="#cb35-605"></a><span class="kw">FROM</span> customer c</span>
+<span id="cb35-606"><a href="#cb35-606"></a>ANTI <span class="kw">JOIN</span> orders o</span>
+<span id="cb35-607"><a href="#cb35-607"></a><span class="kw">ON</span> c<span class="ch">.</span>c_custkey <span class="op">=</span> o<span class="ch">.</span>o_custkey</span>
+<span id="cb35-608"><a href="#cb35-608"></a><span class="kw">ORDER</span> <span class="kw">BY</span> c<span class="ch">.</span>c_custkey</span>
+<span id="cb35-609"><a href="#cb35-609"></a><span class="kw">LIMIT</span> <span class="dv">5</span>;</span>
+<span id="cb35-610"><a href="#cb35-610"></a><span class="in">```</span></span>
+<span id="cb35-611"><a href="#cb35-611"></a></span>
+<span id="cb35-612"><a href="#cb35-612"></a><span class="fu">## #7.3 `LATERAL JOIN`</span></span>
+<span id="cb35-613"><a href="#cb35-613"></a></span>
+<span id="cb35-614"><a href="#cb35-614"></a>LATERAL JOIN is a powerful SQL join type that allows a subquery in the FROM clause to reference columns from preceding tables in the same FROM clause.</span>
+<span id="cb35-615"><a href="#cb35-615"></a></span>
+<span id="cb35-616"><a href="#cb35-616"></a><span class="ss">- </span>Enables per-row dynamic subqueries</span>
+<span id="cb35-617"><a href="#cb35-617"></a><span class="ss">- </span>Allows correlated subqueries in the FROM clause</span>
+<span id="cb35-618"><a href="#cb35-618"></a><span class="ss">- </span>Supported in PostgreSQL, BigQuery, some other modern databases</span>
+<span id="cb35-619"><a href="#cb35-619"></a></span>
+<span id="cb35-620"><a href="#cb35-620"></a>For e.g, for each row in the orders table (<span class="in">`o`</span>), the subquery in the LATERAL JOIN selects line items (<span class="in">`l`</span>) that match certain conditions.</span>
+<span id="cb35-621"><a href="#cb35-621"></a></span>
+<span id="cb35-624"><a href="#cb35-624"></a><span class="in">```{sql}</span></span>
+<span id="cb35-625"><a href="#cb35-625"></a><span class="kw">SELECT</span> </span>
+<span id="cb35-626"><a href="#cb35-626"></a>    o<span class="ch">.</span>o_orderkey, </span>
+<span id="cb35-627"><a href="#cb35-627"></a>    o<span class="ch">.</span>o_totalprice, </span>
+<span id="cb35-628"><a href="#cb35-628"></a>    l<span class="ch">.</span>l_linenumber,</span>
+<span id="cb35-629"><a href="#cb35-629"></a>    l<span class="ch">.</span>l_extendedprice</span>
+<span id="cb35-630"><a href="#cb35-630"></a><span class="kw">FROM</span> orders o,</span>
+<span id="cb35-631"><a href="#cb35-631"></a>LATERAL (</span>
+<span id="cb35-632"><a href="#cb35-632"></a>    <span class="kw">SELECT</span> l<span class="ch">.</span>l_linenumber,</span>
+<span id="cb35-633"><a href="#cb35-633"></a>    l_extendedprice</span>
+<span id="cb35-634"><a href="#cb35-634"></a>    <span class="kw">FROM</span> lineitem l</span>
+<span id="cb35-635"><a href="#cb35-635"></a>    <span class="kw">WHERE</span> l<span class="ch">.</span>l_orderkey <span class="op">=</span> o<span class="ch">.</span>o_orderkey</span>
+<span id="cb35-636"><a href="#cb35-636"></a>    <span class="kw">AND</span> l<span class="ch">.</span>l_linenumber <span class="op">&lt;=</span> <span class="dv">2</span></span>
+<span id="cb35-637"><a href="#cb35-637"></a>    <span class="kw">AND</span> l<span class="ch">.</span>l_extendedprice <span class="op">&lt;</span> (o<span class="ch">.</span>o_totalprice <span class="op">/</span> <span class="dv">2</span>)</span>
+<span id="cb35-638"><a href="#cb35-638"></a>) <span class="kw">AS</span> l</span>
+<span id="cb35-639"><a href="#cb35-639"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="dv">1</span>, <span class="dv">3</span>;</span>
+<span id="cb35-640"><a href="#cb35-640"></a><span class="in">```</span></span>
+<span id="cb35-641"><a href="#cb35-641"></a><span class="al">![output - first 10 rows](lateral_join_1.png)</span></span>
+<span id="cb35-642"><a href="#cb35-642"></a></span>
+<span id="cb35-643"><a href="#cb35-643"></a>For each row in the orders table (<span class="in">`o`</span>), the subquery in the LATERAL JOIN counts the number of line items (<span class="in">`lineitem_count`</span>) related to that order.</span>
+<span id="cb35-644"><a href="#cb35-644"></a></span>
+<span id="cb35-647"><a href="#cb35-647"></a><span class="in">```{sql}</span></span>
+<span id="cb35-648"><a href="#cb35-648"></a><span class="kw">SELECT</span> </span>
+<span id="cb35-649"><a href="#cb35-649"></a>    o<span class="ch">.</span>o_orderkey, </span>
+<span id="cb35-650"><a href="#cb35-650"></a>    o<span class="ch">.</span>o_totalprice, </span>
+<span id="cb35-651"><a href="#cb35-651"></a>    l<span class="ch">.</span>lineitem_count</span>
+<span id="cb35-652"><a href="#cb35-652"></a><span class="kw">FROM</span> orders o,</span>
+<span id="cb35-653"><a href="#cb35-653"></a>LATERAL (</span>
+<span id="cb35-654"><a href="#cb35-654"></a>    <span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> lineitem_count</span>
+<span id="cb35-655"><a href="#cb35-655"></a>    <span class="kw">FROM</span> lineitem l</span>
+<span id="cb35-656"><a href="#cb35-656"></a>    <span class="kw">WHERE</span> l<span class="ch">.</span>l_orderkey <span class="op">=</span> o<span class="ch">.</span>o_orderkey</span>
+<span id="cb35-657"><a href="#cb35-657"></a>) <span class="kw">AS</span> l;</span>
+<span id="cb35-658"><a href="#cb35-658"></a><span class="in">```</span></span>
+<span id="cb35-659"><a href="#cb35-659"></a><span class="al">![output - first 10 rows](lateral_join_2.png)</span></span>
+<span id="cb35-660"><a href="#cb35-660"></a></span>
+<span id="cb35-661"><a href="#cb35-661"></a></span>
+<span id="cb35-662"><a href="#cb35-662"></a><span class="fu"># #8 use cases</span></span>
+<span id="cb35-663"><a href="#cb35-663"></a></span>
+<span id="cb35-664"><a href="#cb35-664"></a>Some real business use cases:</span>
+<span id="cb35-665"><a href="#cb35-665"></a></span>
+<span id="cb35-666"><a href="#cb35-666"></a><span class="fu">## #8.1 `PIVOT`</span></span>
+<span id="cb35-667"><a href="#cb35-667"></a></span>
+<span id="cb35-668"><a href="#cb35-668"></a>We often want to change a value of a column into individual columns, we can use <span class="in">`CASE ... WHEN ...`</span>:</span>
+<span id="cb35-669"><a href="#cb35-669"></a></span>
+<span id="cb35-672"><a href="#cb35-672"></a><span class="in">```{sql}</span></span>
+<span id="cb35-673"><a href="#cb35-673"></a><span class="kw">SELECT</span> </span>
+<span id="cb35-674"><a href="#cb35-674"></a>    o_custkey,</span>
+<span id="cb35-675"><a href="#cb35-675"></a>    <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> o_orderstatus <span class="op">=</span> <span class="st">'F'</span> <span class="cf">THEN</span> o_totalprice <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span>) <span class="kw">AS</span> fulfilled_total,</span>
+<span id="cb35-676"><a href="#cb35-676"></a>    <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> o_orderstatus <span class="op">=</span> <span class="st">'O'</span> <span class="cf">THEN</span> o_totalprice <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span>) <span class="kw">AS</span> open_total,</span>
+<span id="cb35-677"><a href="#cb35-677"></a>    <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> o_orderstatus <span class="op">=</span> <span class="st">'P'</span> <span class="cf">THEN</span> o_totalprice <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span>) <span class="kw">AS</span> pending_total</span>
+<span id="cb35-678"><a href="#cb35-678"></a><span class="kw">FROM</span> orders</span>
+<span id="cb35-679"><a href="#cb35-679"></a><span class="kw">GROUP</span> <span class="kw">BY</span> o_custkey</span>
+<span id="cb35-680"><a href="#cb35-680"></a><span class="kw">ORDER</span> <span class="kw">BY</span> o_custkey;</span>
+<span id="cb35-681"><a href="#cb35-681"></a><span class="in">```</span></span>
+<span id="cb35-682"><a href="#cb35-682"></a></span>
+<span id="cb35-683"><a href="#cb35-683"></a>But also leverage <span class="in">`PIVOT`</span>:</span>
+<span id="cb35-684"><a href="#cb35-684"></a></span>
+<span id="cb35-687"><a href="#cb35-687"></a><span class="in">```{sql}</span></span>
+<span id="cb35-688"><a href="#cb35-688"></a><span class="kw">FROM</span> orders</span>
+<span id="cb35-689"><a href="#cb35-689"></a>PIVOT (</span>
+<span id="cb35-690"><a href="#cb35-690"></a>    <span class="fu">sum</span>(o_totalprice)</span>
+<span id="cb35-691"><a href="#cb35-691"></a>    <span class="cf">FOR</span></span>
+<span id="cb35-692"><a href="#cb35-692"></a>        o_orderstatus <span class="kw">IN</span> (<span class="st">'F'</span>, <span class="st">'O'</span>, <span class="st">'P'</span>)</span>
+<span id="cb35-693"><a href="#cb35-693"></a>    <span class="kw">GROUP</span> <span class="kw">BY</span> o_custkey</span>
+<span id="cb35-694"><a href="#cb35-694"></a>)</span>
+<span id="cb35-695"><a href="#cb35-695"></a>    <span class="kw">ORDER</span> <span class="kw">BY</span> o_custkey;</span>
+<span id="cb35-696"><a href="#cb35-696"></a><span class="in">```</span></span>
+<span id="cb35-697"><a href="#cb35-697"></a><span class="al">![output - first 10 rows](pivot.png)</span></span>
+<span id="cb35-698"><a href="#cb35-698"></a></span>
+<span id="cb35-699"><a href="#cb35-699"></a><span class="fu">## #8.1 `CUBE`</span></span>
+<span id="cb35-700"><a href="#cb35-700"></a></span>
+<span id="cb35-703"><a href="#cb35-703"></a><span class="in">```{sql}</span></span>
+<span id="cb35-704"><a href="#cb35-704"></a><span class="kw">SELECT</span> </span>
+<span id="cb35-705"><a href="#cb35-705"></a>    o_orderpriority,</span>
+<span id="cb35-706"><a href="#cb35-706"></a>    o_orderstatus,</span>
+<span id="cb35-707"><a href="#cb35-707"></a>    <span class="fu">EXTRACT</span>(<span class="fu">YEAR</span> <span class="kw">FROM</span> o_orderdate) <span class="kw">AS</span> order_year,</span>
+<span id="cb35-708"><a href="#cb35-708"></a>    <span class="fu">SUM</span>(o_totalprice) <span class="kw">AS</span> total_sales</span>
+<span id="cb35-709"><a href="#cb35-709"></a><span class="kw">FROM</span> orders</span>
+<span id="cb35-710"><a href="#cb35-710"></a><span class="kw">GROUP</span> <span class="kw">BY</span> CUBE (o_orderpriority, o_orderstatus, order_year)</span>
+<span id="cb35-711"><a href="#cb35-711"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>;</span>
+<span id="cb35-712"><a href="#cb35-712"></a><span class="in">```</span></span>
+<span id="cb35-713"><a href="#cb35-713"></a><span class="al">![output - first 10 rows](cube.png)</span></span>
+<span id="cb35-714"><a href="#cb35-714"></a></span>
+<span id="cb35-715"><a href="#cb35-715"></a><span class="ss">* </span><span class="in">`CUBE (o_custkey, o_orderstatus, order_year)`</span>: This will group the data and calculate subtotals and grand totals for all possible combinations of <span class="in">`o_custkey`</span>, <span class="in">`o_orderstatus`</span>, and <span class="in">`order_year`</span>.</span>
+<span id="cb35-716"><a href="#cb35-716"></a><span class="ss">* </span>It will generate all combinations of the grouping columns, including:</span>
+<span id="cb35-717"><a href="#cb35-717"></a><span class="ss">    - </span>Grouping by just o_custkey</span>
+<span id="cb35-718"><a href="#cb35-718"></a><span class="ss">    - </span>Grouping by just o_orderstatus</span>
+<span id="cb35-719"><a href="#cb35-719"></a><span class="ss">    - </span>Grouping by just order_year</span>
+<span id="cb35-720"><a href="#cb35-720"></a><span class="ss">    - </span>Grouping by all three together</span>
+<span id="cb35-721"><a href="#cb35-721"></a><span class="ss">    - </span>Grouping by pairs of columns</span>
+<span id="cb35-722"><a href="#cb35-722"></a><span class="ss">    - </span>A grand total (no grouping by any column)</span>
+<span id="cb35-723"><a href="#cb35-723"></a><span class="ss">    - </span><span class="in">`SUM(o_totalprice)`</span>: For each combination of groupings, it sums the total order price.</span>
+<span id="cb35-724"><a href="#cb35-724"></a></span>
+<span id="cb35-725"><a href="#cb35-725"></a>Use cases:</span>
+<span id="cb35-726"><a href="#cb35-726"></a></span>
+<span id="cb35-727"><a href="#cb35-727"></a><span class="at">&gt; 1. OLAP Reporting: CUBE is commonly used in OLAP scenarios where you need to analyze data from multiple perspectives. For instance, you may want to generate reports that show total sales by customer, by order status, by year, and all possible combinations of these dimensions.</span></span>
+<span id="cb35-728"><a href="#cb35-728"></a><span class="at">&gt; 2. Sales Analysis: In sales analysis, CUBE can help create pivot-like summaries that show how different attributes (e.g., region, product, time period) contribute to the overall sales.</span></span>
+<span id="cb35-729"><a href="#cb35-729"></a><span class="at">&gt; 3. Financial Reports: Financial departments often use CUBE to calculate totals and subtotals across dimensions like departments, time periods, and account categories, making it easier to prepare comprehensive financial reports.</span></span>
+<span id="cb35-730"><a href="#cb35-730"></a></span>
+<span id="cb35-731"><a href="#cb35-731"></a>Happy learning!</span>
+<span id="cb35-732"><a href="#cb35-732"></a></span>
+<span id="cb35-733"><a href="#cb35-733"></a><span class="fu"># resource</span></span>
+<span id="cb35-734"><a href="#cb35-734"></a></span>
+<span id="cb35-735"><a href="#cb35-735"></a><span class="ss">1. </span>Article by Start Data Engineering: <span class="ot">&lt;https://www.startdataengineering.com/post/n-sql-tips-de/&gt;</span>;</span>
+<span id="cb35-736"><a href="#cb35-736"></a><span class="ss">2. </span>Repo and workbook: <span class="co">[</span><span class="ot">...concepts/sql_tips/sql_tips.ipynb</span><span class="co">](https://github.com/josephmachado/adv_data_transformation_in_sql/blob/main/concepts/sql_tips/sql_tips.ipynb)</span></span>
+<span id="cb35-737"><a href="#cb35-737"></a></span>
+<span id="cb35-740"><a href="#cb35-740"></a><span class="in">```{r}</span></span>
+<span id="cb35-741"><a href="#cb35-741"></a><span class="co">#| eval: true</span></span>
+<span id="cb35-742"><a href="#cb35-742"></a><span class="co">#| code-fold: true</span></span>
+<span id="cb35-743"><a href="#cb35-743"></a><span class="fu">cat</span>(<span class="st">"I added this R code chunk and somehow knitr engine successfully rendered SQL formatting block code.</span><span class="sc">\n</span><span class="st">Workaround: https://github.com/quarto-dev/quarto-cli/issues/2137"</span>)</span>
+<span id="cb35-744"><a href="#cb35-744"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

@@ -3622,8 +3622,8 @@
     "objectID": "blog/2024-12-06-adv_sql/index.html#exclude",
     "href": "blog/2024-12-06-adv_sql/index.html#exclude",
     "title": "Advanced SQL",
-    "section": "#1.6 EXCLUDE\n",
-    "text": "#1.6 EXCLUDE\n\nWhen you want to select all (*) columns excet few ones:\n\nShow the codeSELECT * EXCLUDE (o_orderdate, o_totalprice)\nFROM orders;"
+    "section": "#1.6 EXCLUDE()\n",
+    "text": "#1.6 EXCLUDE()\n\nWhen you want to select all (*) columns excet few ones:\n\nShow the codeSELECT * EXCLUDE (o_orderdate, o_totalprice)\nFROM orders;"
   },
   {
     "objectID": "blog/2024-12-06-adv_sql/index.html#group-by-all-saves-the-day",
@@ -3658,14 +3658,14 @@
     "href": "blog/2024-12-06-adv_sql/index.html#generate_series",
     "title": "Advanced SQL",
     "section": "#1.11 GENERATE_SERIES()\n",
-    "text": "#1.11 GENERATE_SERIES()\n\nThis helps you generate a sequence/series of data over a range with an interval for data simulation or joining with other tables.\n\nShow the codeSELECT *\nFROM generate_series(1, 10);\n\n\n\n\noutput\n\n\nShow the codeSELECT *\nFROM generate_series('2024-01-01'::DATE, '2024-01-10'::DATE, INTERVAL 1 DAY);\n\n\n\n\noutput"
+    "text": "#1.11 GENERATE_SERIES()\n\nThis helps you generate a sequence/series of data over a range with an interval which facilitating data simulation or joining with other tables.\n\nShow the codeSELECT *\nFROM generate_series(1, 10);\n\n\n\n\noutput\n\n\nShow the codeSELECT *\nFROM generate_series('2024-01-01'::DATE, '2024-01-10'::DATE, INTERVAL 1 DAY);\n\n\n\n\noutput"
   },
   {
     "objectID": "blog/2024-12-06-adv_sql/index.html#unnest",
     "href": "blog/2024-12-06-adv_sql/index.html#unnest",
     "title": "Advanced SQL",
     "section": "#1.12 UNNEST()\n",
-    "text": "#1.12 UNNEST()\n\n\nShow the codeWITH nested_data AS (\n    SELECT 1 AS id, [10, 20, 30] AS values\n    UNION ALL\n    SELECT 2 AS id, [40, 50] AS values\n)\nSELECT \n    id, \n    UNNEST(values) AS flattened_value\nFROM nested_data;"
+    "text": "#1.12 UNNEST()\n\nUnpacking data wrapped in JSON array or list [...] using UNNEST():\n\nShow the codeWITH nested_data AS (\n    SELECT 1 AS id, [10, 20, 30] AS values\n    UNION ALL\n    SELECT 2 AS id, [40, 50] AS values\n)\nSELECT \n    id, \n    UNNEST(values) AS flattened_value\nFROM nested_data;\n\n\n\n\noutput"
   },
   {
     "objectID": "jiu_jitsu_journal/index.html#december",
@@ -3673,5 +3673,61 @@
     "title": "My Jiu Jitsu Journal",
     "section": "",
     "text": "Deep half\n\n\n\n\n\nBuổi học được dẫn dắt bởi Huân, tiếp nối chủ đề hôm trước từ bottom - half guard -&gt; under hook tay -&gt; hook lưng -&gt; sweep.\nNhưng hôm nay tiếp cận theo hướng ngược lại -&gt; “lao vào lòng” đối thủ và hook sâu xuống chân/Deep Half.\nTừ đây có thể mở ra nhiều cơ hội tấn công, ít nhất hai hướng sweep tùy theo body movement của đối thủ."
+  },
+  {
+    "objectID": "blog/2024-12-06-adv_sql/index.html#exists",
+    "href": "blog/2024-12-06-adv_sql/index.html#exists",
+    "title": "Advanced SQL",
+    "section": "#2.1 EXISTS\n",
+    "text": "#2.1 EXISTS\n\nEXISTS is used to test for the existence of rows in a subquery, return TRUE if any row in the subquery returned. I think it’s often used for logic check to correlate queries.\nIt checks the existence like INNER JOIN but does not join full rows or select columns from the subquery.\n\nShow the codeSELECT \n    c_custkey, \n    c_name\nFROM customer \nWHERE EXISTS (\n    SELECT o_orderkey\n    FROM orders\n    WHERE 1=1\n    -- AND o_totalprice &gt; 5000000 -- Return customer who has at least 1 order with total price &gt; 500k\n    AND o_custkey = c_custkey  -- Return customer who has at least 1 order\n);"
+  },
+  {
+    "objectID": "blog/2024-12-06-adv_sql/index.html#intersect",
+    "href": "blog/2024-12-06-adv_sql/index.html#intersect",
+    "title": "Advanced SQL",
+    "section": "#2.2 INTERSECT\n",
+    "text": "#2.2 INTERSECT\n\nBelow query return all c_custkey that appears in both customer and orders table.\n\nShow the codeSELECT c_custkey \nFROM customer\nINTERSECT\nSELECT o_custkey \nFROM orders;"
+  },
+  {
+    "objectID": "blog/2024-12-06-adv_sql/index.html#except",
+    "href": "blog/2024-12-06-adv_sql/index.html#except",
+    "title": "Advanced SQL",
+    "section": "#2.3 EXCEPT\n",
+    "text": "#2.3 EXCEPT\n\nAnd the below query return all c_custkey that appears customer but not in orders table.\n\nShow the codeSELECT c_custkey\nFROM customer\nEXCEPT\nSELECT o_custkey\nFROM orders;\n\n\nUsing this, we can perform delta/data diff checking!"
+  },
+  {
+    "objectID": "blog/2024-12-06-adv_sql/index.html#asof-join",
+    "href": "blog/2024-12-06-adv_sql/index.html#asof-join",
+    "title": "Advanced SQL",
+    "section": "#7.1 ASOF JOIN\n",
+    "text": "#7.1 ASOF JOIN\n\nAn ASOF JOIN (As-Of Join) is a time-series specific join operation that matches rows based on the closest timestamp, typically used in financial and time-series data analysis.\n\n\nKey characteristics:\n\nMatches each row from one table to the most recent row in another table by time\nUseful for tracking historical state changes\nCommon in financial databases and time-series analysis\n\n\n\nExample use case:\n\nJoining stock prices with trading orders\nMatching historical prices at the nearest timestamp\nTracking changes in reference data over time\n\n\n\nFor eg. “give me the value of the property as of this time”:\n\nShow the codeWITH stock_prices AS (\n    SELECT 'APPL' AS ticker, TIMESTAMP '2001-01-01 00:00:00' AS \"when\", 1 AS price\n    UNION ALL\n    SELECT 'APPL', TIMESTAMP '2001-01-01 00:01:00', 2\n    UNION ALL\n    SELECT 'APPL', TIMESTAMP '2001-01-01 00:02:00', 3\n    UNION ALL\n    SELECT 'MSFT', TIMESTAMP '2001-01-01 00:00:00', 1\n    UNION ALL\n    SELECT 'MSFT', TIMESTAMP '2001-01-01 00:01:00', 2\n    UNION ALL\n    SELECT 'MSFT', TIMESTAMP '2001-01-01 00:02:00', 3\n    UNION ALL\n    SELECT 'GOOG', TIMESTAMP '2001-01-01 00:00:00', 1\n    UNION ALL\n    SELECT 'GOOG', TIMESTAMP '2001-01-01 00:01:00', 2\n    UNION ALL\n    SELECT 'GOOG', TIMESTAMP '2001-01-01 00:02:00', 3\n),\nportfolio_holdings AS (\n    SELECT 'APPL' AS ticker, TIMESTAMP '2000-12-31 23:59:30' AS \"when\", 5.16 AS shares\n    UNION ALL\n    SELECT 'APPL', TIMESTAMP '2001-01-01 00:00:30', 2.94\n    UNION ALL\n    SELECT 'APPL', TIMESTAMP '2001-01-01 00:01:30', 24.13\n    UNION ALL\n    SELECT 'GOOG', TIMESTAMP '2000-12-31 23:59:30', 9.33\n    UNION ALL\n    SELECT 'GOOG', TIMESTAMP '2001-01-01 00:00:30', 23.45\n    UNION ALL\n    SELECT 'GOOG', TIMESTAMP '2001-01-01 00:01:30', 10.58\n    UNION ALL\n    SELECT 'DATA', TIMESTAMP '2000-12-31 23:59:30', 6.65\n    UNION ALL\n    SELECT 'DATA', TIMESTAMP '2001-01-01 00:00:30', 17.95\n    UNION ALL\n    SELECT 'DATA', TIMESTAMP '2001-01-01 00:01:30', 18.37\n)\nSELECT h.ticker,\n    h.when,\n    p.when as stock_price_ts,\n    price,\n    shares,\n    price * shares AS value\nFROM portfolio_holdings h\nASOF JOIN stock_prices p\n       ON h.ticker = p.ticker\n      AND h.when &gt;= p.when\nORDER BY 1, 2;\n\n\n\n\noutput\n\nWithout ASOF JOIN, we must use a WINDOW function to achieve this."
+  },
+  {
+    "objectID": "blog/2024-12-06-adv_sql/index.html#anti-join",
+    "href": "blog/2024-12-06-adv_sql/index.html#anti-join",
+    "title": "Advanced SQL",
+    "section": "#7.2 ANTI JOIN\n",
+    "text": "#7.2 ANTI JOIN\n\nThe pattern is to get rows in one table that are not in another table:\n\nShow the codeSELECT c.c_custkey\nFROM customer c\nLEFT JOIN orders o\nON c.c_custkey = o.o_custkey\nWHERE o.o_custkey IS NULL\nORDER BY c.c_custkey\nLIMIT 5;\n\n\nSome DBs have native support for ANTI JOIN:\n\nShow the codeSELECT c.c_custkey\nFROM customer c\nANTI JOIN orders o\nON c.c_custkey = o.o_custkey\nORDER BY c.c_custkey\nLIMIT 5;"
+  },
+  {
+    "objectID": "blog/2024-12-06-adv_sql/index.html#lateral-join",
+    "href": "blog/2024-12-06-adv_sql/index.html#lateral-join",
+    "title": "Advanced SQL",
+    "section": "#7.3 LATERAL JOIN\n",
+    "text": "#7.3 LATERAL JOIN\n\nLATERAL JOIN is a powerful SQL join type that allows a subquery in the FROM clause to reference columns from preceding tables in the same FROM clause.\n\nEnables per-row dynamic subqueries\nAllows correlated subqueries in the FROM clause\nSupported in PostgreSQL, BigQuery, some other modern databases\n\nFor e.g, for each row in the orders table (o), the subquery in the LATERAL JOIN selects line items (l) that match certain conditions.\n\nShow the codeSELECT \n    o.o_orderkey, \n    o.o_totalprice, \n    l.l_linenumber,\n    l.l_extendedprice\nFROM orders o,\nLATERAL (\n    SELECT l.l_linenumber,\n    l_extendedprice\n    FROM lineitem l\n    WHERE l.l_orderkey = o.o_orderkey\n    AND l.l_linenumber &lt;= 2\n    AND l.l_extendedprice &lt; (o.o_totalprice / 2)\n) AS l\nORDER BY 1, 3;\n\n\n\n\noutput - first 10 rows\n\nFor each row in the orders table (o), the subquery in the LATERAL JOIN counts the number of line items (lineitem_count) related to that order.\n\nShow the codeSELECT \n    o.o_orderkey, \n    o.o_totalprice, \n    l.lineitem_count\nFROM orders o,\nLATERAL (\n    SELECT COUNT(*) AS lineitem_count\n    FROM lineitem l\n    WHERE l.l_orderkey = o.o_orderkey\n) AS l;\n\n\n\n\noutput - first 10 rows"
+  },
+  {
+    "objectID": "blog/2024-12-06-adv_sql/index.html#pivot",
+    "href": "blog/2024-12-06-adv_sql/index.html#pivot",
+    "title": "Advanced SQL",
+    "section": "#8.1 PIVOT\n",
+    "text": "#8.1 PIVOT\n\nWe often want to change a value of a column into individual columns, we can use CASE ... WHEN ...:\n\nShow the codeSELECT \n    o_custkey,\n    SUM(CASE WHEN o_orderstatus = 'F' THEN o_totalprice ELSE 0 END) AS fulfilled_total,\n    SUM(CASE WHEN o_orderstatus = 'O' THEN o_totalprice ELSE 0 END) AS open_total,\n    SUM(CASE WHEN o_orderstatus = 'P' THEN o_totalprice ELSE 0 END) AS pending_total\nFROM orders\nGROUP BY o_custkey\nORDER BY o_custkey;\n\n\nBut also leverage PIVOT:\n\nShow the codeFROM orders\nPIVOT (\n    sum(o_totalprice)\n    FOR\n        o_orderstatus IN ('F', 'O', 'P')\n    GROUP BY o_custkey\n)\n    ORDER BY o_custkey;\n\n\n\n\noutput - first 10 rows"
+  },
+  {
+    "objectID": "blog/2024-12-06-adv_sql/index.html#cube",
+    "href": "blog/2024-12-06-adv_sql/index.html#cube",
+    "title": "Advanced SQL",
+    "section": "#8.1 CUBE\n",
+    "text": "#8.1 CUBE\n\n\nShow the codeSELECT \n    o_orderpriority,\n    o_orderstatus,\n    EXTRACT(YEAR FROM o_orderdate) AS order_year,\n    SUM(o_totalprice) AS total_sales\nFROM orders\nGROUP BY CUBE (o_orderpriority, o_orderstatus, order_year)\nORDER BY 1,2,3;\n\n\n\n\noutput - first 10 rows\n\n\n\nCUBE (o_custkey, o_orderstatus, order_year): This will group the data and calculate subtotals and grand totals for all possible combinations of o_custkey, o_orderstatus, and order_year.\nIt will generate all combinations of the grouping columns, including:\n\nGrouping by just o_custkey\nGrouping by just o_orderstatus\nGrouping by just order_year\nGrouping by all three together\nGrouping by pairs of columns\nA grand total (no grouping by any column)\n\nSUM(o_totalprice): For each combination of groupings, it sums the total order price.\n\n\n\nUse cases:\n\n\nOLAP Reporting: CUBE is commonly used in OLAP scenarios where you need to analyze data from multiple perspectives. For instance, you may want to generate reports that show total sales by customer, by order status, by year, and all possible combinations of these dimensions.\nSales Analysis: In sales analysis, CUBE can help create pivot-like summaries that show how different attributes (e.g., region, product, time period) contribute to the overall sales.\nFinancial Reports: Financial departments often use CUBE to calculate totals and subtotals across dimensions like departments, time periods, and account categories, making it easier to prepare comprehensive financial reports.\n\n\nHappy learning!"
   }
 ]
