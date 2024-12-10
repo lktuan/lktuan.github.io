@@ -27,18 +27,20 @@ This is my study notes / codes along with Andrej Karpathy's "[Neural Networks: Z
 
 ![swole doge style backpropagation, image credit to [this video](https://www.youtube.com/watch?v=LzxnmqnctmA)](swole_doggo.jpg)
 
-In previous lecture, we're introduced to some common issues with our "shallow" (and of course for deep as well) neural network and how to fix with the initialization setting and Batch Normalization. We're also learnt some diagnostic tools to observe *forward pass activations*, *backward pass gradients*, and *weights update*, to calibrate the training loop. In this lacture, we aim to replace this line of code:
+In the previous lecture, we're introduced to some common issues with our "shallow" (and of course for deep as well) neural network and how to fix with the initialization setting and Batch Normalization. We're also learned some diagnostic tools to observe *forward pass activations*, *backward pass gradients*, and *weights update*, to calibrate the training loop. In this lecture, we aim to replace this line of code:
 
 ```{python}
 #| eval: false
 ... loss.backward() ...
 ```
 
-with from-scratch-code. It's basically identical to `MicroGrad`, but on *Tensor* rather than *Scalar*. Why?
+with from-scratch-code. It's basically identical to `MicroGrad`, but on *Tensor* rather than *Scalar*. But why we should care?
 
 > The problem with Backpropagation is that it is a [leaky abstraction](https://en.wikipedia.org/wiki/Leaky_abstraction). -- Andrej Karpathy
 
-readmore: <https://karpathy.medium.com/yes-you-should-understand-backprop-e2f06eab496b>, and <https://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html>
+readmore: 
+- <https://karpathy.medium.com/yes-you-should-understand-backprop-e2f06eab496b>, 
+- and <https://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html>.
 
 inshort, to effectively debug neural network, we should be deeply understanding how back propagation work under the hood. Let's do it!
 
@@ -208,7 +210,7 @@ loss
 
 # exercise 1: backproping the atomic compute graph
 
-I can do 60, 70% of this myself \~ for popular mathematics operations. What I need to remember after this excercise are backwards of:
+I can do 60, 70% of this myself \~ for popular mathematics operations. What I need to remember after these excercises are backwards of:
 
 -   elements in matrix mult;
 -   max operator;
@@ -673,7 +675,7 @@ for _ in range(20):
 
 # outro
 
-We have gone through and learnt how can we manually do the gradients in our networks, it's just some line of code for eact step and pretty simple (but not for Batch Norm formula). And I'll also back with another post to calculate how the grad of cross entropy is coming.
+We have gone through and learned how can we manually do the gradients in our networks, it's just some line of code for each step and pretty simple (*but not for the Batch Norm formula* 😪). And I'll also be back with another post to calculate how the grad of cross entropy is coming.
 
 In next lesson we will build RNN, LSTM, GRU, etc. Interesting and happly leanring!
 
