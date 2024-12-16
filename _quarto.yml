@@ -1,7 +1,6 @@
 author-name: "Le Khac Tuan"
 draft: false
 
-
 project:
   type: website
   output-dir: docs
@@ -9,10 +8,10 @@ project:
   resources:
     - "img/**"
     - "assets/**"
+    - commit_info.js
     # - "sitemap.xml"
     # - "_redirects"
 
-  # ~ additional metadata excluded for brevity ~
   preview: 
     port: 22222
     browser: true
@@ -28,8 +27,8 @@ title-meta: "Le Khac Tuan"
 description-meta: "This is Tuan's blog"
 
 website:
-  title: "Le Khac Tuan" # This is my name
-  description: "This is Tuan's blog" # A brief slogan
+  title: "Le Khac Tuan"
+  description: "This is Tuan's blog"
   site-url: "https://lktuan.github.io/"
   
   repo-url: "https://github.com/lktuan/lktuan.github.io"
@@ -71,82 +70,20 @@ website:
         # text: Email
         href: "mailto:tuan.lekhac0905@gmail.com"   
 
-
 # Don't touch unless you know what you are doing :) ------------
   search: 
     location: navbar
     type: textbox
 
-  # page-footer: 
-  #   left: "Build with {{< fa heart >} and [Quarto](https://quarto.org/), by Tuan Le Khac (2023-204). License [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)"
-  #   right: "[View the source at {{< fa brands github >}} GitHub](https://github.com/lktuan/lktuan.github.io)"
-
   page-footer: 
     left: |
       <span class="faux-block">[{{< fa brands creative-commons >}}](https://creativecommons.org/licenses/by-nc-nd/4.0/) 2023-2024 Le Khac Tuan</span>
     center: |
-      <span class="faux-block">Designed with {{< fa heart >}}</span>
+      <span class="faux-block">
+        Designed with {{< fa heart >}}, <span id="commit-info">Loading last commit...</span>
+      </span>
     right: |
       <span class="faux-block">Made with [Quarto](https://quarto.org/)</span>
-
-#      <span class="faux-block">
-#        <span id="commit-info">Loading last commit...</span>
-#      </span>
-#     <span class="faux-block">[View the source at {{< fa brands github >}} GitHub](https://github.com/lktuan/lktuan.github.io)</span>
-
-      # <script>
-      # (function() {
-      #     function updateCommitInfo() {
-      #         fetch('https://api.github.com/repos/lktuan/lktuan.github.io/commits?per_page=1')
-      #             .then(function(response) {
-      #                 if (!response.ok) {
-      #                     throw new Error('Failed to fetch commit data');
-      #                 }
-      #                 return response.json();
-      #             })
-      #             .then(function(commits) {
-      #                 if (commits.length > 0) {
-      #                     var latestCommit = commits[0];
-                          
-      #                     // Parse the original UTC date
-      #                     var utcDate = new Date(latestCommit.commit.committer.date);
-                          
-      #                     // Create a new date object in GMT+7
-      #                     var options = {
-      #                         timeZone: 'Asia/Bangkok', // GMT+7 timezone
-      #                         month: 'long',
-      #                         day: 'numeric',
-      #                         year: 'numeric',
-      #                         hour: '2-digit',
-      #                         minute: '2-digit',
-      #                         hour12: false
-      #                     };
-
-      #                     // Format the date in GMT+7
-      #                     var formattedDate = utcDate.toLocaleString('en-US', options);
-
-      #                     // Update the DOM element
-      #                     var commitInfoEl = document.getElementById('commit-info');
-                          
-      #                     if (commitInfoEl) {
-      #                         commitInfoEl.textContent = `Last commit on ${formattedDate} (GMT+7): ${latestCommit.commit.message}`;
-      #                     }
-      #                 }
-      #             })
-      #             .catch(function(error) {
-      #                 console.error('Error fetching commit data:', error);
-      #                 var commitInfoEl = document.getElementById('commit-info');
-                      
-      #                 if (commitInfoEl) {
-      #                     commitInfoEl.textContent = 'Could not retrieve commit information';
-      #                 }
-      #             });
-      #     }
-
-      #     // Run the update when the script loads
-      #     updateCommitInfo();
-      # })();
-      # </script>
 
 format:
   html:
@@ -166,7 +103,12 @@ format:
     highlight-style: gruvbox
     code-overflow: scroll
 
-editor: visual
+    include-after-body:
+      text: |
+        <script type="application/javascript" src="commit_info.js"></script>
+
+
+editor: source
 
 execute:
   freeze: true
