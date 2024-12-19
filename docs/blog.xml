@@ -10,7 +10,200 @@
 <atom:link href="https://lktuan.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>This is Tuan&#39;s blog</description>
 <generator>quarto-1.4.554</generator>
-<lastBuildDate>Sun, 08 Dec 2024 17:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 11 Dec 2024 17:00:00 GMT</lastBuildDate>
+<item>
+  <title>Intro to Large Language Models: A Summary of Andrej Karpathy’s Talk</title>
+  <dc:creator>Tuan Le Khac</dc:creator>
+  <link>https://lktuan.github.io/blog/2024-12-12-intro-llm/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>On edit!</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="AI-assisted content">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+AI-assisted content
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This summary is conducted with the help of “<a href="https://aistudio.google.com/prompts/new_chat?model=gemini-2.0-flash-exp">Gemini 2.0 Flash Experimental</a>” in Google AI Studio.</p>
+</div>
+</div>
+<section id="part-1-understanding-llms" class="level1">
+<h1>Part 1: Understanding LLMs</h1>
+<section id="intro-large-language-model-llm-talk" class="level2">
+<h2 class="anchored" data-anchor-id="intro-large-language-model-llm-talk">Intro: Large Language Model (LLM) Talk</h2>
+<p>Karpathy begins by explaining the motivation for re-recording his talk, emphasizing its popularity. He frames it as a “busy person’s intro” to large language models, aiming to provide a concise yet informative overview. He quickly dives into the core of what constitutes an LLM.</p>
+</section>
+<section id="llm-inference-the-essence-of-llms" class="level2">
+<h2 class="anchored" data-anchor-id="llm-inference-the-essence-of-llms">LLM Inference: The Essence of LLMs</h2>
+<p>In its most basic form, a large language model is just two files:</p>
+<ul>
+<li>a “parameters” file; and</li>
+<li>a “run” file.</li>
+</ul>
+<p>Using the example of the Llama 2 70B model, released by Meta AI, he clarifies these points. The parameters file contains the model’s weights, essentially a vast list of numbers representing the trained neural network. These parameters, stored as 2-byte <code>float16</code> numbers, for the 70B model, come up to about 140 GB (<em>because each param is 2 bytes</em>). The “run” file is the code (often in C or Python) that executes the neural network using the parameters. This code is surprisingly compact, requiring approximately 500 lines of C code without external dependencies. This is the essence of the model itself – a <strong>self-contained package</strong> requiring no internet connectivity once compiled.</p>
+<p>Karpathy uses the example of providing text to the model (“write a poem about scale AI”), which generates a poem, to demonstrate what inference (running the model) looks like. He emphasizes that the computational complexity comes in obtaining those parameters via training, not running the model itself. The demonstration is not actually the 70B model in real time but a much smaller 7B model, running about 10 times faster for illustrative purposes.</p>
+<p>The magic lies under the parameters. <em>But how can we obtain them?</em></p>
+</section>
+<section id="llm-training-the-heavy-lifting" class="level2">
+<h2 class="anchored" data-anchor-id="llm-training-the-heavy-lifting">LLM Training: The Heavy Lifting</h2>
+<p>The bulk of the computational effort and cost is tied to <em>training</em> the model. This involves creating the parameters, a process far more complex than running it (inference). The training is conceptualized as a compression process of the internet.</p>
+<p>The resources required for training Llama 2 70B:</p>
+<ul>
+<li>roughly 10 terabytes of text from a crawl of the internet,</li>
+<li>processed by 6,000 GPUs over 12 days,</li>
+<li>at a cost of around $2 million.</li>
+</ul>
+<p>This process compresses the massive text dataset into the 140GB parameters file, which he refers to as “<em>like a zip file of the internet</em>” with a compression ratio of approximately <strong>100x</strong>. Importantly, this is a <em>lossy</em> compression, meaning the model doesn’t store an exact copy of the text, but a generalized representation, a kind of “Gestalt.” Karpathy points out that the numbers associated with Llama 2 70B, while significant, are “rookie numbers” compared to the training efforts for state-of-the-art models used in ChatGPT or Claude which are of magnitude 10x or more and costing tens or hundreds of millions of dollars.</p>
+<p>After being <em>trained</em> (and <em>fine-tuned</em> - which is discussed later), running the LLM model which is neural network is faily computationally cheap. <em>So what is neural network is really doing?</em></p>
+</section>
+<section id="llm-dreams-text-generation-hallucination" class="level2">
+<h2 class="anchored" data-anchor-id="llm-dreams-text-generation-hallucination">LLM Dreams: Text Generation &amp; Hallucination</h2>
+<p>Fundamentally, a language model’s primary task during training is to predict the <em>next word</em> in a sequence. For example, from a sequence “Cat sat on a”, the neural network will predict what word comes next, e.g.&nbsp;“mat” with a 97% probability. Karpathy explains that this prediction task has a very close mathematical relationship to compression. This simple prediction is a powerful objective, forcing the model to learn vast amounts of world knowledge. He uses a sample from Wikipedia about Ruth Handler to highlight how even seemingly mundane text is full of information that the model internalizes.</p>
+<p>After training, running the model (inference) involves iterative text generation. The model predicts a word, feeds it back in, predicts the next, and so on, in a process Karpathy describes as “dreaming internet documents.” He shows examples of generated text resembling Java code, Amazon product listings, and Wikipedia articles. This generated text is often plausible but <em>hallucinated</em> – not necessarily true or derived directly from the training data. He gives examples of made up ISBNs and text referencing an obscure fish species, demonstrating that the model is not simply memorizing the training set.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-12-12-intro-llm/1_network_dreams.png" class="img-fluid figure-img"></p>
+<figcaption>All of these are dreamed by neural networks</figcaption>
+</figure>
+</div>
+</section>
+<section id="how-do-they-work-the-transformer-architecture" class="level2">
+<h2 class="anchored" data-anchor-id="how-do-they-work-the-transformer-architecture">How Do They Work? The Transformer Architecture</h2>
+<p>Into the inner workings of LLMs, they are based on a neural network architecture called the “<em>Transformer</em>”. The full details of the mathematical operations and architecture are available. The challenge is that parameters are spread across the network and the exact nature of their interactions and contributions to the whole is unknown. While we know how to iteratively adjust the parameters to improve next-word prediction accuracy, we don’t truly understand <em>how</em> these parameters collaborate to produce specific outputs. We do have some models suggesting they build up knowledge databases but this knowledge is imperfect and strange. Karpathy illustrates the weirdness of LLM knowledge using the viral “reversal course” example of Chat GPT’s inability to recognize “Tom Cruise” as “Merily Feifer’s son,” showing the knowledge is one-dimensional and directionally dependent. He summarizes that LLMs should be viewed as “<strong>mostly inscrutable artifacts</strong>”, unlike engineered systems (like cars). He emphasizes that they are empirical artifacts that necessitate sophisticated evaluation methods.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-12-12-intro-llm/2_reversal_course.png" class="img-fluid figure-img"></p>
+<figcaption>Reversal Course</figcaption>
+</figure>
+</div>
+</section>
+<section id="fine-tuning-into-an-assistant-from-document-generators-to-chatbots" class="level2">
+<h2 class="anchored" data-anchor-id="fine-tuning-into-an-assistant-from-document-generators-to-chatbots">Fine-tuning into an Assistant: From Document Generators to Chatbots</h2>
+<p>The first training phase results in an internet document generator, which is not that helpful. The second major step is <em>fine-tuning</em>, the process of transforming this into a helpful “assistant model”. This transformation is achieved by switching from training on a large collection of internet text to training on a smaller, <strong>carefully curated dataset of conversations</strong>.</p>
+<p>This dataset is typically created manually by human labelers who are provided with labeling instructions to generate questions and model answers. An example is provided of a question, with the correct assistant answer. The pre-training stage prioritizes data quantity but low quality, while the fine-tuning stage favors high-quality, carefully labelled Q&amp;A documents. A dataset of 100,000 high-quality Q&amp;A documents would be more than sufficient for fine tuning. The fine tuning stage leverages the knowledge from pre-training and reconfigures the LLM to answer questions in a helpful manner. He gives the example of the prompt “can you help me with this code” with the corresponding helpful response. The model is able to “format” itself into an assistant that knows how to answer and responds to these kinds of questions, by learning patterns from the training data, and generating text word by word.</p>
+</section>
+<section id="summary-so-far-pre-training-vs.-fine-tuning" class="level2">
+<h2 class="anchored" data-anchor-id="summary-so-far-pre-training-vs.-fine-tuning">Summary So Far: Pre-training vs.&nbsp;Fine-tuning</h2>
+<p>Karpathy summarizes the two-stage process: * <strong>Pre-training:</strong> training on a massive internet dataset, resulting in a base model with world knowledge, this is computationally very expensive (millions of dollars) and done infrequently. * <strong>Fine-tuning:</strong> training on high-quality Q&amp;A data, resulting in an assistant model, this is computationally cheaper and done more frequently (daily or weekly).</p>
+<p>The Llama 2 series included both base and assistant models. The base model, without fine tuning, is not directly usable because it just samples documents rather than responding with an answer. Meta performed the pre-training and released the result. This allows others to do their own fine-tuning, providing tremendous freedom.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-12-12-intro-llm/3_2stage.png" class="img-fluid figure-img"></p>
+<figcaption>How to train your <del>dragon</del> ChatGPT</figcaption>
+</figure>
+</div>
+</section>
+<section id="appendix-comparisons-labeling-docs-rlhf-synthetic-data-leaderboard" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-comparisons-labeling-docs-rlhf-synthetic-data-leaderboard">Appendix: Comparisons, Labeling Docs, RLHF, Synthetic Data, Leaderboard</h2>
+<p>This section expands on finer aspects of training and evaluation. Fine-tuning is followed by an <em>optional</em> third stage that leverages comparison labels. It is typically easier for a human labeler to rank options vs.&nbsp;generating the content. The labelers are given example Haikus and they are asked to pick the best one. These comparisons are used to further fine-tune the model via Reinforcement Learning from Human Feedback (RLHF). Karpathy shows an example of labeling instructions from the InstructGPT paper asking labelers to be “helpful, truthful, and harmless”. He notes that these instructions can be tens or hundreds of pages long and very complicated.</p>
+<p>He then explains that human labelers are used, although increasingly, machine assisted. Models can be used to sample answers and a human can do the cherry picking to improve efficiency. He then displays the Chatbot Arena leaderboard where Language Models are ranked according to their ELO ratings (just like chess). This ranking system determines which model does better on user queries. He observes the closed, proprietary models like those from OpenAI and Anthropic generally perform better. However, open-weights models (Llama series, Zephyr) are available and can be fine-tuned and used by everyone. The open-source models may be less accurate, but good enough for many applications.</p>
+</section>
+</section>
+<section id="part-2-future-of-llms" class="level1">
+<h1>Part 2: Future of LLMs</h1>
+<section id="llm-scaling-laws-the-path-to-better-performance" class="level2">
+<h2 class="anchored" data-anchor-id="llm-scaling-laws-the-path-to-better-performance">LLM Scaling Laws: The Path to Better Performance</h2>
+<p>Karpathy highlights the importance of <em>scaling laws</em>: the performance of LLMs in terms of next-word prediction accuracy is a predictable function of:</p>
+<ul>
+<li>the number of parameters (N), and</li>
+<li>the amount of training data (D).</li>
+</ul>
+<p>Increased parameters and increased dataset always result in better performance (predictability), so algorithmic progress is a bonus. It’s not necessarily needed for improvement, which creates a gold rush, because bigger and better clusters can provide better results. He emphasizes this is correlated with performance across many downstream tasks.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-12-12-intro-llm/4_free_scaling.png" class="img-fluid figure-img"></p>
+<figcaption>Free scaling!</figcaption>
+</figure>
+</div>
+</section>
+<section id="tool-use-expanding-capabilities" class="level2">
+<h2 class="anchored" data-anchor-id="tool-use-expanding-capabilities">Tool Use: Expanding Capabilities</h2>
+<p>He uses a concrete example to demonstrate the <em>tool use</em> capabilities of LLMs using ChatGPT, by providing a query to find information on Scale AI’s funding rounds. ChatGPT can browse the internet using <em>search tools</em>, it then takes the information from search results, and uses that to answer the prompt. The model then can use a <em>calculator tool</em> to perform arithmetic tasks, and generates an estimation based on ratios from data it previously received. It can then use a <em>python interpreter</em> with the matplotlib library to generate graphs and visualizations to the data. This allows the language model to solve problems just as humans might, using external tools to aid in problem solving. It can also use <em>DALL-E</em> for image generation. The LLM orchestrates the various tools to solve the prompt and return the result to the user.</p>
+</section>
+<section id="multimodality-beyond-text" class="level2">
+<h2 class="anchored" data-anchor-id="multimodality-beyond-text">Multimodality: Beyond Text</h2>
+<p>The next major aspect is <em>multimodality</em>, showing how LLMs can interact beyond text with images, audio, etc. Karpathy gives the example of ChatGPT analyzing a hand-sketched website diagram, generating functional HTML and JavaScript. ChatGPT can also hear and speak and thus enable speech-to-speech interactions.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://lktuan.github.io/blog/2024-12-12-intro-llm/5_multimodality.png" class="img-fluid figure-img"></p>
+<figcaption>Multimodality</figcaption>
+</figure>
+</div>
+</section>
+<section id="thinking-system-12-reasoning-and-planning" class="level2">
+<h2 class="anchored" data-anchor-id="thinking-system-12-reasoning-and-planning">Thinking, System 1/2: Reasoning and Planning</h2>
+<p>Karpathy introduces the concept of <em>System 1</em> and <em>System 2</em> thinking, inspired by Daniel Kahneman’s work. System 1 is fast, instinctive thinking, whereas System 2 is slower, more deliberate reasoning. He explains that LLMs currently only operate in System 1 mode, sampling word by word without deep planning. A major future direction is to enable <em>System 2</em> thinking, where models can spend more time to improve quality. The idea is to make a trade off between compute time and accuracy. He notes how this is not possible today, where the LLM just goes chunk chunk chunk and sampling words in the sequence without “thinking” through it. He emphasizes the importance of converting time into accuracy using tree-of-thought and other techniques.</p>
+</section>
+<section id="self-improvement-going-beyond-human-limits" class="level2">
+<h2 class="anchored" data-anchor-id="self-improvement-going-beyond-human-limits">Self-improvement: Going Beyond Human Limits</h2>
+<p>He references DeepMind’s AlphaGo, which initially learned by imitating human players but later surpassed human performance through self-improvement. Karpathy argues that current LLMs are only in the imitation stage, and the next challenge is to achieve <em>self-improvement</em> for them, similar to the AlphaGo step two. The lack of a general reward function, unlike the win/loss criteria of the go game, is the main challenge. In narrow domains though, this may be achievable.</p>
+</section>
+<section id="llm-customization-expert-systems" class="level2">
+<h2 class="anchored" data-anchor-id="llm-customization-expert-systems">LLM Customization: Expert Systems</h2>
+<p>Karpathy explains the need for customization to allow LLMs to become specialized in specific tasks. This is especially important due to the diversity of needs in the real world. He provides the example of the GPT Store by OpenAI, which allows users to create custom GPTs using custom instructions, and retrieval augmented generation. Fine-tuning LLMs may be needed to have experts in specific areas.</p>
+</section>
+<section id="llm-os-a-new-paradigm" class="level2">
+<h2 class="anchored" data-anchor-id="llm-os-a-new-paradigm">LLM OS: A New Paradigm</h2>
+<p>Karpathy proposes that LLMs should not be seen as mere chatbots, but rather the <em>kernel process of an emerging operating system</em>. He explains that the LLM is coordinating a lot of resources for problem solving, acting like the kernel of an operating system. He then goes to show an analog of a computer’s components, and what they might correspond to in LLM space. He outlines the LLM OS’s capabilities, such as internet browsing, local file referencing, access to software tools, ability to generate/interpret images, videos, and audio, long-term “thinking”, customization, and self-improvement. This maps directly to what we expect an operating system to do. He makes an analogy to a computer’s memory hierarchy with hard disks (internet/local files), random access memory (context window). He also draws a parallel between the diverse OS landscape of today with the proprietary desktop OS like Windows and MacOS vs open-source alternatives. In the LLM space, similarly there’s GPT/Claude/Bard and the open-source landscape built around Llama.</p>
+</section>
+</section>
+<section id="part-3-llm-security" class="level1">
+<h1>Part 3: LLM Security</h1>
+<section id="llm-security-intro-the-new-battleground" class="level2">
+<h2 class="anchored" data-anchor-id="llm-security-intro-the-new-battleground">LLM Security Intro: The New Battleground</h2>
+<p>Karpathy then switches gears to security challenges, arguing that the new paradigm of LLMs introduce new security vulnerabilities. He emphasizes that cat and mouse security game that we are familiar with in computer security also exists in LLM security.</p>
+</section>
+<section id="jailbreaks-bypassing-safety-restrictions" class="level2">
+<h2 class="anchored" data-anchor-id="jailbreaks-bypassing-safety-restrictions">Jailbreaks: Bypassing Safety Restrictions</h2>
+<p>He starts with <em>jailbreak attacks</em>, demonstrating how prompts can circumvent safety restrictions and elicit harmful information from LLMs. One example given is the grandmother-role-play where the LLM was tricked to give instructions on how to make Napalm. There are many ways to trick a system into providing unsafe responses. He gives the example of base64 encoding a dangerous request to elicit unsafe information because training for safety often focuses on English text. The universal transferable suffix is another attack vector: adding the suffix will bypass safety filters. Image noise based jailbreaks are also possible by carefully crafting the noise pattern.</p>
+</section>
+<section id="prompt-injection-hijacking-the-model" class="level2">
+<h2 class="anchored" data-anchor-id="prompt-injection-hijacking-the-model">Prompt Injection: Hijacking the Model</h2>
+<p>Karpathy moves to <em>prompt injection attacks</em>, where hidden or injected prompts hijack the model, causing it to follow undesirable instructions. One example is using faint text hidden in an image, containing a prompt injection, to make ChatGPT talk about Sephora sales. He explains that prompt injection can exist in web pages. This is demonstrated using the scenario of searching for movies in Bing and having Bing inject a fraud link due to a web page the search accessed having a prompt injection vulnerability. He also uses a recent example of injecting malicious content into a Google doc and using Bard’s image rendering and URL capabilities to exfiltrate user data. He explains that while engineers implement mitigations, determined attackers always find a loophole (Google Apps scripts).</p>
+</section>
+<section id="data-poisoning-the-backdoor-threat" class="level2">
+<h2 class="anchored" data-anchor-id="data-poisoning-the-backdoor-threat">Data Poisoning: The Backdoor Threat</h2>
+<p>The final attack vector is <em>data poisoning</em> or <em>backdoor attacks</em>. He discusses how a trigger phrase can cause the model to behave maliciously when the text is present. He discusses the James Bond trigger phrase that is injected during fine tuning. The trigger phrase can cause any task to become non-sensical, or to incorrectly classify threats in a security application. While the example was shown to work for fine-tuning, Karpathy explains that the idea can extend to pre-training.</p>
+</section>
+<section id="llm-security-conclusions-a-constant-battle" class="level2">
+<h2 class="anchored" data-anchor-id="llm-security-conclusions-a-constant-battle">LLM Security Conclusions: A Constant Battle</h2>
+<p>Karpathy summarizes that while defenses exist, the security landscape in LLMs will likely be a constant “cat and mouse game,” mirroring traditional computer security. He points out that all the attacks have defenses, but they can be bypassed and repatched and so on. The field is very new and actively evolving.</p>
+</section>
+<section id="outro" class="level2">
+<h2 class="anchored" data-anchor-id="outro">Outro</h2>
+<p>Karpathy ends the talk by summarizing all major aspects he touched upon. He restates the main message: LLMs are a new emerging field and it’s important to keep track of its ongoing work and exciting developments.</p>
+</section>
+</section>
+<section id="resources" class="level1">
+<h1>resources</h1>
+<ol type="1">
+<li>video: <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g" class="uri">https://www.youtube.com/watch?v=zjkBMFhNj_g</a>;</li>
+<li>pdf slide: <a href="https://drive.google.com/file/d/1pxx_ZI7O-Nwl7ZLNk5hI3WzAsTLwvNU7/view" class="uri">https://drive.google.com/file/d/1pxx_ZI7O-Nwl7ZLNk5hI3WzAsTLwvNU7/view</a></li>
+<li>a recommended to read blog post: <a href="https://karpathy.github.io/2015/05/21/rnn-effectiveness/" class="uri">https://karpathy.github.io/2015/05/21/rnn-effectiveness/</a></li>
+<li>a <code>run.c</code> file: <a href="https://github.com/karpathy/llama2.c/blob/master/run.c" class="uri">https://github.com/karpathy/llama2.c/blob/master/run.c</a></li>
+</ol>
+
+
+<!-- -->
+
+</section>
+
+ ]]></description>
+  <category>andrej karpathy</category>
+  <category>llm</category>
+  <category>neural networks</category>
+  <guid>https://lktuan.github.io/blog/2024-12-12-intro-llm/</guid>
+  <pubDate>Wed, 11 Dec 2024 17:00:00 GMT</pubDate>
+  <media:content url="https://lktuan.github.io/blog/2024-12-12-intro-llm/llmintro.png" medium="image" type="image/png" height="81" width="144"/>
+</item>
 <item>
   <title>NN-Z2H Lesson 6: Building makemore part 5 - Building a WaveNet</title>
   <dc:creator>Tuan Le Khac</dc:creator>
@@ -27099,388 +27292,6 @@ font-style: inherit;">docker</span> run ml_project</span></code></pre></div>
   <guid>https://lktuan.github.io/blog/2024-06-24-docker/</guid>
   <pubDate>Sun, 23 Jun 2024 17:00:00 GMT</pubDate>
   <media:content url="https://lktuan.github.io/blog/2024-06-24-docker/docker.png" medium="image" type="image/png" height="76" width="144"/>
-</item>
-<item>
-  <title>Observable Framework try-out</title>
-  <dc:creator>Tuan Le Khac</dc:creator>
-  <link>https://lktuan.github.io/blog/2024-06-19-observable/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p>I’ve heard that Observable released their Framework as open source in April 2024, and Quarto also supported Observable natively since version 1.4 (?), thus decided to give it a try. Could not agree more with their slogan:</p>
-<blockquote class="blockquote">
-<p>The best dashboards are built with <code>code</code>.</p>
-</blockquote>
-<p>This is my <a href="https://github.com/lktuan/first-observable-project">repo</a> for the practice.</p>
-<p>🚀 <strong>Observable Framwork</strong> <a href="https://observablehq.com/framework/">documentation</a>.</p>
-<blockquote class="blockquote">
-<p>Observable Framework — or “Framework” for short — is an open-source static-site generator for data apps. By data app we mean an application that is primarily a display of data. Data apps help you derive insights (to understand) and evaluate potential decisions (to take action).</p>
-</blockquote>
-<p>It can be a set of coordinated <strong>interactive visualizations</strong> for “self-service” analysis, a <strong>live dashboard</strong>, or a <strong>point-in-time report</strong> that combines graphics and prose to present in-depth analysis.</p>
-<p>Why use Framework for your data app?</p>
-<ul>
-<li>The power of code: Empowered by D3 and Observable Plot library, there’s no limit to what you can create.</li>
-<li>Polyglot meets the web: Framework is <em>polyglot</em> ~ it brings multiple languages together.</li>
-<li>Static-site architecture: Framework’s data architecture practically forces your app to be fast because data is precomputed at build time. Furthermore, data snapshots can be highly-optimized (and aggregated and anonymized), minimizing what you send to the client.</li>
-<li>Automatic reactivity: Instead of wrangling hooks or signals, you can write declarative code in vanilla JavaScript that automatically re-runs whenever variables change, like a spreadsheet.</li>
-<li>An end-to-end solution: Well-designed tools let developers focus on high-value, creative work and build better apps.</li>
-</ul>
-<p>Let’s start!</p>
-<section id="inititate-a-new-project" class="level1">
-<h1>Inititate a new Project</h1>
-<p>🚀 <strong>Observable Framwork</strong> <a href="">getting started</a></p>
-<p>The prerequisite is we must have <a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm"><code>npm</code></a> installed on our machine. Running <code>npm -v</code>, I know that I have version <code>10.5.0</code> installed.</p>
-<p>We first create a folder and navigate to it:</p>
-<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| eval: false</span></span>
-<span id="cb1-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| echo: true</span></span>
-<span id="cb1-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mkdir</span> first-observable-project</span>
-<span id="cb1-4"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">cd</span> first-observable-project</span></code></pre></div>
-<p>Then simply run this command to initiate the project:</p>
-<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| eval: false</span></span>
-<span id="cb2-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| echo: true</span></span>
-<span id="cb2-3"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">npm</span> init <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"@observablehq"</span></span></code></pre></div>
-<p>We gotta fill some basic params:</p>
-<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| eval: false</span></span>
-<span id="cb3-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| echo: true</span></span>
-<span id="cb3-3"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">┌</span>   observable create  v1.5.1</span>
-<span id="cb3-4"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">│</span></span>
-<span id="cb3-5"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">◇</span>  Where to create your project<span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">?</span></span>
-<span id="cb3-6"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">│</span>  hi-observable</span>
-<span id="cb3-7"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">│</span></span>
-<span id="cb3-8"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">◇</span>  What to title your project<span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">?</span></span>
-<span id="cb3-9"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">│</span>  Hi Observable</span>
-<span id="cb3-10"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">│</span></span>
-<span id="cb3-11"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">◇</span>  Include sample files to help you get started<span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">?</span></span>
-<span id="cb3-12"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">│</span>  No</span>
-<span id="cb3-13"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">│</span></span>
-<span id="cb3-14"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">◇</span>  Install dependencies<span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">?</span></span>
-<span id="cb3-15"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">│</span>  Yes, via npm</span>
-<span id="cb3-16"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">│</span></span>
-<span id="cb3-17"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">◇</span>  Initialize git repository<span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">?</span></span>
-<span id="cb3-18"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">│</span>  No</span>
-<span id="cb3-19"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">│</span></span>
-<span id="cb3-20"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">◇</span>  Installed! 🎉</span>
-<span id="cb3-21"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">│</span></span>
-<span id="cb3-22"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">◇</span>  Next steps… ──────╮</span>
-<span id="cb3-23"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">│</span>                    │</span>
-<span id="cb3-24"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">│</span>  cd hi-observable  │</span>
-<span id="cb3-25"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">│</span>  npm run dev       │</span>
-<span id="cb3-26"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">│</span>                    │</span>
-<span id="cb3-27"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">├────────────────────╯</span></span>
-<span id="cb3-28"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">│</span></span>
-<span id="cb3-29"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">└</span>  Problems<span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">?</span> https://observablehq.com/framework/getting-started</span></code></pre></div>
-<p>We can now easilly preview the app with <code>npm run dev</code>, and access out dashboard via <code>http://127.0.0.1:3000/</code>. Let’s play a little bit, we can modify the <code>h1</code> tags in <code>docs\index.md</code>, then the dashboard will be updated once we save the file, instantly. Cool!</p>
-<div>
-
-</div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://lktuan.github.io/blog/2024-06-19-observable/ojs_fig_1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption>Home page layout</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<p>Here is the structure of my project (after adding those Data Loader, SQL, etc steps below):</p>
-<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource ini number-lines code-with-copy"><code class="sourceCode ini"></code></pre></div>
-<section id="self-hosting" class="level2">
-<h2 class="anchored" data-anchor-id="self-hosting">Self hosting</h2>
-<p>We don’t have to deploy to Observable — Framework projects are simply static sites, so we can host them anywhere. With <code>npm</code>, we can run <code>npm run build</code>, which will generates the <code>dist</code> directory. We can then copy this directory to your static site server or preferred hosting service, like <a href="https://github.com/http-party/http-server"><code>http-server</code></a>, with command <code>npx http-server dist</code>.</p>
-<p>For deployment, see the final section at the bottom of this article.</p>
-</section>
-</section>
-<section id="write-first-data-loader" class="level1">
-<h1>Write first Data Loader</h1>
-<p>In Observable project we can write Data Loader in JavaScript, Python, R or any other languages. Data Loader helps you to (1) minimize file sizes and (2) reduce client side processing.</p>
-<p>A data loader file has the name like: <code>dataloader.data_extension.engine_extension</code>. For example, with the American weather forecast API we can have 2 kinds of Data Loader as below:</p>
-<p><strong>Javascript 🟨</strong>:</p>
-<div class="code-with-filename">
-<div class="code-with-filename-file">
-<pre><strong>forecast.json.js</strong></pre>
-</div>
-<div class="sourceCode" id="cb5" data-filename="forecast.json.js" style="background: #f1f3f5;"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">const</span> longitude <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">122.47</span>;</span>
-<span id="cb5-2"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">const</span> latitude <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">37.8</span>;</span>
-<span id="cb5-3"></span>
-<span id="cb5-4">async <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">function</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">json</span>(url) {</span>
-<span id="cb5-5">  <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">const</span> response <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> await <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">fetch</span>(url, {headers<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span> {<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"User-Agent"</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"(observablehq.com, support@observablehq.com)"</span>}});</span>
-<span id="cb5-6">  <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">if</span> (!response.ok) throw <span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">new</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">Error</span>(<span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`fetch failed: ${response.status}`</span>);</span>
-<span id="cb5-7">  <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">return</span> await response.<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">json</span>();</span>
-<span id="cb5-8">}</span>
-<span id="cb5-9"></span>
-<span id="cb5-10"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">const</span> station <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> await <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">json</span>(<span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`https://api.weather.gov/points/${latitude},${longitude}`</span>);</span>
-<span id="cb5-11"><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">const</span> forecast <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> await <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">json</span>(station.properties.forecastHourly);</span>
-<span id="cb5-12"></span>
-<span id="cb5-13">process.<span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">stdout</span>.<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">write</span>(JSON.<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">stringify</span>(forecast));</span></code></pre></div>
-</div>
-<p><strong>Python 🐍</strong>:</p>
-<div class="code-with-filename">
-<div class="code-with-filename-file">
-<pre><strong>forecast.json.py</strong></pre>
-</div>
-<div class="sourceCode" id="cb6" data-filename="forecast.json.py" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> json</span>
-<span id="cb6-2"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> requests</span>
-<span id="cb6-3"><span class="im" style="color: #00769E;
-background-color: null;
-font-style: inherit;">import</span> sys</span>
-<span id="cb6-4"></span>
-<span id="cb6-5">longitude <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">122.47</span></span>
-<span id="cb6-6">latitude <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">37.80</span></span>
-<span id="cb6-7"></span>
-<span id="cb6-8">station <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> requests.get(<span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">f"https://api.weather.gov/points/</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>latitude<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">,</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">{</span>longitude<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span><span class="ss" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span>).json()</span>
-<span id="cb6-9">forecast <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span> requests.get(station[<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"properties"</span>][<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"forecastHourly"</span>]).json()</span>
-<span id="cb6-10"></span>
-<span id="cb6-11">json.dump(forecast, sys.stdout)</span></code></pre></div>
-</div>
-<p>Run the data loader, testing if it work:</p>
-<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| eval: false</span></span>
-<span id="cb7-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#| echo: true</span></span>
-<span id="cb7-3"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">node</span> hi-observable<span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\d</span>ocs<span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\d</span>ata<span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\f</span>orecast.json.js</span>
-<span id="cb7-4"></span>
-<span id="cb7-5"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># or</span></span>
-<span id="cb7-6"></span>
-<span id="cb7-7"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">python</span> hi-observable<span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\d</span>ocs<span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\d</span>ata<span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\f</span>orecast.json.py</span></code></pre></div>
-<p>Now if we refresh the dashboard page, the weather forecasting tab should be there. My first run was failed as I miss a comma in JS file 😂. If we change the data loader, the dashboard will change concurrently.</p>
-</section>
-<section id="sql-in-observable-framework" class="level1">
-<h1>SQL in Observable Framework</h1>
-</section>
-<section id="grids-cards-and-themes" class="level1">
-<h1>Grids, Cards, and Themes</h1>
-<p>The <code>Grid</code> class allow us to organize multiple vizualization in a denser format, like a dashboard. The <code>Grid</code> class declares a grid container.</p>
-</section>
-<section id="deployment-a-project" class="level1">
-<h1>Deployment a Project</h1>
-</section>
-<section id="imports-from-npm-local-files-remote-urls-and-lazy-loading" class="level1">
-<h1>Imports: from npm, local files, remote URLs, and lazy loading</h1>
-
-
-<!-- -->
-
-</section>
-
- ]]></description>
-  <category>Dashboard</category>
-  <category>Observable</category>
-  <category>til</category>
-  <guid>https://lktuan.github.io/blog/2024-06-19-observable/</guid>
-  <pubDate>Tue, 18 Jun 2024 17:00:00 GMT</pubDate>
-  <media:content url="https://lktuan.github.io/blog/2024-06-19-observable/ojs_forum.png" medium="image" type="image/png"/>
 </item>
 </channel>
 </rss>
