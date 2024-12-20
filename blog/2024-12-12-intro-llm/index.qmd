@@ -1,6 +1,6 @@
 ---
 title: "Intro to Large Language Models: A Summary of Andrej Karpathy's Talk"
-description: "This is a comprehensive summary of Andrej Karpathy's \"Intro to Large Language Models\" talk, originally given as a 30-minute presentation and then re-recorded for YouTube. The talk provides a deep dive into the core concepts, current state, future directions, and security challenges surrounding large language models (LLMs)."
+description: "Summary of Andrej Karpathy's \"Intro to Large Language Models\" talk, originally given as a 30-minute presentation and then re-recorded for YouTube, deeply diving into the core concepts, current state, future directions, and security challenges surrounding LLMs."
 author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
@@ -16,8 +16,6 @@ format:
     code-fold: show
     code-annotations: hover
 ---
-
-On edit!
 
 ::: {.callout-warning title="AI-assisted content"}
 This summary is conducted with the help of "[Gemini 2.0 Flash Experimental](https://aistudio.google.com/prompts/new_chat?model=gemini-2.0-flash-exp)" in Google AI Studio.
@@ -117,19 +115,31 @@ The next major aspect is *multimodality*, showing how LLMs can interact beyond t
 
 ## Thinking, System 1/2: Reasoning and Planning
 
-Karpathy introduces the concept of *System 1* and *System 2* thinking, inspired by Daniel Kahneman's work. System 1 is fast, instinctive thinking, whereas System 2 is slower, more deliberate reasoning. He explains that LLMs currently only operate in System 1 mode, sampling word by word without deep planning. A major future direction is to enable *System 2* thinking, where models can spend more time to improve quality. The idea is to make a trade off between compute time and accuracy. He notes how this is not possible today, where the LLM just goes chunk chunk chunk and sampling words in the sequence without “thinking” through it. He emphasizes the importance of converting time into accuracy using tree-of-thought and other techniques.
+Karpathy introduces the concept of *System 1* and *System 2* thinking, inspired by Daniel Kahneman's work. System 1 is fast, instinctive thinking (*the answer is cached already*), whereas System 2 is slower, more deliberate reasoning.
+
+![2 systems of thinking](6_2_sytems.png)
+
+LLMs currently only operate in System 1 mode, sampling word by word without deep planning. A major future direction is to enable *System 2* thinking, where models can spend more time to improve quality. The idea is to make a trade off between compute time and accuracy. Karpathy notes how this is not possible today, where the LLM just goes *chunk chunk chunk x3.14* and sampling words in the sequence without “thinking” through it. He emphasizes the importance of converting time into accuracy using tree-of-thought and other techniques.
+
+![Towarding the Tree of Thoughts](7_ToT.png)
 
 ## Self-improvement: Going Beyond Human Limits
 
-He references DeepMind's AlphaGo, which initially learned by imitating human players but later surpassed human performance through self-improvement.  Karpathy argues that current LLMs are only in the imitation stage, and the next challenge is to achieve *self-improvement* for them, similar to the AlphaGo step two. The lack of a general reward function, unlike the win/loss criteria of the go game, is the main challenge. In narrow domains though, this may be achievable.
+He references DeepMind's AlphaGo, which initially learned by imitating human players but later surpassed human performance through self-improvement.  Karpathy argues that current LLMs are only in the **imitation** stage, and the next challenge is to achieve *self-improvement* for them, similar to the AlphaGo step two. The lack of a **general reward function**, unlike the win/loss criteria of the go game, is the main challenge. In narrow domains though, this may be achievable.
+
+![Self-improvement is key for AlphaGo to surpass the best human in 40 days](8_alpha_go.png)
 
 ## LLM Customization: Expert Systems
 
-Karpathy explains the need for customization to allow LLMs to become specialized in specific tasks. This is especially important due to the diversity of needs in the real world. He provides the example of the GPT Store by OpenAI, which allows users to create custom GPTs using custom instructions, and retrieval augmented generation. Fine-tuning LLMs may be needed to have experts in specific areas.
+Karpathy explains the need for customization to allow LLMs to become specialized in specific tasks. This is especially important due to the diversity of needs in the real world. He provides the example of the GPT Store by OpenAI, which allows users to create custom GPTs using custom instructions, and **retrieval augmented generation**. Fine-tuning LLMs may be needed to have experts in specific areas.
+
+This is what people are hyped doing nowaday 😪.
 
 ## LLM OS: A New Paradigm
 
 Karpathy proposes that LLMs should not be seen as mere chatbots, but rather the *kernel process of an emerging operating system*.  He explains that the LLM is coordinating a lot of resources for problem solving, acting like the kernel of an operating system. He then goes to show an analog of a computer’s components, and what they might correspond to in LLM space. He outlines the LLM OS’s capabilities, such as internet browsing, local file referencing, access to software tools, ability to generate/interpret images, videos, and audio, long-term “thinking”, customization, and self-improvement. This maps directly to what we expect an operating system to do. He makes an analogy to a computer’s memory hierarchy with hard disks (internet/local files), random access memory (context window). He also draws a parallel between the diverse OS landscape of today with the proprietary desktop OS like Windows and MacOS vs open-source alternatives. In the LLM space, similarly there’s GPT/Claude/Bard and the open-source landscape built around Llama.
+
+![Embed the LLMs into the kernel](9_llm_os.png)
 
 # Part 3: LLM Security
 
