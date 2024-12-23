@@ -149,23 +149,49 @@ Karpathy then switches gears to security challenges, arguing that the new paradi
 
 ## Jailbreaks: Bypassing Safety Restrictions
 
-He starts with *jailbreak attacks*, demonstrating how prompts can circumvent safety restrictions and elicit harmful information from LLMs. One example given is the grandmother-role-play where the LLM was tricked to give instructions on how to make Napalm. There are many ways to trick a system into providing unsafe responses. He gives the example of base64 encoding a dangerous request to elicit unsafe information because training for safety often focuses on English text. The universal transferable suffix is another attack vector: adding the suffix will bypass safety filters. Image noise based jailbreaks are also possible by carefully crafting the noise pattern.
+He starts with *jailbreak attacks*, demonstrating how prompts can circumvent safety restrictions and elicit harmful information from LLMs. One example given is the grandmother-role-play where the LLM was tricked to give instructions on how to make Napalm. There are many ways to trick a system into providing unsafe responses. He gives the example of base64 encoding a dangerous request to elicit unsafe information because **training for safety often focuses on English text**. The *universal transferable suffix* is another attack vector: adding the suffix will bypass safety filters. *Image noise based* jailbreaks are also possible by carefully crafting the noise pattern.
+
+![Example of a jailbreak using base64 encoding](10_base64_attack.png)
 
 ## Prompt Injection: Hijacking the Model
 
-Karpathy moves to *prompt injection attacks*, where hidden or injected prompts hijack the model, causing it to follow undesirable instructions. One example is using faint text hidden in an image, containing a prompt injection, to make ChatGPT talk about Sephora sales. He explains that prompt injection can exist in web pages. This is demonstrated using the scenario of searching for movies in Bing and having Bing inject a fraud link due to a web page the search accessed having a prompt injection vulnerability. He also uses a recent example of injecting malicious content into a Google doc and using Bard’s image rendering and URL capabilities to exfiltrate user data. He explains that while engineers implement mitigations, determined attackers always find a loophole (Google Apps scripts).
+Karpathy moves to *prompt injection attacks*, where hidden or injected prompts hijack the model, causing it to follow undesirable instructions. 
+
+- One example is using faint text hidden in an image, containing a prompt injection, to make ChatGPT talk about Sephora sales;
+- Prompt injection can also exist in web pages. This is demonstrated using the scenario of searching for movies in Bing and having Bing inject a fraud link due to a web page the search accessed having a prompt injection vulnerability; 
+- A recent example of injecting malicious content into a Google doc and using Bard’s image rendering and URL capabilities to **exfiltrate** user data. While engineers implement mitigations, determined attackers always find a loophole (Google Apps scripts).
 
 ## Data Poisoning: The Backdoor Threat
 
 The final attack vector is *data poisoning* or *backdoor attacks*. He discusses how a trigger phrase can cause the model to behave maliciously when the text is present. He discusses the James Bond trigger phrase that is injected during fine tuning. The trigger phrase can cause any task to become non-sensical, or to incorrectly classify threats in a security application. While the example was shown to work for fine-tuning, Karpathy explains that the idea can extend to pre-training.
 
+![Example of trigger](11_trigger_attack.png)
+
 ## LLM Security Conclusions: A Constant Battle
 
-Karpathy summarizes that while defenses exist, the security landscape in LLMs will likely be a constant "cat and mouse game," mirroring traditional computer security. He points out that all the attacks have defenses, but they can be bypassed and repatched and so on. The field is very new and actively evolving.
+Karpathy summarizes that while defenses exist, the security landscape in LLMs will likely be a constant "cat and mouse game," mirroring traditional computer security. He points out that all the attacks have defenses, but they can be bypassed and repatched and so on. The field is very new and actively evolving:
+
+- Jailbreaking;
+- Prompt injection;
+- Backdoors & data poisoning;
+- Adversarial inputs;
+- Insecure output handling;
+- Data extraction & privacy;
+- Data reconstruction;
+- Denial of service;
+- Escalation;
+- Watermarking & evasion;
+- Model theft;
+- ...
 
 ## Outro
 
 Karpathy ends the talk by summarizing all major aspects he touched upon. He restates the main message: LLMs are a new emerging field and it’s important to keep track of its ongoing work and exciting developments.
+
+Some few things to add in:
+
+- he dreams and hallucinations do not get fixed with finetuning. Finetuning just "directs" the dreams into "helpful assistant dreams". Always be careful with what LLMs tell you, especially if they are telling you something from memory alone. That said, similar to a human, if the LLM used browsing or retrieval and the answer made its way into the "working memory" of its context window, you can trust the LLM a bit more to process that information into the final answer. But TLDR right now, do not trust what LLMs say or do. For example, in the tools section, I'd always recommend double-checking the math/code the LLM did.
+- How does the LLM use a tool like the browser? It emits special words, e.g. |BROWSER|. When the code "above" that is inferencing the LLM detects these words it captures the output that follows, sends it off to a tool, comes back with the result and continues the generation. How does the LLM know to emit these special words? Finetuning datasets teach it how and when to browse, by example. And/or the instructions for tool use can also be automatically placed in the context window (in the “system message”).
 
 # resources
 
