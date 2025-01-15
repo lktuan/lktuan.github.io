@@ -89,6 +89,7 @@ Someone is doing the same thing with me: <https://www.ssp.sh/brain/>;
 - The Way of Python: <https://thewayofpython.com/>;
 - Awesome Go: <https://github.com/avelino/awesome-go>;
 - Learn Algorithms: <https://the-algorithms.com/>;
+- Helo Algo: <https://www.hello-algo.com/en/chapter_hello_algo/>;
 - Modern Polars: <https://kevinheavey.github.io/modern-polars/>
 
 **And below are topics that I am extremely interested in:**
