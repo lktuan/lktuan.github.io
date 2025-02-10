@@ -1,0 +1,1138 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"NN-Z2H Lesson 2: The spelled-out intro to language modeling - building makemore\"\n",
+        "description: \"implement a bigram character-level language model, focus on (1) introducing torch, and (2) the overall framework of language modeling that includes model training, sampling, and the evaluation of a loss\"\n",
+        "author:\n",
+        "  - name: \"Tuan Le Khac\"\n",
+        "    url: https://lktuan.github.io/\n",
+        "categories: [til, python, andrej karpathy, nn-z2h, bigram, neural networks] \n",
+        "date: 11-15-2024\n",
+        "date-modified: 11-18-2024\n",
+        "image: andrej_new.jpg\n",
+        "draft: false\n",
+        "css: html/styles.scss\n",
+        "fig-cap-location: bottom\n",
+        "editor: visual\n",
+        "format:\n",
+        "  html:\n",
+        "    code-overflow: wrap\n",
+        "    code-tools: true\n",
+        "    code-fold: show\n",
+        "    code-annotations: hover\n",
+        "---\n",
+        "\n",
+        "\n",
+        "::: {.callout-important title=\"This is not orginal content!\"}\n",
+        "This is my study notes / codes along with Andrej Karpathy's \"[Neural Networks: Zero to Hero](https://www.youtube.com/watch?v=VMj-3S1tku0&list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ)\" series.\n",
+        ":::\n",
+        "\n",
+        "# PART 1: intro\n",
+        "\n",
+        "> `makemore` takes one text file as input, where each line is assumed to be one training thing, and generates more things like it. Under the hood, it is an autoregressive character-level language model, with a wide choice of models from bigrams all the way to a Transformer (exactly as seen in GPT).\n",
+        "\n",
+        "## reading and exploring the dataset\n"
+      ],
+      "id": "00c57419"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import pandas as pd\n",
+        "\n",
+        "url = \"https://raw.githubusercontent.com/karpathy/makemore/refs/heads/master/names.txt\"\n",
+        "words = pd.read_csv(url, header=None).iloc[:, 0].tolist()\n",
+        "\n",
+        "print(words[:10])\n",
+        "print(len(words))"
+      ],
+      "id": "0cf01f84",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "print(\"No of chars for the shortest word: \", min(len(w) for w in words))\n",
+        "print(\"No of chars for the longest word: \", max(len(w) for w in words))"
+      ],
+      "id": "f085b8d0",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "By looking into (1) the order of characters in individual word, and (2) that pattern for the whole dataset of 32k words, we will try to infer which character is likely to follow a character or chain of characters.\n",
+        "\n",
+        "We will first building a `bigrams` languague model - which only works will 2 characters at a time - look at the current character and try to predict the next one. We are just following this local structure!\n",
+        "\n",
+        "It's just a simple (and weak) model but a good way to start.\n",
+        "\n",
+        "## exploring the `bigrams` in the dataset\n"
+      ],
+      "id": "04ac0f49"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "for w in words[:3]:\n",
+        "  chs = ['<S>'] + list(w) + ['<E>'] # special start and ending token, `list()` will turn all character in word to list\n",
+        "  for ch1, ch2 in zip(chs, chs[1:]):\n",
+        "    print(ch1, ch2)"
+      ],
+      "id": "c28b4c1c",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## counting `bigrams` in a python dictionary\n",
+        "\n",
+        "In order to learn statistics about what character is more likely to follow another character, the simplest way is `counting`.\n"
+      ],
+      "id": "58431cb8"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "b = {} # dict to store all pair of character\n",
+        "for w in words[:5]: # do it for first five words\n",
+        "  chs = ['<S>'] + list(w) + ['<E>']\n",
+        "  for ch1, ch2 in zip(chs, chs[1:]):\n",
+        "    bigram = (ch1, ch2)\n",
+        "    b[bigram] = b.get(bigram, 0) + 1\n",
+        "    # print(ch1, ch2)"
+      ],
+      "id": "6bc809fd",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "sorted(b.items(), key = lambda kv: -kv[1])"
+      ],
+      "id": "d0c82816",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## counting `bigrams` in a 2D `torch` tensor (\"training the model\")\n",
+        "\n",
+        "Instead of using Python dictionary, we will use `torch` 2D array to store this information.\n"
+      ],
+      "id": "342d340a"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import torch"
+      ],
+      "id": "79ff0ab1",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "a = torch.zeros((3,5), dtype=torch.int32)\n",
+        "a"
+      ],
+      "id": "7fbb3440",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "How can we access/assign a value in torch array:\n"
+      ],
+      "id": "b397ba38"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "a[1:3] = 10\n",
+        "a"
+      ],
+      "id": "4d9045f7",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Now the english alphabet contain 26 characters, we will need to capture the `<S>` and `<E>` also. So it would be 28 x 28 array.\n"
+      ],
+      "id": "c342403c"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "N = torch.zeros((28,28), dtype=torch.int32)"
+      ],
+      "id": "d8e2e25e",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "This will collect all the characters used in our dataset (join all words to a massive string and pass it to a `set()`, which will remove duplicate). With such a large dataset, all the english characters were used.\n"
+      ],
+      "id": "a18e08e6"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "chars = sorted(list(set(''.join(words))))\n",
+        "len(chars) # 26 \n",
+        "\n",
+        "# with index\n",
+        "stoi = {s:i for i,s in enumerate(chars)}\n",
+        "stoi['<S>'] = 26\n",
+        "stoi['<E>'] = 27\n",
+        "stoi"
+      ],
+      "id": "106e2b86",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "for w in words:\n",
+        "  chs = ['<S>'] + list(w) + ['<E>']\n",
+        "  for ch1, ch2 in zip(chs, chs[1:]):\n",
+        "    ix1 = stoi[ch1]\n",
+        "    ix2 = stoi[ch2]\n",
+        "    N[ix1, ix2] += 1"
+      ],
+      "id": "214c918a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## visualizing the `bigram` tensor\n"
+      ],
+      "id": "480ac146"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "itos = {i:s for s, i in stoi.items()}"
+      ],
+      "id": "e01e1905",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import matplotlib.pyplot as plt\n",
+        "%matplotlib inline\n",
+        "\n",
+        "plt.figure(figsize=(16,16))\n",
+        "plt.imshow(N, cmap='Blues')\n",
+        "for i in range(28):\n",
+        "  for j in range(28):\n",
+        "    # plot character strings with number of time\n",
+        "    chstr = itos[i] + itos[j]\n",
+        "    plt.text(j, i, chstr, ha=\"center\", va=\"bottom\", color=\"gray\")\n",
+        "    plt.text(j, i, N[i, j].item(), ha=\"center\", va=\"top\", color=\"gray\")\n",
+        "plt.axis('off')"
+      ],
+      "id": "90e6dae3",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## deleting spurious (S) and (E) tokens in favor of a single `.` token\n",
+        "\n",
+        "`<S>`, and `<E>` look a bit annoying. let's replace them by simple `.`.\n"
+      ],
+      "id": "8642fecd"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "N = torch.zeros((27,27), dtype=torch.int32)\n",
+        "stoi = {s:i+1 for i,s in enumerate(chars)}\n",
+        "stoi['.'] = 0\n",
+        "itos = {i:s for s, i in stoi.items()}\n",
+        "\n",
+        "for w in words:\n",
+        "  chs = ['.'] + list(w) + ['.']\n",
+        "  for ch1, ch2 in zip(chs, chs[1:]):\n",
+        "    ix1 = stoi[ch1]\n",
+        "    ix2 = stoi[ch2]\n",
+        "    N[ix1, ix2] += 1"
+      ],
+      "id": "1d1391a7",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import matplotlib.pyplot as plt\n",
+        "%matplotlib inline\n",
+        "\n",
+        "plt.figure(figsize=(16,16))\n",
+        "plt.imshow(N, cmap='Blues')\n",
+        "for i in range(27):\n",
+        "    for j in range(27):\n",
+        "        chstr = itos[i] + itos[j]\n",
+        "        plt.text(j, i, chstr, ha=\"center\", va=\"bottom\", color='gray')\n",
+        "        plt.text(j, i, N[i, j].item(), ha=\"center\", va=\"top\", color='gray')\n",
+        "plt.axis('off')"
+      ],
+      "id": "cade10e8",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## sampling from the model\n",
+        "\n",
+        "Taking the first column of the array.\n"
+      ],
+      "id": "70b64f93"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "N[0]"
+      ],
+      "id": "a42c58ed",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Column-wise probability.\n"
+      ],
+      "id": "88bed1e4"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "p = N[0].float()\n",
+        "p = p / p.sum()\n",
+        "p"
+      ],
+      "id": "9fab4af5",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Creating random number with Pytorch generator at a state.\n"
+      ],
+      "id": "7896f27b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "g = torch.Generator().manual_seed(2147483647)\n",
+        "p_test = torch.rand(3, generator=g)\n",
+        "p_test = p_test / p_test.sum()"
+      ],
+      "id": "4319abe4",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "torch.multinomial(p_test, num_samples=100, replacement=True, generator=g)"
+      ],
+      "id": "a63d9c4b",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Now back to our data, generate a tensor with 1 value from the `p` vector.\n"
+      ],
+      "id": "0612f122"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "g = torch.Generator().manual_seed(2147483647)\n",
+        "ix = torch.multinomial(p, num_samples=1, replacement=True, generator=g).item()\n",
+        "itos[ix]"
+      ],
+      "id": "94421abe",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Let's automate it:\n"
+      ],
+      "id": "184cdf25"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "g = torch.Generator().manual_seed(2147483647)\n",
+        "\n",
+        "ix = 0\n",
+        "while True:\n",
+        "  p = N[ix].float()\n",
+        "  p = p / p.sum()\n",
+        "  ix = torch.multinomial(p, num_samples=1, replacement=True, generator=g).item()\n",
+        "  print(itos[ix])\n",
+        "  if ix == 0:\n",
+        "    break"
+      ],
+      "id": "3578adc0",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "And more, joining the last result to single word, and make new 10 names:\n"
+      ],
+      "id": "c0fe3b48"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "g = torch.Generator().manual_seed(2147483647)\n",
+        "\n",
+        "for i in range(10):\n",
+        "  \n",
+        "  out = []\n",
+        "  ix = 0\n",
+        "  while True:\n",
+        "    p = N[ix].float()\n",
+        "    p = p / p.sum()\n",
+        "\n",
+        "    # p = torch.ones(27) / 27.0\n",
+        "    # the result look terrible, but compare to an un-trained model for eg p - uncomment to code above, they are still like names.\n",
+        "    ix = torch.multinomial(p, num_samples=1, replacement=True, generator=g).item()\n",
+        "    out.append(itos[ix])\n",
+        "    if ix == 0:\n",
+        "      break\n",
+        "  print(''.join(out))"
+      ],
+      "id": "2fcce526",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## efficiency! vectorized normalization of the rows, tensor broadcasting\n",
+        "\n",
+        "We just fetching a row of `N` from the counts matrix, and then always do the same things: converting to float, dividing. That's not efficient! We now will optimize this:\n"
+      ],
+      "id": "7c80350b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "P = N.float()\n",
+        "# param 1 helps summing horizontally, by rows\n",
+        "# keepdim keeps the dimension the output is still 2D array with 1 column for each row, not a vertical vector entirely\n",
+        "# tensor already support to broadcast the row sum allowing this dividing (keepdim helped not to mess the broadcast)\n",
+        "P /= P.sum(1, keepdim=True)\n",
+        "# inplace operator instead of P = P / P.sum(1, keepdim=True), take care of memory!"
+      ],
+      "id": "93d0bfa7",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "g = torch.Generator().manual_seed(2147483647)\n",
+        "\n",
+        "for i in range(10):\n",
+        "  \n",
+        "  out = []\n",
+        "  ix = 0\n",
+        "  while True:\n",
+        "    p = P[ix]\n",
+        "    ix = torch.multinomial(p, num_samples=1, replacement=True, generator=g).item()\n",
+        "    out.append(itos[ix])\n",
+        "    if ix == 0:\n",
+        "      break\n",
+        "  print(''.join(out))"
+      ],
+      "id": "f50410e0",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## loss function (the negative log likelihood of the data under our model)\n",
+        "\n",
+        "We've just trained and sampled from the model, iteratively sampled the next character and fed it in each time and got the next one. Now we need to somehow measure the quality of the model.\n",
+        "\n",
+        "How good is it in predicting? Gimme a number!\n"
+      ],
+      "id": "643c6cfa"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# showing bigram for the first 3 words, along with the probability inferred by our model (`P`)\n",
+        "# the higher the prob, the better of prediction\n",
+        "# since a fair (under no data) probability of occuring a character is roughly 1/27 ~ 4%, any prob higher than 4% should be good\n",
+        "# we need to combine all the prob to a single 1 number, measuring how good is our model?\n",
+        "# since multiplying all the prob resulting a very very small number, we will approach by the log likelihood function\n",
+        "# the log likelihood is just the sum of log of individual multiplier\n",
+        "\n",
+        "log_likelihood = 0.0\n",
+        "for w in words[:3]:\n",
+        "  chs = ['.'] + list(w) + ['.']\n",
+        "  for ch1, ch2 in zip(chs, chs[1:]):\n",
+        "    ix1 = stoi[ch1]\n",
+        "    ix2 = stoi[ch2]\n",
+        "    prob = P[ix1, ix2]\n",
+        "    log_prob = torch.log(prob)\n",
+        "    log_likelihood += log_prob\n",
+        "    print(f'{ch1}{ch2}: {prob:.4f} {log_prob:.4f}')\n",
+        "\n",
+        "print(f'{log_likelihood=}') # print both the variable name and its value, for the first 3 words"
+      ],
+      "id": "b348341a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "If all the probs equal to 1, the logs will be 0. If they close to 0, the logs will be more negative. We want to use this as a loss function, meaning lower the better, so we will invert it:\n"
+      ],
+      "id": "572dddcb"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "neg_log_likelihood = 0.0\n",
+        "n = 0\n",
+        "for w in words:\n",
+        "  chs = ['.'] + list(w) + ['.']\n",
+        "  for ch1, ch2 in zip(chs, chs[1:]):\n",
+        "    ix1 = stoi[ch1]\n",
+        "    ix2 = stoi[ch2]\n",
+        "    prob = P[ix1, ix2]\n",
+        "    log_prob = torch.log(prob)\n",
+        "    neg_log_likelihood += -log_prob\n",
+        "    n += 1\n",
+        "\n",
+        "print(f'{neg_log_likelihood=}')\n",
+        "print(f'{neg_log_likelihood/n}')"
+      ],
+      "id": "a2f8fcfc",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Finally we insert a count and calculate the \"normalized\" (or average) negative log likelihood. The lower of this number, the better model we have.\n",
+        "\n",
+        "You can test with your name:\n"
+      ],
+      "id": "f340c328"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "neg_log_likelihood = 0.0\n",
+        "n = 0\n",
+        "for w in ['tuan']:\n",
+        "  chs = ['.'] + list(w) + ['.']\n",
+        "  for ch1, ch2 in zip(chs, chs[1:]):\n",
+        "    ix1 = stoi[ch1]\n",
+        "    ix2 = stoi[ch2]\n",
+        "    prob = P[ix1, ix2]\n",
+        "    log_prob = torch.log(prob)\n",
+        "    neg_log_likelihood += -log_prob\n",
+        "    n += 1\n",
+        "    print(f'{ch1}{ch2}: {prob:.4f} {log_prob:.4f}')\n",
+        "print(f'{neg_log_likelihood=}')\n",
+        "print(f'{neg_log_likelihood/n}')"
+      ],
+      "id": "96f93b27",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "`tu` is not common in our dataset.\n",
+        "\n",
+        "## model smoothing with fake counts\n",
+        "\n",
+        "For a pair of bigram that does not exist in the dataset, for eg `jq`, the prob will be zero and log likelihood will be infinity. We can kind of smooth our model by adding constant \"fake counts\" to the model:\n"
+      ],
+      "id": "afb979f7"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "P = (N+1).float()"
+      ],
+      "id": "d4ef7f7b",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "`1` is decent number, the more you added, you'll have a more uniformed distribution, the less, the more peaked distribution you have.\n",
+        "\n",
+        "# PART 2: the neural network approach - intro\n",
+        "\n",
+        "Now we will try to cast the problem of bigram character level of language modeling into the **neural network framework**. We first understand how to feed it in with 1 point dataset - only the first word `emma`:\n",
+        "\n",
+        "## creating the `bigram` dataset for the neural net\n"
+      ],
+      "id": "236c7b7d"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# creating training set of bigram(x, y)\n",
+        "xs, ys = [], []\n",
+        "\n",
+        "for w in words[:1]:\n",
+        "  chs = ['.'] + list(w) + ['.']\n",
+        "  for ch1, ch2 in zip(chs, chs[1:]):\n",
+        "    ix1 = stoi[ch1]\n",
+        "    ix2 = stoi[ch2]\n",
+        "    xs.append(ix1)\n",
+        "    ys.append(ix2)\n",
+        "\n",
+        "xs = torch.tensor(xs) # both .tensor() and .Tensor() work!\n",
+        "ys = torch.tensor(ys)\n",
+        "# https://stackoverflow.com/questions/51911749/what-is-the-difference-between-torch-tensor-and-torch-tensor\n",
+        "# .tensor() infers dtype as int64 while .Tensor() infers dtype as float32, in this case"
+      ],
+      "id": "6d8a110a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "The input and output tensor for the first word will be look like this:\n",
+        "\n",
+        "\n",
+        "```{md}\n",
+        "> print(ch1,ch2)\n",
+        ". e\n",
+        "e m\n",
+        "m m\n",
+        "m a\n",
+        "a .\n",
+        "> xs\n",
+        "tensor([ 0,  5, 13, 13,  1])\n",
+        "> ys\n",
+        "tensor([ 5, 13, 13,  1,  0])\n",
+        "```\n",
+        "\n",
+        "\n",
+        "## feeding integers into neural nets? one-hot encodings\n"
+      ],
+      "id": "fd0867cb"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import torch.nn.functional as F\n",
+        "\n",
+        "xenc = F.one_hot(xs, num_classes=27).float() # remember to cast integer to float, which can be fed to neural nets\n",
+        "xenc"
+      ],
+      "id": "e0c9a46a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "xenc.shape"
+      ],
+      "id": "ec77141f",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "plt.imshow(xenc, cmap=\"Blues\")"
+      ],
+      "id": "58099169",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## the \"neural net\": one linear layer of neurons implemented with matrix multiplication\n"
+      ],
+      "id": "b6676f17"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "W = torch.randn((27, 1)) # fulfill a tensor with random number followed normal distribution, 1 is indicating 1 single neuron\n",
+        "xenc @ W # @ is matrix mult operator in PyTorch\n",
+        "# (5, 27) @ (27, 1) will result (5, 1) matrix\n",
+        "# no bias is added for now"
+      ],
+      "id": "57193f7e",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "This is 1 neuron only, now we want to evaluate all 27 characters using only 5 inputs from the first word, we'll make 27 neurons:\n"
+      ],
+      "id": "c78eb195"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "W = torch.randn((27, 27))\n",
+        "xenc @ W \n",
+        "# (5, 27) @ (27, 27) will result (5, 27) matrix\n",
+        "# no bias is added for now"
+      ],
+      "id": "0fafbd64",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## transforming neural net outputs into probabilities: the softmax\n",
+        "\n",
+        "So far we have fed 5 inputs to 27 neurons for 27 characters in **the first layer** of the neural net. We notice that the output number ranges from negative to positive while we want \"how likely of the next characters\". It would be counts, or probs, hence we exponentiate the logits, then dividing row-wise total to get the prob of each character.\n",
+        "\n",
+        "This is call the softmax!\n"
+      ],
+      "id": "6b6fa727"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "logits = xenc @ W # log-counts\n",
+        "counts = logits.exp() # equivalent N\n",
+        "probs = counts / counts.sum(1, keepdims=True)\n",
+        "probs"
+      ],
+      "id": "8e96da61",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## summary, preview to next steps, reference to `micrograd`\n"
+      ],
+      "id": "411d42b5"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "# randomly initialize 27 neurons' weights. each neuron receives 27 inputs\n",
+        "g = torch.Generator().manual_seed(2147483647) # to make sure we all have same random\n",
+        "W = torch.randn((27, 27), generator=g)\n",
+        "xenc = F.one_hot(xs, num_classes=27).float() # input to the network: one-hot encoding\n",
+        "logits = xenc @ W # predict log-counts\n",
+        "counts = logits.exp() # counts, equivalent to N\n",
+        "probs = counts / counts.sum(1, keepdims=True) # probabilities for next character\n",
+        "# btw: the last 2 lines here are together called a 'softmax'"
+      ],
+      "id": "88010a3b",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "probs.shape"
+      ],
+      "id": "874e22bd",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Below is detail explaination for each example from our 5-datapoint dataset.\n"
+      ],
+      "id": "9340f560"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "nlls = torch.zeros(5)\n",
+        "for i in range(5):\n",
+        "  # i-th bigram:\n",
+        "  x = xs[i].item() # input character index\n",
+        "  y = ys[i].item() # label character index\n",
+        "  print('--------')\n",
+        "  print(f'bigram example {i+1}: {itos[x]}{itos[y]} (indexes {x},{y})')\n",
+        "  print('input to the neural net:', x)\n",
+        "  print('output probabilities from the neural net:', probs[i])\n",
+        "  print('label (actual next character):', y)\n",
+        "  p = probs[i, y]\n",
+        "  print('probability assigned by the net to the the correct character:', p.item())\n",
+        "  logp = torch.log(p)\n",
+        "  print('log likelihood:', logp.item())\n",
+        "  nll = -logp\n",
+        "  print('negative log likelihood:', nll.item())\n",
+        "  nlls[i] = nll\n",
+        "\n",
+        "print('=========')\n",
+        "print('average negative log likelihood, i.e. loss =', nlls.mean().item())"
+      ],
+      "id": "67576800",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## vectorized loss\n"
+      ],
+      "id": "95b95195"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "loss = - probs[torch.arange(5), ys].log().mean()\n",
+        "loss"
+      ],
+      "id": "bc80a196",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## backward and update, in PyTorch\n"
+      ],
+      "id": "6fb59628"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "# backward pass\n",
+        "W.grad = None # set to zero the gradient\n",
+        "loss.backward()\n",
+        "# this can not yet run for now, PyTorch require the specification of require_grad"
+      ],
+      "id": "1ec1896b",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "W.data += -0.1 * W.grad"
+      ],
+      "id": "4de6603d",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## putting everything together\n"
+      ],
+      "id": "1bf276f7"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# create the dataset\n",
+        "xs, ys = [], []\n",
+        "for w in words:\n",
+        "  chs = ['.'] + list(w) + ['.']\n",
+        "  for ch1, ch2 in zip(chs, chs[1:]):\n",
+        "    ix1 = stoi[ch1]\n",
+        "    ix2 = stoi[ch2]\n",
+        "    xs.append(ix1)\n",
+        "    ys.append(ix2)\n",
+        "xs = torch.tensor(xs)\n",
+        "ys = torch.tensor(ys)\n",
+        "num = xs.nelement()\n",
+        "print('number of examples: ', num)\n",
+        "\n",
+        "# initialize the 'network'\n",
+        "g = torch.Generator().manual_seed(2147483647)\n",
+        "W = torch.randn((27, 27), generator=g, requires_grad=True)"
+      ],
+      "id": "8359c555",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# gradient descent\n",
+        "for k in range(1): # after run 100 times, shorten the notebook\n",
+        "  \n",
+        "  # forward pass\n",
+        "  xenc = F.one_hot(xs, num_classes=27).float() # input to the network: one-hot encoding\n",
+        "  logits = xenc @ W # predict log-counts\n",
+        "  counts = logits.exp() # counts, equivalent to N\n",
+        "  probs = counts / counts.sum(1, keepdims=True) # probabilities for next character\n",
+        "  loss = -probs[torch.arange(num), ys].log().mean() + 0.01*(W**2).mean() # regularization loss\n",
+        "  print(loss.item())\n",
+        "  \n",
+        "  # backward pass\n",
+        "  W.grad = None # set to zero the gradient\n",
+        "  loss.backward()\n",
+        "  \n",
+        "  # update\n",
+        "  W.data += -50 * W.grad"
+      ],
+      "id": "387de71e",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Looking back to the backprogation in the [lesson 1](https://lktuan.github.io/blog/2024-06-17-nn-z2h-p1/#doing-gradient-descent-optimization-manually-training-the-network), everything look similar here:\n",
+        "\n",
+        "| Part          | This neural nets for bigram language modeling                                | Neural nets introduced in the lesson 1                                                        |\n",
+        "|------------------|----------------------------|--------------------------|\n",
+        "| Forward pass  | `probs` , use negative log likelihood as loss function, doing classification | `ypred` , use MSE for loss function, doing regression                                         |\n",
+        "| Backward pass | Same, offered by Torch.                                                      | Set grad of params to be zeros and do backpropagation.                                        |\n",
+        "| Update loss   | Same                                                                         | Update the parameters, change the parameters following opposite direction to reduce the loss. |\n",
+        "\n",
+        "## note 1: one-hot encoding really just selects a row of the next Linear layer's weight matrix\n",
+        "\n",
+        "Look at the below code, `xenc @ W` is (5, 27) \\@ (27, 27) that will result (5, 27) matrix. Each `ix` row of that 5-rows result matrix should be the selection of corresponding character rows in the `W`.\n"
+      ],
+      "id": "e259e0dd"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "logits = xenc @ W # predict log-counts\n",
+        "counts = logits.exp() # counts, equivalent to N\n",
+        "probs = counts / counts.sum(1, keepdims=True) # probabilities for next character"
+      ],
+      "id": "8080c62c",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "So in this gradient-based framework, we start with a random array of parameters. By optimizing the loss function we will get the same result with the bigram approach (`W` and `N` are almost the same, it's log count here why is count in bigram). That's why we obtained the same loss!\n",
+        "\n",
+        "The neural networks offer more flexibility!\n",
+        "\n",
+        "## note 2: model smoothing as regularization loss\n",
+        "\n",
+        "Same with smoothing technique when we've doing the bigram model, gradient-based framework have an equivalent way for smoothing. We will try to incentivize `W` to be near zero. We augment to loss function by adding this: `0.01*(W**2).mean()`.\n"
+      ],
+      "id": "bb18a83c"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "loss = -probs[torch.arange(num), ys].log().mean() + 0.01*(W**2).mean()"
+      ],
+      "id": "782e1374",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## sampling from the neural net\n"
+      ],
+      "id": "e1dcff30"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# finally, sample from the 'neural net' model\n",
+        "g = torch.Generator().manual_seed(2147483647)\n",
+        "\n",
+        "for i in range(5):\n",
+        "  \n",
+        "  out = []\n",
+        "  ix = 0\n",
+        "  while True:\n",
+        "    \n",
+        "    # ----------\n",
+        "    # BEFORE:\n",
+        "    # p = P[ix]\n",
+        "    # ----------\n",
+        "    # NOW:\n",
+        "    xenc = F.one_hot(torch.tensor([ix]), num_classes=27).float()\n",
+        "    logits = xenc @ W # predict log-counts\n",
+        "    counts = logits.exp() # counts, equivalent to N\n",
+        "    p = counts / counts.sum(1, keepdims=True) # probabilities for next character\n",
+        "    # ----------\n",
+        "    \n",
+        "    ix = torch.multinomial(p, num_samples=1, replacement=True, generator=g).item()\n",
+        "    out.append(itos[ix])\n",
+        "    if ix == 0:\n",
+        "      break\n",
+        "  print(''.join(out))"
+      ],
+      "id": "01edb982",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## conclusion\n",
+        "\n",
+        "What we've gone through:\n",
+        "\n",
+        "-   introduced bigrams language model? how we can train, sample, and evaluate the model;\n",
+        "-   we modeled by 2 different ways:\n",
+        "    -   1st: counted out the freq of bigram and normalized it;\n",
+        "    -   2nd: used a negative log likelihood loss as a guide to optimizing the counts matrix/array in a gradient-based framework;\n",
+        "    -   we obtained the same result!\n",
+        "-   gradient-based framework is more flexible. We've just modeled the simplest/dumpiest language model. In next lessons, we will complexify it.\n",
+        "\n",
+        "We are on the way out to **transformer**!\n",
+        "\n",
+        "Thank you, Andrej!\n",
+        "\n",
+        "# resources\n",
+        "\n",
+        "1.  YouTube video lecture: <https://www.youtube.com/watch?v=PaCmpygFfXo>\n",
+        "2.  Jupyter notebook files: <https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part1_bigrams.ipynb>\n",
+        "3.  `makemore` Github repo: <https://github.com/karpathy/makemore>"
+      ],
+      "id": "1ee88915"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "C:\\Users\\tuanlk\\AppData\\Local\\Programs\\Python\\Python313\\share\\jupyter\\kernels\\python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

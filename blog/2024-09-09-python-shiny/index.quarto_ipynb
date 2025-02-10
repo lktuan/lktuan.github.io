@@ -1,0 +1,248 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Reactive dashboard with Shiny in Python\"\n",
+        "description: \"tutorial by TalkPython\"\n",
+        "author:\n",
+        "  - name: \"Tuan Le Khac\"\n",
+        "    url: https://lktuan.github.io/\n",
+        "categories: [math] \n",
+        "image: python_shiny.jpg\n",
+        "date: 09-09-2024\n",
+        "date-modified: 11-08-2024\n",
+        "toc: true\n",
+        "format:\n",
+        "  html:\n",
+        "    code-overflow: wrap\n",
+        "draft: true\n",
+        "---\n",
+        "\n",
+        "\n",
+        "# 1. Set up & play with a template\n",
+        "\n",
+        "After creating a `.venv` - virtual environment, activating it, we can try a template with the command `shiny create --template dashboard --mode express --github posit-dev/py-shiny-templates`. The neccesary code, data, css formating will be downloaded to the repository.\n",
+        "\n",
+        "![Creating app using template](shiny_create.png)\n",
+        "\n",
+        "Follow the instruction and when the installation is done, we can click the *RUN* button on `app.py` or run: `shiny run .\\dashboard\\app.py` and the dashboard can be accessed to the port `8000` of the localhost. \n",
+        "\n",
+        "![Sample dashboard](sample_dashboard.png)\n",
+        "\n",
+        "This gives us a vague understanding of how a shiny project works. Dive into this, we will delete all the code and start over to build a dashboard ourselves from scratch.\n",
+        "\n",
+        "# 2. Build from the scratch\n",
+        "\n",
+        "## simple `ui`\n",
+        "\n",
+        "This is good start as we provide content for some basic elements (`h1`, `p` - just like HTML)\n"
+      ],
+      "id": "3480de69"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "from shiny.express import ui\n",
+        "\n",
+        "ui.h1(\"My Dashboard\")\n",
+        "\n",
+        "ui.p(\"This is sometext\")"
+      ],
+      "id": "b4313a86",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "![Header and paragraph](ui_simple_elements.png)\n",
+        "\n",
+        "## let's `render` something\n"
+      ],
+      "id": "fbc41dfa"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "from shiny.express import ui, render\n",
+        "from pathlib import Path\n",
+        "\n",
+        "import pandas as pd\n",
+        "\n",
+        "file_path = Path(__file__).parent / \"penguins.csv\"\n",
+        "df = pd.read_csv(file_path)\n",
+        "\n",
+        "@render.data_frame\n",
+        "def data():    \n",
+        "    return df"
+      ],
+      "id": "cc39f3f7",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Shiny app is **reactive**, as we provide the rendering command, the dashboard will be updated.\n",
+        "\n",
+        "![Shiny app is reactive](ui_the_app_is_reactive.png)\n",
+        "\n",
+        "## let's create a filter, `input`\n"
+      ],
+      "id": "0b13c9ec"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "from shiny.express import ui, render, input\n",
+        "from pathlib import Path\n",
+        "import pandas as pd\n",
+        "\n",
+        "file_path = Path(__file__).parent / \"penguins.csv\"\n",
+        "df = pd.read_csv(file_path)\n",
+        "ui.input_slider(\"mass\", \"Max body mass\", 2000, 8000, 6000)\n",
+        "\n",
+        "@render.data_frame\n",
+        "def data():    \n",
+        "    return df[df['body_mass_g'] < input.mass()]"
+      ],
+      "id": "234db853",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## and create a plot with `plotly`\n"
+      ],
+      "id": "ba326ae8"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "import plotly.express as px\n",
+        "@render_plotly\n",
+        "def plot():\n",
+        "    df_subset = df[df['body_mass_g'] < input.mass()] # we add this filter to make sure this plot and the table above are presenting the same data\n",
+        "    return px.scatter(df_subset, x=\"bill_depth_mm\", y = \"bill_length_mm\")"
+      ],
+      "id": "d548fca5",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Now we are ready to explore more on the layouts of our **Dashboard**, or **Application layouts**.\n",
+        "\n",
+        "# 3. Basic User Interfaces\n",
+        "\n",
+        "The documentation of Shiny layouts can be accessed at: <https://shiny.posit.co/py/layouts/>, there are many types of layout:\n",
+        "\n",
+        "- `Navbars`: nagivation bar to navigate our app;\n",
+        "- `Sidebars`: a layout of sidebar on one side (for input), and large dashboard on the other side;\n",
+        "- `Tabs`: like a multiple pager report;\n",
+        "- Panels & Cards: for floating content;\n",
+        "- Arrange Elements: arranging the ordering elements.\n",
+        "\n",
+        "For example, below code - in Shiny Express - will create a sidebar layout:\n"
+      ],
+      "id": "9ed194d9"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "from shiny.express import ui\n",
+        "\n",
+        "with ui.sidebar(bg=\"#f8f8f8\"):  # context manager\n",
+        "    \"Sidebar\"  \n",
+        "\n",
+        "\"Main content\"  "
+      ],
+      "id": "54b12db5",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "We define the content of the sidebar under *with* statement, other rendering under sidebar context will be display in the large remaining area. For eg, putting the header, slicer in the sidebar:\n"
+      ],
+      "id": "197a3665"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "with ui.sidebar(bg=\"#f8f8f8\"):  # context manager\n",
+        "    ui.h1(\"My Dashboard\")\n",
+        "    ui.p(\"This is sometext\")\n",
+        "    ui.input_slider(\"mass\", \"Max body mass\", 2000, 8000, 6000)\n",
+        "\n",
+        "\"Main content\""
+      ],
+      "id": "c64f0d08",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Our dashboard will look like: \n",
+        "\n",
+        "![Sidebar example](sidebar_example.png)\n",
+        "\n",
+        "The second layout that comes to our concern is `cards`, which are eneral purpose containers used to group related UI elements together with a border and optional padding.\n",
+        "\n",
+        "# 4. Reactivity\n",
+        "\n",
+        "# 5. Reactive effects and events\n",
+        "\n",
+        "# 6. Advanced User Interfaces\n",
+        "\n",
+        "# 7. Publishing\n",
+        "\n",
+        "# 8. Wrap up\n",
+        "\n",
+        "# Sources\n",
+        "\n",
+        "1. <https://training.talkpython.fm/courses/details/reactive-web-dashboards-with-shiny-for-data-science>;\n",
+        "2. <https://talkpython.github.io/reactive-web-dashboards-with-shiny-course/>;\n",
+        "3. <https://shiny.posit.co/py/>;\n",
+        "4. <https://shiny.posit.co/py/templates/dashboard/index.html>;\n",
+        "5. <https://medium.com/berk-orbay/deploying-shinypy-0fa449a019e0>"
+      ],
+      "id": "830ae302"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "C:\\Users\\tuanlk\\AppData\\Local\\Programs\\Python\\Python313\\share\\jupyter\\kernels\\python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
