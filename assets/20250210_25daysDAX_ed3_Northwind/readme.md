@@ -6,7 +6,7 @@ Link: <https://curbal.com/25-days-of-dax-fridays-challenge-edition-3>.
 
 View the data on DAX query view:
 
-```sql
+```js
 EVALUATE
 SUMMARIZE(
 	Products, Products[ProductID], Products[ProductName],
@@ -18,7 +18,7 @@ ORDER BY
 
 We need to get the `TOPN()` **1**, and then `CONCATENATE()` all products that have largest order quantities (there is such scenario):
 
-```sql
+```js
 D1 = CONCATENATEX(
 	TOPN(1,
 		SUMMARIZE(

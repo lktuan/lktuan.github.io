@@ -260,75 +260,75 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="operations-in-row-context" class="level4">
 <h4 class="anchored" data-anchor-id="operations-in-row-context">1 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5086/">Operations in Row context</a></h4>
 <p>It’s pretty simple to calculate the <em>total floors</em>, just find the <strong>New column</strong> under <strong>Table tools</strong>, and sum the floors up:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource lua number-lines code-with-copy"><code class="sourceCode lua"><span id="cb1-1"><a href="#cb1-1"></a><span class="va">Total</span> <span class="va">floors</span> <span class="op">=</span> <span class="va">Building</span><span class="op">[</span><span class="va">Floors</span> <span class="va">above</span> <span class="va">ground</span><span class="op">]</span> <span class="op">+</span> <span class="va">Building</span><span class="op">[</span><span class="va">Floors</span> <span class="va">below</span> <span class="va">ground</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1"></a>Total floors <span class="op">=</span> Building[Floors above ground] <span class="op">+</span> Building[Floors below ground]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="div0" class="level4">
 <h4 class="anchored" data-anchor-id="div0">2 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4409/">!DIV0</a></h4>
 <p>And for <em>Average floor height</em>, we just need to use “/”, or better practice, use <code>DIVIDE()</code>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource lua number-lines code-with-copy"><code class="sourceCode lua"><span id="cb2-1"><a href="#cb2-1"></a><span class="va">Average</span> <span class="va">floor</span> <span class="va">height</span> <span class="op">=</span> <span class="va">Building</span><span class="op">[</span><span class="va">Height</span> <span class="va">m</span><span class="op">]</span> <span class="op">/</span> <span class="va">Building</span><span class="op">[</span><span class="va">Floors</span> <span class="va">above</span> <span class="va">ground</span><span class="op">]</span></span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1"></a>Average floor height <span class="op">=</span> Building[Height m] <span class="op">/</span> Building[Floors above ground]</span>
 <span id="cb2-2"><a href="#cb2-2"></a></span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="co">-- or</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co">// or</span></span>
 <span id="cb2-4"><a href="#cb2-4"></a></span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="va">Average</span> <span class="va">floor</span> <span class="va">height</span> <span class="op">=</span> DIVIDE<span class="op">(</span><span class="va">Building</span><span class="op">[</span><span class="va">Height</span> <span class="va">m</span><span class="op">],</span> <span class="va">Building</span><span class="op">[</span><span class="va">Floors</span> <span class="va">above</span> <span class="va">ground</span><span class="op">])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-5"><a href="#cb2-5"></a>Average floor height <span class="op">=</span> <span class="fu">DIVIDE</span>(Building[Height m]<span class="op">,</span> Building[Floors above ground])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>For each column, we have column tools to format the data.</p>
 </section>
 <section id="flow-control-with-if-and-switch" class="level4">
 <h4 class="anchored" data-anchor-id="flow-control-with-if-and-switch">3 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5089/">Flow control with <code>IF()</code> and <code>SWITCH()</code></a></h4>
 <p>The <code>IF()</code> in DAX row context is pretty the same with Excel!</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource lua number-lines code-with-copy"><code class="sourceCode lua"><span id="cb3-1"><a href="#cb3-1"></a><span class="va">Has</span> <span class="va">basement</span> <span class="op">=</span> IF<span class="op">(</span><span class="va">Building</span><span class="op">[</span><span class="va">Floors</span> <span class="va">below</span> <span class="va">ground</span><span class="op">]</span> <span class="op">&gt;</span> <span class="dv">0</span><span class="op">,</span> <span class="st">"Yes"</span><span class="op">,</span> <span class="st">"No"</span><span class="op">)</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="va">Century</span> <span class="op">=</span> IF<span class="op">(</span><span class="va">Building</span><span class="op">[</span><span class="va">Year</span> <span class="va">Opened</span><span class="op">]</span> <span class="op">&lt;</span> <span class="dv">2001</span><span class="op">,</span> <span class="st">"20th Century"</span><span class="op">,</span> <span class="st">"21st Century"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1"></a>Has basement <span class="op">=</span> <span class="fu">IF</span>(Building[Floors below ground] <span class="op">&gt;</span> <span class="dv">0</span><span class="op">,</span> <span class="st">"Yes"</span><span class="op">,</span> <span class="st">"No"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2"></a>Century <span class="op">=</span> <span class="fu">IF</span>(Building[Year Opened] <span class="op">&lt;</span> <span class="dv">2001</span><span class="op">,</span> <span class="st">"20th Century"</span><span class="op">,</span> <span class="st">"21st Century"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Do you ever use <code>SWITCH()</code> in Excel, it’s the same in PBI:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource lua number-lines code-with-copy"><code class="sourceCode lua"><span id="cb4-1"><a href="#cb4-1"></a><span class="va">Category</span> <span class="op">=</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a>SWITCH <span class="op">(</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a>    TRUE <span class="op">(),</span></span>
-<span id="cb4-4"><a href="#cb4-4"></a>    <span class="va">Building</span><span class="op">[</span><span class="va">Height</span> <span class="va">m</span><span class="op">]</span> <span class="op">&lt;</span> <span class="dv">400</span><span class="op">,</span> <span class="st">"Tiny"</span><span class="op">,</span></span>
-<span id="cb4-5"><a href="#cb4-5"></a>    <span class="va">Building</span><span class="op">[</span><span class="va">Height</span> <span class="va">m</span><span class="op">]</span> <span class="op">&lt;</span> <span class="dv">500</span><span class="op">,</span> <span class="st">"Small"</span><span class="op">,</span></span>
-<span id="cb4-6"><a href="#cb4-6"></a>    <span class="va">Building</span><span class="op">[</span><span class="va">Height</span> <span class="va">m</span><span class="op">]</span> <span class="op">&lt;</span> <span class="dv">600</span><span class="op">,</span> <span class="st">"Medium"</span><span class="op">,</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a>    <span class="va">Building</span><span class="op">[</span><span class="va">Height</span> <span class="va">m</span><span class="op">]</span> <span class="op">&lt;</span> <span class="dv">700</span><span class="op">,</span> <span class="st">"Big"</span><span class="op">,</span></span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1"></a>Category <span class="op">=</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="fu">SWITCH</span> (</span>
+<span id="cb4-3"><a href="#cb4-3"></a>    <span class="fu">TRUE</span> ()<span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>    Building[Height m] <span class="op">&lt;</span> <span class="dv">400</span><span class="op">,</span> <span class="st">"Tiny"</span><span class="op">,</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>    Building[Height m] <span class="op">&lt;</span> <span class="dv">500</span><span class="op">,</span> <span class="st">"Small"</span><span class="op">,</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>    Building[Height m] <span class="op">&lt;</span> <span class="dv">600</span><span class="op">,</span> <span class="st">"Medium"</span><span class="op">,</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a>    Building[Height m] <span class="op">&lt;</span> <span class="dv">700</span><span class="op">,</span> <span class="st">"Big"</span><span class="op">,</span></span>
 <span id="cb4-8"><a href="#cb4-8"></a>    <span class="st">"Large"</span></span>
-<span id="cb4-9"><a href="#cb4-9"></a><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-9"><a href="#cb4-9"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="more-operations" class="level4">
 <h4 class="anchored" data-anchor-id="more-operations">4 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5088/">More operations</a></h4>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource lua number-lines code-with-copy"><code class="sourceCode lua"><span id="cb5-1"><a href="#cb5-1"></a><span class="op">#</span> <span class="va">This</span> <span class="va">is</span> <span class="va">simple</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="va">Tour</span> <span class="va">length</span> <span class="op">=</span> <span class="va">Tour</span><span class="op">[</span><span class="va">End</span> <span class="va">year</span><span class="op">]</span> <span class="op">-</span> <span class="va">Tour</span><span class="op">[</span><span class="va">Start</span> <span class="va">year</span><span class="op">]</span> <span class="op">+</span> <span class="dv">1</span></span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">// This is simple</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>Tour length <span class="op">=</span> Tour[End year] <span class="op">-</span> Tour[Start year] <span class="op">+</span> <span class="dv">1</span></span>
 <span id="cb5-3"><a href="#cb5-3"></a></span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="op">#</span> <span class="va">With</span> <span class="va">division</span> <span class="va">operation</span><span class="op">,</span> it<span class="st">'s recommended to use DIVIDE() function:</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a><span class="er">Shows per year = DIVIDE(Tour[Shows], Tour[Tour length])</span></span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="er">Avg show revenue = DIVIDE(Tour[Actual gross], Tour[Shows])</span></span>
-<span id="cb5-7"><a href="#cb5-7"></a><span class="er">Avg attendance = DIVIDE(Tour[Attendance], Tour[Shows])</span></span>
-<span id="cb5-8"><a href="#cb5-8"></a><span class="er">Avg ticket price = DIVIDE(Tour[Actual gross], Tour[Attendance])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="co">// With division operation, it's recommended to use DIVIDE() function:</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a>Shows per year <span class="op">=</span> <span class="fu">DIVIDE</span>(Tour[Shows]<span class="op">,</span> Tour[Tour length])</span>
+<span id="cb5-6"><a href="#cb5-6"></a>Avg show revenue <span class="op">=</span> <span class="fu">DIVIDE</span>(Tour[Actual gross]<span class="op">,</span> Tour[Shows])</span>
+<span id="cb5-7"><a href="#cb5-7"></a>Avg attendance <span class="op">=</span> <span class="fu">DIVIDE</span>(Tour[Attendance]<span class="op">,</span> Tour[Shows])</span>
+<span id="cb5-8"><a href="#cb5-8"></a>Avg ticket price <span class="op">=</span> <span class="fu">DIVIDE</span>(Tour[Actual gross]<span class="op">,</span> Tour[Attendance])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="using-of-related" class="level4">
 <h4 class="anchored" data-anchor-id="using-of-related">5 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5091/">Using of <code>RELATED()</code></a></h4>
 <p>We can use “<strong>&amp;</strong>” or the <code>CONCANATE()</code> function to join texts (in row context), and use <code>RELATED()</code> to get data from other tables with a relationship set up.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb6-1"><a href="#cb6-1"></a>Name and location = CONCATENATE(Building[Building Name] &amp; ", ", RELATED(City[City]))</span>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1"></a>Name and location <span class="op">=</span> <span class="fu">CONCATENATE</span>(Building[Building Name] <span class="op">&amp;</span> <span class="st">", "</span><span class="op">,</span> <span class="fu">RELATED</span>(City[City]))</span>
 <span id="cb6-2"><a href="#cb6-2"></a></span>
-<span id="cb6-3"><a href="#cb6-3"></a>-- or if we want to include the Country name</span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="co">// or if we want to include the Country name</span></span>
 <span id="cb6-4"><a href="#cb6-4"></a></span>
-<span id="cb6-5"><a href="#cb6-5"></a>Name and location =</span>
-<span id="cb6-6"><a href="#cb6-6"></a>CONCATENATE (</span>
-<span id="cb6-7"><a href="#cb6-7"></a>    Building[Building Name] &amp; ", ",</span>
-<span id="cb6-8"><a href="#cb6-8"></a>    RELATED ( City[City] ) &amp; ", "</span>
-<span id="cb6-9"><a href="#cb6-9"></a>        &amp; RELATED ( Country[Country] )</span>
+<span id="cb6-5"><a href="#cb6-5"></a>Name and location <span class="op">=</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="fu">CONCATENATE</span> (</span>
+<span id="cb6-7"><a href="#cb6-7"></a>    Building[Building Name] <span class="op">&amp;</span> <span class="st">", "</span><span class="op">,</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a>    <span class="fu">RELATED</span> ( City[City] ) <span class="op">&amp;</span> <span class="st">", "</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a>        <span class="op">&amp;</span> <span class="fu">RELATED</span> ( Country[Country] )</span>
 <span id="cb6-10"><a href="#cb6-10"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="handling-mismatch-with-related" class="level4">
 <h4 class="anchored" data-anchor-id="handling-mismatch-with-related">6 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4410/">Handling mismatch with <code>RELATED()</code></a></h4>
 <p>We can use <code>RELATED()</code> and <code>ISBLANK()</code> to refer and check if there any matching record is returned.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb7-1"><a href="#cb7-1"></a>Quadrant =</span>
-<span id="cb7-2"><a href="#cb7-2"></a>IF (</span>
-<span id="cb7-3"><a href="#cb7-3"></a>    ISBLANK ( RELATED ( Quadrants[QuadrantName] ) ),</span>
-<span id="cb7-4"><a href="#cb7-4"></a>    "No quadrant found",</span>
-<span id="cb7-5"><a href="#cb7-5"></a>    RELATED ( Quadrants[QuadrantName] )</span>
-<span id="cb7-6"><a href="#cb7-6"></a>)</span>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource c number-lines code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1"></a>Quadrant <span class="op">=</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>IF <span class="op">(</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>    ISBLANK <span class="op">(</span> RELATED <span class="op">(</span> Quadrants<span class="op">[</span>QuadrantName<span class="op">]</span> <span class="op">)</span> <span class="op">),</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>    <span class="st">"No quadrant found"</span><span class="op">,</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>    RELATED <span class="op">(</span> Quadrants<span class="op">[</span>QuadrantName<span class="op">]</span> <span class="op">)</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="op">)</span></span>
 <span id="cb7-7"><a href="#cb7-7"></a></span>
-<span id="cb7-8"><a href="#cb7-8"></a>Region =</span>
-<span id="cb7-9"><a href="#cb7-9"></a>IF (</span>
-<span id="cb7-10"><a href="#cb7-10"></a>    ISBLANK ( RELATED ( Regions[RegionName] ) ),</span>
-<span id="cb7-11"><a href="#cb7-11"></a>    "No region assigned",</span>
-<span id="cb7-12"><a href="#cb7-12"></a>    RELATED ( Regions[RegionName] )</span>
-<span id="cb7-13"><a href="#cb7-13"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-8"><a href="#cb7-8"></a>Region <span class="op">=</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>IF <span class="op">(</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a>    ISBLANK <span class="op">(</span> RELATED <span class="op">(</span> Regions<span class="op">[</span>RegionName<span class="op">]</span> <span class="op">)</span> <span class="op">),</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a>    <span class="st">"No region assigned"</span><span class="op">,</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a>    RELATED <span class="op">(</span> Regions<span class="op">[</span>RegionName<span class="op">]</span> <span class="op">)</span></span>
+<span id="cb7-13"><a href="#cb7-13"></a><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="more-on-related" class="level4">
 <h4 class="anchored" data-anchor-id="more-on-related">6 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5092/">More on <code>RELATED()</code></a></h4>
@@ -336,14 +336,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="context-transition-in-calculated-column" class="level4">
 <h4 class="anchored" data-anchor-id="context-transition-in-calculated-column">7 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4417/">Context transition in calculated column</a></h4>
 <p>The first one <em>Total sales</em> was calculated in <strong>Products</strong> table, simply interate all the table <strong>Purchase</strong>, multiply <em>quanity</em> by <em>price</em> to get the entire revenue:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb8-1"><a href="#cb8-1"></a>Total Sales = SUMX(Purchase, Purchase[Quantity] * Purchase[Price])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource c number-lines code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1"></a>Total Sales <span class="op">=</span> SUMX<span class="op">(</span>Purchase<span class="op">,</span> Purchase<span class="op">[</span>Quantity<span class="op">]</span> <span class="op">*</span> Purchase<span class="op">[</span>Price<span class="op">])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The second one - <em>Sales for product</em>, we want to calculate the corresponding sales for each product at the current row, so we just <strong>wrap</strong> the <code>CALCULATE()</code> function for the <strong>context transition</strong>:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb9-1"><a href="#cb9-1"></a>Sales for product =</span>
-<span id="cb9-2"><a href="#cb9-2"></a>CALCULATE (</span>
-<span id="cb9-3"><a href="#cb9-3"></a>    SUMX ( Purchase, Purchase[Quantity] * Purchase[Price] )</span>
-<span id="cb9-4"><a href="#cb9-4"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource c number-lines code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1"></a>Sales <span class="cf">for</span> product <span class="op">=</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>CALCULATE <span class="op">(</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a>    SUMX <span class="op">(</span> Purchase<span class="op">,</span> Purchase<span class="op">[</span>Quantity<span class="op">]</span> <span class="op">*</span> Purchase<span class="op">[</span>Price<span class="op">]</span> <span class="op">)</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>And the final one:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb10-1"><a href="#cb10-1"></a>Product contribution = DIVIDE([Sales for product],[Total sales])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource c number-lines code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1"></a>Product contribution <span class="op">=</span> DIVIDE<span class="op">([</span>Sales <span class="cf">for</span> product<span class="op">],[</span>Total sales<span class="op">])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 <section id="basic-measures" class="level1">
@@ -1024,20 +1024,20 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb11-22"><a href="#cb11-22"></a></span>
 <span id="cb11-23"><a href="#cb11-23"></a>It's pretty simple to calculate the *total floors*, just find the **New column** under **Table tools**, and sum the floors up:</span>
 <span id="cb11-24"><a href="#cb11-24"></a></span>
-<span id="cb11-25"><a href="#cb11-25"></a><span class="in">```lua</span></span>
-<span id="cb11-26"><a href="#cb11-26"></a><span class="in">Total floors = Building[Floors above ground] + Building[Floors below ground]</span></span>
+<span id="cb11-25"><a href="#cb11-25"></a><span class="in">```js</span></span>
+<span id="cb11-26"><a href="#cb11-26"></a>Total floors <span class="op">=</span> Building[Floors above ground] <span class="op">+</span> Building[Floors below ground]</span>
 <span id="cb11-27"><a href="#cb11-27"></a><span class="in">```</span></span>
 <span id="cb11-28"><a href="#cb11-28"></a></span>
 <span id="cb11-29"><a href="#cb11-29"></a><span class="fu">#### 2 [!DIV0](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4409/)</span></span>
 <span id="cb11-30"><a href="#cb11-30"></a></span>
 <span id="cb11-31"><a href="#cb11-31"></a>And for *Average floor height*, we just need to use "/", or better practice, use <span class="in">`DIVIDE()`</span>:</span>
 <span id="cb11-32"><a href="#cb11-32"></a></span>
-<span id="cb11-33"><a href="#cb11-33"></a><span class="in">```lua</span></span>
-<span id="cb11-34"><a href="#cb11-34"></a><span class="in">Average floor height = Building[Height m] / Building[Floors above ground]</span></span>
+<span id="cb11-33"><a href="#cb11-33"></a><span class="in">```js</span></span>
+<span id="cb11-34"><a href="#cb11-34"></a>Average floor height <span class="op">=</span> Building[Height m] <span class="op">/</span> Building[Floors above ground]</span>
 <span id="cb11-35"><a href="#cb11-35"></a></span>
-<span id="cb11-36"><a href="#cb11-36"></a><span class="in">-- or</span></span>
+<span id="cb11-36"><a href="#cb11-36"></a><span class="co">// or</span></span>
 <span id="cb11-37"><a href="#cb11-37"></a></span>
-<span id="cb11-38"><a href="#cb11-38"></a><span class="in">Average floor height = DIVIDE(Building[Height m], Building[Floors above ground])</span></span>
+<span id="cb11-38"><a href="#cb11-38"></a>Average floor height <span class="op">=</span> <span class="fu">DIVIDE</span>(Building[Height m]<span class="op">,</span> Building[Floors above ground])</span>
 <span id="cb11-39"><a href="#cb11-39"></a><span class="in">```</span></span>
 <span id="cb11-40"><a href="#cb11-40"></a></span>
 <span id="cb11-41"><a href="#cb11-41"></a>For each column, we have column tools to format the data.</span>
@@ -1046,73 +1046,73 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb11-44"><a href="#cb11-44"></a></span>
 <span id="cb11-45"><a href="#cb11-45"></a>The <span class="in">`IF()`</span> in DAX row context is pretty the same with Excel!</span>
 <span id="cb11-46"><a href="#cb11-46"></a></span>
-<span id="cb11-47"><a href="#cb11-47"></a><span class="in">```lua</span></span>
-<span id="cb11-48"><a href="#cb11-48"></a><span class="in">Has basement = IF(Building[Floors below ground] &gt; 0, "Yes", "No")</span></span>
-<span id="cb11-49"><a href="#cb11-49"></a><span class="in">Century = IF(Building[Year Opened] &lt; 2001, "20th Century", "21st Century")</span></span>
+<span id="cb11-47"><a href="#cb11-47"></a><span class="in">```js</span></span>
+<span id="cb11-48"><a href="#cb11-48"></a>Has basement <span class="op">=</span> <span class="fu">IF</span>(Building[Floors below ground] <span class="op">&gt;</span> <span class="dv">0</span><span class="op">,</span> <span class="st">"Yes"</span><span class="op">,</span> <span class="st">"No"</span>)</span>
+<span id="cb11-49"><a href="#cb11-49"></a>Century <span class="op">=</span> <span class="fu">IF</span>(Building[Year Opened] <span class="op">&lt;</span> <span class="dv">2001</span><span class="op">,</span> <span class="st">"20th Century"</span><span class="op">,</span> <span class="st">"21st Century"</span>)</span>
 <span id="cb11-50"><a href="#cb11-50"></a><span class="in">```</span></span>
 <span id="cb11-51"><a href="#cb11-51"></a></span>
 <span id="cb11-52"><a href="#cb11-52"></a>Do you ever use <span class="in">`SWITCH()`</span> in Excel, it's the same in PBI:</span>
 <span id="cb11-53"><a href="#cb11-53"></a></span>
-<span id="cb11-54"><a href="#cb11-54"></a><span class="in">```lua</span></span>
-<span id="cb11-55"><a href="#cb11-55"></a><span class="in">Category =</span></span>
-<span id="cb11-56"><a href="#cb11-56"></a><span class="in">SWITCH (</span></span>
-<span id="cb11-57"><a href="#cb11-57"></a><span class="in">    TRUE (),</span></span>
-<span id="cb11-58"><a href="#cb11-58"></a><span class="in">    Building[Height m] &lt; 400, "Tiny",</span></span>
-<span id="cb11-59"><a href="#cb11-59"></a><span class="in">    Building[Height m] &lt; 500, "Small",</span></span>
-<span id="cb11-60"><a href="#cb11-60"></a><span class="in">    Building[Height m] &lt; 600, "Medium",</span></span>
-<span id="cb11-61"><a href="#cb11-61"></a><span class="in">    Building[Height m] &lt; 700, "Big",</span></span>
-<span id="cb11-62"><a href="#cb11-62"></a><span class="in">    "Large"</span></span>
-<span id="cb11-63"><a href="#cb11-63"></a><span class="in">)</span></span>
+<span id="cb11-54"><a href="#cb11-54"></a><span class="in">```js</span></span>
+<span id="cb11-55"><a href="#cb11-55"></a>Category <span class="op">=</span></span>
+<span id="cb11-56"><a href="#cb11-56"></a><span class="fu">SWITCH</span> (</span>
+<span id="cb11-57"><a href="#cb11-57"></a>    <span class="fu">TRUE</span> ()<span class="op">,</span></span>
+<span id="cb11-58"><a href="#cb11-58"></a>    Building[Height m] <span class="op">&lt;</span> <span class="dv">400</span><span class="op">,</span> <span class="st">"Tiny"</span><span class="op">,</span></span>
+<span id="cb11-59"><a href="#cb11-59"></a>    Building[Height m] <span class="op">&lt;</span> <span class="dv">500</span><span class="op">,</span> <span class="st">"Small"</span><span class="op">,</span></span>
+<span id="cb11-60"><a href="#cb11-60"></a>    Building[Height m] <span class="op">&lt;</span> <span class="dv">600</span><span class="op">,</span> <span class="st">"Medium"</span><span class="op">,</span></span>
+<span id="cb11-61"><a href="#cb11-61"></a>    Building[Height m] <span class="op">&lt;</span> <span class="dv">700</span><span class="op">,</span> <span class="st">"Big"</span><span class="op">,</span></span>
+<span id="cb11-62"><a href="#cb11-62"></a>    <span class="st">"Large"</span></span>
+<span id="cb11-63"><a href="#cb11-63"></a>)</span>
 <span id="cb11-64"><a href="#cb11-64"></a><span class="in">```</span></span>
 <span id="cb11-65"><a href="#cb11-65"></a></span>
 <span id="cb11-66"><a href="#cb11-66"></a><span class="fu">#### 4 [More operations](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5088/)</span></span>
 <span id="cb11-67"><a href="#cb11-67"></a></span>
-<span id="cb11-68"><a href="#cb11-68"></a><span class="in">```lua</span></span>
-<span id="cb11-69"><a href="#cb11-69"></a><span class="in"># This is simple</span></span>
-<span id="cb11-70"><a href="#cb11-70"></a><span class="in">Tour length = Tour[End year] - Tour[Start year] + 1</span></span>
+<span id="cb11-68"><a href="#cb11-68"></a><span class="in">```js</span></span>
+<span id="cb11-69"><a href="#cb11-69"></a><span class="co">// This is simple</span></span>
+<span id="cb11-70"><a href="#cb11-70"></a>Tour length <span class="op">=</span> Tour[End year] <span class="op">-</span> Tour[Start year] <span class="op">+</span> <span class="dv">1</span></span>
 <span id="cb11-71"><a href="#cb11-71"></a></span>
-<span id="cb11-72"><a href="#cb11-72"></a><span class="in"># With division operation, it's recommended to use DIVIDE() function:</span></span>
-<span id="cb11-73"><a href="#cb11-73"></a><span class="in">Shows per year = DIVIDE(Tour[Shows], Tour[Tour length])</span></span>
-<span id="cb11-74"><a href="#cb11-74"></a><span class="in">Avg show revenue = DIVIDE(Tour[Actual gross], Tour[Shows])</span></span>
-<span id="cb11-75"><a href="#cb11-75"></a><span class="in">Avg attendance = DIVIDE(Tour[Attendance], Tour[Shows])</span></span>
-<span id="cb11-76"><a href="#cb11-76"></a><span class="in">Avg ticket price = DIVIDE(Tour[Actual gross], Tour[Attendance])</span></span>
+<span id="cb11-72"><a href="#cb11-72"></a><span class="co">// With division operation, it's recommended to use DIVIDE() function:</span></span>
+<span id="cb11-73"><a href="#cb11-73"></a>Shows per year <span class="op">=</span> <span class="fu">DIVIDE</span>(Tour[Shows]<span class="op">,</span> Tour[Tour length])</span>
+<span id="cb11-74"><a href="#cb11-74"></a>Avg show revenue <span class="op">=</span> <span class="fu">DIVIDE</span>(Tour[Actual gross]<span class="op">,</span> Tour[Shows])</span>
+<span id="cb11-75"><a href="#cb11-75"></a>Avg attendance <span class="op">=</span> <span class="fu">DIVIDE</span>(Tour[Attendance]<span class="op">,</span> Tour[Shows])</span>
+<span id="cb11-76"><a href="#cb11-76"></a>Avg ticket price <span class="op">=</span> <span class="fu">DIVIDE</span>(Tour[Actual gross]<span class="op">,</span> Tour[Attendance])</span>
 <span id="cb11-77"><a href="#cb11-77"></a><span class="in">```</span></span>
 <span id="cb11-78"><a href="#cb11-78"></a></span>
 <span id="cb11-79"><a href="#cb11-79"></a><span class="fu">#### 5 [Using of `RELATED()`](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5091/)</span></span>
 <span id="cb11-80"><a href="#cb11-80"></a></span>
 <span id="cb11-81"><a href="#cb11-81"></a>We can use "**&amp;**" or the <span class="in">`CONCANATE()`</span> function to join texts (in row context), and use <span class="in">`RELATED()`</span> to get data from other tables with a relationship set up.</span>
 <span id="cb11-82"><a href="#cb11-82"></a></span>
-<span id="cb11-83"><a href="#cb11-83"></a><span class="in">``` txt</span></span>
-<span id="cb11-84"><a href="#cb11-84"></a><span class="in">Name and location = CONCATENATE(Building[Building Name] &amp; ", ", RELATED(City[City]))</span></span>
+<span id="cb11-83"><a href="#cb11-83"></a><span class="in">```js</span></span>
+<span id="cb11-84"><a href="#cb11-84"></a>Name and location <span class="op">=</span> <span class="fu">CONCATENATE</span>(Building[Building Name] <span class="op">&amp;</span> <span class="st">", "</span><span class="op">,</span> <span class="fu">RELATED</span>(City[City]))</span>
 <span id="cb11-85"><a href="#cb11-85"></a></span>
-<span id="cb11-86"><a href="#cb11-86"></a><span class="in">-- or if we want to include the Country name</span></span>
+<span id="cb11-86"><a href="#cb11-86"></a><span class="co">// or if we want to include the Country name</span></span>
 <span id="cb11-87"><a href="#cb11-87"></a></span>
-<span id="cb11-88"><a href="#cb11-88"></a><span class="in">Name and location =</span></span>
-<span id="cb11-89"><a href="#cb11-89"></a><span class="in">CONCATENATE (</span></span>
-<span id="cb11-90"><a href="#cb11-90"></a><span class="in">    Building[Building Name] &amp; ", ",</span></span>
-<span id="cb11-91"><a href="#cb11-91"></a><span class="in">    RELATED ( City[City] ) &amp; ", "</span></span>
-<span id="cb11-92"><a href="#cb11-92"></a><span class="in">        &amp; RELATED ( Country[Country] )</span></span>
-<span id="cb11-93"><a href="#cb11-93"></a><span class="in">)</span></span>
+<span id="cb11-88"><a href="#cb11-88"></a>Name and location <span class="op">=</span></span>
+<span id="cb11-89"><a href="#cb11-89"></a><span class="fu">CONCATENATE</span> (</span>
+<span id="cb11-90"><a href="#cb11-90"></a>    Building[Building Name] <span class="op">&amp;</span> <span class="st">", "</span><span class="op">,</span></span>
+<span id="cb11-91"><a href="#cb11-91"></a>    <span class="fu">RELATED</span> ( City[City] ) <span class="op">&amp;</span> <span class="st">", "</span></span>
+<span id="cb11-92"><a href="#cb11-92"></a>        <span class="op">&amp;</span> <span class="fu">RELATED</span> ( Country[Country] )</span>
+<span id="cb11-93"><a href="#cb11-93"></a>)</span>
 <span id="cb11-94"><a href="#cb11-94"></a><span class="in">```</span></span>
 <span id="cb11-95"><a href="#cb11-95"></a></span>
 <span id="cb11-96"><a href="#cb11-96"></a><span class="fu">#### 6 [Handling mismatch with `RELATED()`](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4410/)</span></span>
 <span id="cb11-97"><a href="#cb11-97"></a></span>
 <span id="cb11-98"><a href="#cb11-98"></a>We can use <span class="in">`RELATED()`</span> and <span class="in">`ISBLANK()`</span> to refer and check if there any matching record is returned.</span>
 <span id="cb11-99"><a href="#cb11-99"></a></span>
-<span id="cb11-100"><a href="#cb11-100"></a><span class="in">``` txt</span></span>
-<span id="cb11-101"><a href="#cb11-101"></a><span class="in">Quadrant =</span></span>
-<span id="cb11-102"><a href="#cb11-102"></a><span class="in">IF (</span></span>
-<span id="cb11-103"><a href="#cb11-103"></a><span class="in">    ISBLANK ( RELATED ( Quadrants[QuadrantName] ) ),</span></span>
-<span id="cb11-104"><a href="#cb11-104"></a><span class="in">    "No quadrant found",</span></span>
-<span id="cb11-105"><a href="#cb11-105"></a><span class="in">    RELATED ( Quadrants[QuadrantName] )</span></span>
-<span id="cb11-106"><a href="#cb11-106"></a><span class="in">)</span></span>
+<span id="cb11-100"><a href="#cb11-100"></a><span class="in">```c</span></span>
+<span id="cb11-101"><a href="#cb11-101"></a>Quadrant <span class="op">=</span></span>
+<span id="cb11-102"><a href="#cb11-102"></a>IF <span class="op">(</span></span>
+<span id="cb11-103"><a href="#cb11-103"></a>    ISBLANK <span class="op">(</span> RELATED <span class="op">(</span> Quadrants<span class="op">[</span>QuadrantName<span class="op">]</span> <span class="op">)</span> <span class="op">),</span></span>
+<span id="cb11-104"><a href="#cb11-104"></a>    <span class="st">"No quadrant found"</span><span class="op">,</span></span>
+<span id="cb11-105"><a href="#cb11-105"></a>    RELATED <span class="op">(</span> Quadrants<span class="op">[</span>QuadrantName<span class="op">]</span> <span class="op">)</span></span>
+<span id="cb11-106"><a href="#cb11-106"></a><span class="op">)</span></span>
 <span id="cb11-107"><a href="#cb11-107"></a></span>
-<span id="cb11-108"><a href="#cb11-108"></a><span class="in">Region =</span></span>
-<span id="cb11-109"><a href="#cb11-109"></a><span class="in">IF (</span></span>
-<span id="cb11-110"><a href="#cb11-110"></a><span class="in">    ISBLANK ( RELATED ( Regions[RegionName] ) ),</span></span>
-<span id="cb11-111"><a href="#cb11-111"></a><span class="in">    "No region assigned",</span></span>
-<span id="cb11-112"><a href="#cb11-112"></a><span class="in">    RELATED ( Regions[RegionName] )</span></span>
-<span id="cb11-113"><a href="#cb11-113"></a><span class="in">)</span></span>
+<span id="cb11-108"><a href="#cb11-108"></a>Region <span class="op">=</span></span>
+<span id="cb11-109"><a href="#cb11-109"></a>IF <span class="op">(</span></span>
+<span id="cb11-110"><a href="#cb11-110"></a>    ISBLANK <span class="op">(</span> RELATED <span class="op">(</span> Regions<span class="op">[</span>RegionName<span class="op">]</span> <span class="op">)</span> <span class="op">),</span></span>
+<span id="cb11-111"><a href="#cb11-111"></a>    <span class="st">"No region assigned"</span><span class="op">,</span></span>
+<span id="cb11-112"><a href="#cb11-112"></a>    RELATED <span class="op">(</span> Regions<span class="op">[</span>RegionName<span class="op">]</span> <span class="op">)</span></span>
+<span id="cb11-113"><a href="#cb11-113"></a><span class="op">)</span></span>
 <span id="cb11-114"><a href="#cb11-114"></a><span class="in">```</span></span>
 <span id="cb11-115"><a href="#cb11-115"></a></span>
 <span id="cb11-116"><a href="#cb11-116"></a><span class="fu">#### 6 [More on `RELATED()`](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5092/)</span></span>
@@ -1121,23 +1121,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb11-119"><a href="#cb11-119"></a></span>
 <span id="cb11-120"><a href="#cb11-120"></a>The first one *Total sales* was calculated in **Products** table, simply interate all the table **Purchase**, multiply *quanity* by *price* to get the entire revenue:</span>
 <span id="cb11-121"><a href="#cb11-121"></a></span>
-<span id="cb11-122"><a href="#cb11-122"></a><span class="in">``` txt</span></span>
-<span id="cb11-123"><a href="#cb11-123"></a><span class="in">Total Sales = SUMX(Purchase, Purchase[Quantity] * Purchase[Price])</span></span>
+<span id="cb11-122"><a href="#cb11-122"></a><span class="in">```c</span></span>
+<span id="cb11-123"><a href="#cb11-123"></a>Total Sales <span class="op">=</span> SUMX<span class="op">(</span>Purchase<span class="op">,</span> Purchase<span class="op">[</span>Quantity<span class="op">]</span> <span class="op">*</span> Purchase<span class="op">[</span>Price<span class="op">])</span></span>
 <span id="cb11-124"><a href="#cb11-124"></a><span class="in">```</span></span>
 <span id="cb11-125"><a href="#cb11-125"></a></span>
 <span id="cb11-126"><a href="#cb11-126"></a>The second one - *Sales for product*, we want to calculate the corresponding sales for each product at the current row, so we just **wrap** the `CALCULATE()` function for the **context transition**:</span>
 <span id="cb11-127"><a href="#cb11-127"></a></span>
-<span id="cb11-128"><a href="#cb11-128"></a><span class="in">``` txt</span></span>
-<span id="cb11-129"><a href="#cb11-129"></a><span class="in">Sales for product =</span></span>
-<span id="cb11-130"><a href="#cb11-130"></a><span class="in">CALCULATE (</span></span>
-<span id="cb11-131"><a href="#cb11-131"></a><span class="in">    SUMX ( Purchase, Purchase[Quantity] * Purchase[Price] )</span></span>
-<span id="cb11-132"><a href="#cb11-132"></a><span class="in">)</span></span>
+<span id="cb11-128"><a href="#cb11-128"></a><span class="in">```c</span></span>
+<span id="cb11-129"><a href="#cb11-129"></a>Sales <span class="cf">for</span> product <span class="op">=</span></span>
+<span id="cb11-130"><a href="#cb11-130"></a>CALCULATE <span class="op">(</span></span>
+<span id="cb11-131"><a href="#cb11-131"></a>    SUMX <span class="op">(</span> Purchase<span class="op">,</span> Purchase<span class="op">[</span>Quantity<span class="op">]</span> <span class="op">*</span> Purchase<span class="op">[</span>Price<span class="op">]</span> <span class="op">)</span></span>
+<span id="cb11-132"><a href="#cb11-132"></a><span class="op">)</span></span>
 <span id="cb11-133"><a href="#cb11-133"></a><span class="in">```</span></span>
 <span id="cb11-134"><a href="#cb11-134"></a></span>
 <span id="cb11-135"><a href="#cb11-135"></a>And the final one:</span>
 <span id="cb11-136"><a href="#cb11-136"></a></span>
-<span id="cb11-137"><a href="#cb11-137"></a><span class="in">``` txt</span></span>
-<span id="cb11-138"><a href="#cb11-138"></a><span class="in">Product contribution = DIVIDE([Sales for product],[Total sales])</span></span>
+<span id="cb11-137"><a href="#cb11-137"></a><span class="in">```c</span></span>
+<span id="cb11-138"><a href="#cb11-138"></a>Product contribution <span class="op">=</span> DIVIDE<span class="op">([</span>Sales <span class="cf">for</span> product<span class="op">],[</span>Total sales<span class="op">])</span></span>
 <span id="cb11-139"><a href="#cb11-139"></a><span class="in">```</span></span>
 <span id="cb11-140"><a href="#cb11-140"></a></span>
 <span id="cb11-141"><a href="#cb11-141"></a><span class="fu"># 2. [Basic measures](https://www.wiseowl.co.uk/power-bi/exercises/dax/basic-measures/)</span></span>

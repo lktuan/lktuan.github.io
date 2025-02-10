@@ -22,7 +22,7 @@ Including 11 exercises:
 
 It's pretty simple to calculate the *total floors*, just find the **New column** under **Table tools**, and sum the floors up:
 
-```c
+```js
 Total floors = Building[Floors above ground] + Building[Floors below ground]
 ```
 
@@ -30,7 +30,7 @@ Total floors = Building[Floors above ground] + Building[Floors below ground]
 
 And for *Average floor height*, we just need to use "/", or better practice, use `DIVIDE()`:
 
-```c
+```js
 Average floor height = Building[Height m] / Building[Floors above ground]
 
 // or
@@ -44,14 +44,14 @@ For each column, we have column tools to format the data.
 
 The `IF()` in DAX row context is pretty the same with Excel!
 
-```c
+```js
 Has basement = IF(Building[Floors below ground] > 0, "Yes", "No")
 Century = IF(Building[Year Opened] < 2001, "20th Century", "21st Century")
 ```
 
 Do you ever use `SWITCH()` in Excel, it's the same in PBI:
 
-```c
+```js
 Category =
 SWITCH (
     TRUE (),
@@ -65,7 +65,7 @@ SWITCH (
 
 #### 4 [More operations](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5088/)
 
-```c
+```js
 // This is simple
 Tour length = Tour[End year] - Tour[Start year] + 1
 
@@ -80,10 +80,10 @@ Avg ticket price = DIVIDE(Tour[Actual gross], Tour[Attendance])
 
 We can use "**&**" or the `CONCANATE()` function to join texts (in row context), and use `RELATED()` to get data from other tables with a relationship set up.
 
-```c
+```js
 Name and location = CONCATENATE(Building[Building Name] & ", ", RELATED(City[City]))
 
--- or if we want to include the Country name
+// or if we want to include the Country name
 
 Name and location =
 CONCATENATE (

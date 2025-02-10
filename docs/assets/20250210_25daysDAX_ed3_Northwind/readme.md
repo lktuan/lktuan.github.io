@@ -1,10 +1,12 @@
 # 25 Days of DAX challenge Ed3 on Northwind dataset
 
+Link: <https://curbal.com/25-days-of-dax-fridays-challenge-edition-3>.
+
 ## Day 1: Which product had been ordered the most (in terms of quantity) ?
 
 View the data on DAX query view:
 
-```sql
+```js
 EVALUATE
 SUMMARIZE(
 	Products, Products[ProductID], Products[ProductName],
@@ -14,9 +16,9 @@ ORDER BY
 [Qty] DESC
 ```
 
-And we need to get the `TOPN()` **1**, and then `CONCATENATE()` all products that have largest order quantities (there is such scenario):
+We need to get the `TOPN()` **1**, and then `CONCATENATE()` all products that have largest order quantities (there is such scenario):
 
-```sql
+```js
 D1 = CONCATENATEX(
 	TOPN(1,
 		SUMMARIZE(
@@ -26,6 +28,8 @@ D1 = CONCATENATEX(
 	),
 	Products[ProductName], ", ", Products[ProductName], ASC) // Concat ProductName and order ascending by itself
 ```
+
+The answer is: "Camembert Pierrot"!
 
 > [!TIP]
 > `CONCATENATE()` return string so if we want to run it in DAX query view, use the `ROW()` function:
