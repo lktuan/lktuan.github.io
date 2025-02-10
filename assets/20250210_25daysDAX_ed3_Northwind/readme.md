@@ -1,5 +1,7 @@
 # 25 Days of DAX challenge Ed3 on Northwind dataset
 
+Link: <https://curbal.com/25-days-of-dax-fridays-challenge-edition-3>.
+
 ## Day 1: Which product had been ordered the most (in terms of quantity) ?
 
 View the data on DAX query view:
