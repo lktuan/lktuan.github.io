@@ -4,12 +4,12 @@ description: "I am trying to solve all 59 DAX exercises from WiseOwl Training Pl
 author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
-categories: [math] 
+categories: [DAX] 
 image: wise_owl.jpg
 date: 09-30-2024
 date-modified: 09-30-2024
 toc: true
-draft: true
+draft: false
 ---
 
 Link to the challenge: <https://www.wiseowl.co.uk/power-bi/exercises/dax/>
@@ -22,7 +22,7 @@ Including 11 exercises:
 
 It's pretty simple to calculate the *total floors*, just find the **New column** under **Table tools**, and sum the floors up:
 
-``` txt
+```c
 Total floors = Building[Floors above ground] + Building[Floors below ground]
 ```
 
@@ -30,10 +30,10 @@ Total floors = Building[Floors above ground] + Building[Floors below ground]
 
 And for *Average floor height*, we just need to use "/", or better practice, use `DIVIDE()`:
 
-``` txt
+```c
 Average floor height = Building[Height m] / Building[Floors above ground]
 
--- or
+// or
 
 Average floor height = DIVIDE(Building[Height m], Building[Floors above ground])
 ```
@@ -44,14 +44,14 @@ For each column, we have column tools to format the data.
 
 The `IF()` in DAX row context is pretty the same with Excel!
 
-``` txt
+```c
 Has basement = IF(Building[Floors below ground] > 0, "Yes", "No")
 Century = IF(Building[Year Opened] < 2001, "20th Century", "21st Century")
 ```
 
 Do you ever use `SWITCH()` in Excel, it's the same in PBI:
 
-``` txt
+```c
 Category =
 SWITCH (
     TRUE (),
@@ -65,11 +65,11 @@ SWITCH (
 
 #### 4 [More operations](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5088/)
 
-``` txt
-# This is simple
+```c
+// This is simple
 Tour length = Tour[End year] - Tour[Start year] + 1
 
-# With division operation, it's recommended to use DIVIDE() function:
+// With division operation, it's recommended to use DIVIDE() function:
 Shows per year = DIVIDE(Tour[Shows], Tour[Tour length])
 Avg show revenue = DIVIDE(Tour[Actual gross], Tour[Shows])
 Avg attendance = DIVIDE(Tour[Attendance], Tour[Shows])
@@ -80,7 +80,7 @@ Avg ticket price = DIVIDE(Tour[Actual gross], Tour[Attendance])
 
 We can use "**&**" or the `CONCANATE()` function to join texts (in row context), and use `RELATED()` to get data from other tables with a relationship set up.
 
-``` txt
+```c
 Name and location = CONCATENATE(Building[Building Name] & ", ", RELATED(City[City]))
 
 -- or if we want to include the Country name
@@ -97,7 +97,7 @@ CONCATENATE (
 
 We can use `RELATED()` and `ISBLANK()` to refer and check if there any matching record is returned.
 
-``` txt
+```c
 Quadrant =
 IF (
     ISBLANK ( RELATED ( Quadrants[QuadrantName] ) ),
@@ -119,13 +119,13 @@ IF (
 
 The first one *Total sales* was calculated in **Products** table, simply interate all the table **Purchase**, multiply *quanity* by *price* to get the entire revenue:
 
-``` txt
+```c
 Total Sales = SUMX(Purchase, Purchase[Quantity] * Purchase[Price])
 ```
 
 The second one - *Sales for product*, we want to calculate the corresponding sales for each product at the current row, so we just **wrap** the `CALCULATE()` function for the **context transition**:
 
-``` txt
+```c
 Sales for product =
 CALCULATE (
     SUMX ( Purchase, Purchase[Quantity] * Purchase[Price] )
@@ -134,7 +134,7 @@ CALCULATE (
 
 And the final one:
 
-``` txt
+```c
 Product contribution = DIVIDE([Sales for product],[Total sales])
 ```
 

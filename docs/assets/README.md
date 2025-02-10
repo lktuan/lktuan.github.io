@@ -116,9 +116,11 @@ Someone is doing the same thing with me: <https://www.ssp.sh/brain/>;
 
 ### Visualization, Grammar of Graphics, ICBS Standard
 
+- Chris Webb's BI Blog: <https://blog.crossjoin.co.uk/>;
 - Power of Business Intelligence (by Andrzej Leszkiewicz, ICBS, Deneb, and more): <https://www.powerofbi.org/>;
 - Deneb showcases by PBI David: <https://github.com/PBI-David/Deneb-Showcase>;
 - Learning Deneb: <https://publish.obsidian.md/minceddata/Blog/Data+Visualization/learning+Deneb>;
+- Learning Deneb by PBI Datavizzle: <https://github.com/PBI-DataVizzle/Deneb> (blog [here](pbi-datavizzle.github.io));
 - Data Goblins: <https://data-goblins.com/>;
 - Star Schema: <https://www.starschema.co.uk/>;
 - DataViz Inspriration: <https://www.dataviz-inspiration.com/>;

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.554">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2024-09-30">
 <meta name="description" content="This is Tuan’s blog">
 
-<title>Le Khac Tuan - DAX exercises by WiseOwl Training</title>
+<title>DAX exercises by WiseOwl Training – Le Khac Tuan</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -36,7 +36,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -72,12 +72,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-8e54dfbe729680b42f22c627ac27a053.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-81b089a3b74ed4cf194f083418e7130b.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-89cb849060b93fd12025e4f44aaa3f02.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-94f6159ad9ce5d98e16f8a0f764f5363.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -122,7 +122,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -176,7 +176,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
       </div> <!-- /container-fluid -->
@@ -193,7 +193,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">math</div>
+                <div class="quarto-category">DAX</div>
               </div>
                   </div>
   </div>
@@ -260,44 +260,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="operations-in-row-context" class="level4">
 <h4 class="anchored" data-anchor-id="operations-in-row-context">1 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5086/">Operations in Row context</a></h4>
 <p>It’s pretty simple to calculate the <em>total floors</em>, just find the <strong>New column</strong> under <strong>Table tools</strong>, and sum the floors up:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1"></a>Total floors = Building[Floors above ground] + Building[Floors below ground]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource lua number-lines code-with-copy"><code class="sourceCode lua"><span id="cb1-1"><a href="#cb1-1"></a><span class="va">Total</span> <span class="va">floors</span> <span class="op">=</span> <span class="va">Building</span><span class="op">[</span><span class="va">Floors</span> <span class="va">above</span> <span class="va">ground</span><span class="op">]</span> <span class="op">+</span> <span class="va">Building</span><span class="op">[</span><span class="va">Floors</span> <span class="va">below</span> <span class="va">ground</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="div0" class="level4">
 <h4 class="anchored" data-anchor-id="div0">2 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/4409/">!DIV0</a></h4>
 <p>And for <em>Average floor height</em>, we just need to use “/”, or better practice, use <code>DIVIDE()</code>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1"></a>Average floor height = Building[Height m] / Building[Floors above ground]</span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource lua number-lines code-with-copy"><code class="sourceCode lua"><span id="cb2-1"><a href="#cb2-1"></a><span class="va">Average</span> <span class="va">floor</span> <span class="va">height</span> <span class="op">=</span> <span class="va">Building</span><span class="op">[</span><span class="va">Height</span> <span class="va">m</span><span class="op">]</span> <span class="op">/</span> <span class="va">Building</span><span class="op">[</span><span class="va">Floors</span> <span class="va">above</span> <span class="va">ground</span><span class="op">]</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a></span>
-<span id="cb2-3"><a href="#cb2-3"></a>-- or</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co">-- or</span></span>
 <span id="cb2-4"><a href="#cb2-4"></a></span>
-<span id="cb2-5"><a href="#cb2-5"></a>Average floor height = DIVIDE(Building[Height m], Building[Floors above ground])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="va">Average</span> <span class="va">floor</span> <span class="va">height</span> <span class="op">=</span> DIVIDE<span class="op">(</span><span class="va">Building</span><span class="op">[</span><span class="va">Height</span> <span class="va">m</span><span class="op">],</span> <span class="va">Building</span><span class="op">[</span><span class="va">Floors</span> <span class="va">above</span> <span class="va">ground</span><span class="op">])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>For each column, we have column tools to format the data.</p>
 </section>
 <section id="flow-control-with-if-and-switch" class="level4">
 <h4 class="anchored" data-anchor-id="flow-control-with-if-and-switch">3 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5089/">Flow control with <code>IF()</code> and <code>SWITCH()</code></a></h4>
 <p>The <code>IF()</code> in DAX row context is pretty the same with Excel!</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1"></a>Has basement = IF(Building[Floors below ground] &gt; 0, "Yes", "No")</span>
-<span id="cb3-2"><a href="#cb3-2"></a>Century = IF(Building[Year Opened] &lt; 2001, "20th Century", "21st Century")</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource lua number-lines code-with-copy"><code class="sourceCode lua"><span id="cb3-1"><a href="#cb3-1"></a><span class="va">Has</span> <span class="va">basement</span> <span class="op">=</span> IF<span class="op">(</span><span class="va">Building</span><span class="op">[</span><span class="va">Floors</span> <span class="va">below</span> <span class="va">ground</span><span class="op">]</span> <span class="op">&gt;</span> <span class="dv">0</span><span class="op">,</span> <span class="st">"Yes"</span><span class="op">,</span> <span class="st">"No"</span><span class="op">)</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="va">Century</span> <span class="op">=</span> IF<span class="op">(</span><span class="va">Building</span><span class="op">[</span><span class="va">Year</span> <span class="va">Opened</span><span class="op">]</span> <span class="op">&lt;</span> <span class="dv">2001</span><span class="op">,</span> <span class="st">"20th Century"</span><span class="op">,</span> <span class="st">"21st Century"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Do you ever use <code>SWITCH()</code> in Excel, it’s the same in PBI:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb4-1"><a href="#cb4-1"></a>Category =</span>
-<span id="cb4-2"><a href="#cb4-2"></a>SWITCH (</span>
-<span id="cb4-3"><a href="#cb4-3"></a>    TRUE (),</span>
-<span id="cb4-4"><a href="#cb4-4"></a>    Building[Height m] &lt; 400, "Tiny",</span>
-<span id="cb4-5"><a href="#cb4-5"></a>    Building[Height m] &lt; 500, "Small",</span>
-<span id="cb4-6"><a href="#cb4-6"></a>    Building[Height m] &lt; 600, "Medium",</span>
-<span id="cb4-7"><a href="#cb4-7"></a>    Building[Height m] &lt; 700, "Big",</span>
-<span id="cb4-8"><a href="#cb4-8"></a>    "Large"</span>
-<span id="cb4-9"><a href="#cb4-9"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource lua number-lines code-with-copy"><code class="sourceCode lua"><span id="cb4-1"><a href="#cb4-1"></a><span class="va">Category</span> <span class="op">=</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>SWITCH <span class="op">(</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>    TRUE <span class="op">(),</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>    <span class="va">Building</span><span class="op">[</span><span class="va">Height</span> <span class="va">m</span><span class="op">]</span> <span class="op">&lt;</span> <span class="dv">400</span><span class="op">,</span> <span class="st">"Tiny"</span><span class="op">,</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>    <span class="va">Building</span><span class="op">[</span><span class="va">Height</span> <span class="va">m</span><span class="op">]</span> <span class="op">&lt;</span> <span class="dv">500</span><span class="op">,</span> <span class="st">"Small"</span><span class="op">,</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>    <span class="va">Building</span><span class="op">[</span><span class="va">Height</span> <span class="va">m</span><span class="op">]</span> <span class="op">&lt;</span> <span class="dv">600</span><span class="op">,</span> <span class="st">"Medium"</span><span class="op">,</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a>    <span class="va">Building</span><span class="op">[</span><span class="va">Height</span> <span class="va">m</span><span class="op">]</span> <span class="op">&lt;</span> <span class="dv">700</span><span class="op">,</span> <span class="st">"Big"</span><span class="op">,</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a>    <span class="st">"Large"</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="more-operations" class="level4">
 <h4 class="anchored" data-anchor-id="more-operations">4 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5088/">More operations</a></h4>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource txt number-lines code-with-copy"><code class="sourceCode default"><span id="cb5-1"><a href="#cb5-1"></a># This is simple</span>
-<span id="cb5-2"><a href="#cb5-2"></a>Tour length = Tour[End year] - Tour[Start year] + 1</span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource lua number-lines code-with-copy"><code class="sourceCode lua"><span id="cb5-1"><a href="#cb5-1"></a><span class="op">#</span> <span class="va">This</span> <span class="va">is</span> <span class="va">simple</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="va">Tour</span> <span class="va">length</span> <span class="op">=</span> <span class="va">Tour</span><span class="op">[</span><span class="va">End</span> <span class="va">year</span><span class="op">]</span> <span class="op">-</span> <span class="va">Tour</span><span class="op">[</span><span class="va">Start</span> <span class="va">year</span><span class="op">]</span> <span class="op">+</span> <span class="dv">1</span></span>
 <span id="cb5-3"><a href="#cb5-3"></a></span>
-<span id="cb5-4"><a href="#cb5-4"></a># With division operation, it's recommended to use DIVIDE() function:</span>
-<span id="cb5-5"><a href="#cb5-5"></a>Shows per year = DIVIDE(Tour[Shows], Tour[Tour length])</span>
-<span id="cb5-6"><a href="#cb5-6"></a>Avg show revenue = DIVIDE(Tour[Actual gross], Tour[Shows])</span>
-<span id="cb5-7"><a href="#cb5-7"></a>Avg attendance = DIVIDE(Tour[Attendance], Tour[Shows])</span>
-<span id="cb5-8"><a href="#cb5-8"></a>Avg ticket price = DIVIDE(Tour[Actual gross], Tour[Attendance])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="op">#</span> <span class="va">With</span> <span class="va">division</span> <span class="va">operation</span><span class="op">,</span> it<span class="st">'s recommended to use DIVIDE() function:</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="er">Shows per year = DIVIDE(Tour[Shows], Tour[Tour length])</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="er">Avg show revenue = DIVIDE(Tour[Actual gross], Tour[Shows])</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="er">Avg attendance = DIVIDE(Tour[Attendance], Tour[Shows])</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="er">Avg ticket price = DIVIDE(Tour[Actual gross], Tour[Attendance])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="using-of-related" class="level4">
 <h4 class="anchored" data-anchor-id="using-of-related">5 <a href="https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5091/">Using of <code>RELATED()</code></a></h4>
@@ -567,18 +567,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -610,7 +599,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
   const viewSource = window.document.getElementById('quarto-view-source') ||
                      window.document.getElementById('quarto-code-tools-source');
   if (viewSource) {
@@ -669,7 +678,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -766,7 +775,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
@@ -998,12 +1006,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb11-4"><a href="#cb11-4"></a><span class="an">author:</span></span>
 <span id="cb11-5"><a href="#cb11-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
 <span id="cb11-6"><a href="#cb11-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
-<span id="cb11-7"><a href="#cb11-7"></a><span class="an">categories:</span><span class="co"> [math] </span></span>
+<span id="cb11-7"><a href="#cb11-7"></a><span class="an">categories:</span><span class="co"> [DAX] </span></span>
 <span id="cb11-8"><a href="#cb11-8"></a><span class="an">image:</span><span class="co"> wise_owl.jpg</span></span>
 <span id="cb11-9"><a href="#cb11-9"></a><span class="an">date:</span><span class="co"> 09-30-2024</span></span>
 <span id="cb11-10"><a href="#cb11-10"></a><span class="an">date-modified:</span><span class="co"> 09-30-2024</span></span>
 <span id="cb11-11"><a href="#cb11-11"></a><span class="an">toc:</span><span class="co"> true</span></span>
-<span id="cb11-12"><a href="#cb11-12"></a><span class="an">draft:</span><span class="co"> true</span></span>
+<span id="cb11-12"><a href="#cb11-12"></a><span class="an">draft:</span><span class="co"> false</span></span>
 <span id="cb11-13"><a href="#cb11-13"></a><span class="co">---</span></span>
 <span id="cb11-14"><a href="#cb11-14"></a></span>
 <span id="cb11-15"><a href="#cb11-15"></a>Link to the challenge: <span class="ot">&lt;https://www.wiseowl.co.uk/power-bi/exercises/dax/&gt;</span></span>
@@ -1016,7 +1024,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb11-22"><a href="#cb11-22"></a></span>
 <span id="cb11-23"><a href="#cb11-23"></a>It's pretty simple to calculate the *total floors*, just find the **New column** under **Table tools**, and sum the floors up:</span>
 <span id="cb11-24"><a href="#cb11-24"></a></span>
-<span id="cb11-25"><a href="#cb11-25"></a><span class="in">``` txt</span></span>
+<span id="cb11-25"><a href="#cb11-25"></a><span class="in">```lua</span></span>
 <span id="cb11-26"><a href="#cb11-26"></a><span class="in">Total floors = Building[Floors above ground] + Building[Floors below ground]</span></span>
 <span id="cb11-27"><a href="#cb11-27"></a><span class="in">```</span></span>
 <span id="cb11-28"><a href="#cb11-28"></a></span>
@@ -1024,7 +1032,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb11-30"><a href="#cb11-30"></a></span>
 <span id="cb11-31"><a href="#cb11-31"></a>And for *Average floor height*, we just need to use "/", or better practice, use <span class="in">`DIVIDE()`</span>:</span>
 <span id="cb11-32"><a href="#cb11-32"></a></span>
-<span id="cb11-33"><a href="#cb11-33"></a><span class="in">``` txt</span></span>
+<span id="cb11-33"><a href="#cb11-33"></a><span class="in">```lua</span></span>
 <span id="cb11-34"><a href="#cb11-34"></a><span class="in">Average floor height = Building[Height m] / Building[Floors above ground]</span></span>
 <span id="cb11-35"><a href="#cb11-35"></a></span>
 <span id="cb11-36"><a href="#cb11-36"></a><span class="in">-- or</span></span>
@@ -1038,14 +1046,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb11-44"><a href="#cb11-44"></a></span>
 <span id="cb11-45"><a href="#cb11-45"></a>The <span class="in">`IF()`</span> in DAX row context is pretty the same with Excel!</span>
 <span id="cb11-46"><a href="#cb11-46"></a></span>
-<span id="cb11-47"><a href="#cb11-47"></a><span class="in">``` txt</span></span>
+<span id="cb11-47"><a href="#cb11-47"></a><span class="in">```lua</span></span>
 <span id="cb11-48"><a href="#cb11-48"></a><span class="in">Has basement = IF(Building[Floors below ground] &gt; 0, "Yes", "No")</span></span>
 <span id="cb11-49"><a href="#cb11-49"></a><span class="in">Century = IF(Building[Year Opened] &lt; 2001, "20th Century", "21st Century")</span></span>
 <span id="cb11-50"><a href="#cb11-50"></a><span class="in">```</span></span>
 <span id="cb11-51"><a href="#cb11-51"></a></span>
 <span id="cb11-52"><a href="#cb11-52"></a>Do you ever use <span class="in">`SWITCH()`</span> in Excel, it's the same in PBI:</span>
 <span id="cb11-53"><a href="#cb11-53"></a></span>
-<span id="cb11-54"><a href="#cb11-54"></a><span class="in">``` txt</span></span>
+<span id="cb11-54"><a href="#cb11-54"></a><span class="in">```lua</span></span>
 <span id="cb11-55"><a href="#cb11-55"></a><span class="in">Category =</span></span>
 <span id="cb11-56"><a href="#cb11-56"></a><span class="in">SWITCH (</span></span>
 <span id="cb11-57"><a href="#cb11-57"></a><span class="in">    TRUE (),</span></span>
@@ -1059,7 +1067,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb11-65"><a href="#cb11-65"></a></span>
 <span id="cb11-66"><a href="#cb11-66"></a><span class="fu">#### 4 [More operations](https://www.wiseowl.co.uk/power-bi/exercises/dax/calculated-columns/5088/)</span></span>
 <span id="cb11-67"><a href="#cb11-67"></a></span>
-<span id="cb11-68"><a href="#cb11-68"></a><span class="in">``` txt</span></span>
+<span id="cb11-68"><a href="#cb11-68"></a><span class="in">```lua</span></span>
 <span id="cb11-69"><a href="#cb11-69"></a><span class="in"># This is simple</span></span>
 <span id="cb11-70"><a href="#cb11-70"></a><span class="in">Tour length = Tour[End year] - Tour[Start year] + 1</span></span>
 <span id="cb11-71"><a href="#cb11-71"></a></span>
@@ -1166,22 +1174,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb11-172"><a href="#cb11-172"></a></span>
 <span id="cb11-173"><a href="#cb11-173"></a><span class="fu"># 10. [Variables](https://www.wiseowl.co.uk/power-bi/exercises/dax/variables/)</span></span>
 <span id="cb11-174"><a href="#cb11-174"></a></span>
-<span id="cb11-175"><a href="#cb11-175"></a>Including 3 exercises</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-175"><a href="#cb11-175"></a>Including 3 exercises</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2024 Le Khac Tuan</span></p>
+<p><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2025 Le Khac Tuan</span></p>
 </div>   
     <div class="nav-footer-center">
-<p><span class="faux-block">Designed with <i class="fa-solid fa-heart" aria-label="heart"></i></span></p>
+<p><span class="faux-block"> Designed with <i class="fa-solid fa-heart" aria-label="heart"></i>, <span id="commit-info">Loading last commit…</span> </span></p>
 </div>
     <div class="nav-footer-right">
 <p><span class="faux-block">Made with <a href="https://quarto.org/">Quarto</a></span></p>
 </div>
   </div>
 </footer>
+<script type="application/javascript" src="commit_info.js"></script>
 
 
 

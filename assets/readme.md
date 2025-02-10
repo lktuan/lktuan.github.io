@@ -120,6 +120,7 @@ Someone is doing the same thing with me: <https://www.ssp.sh/brain/>;
 - Power of Business Intelligence (by Andrzej Leszkiewicz, ICBS, Deneb, and more): <https://www.powerofbi.org/>;
 - Deneb showcases by PBI David: <https://github.com/PBI-David/Deneb-Showcase>;
 - Learning Deneb: <https://publish.obsidian.md/minceddata/Blog/Data+Visualization/learning+Deneb>;
+- Learning Deneb by PBI Datavizzle: <https://github.com/PBI-DataVizzle/Deneb> (blog [here](pbi-datavizzle.github.io));
 - Data Goblins: <https://data-goblins.com/>;
 - Star Schema: <https://www.starschema.co.uk/>;
 - DataViz Inspriration: <https://www.dataviz-inspiration.com/>;
