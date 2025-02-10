@@ -38,3 +38,26 @@ The answer is: "Camembert Pierrot"!
 > -- measure D1
 > )
 > ```
+
+## Day 2: Which product have the highest average order size?
+
+The average order size is calculated for each product base on the quantity of each order. We will first `SUMMARIZE()` to get distinct product and get average order quantity over Order Details table.
+
+This time we will use the `ADDCOLUMNS()` to explicit the tention of adding more columns, and it is more efficient (this is also a common pattern in DAX).
+
+```js
+D2 = CONCATENATEX(
+	TOPN(1,
+		ADDCOLUMNS(
+			SUMMARIZE(
+				Products, 
+				Products[ProductID], 
+				Products[ProductName]
+			),
+			"Avg qty", CALCULATE(AVERAGE(Order_Details[Quantity]))
+		),
+	[Avg qty], DESC
+	),
+	Products[ProductName], ", ", Products[ProductName], ASC
+)
+```
