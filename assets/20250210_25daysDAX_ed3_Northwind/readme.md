@@ -1,6 +1,7 @@
 # 25 Days of DAX challenge Ed3 on Northwind dataset
 
 Link: <https://curbal.com/25-days-of-dax-fridays-challenge-edition-3>;
+
 DAX codes were formatted using DAXFormatter: <https://www.daxformatter.com/>.
 
 ## Day 1: Which product had been ordered the most (in terms of quantity) ?
@@ -175,3 +176,52 @@ DIVIDE(
 The answer is: 14.61%!
 
 ## Day 7: How many high-value orders were placed in 1997?
+
+The Orders table, not the Order detail is the concerned table, we first calculate the average order revenue for all orders place in 1997. And then we filter the Orders table with 2 conditions: year of order date is 1997, and the revenue post discount is larger than average.
+
+```js
+D7 =
+VAR Avg_order_rev_1997 =
+    AVERAGEX (
+        FILTER ( Orders, YEAR ( Orders[OrderDate] ) = 1997 ),
+        [Revenue after discount]
+    )
+RETURN
+    COUNTROWS (
+        FILTER (
+            Orders,
+            [Revenue after discount] > Avg_order_rev_1997
+                && YEAR ( Orders[OrderDate] ) = 1997
+        )
+    )
+```
+
+There are 145 high-value orders in the year 1997!
+
+## Day 8: Number of orders delivered on time?
+
+Curbal seems to prefer using `SUMMARIZE()` everywhere, I think the solution is relatively simple of `COUNTROWS()` after some `FILTER()`. Here is my initial solution:
+
+```js
+D8 =
+COUNTROWS (
+    FILTER (
+        Orders,
+        NOT ISBLANK ( Orders[ShippedDate] )
+            && DATEDIFF ( Orders[RequiredDate], Orders[ShippedDate], DAY ) = 0
+    )
+)
+```
+
+I asked Claude 3.5 Sonnet to optimized this and he said the combination of `FILTER()` and `DATEDIFF` might be expensive, his solution is:
+
+```js
+D8 = 
+CALCULATE(
+    COUNTROWS(Orders),
+    Orders[ShippedDate] <> BLANK(),
+    Orders[RequiredDate] = Orders[ShippedDate]
+)
+```
+
+Cool! There is 3 such orders.
