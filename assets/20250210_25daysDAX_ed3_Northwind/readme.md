@@ -1,8 +1,9 @@
 # 25 Days of DAX challenge Ed3 on Northwind dataset
 
-Link: <https://curbal.com/25-days-of-dax-fridays-challenge-edition-3>;
-
-DAX codes were formatted using DAXFormatter: <https://www.daxformatter.com/>.
+- Link to the challenge: <https://curbal.com/25-days-of-dax-fridays-challenge-edition-3>;
+- DAX codes were formatted using DAXFormatter: <https://www.daxformatter.com/>;
+- A brilliant No-CALCULATE solution by Brian Julius: <https://github.com/bjulius/No-CALCULATE-DAX>;
+- Worth reading - The One DAX pattern to rule them all by Greg Deckler in [LinkedIn](https://www.linkedin.com/posts/gregdeckler_powerbi-microsoft-dax-activity-7056636983959322624-uxwY).
 
 ## Day 1: Which product had been ordered the most (in terms of quantity) ?
 
@@ -288,3 +289,94 @@ CALCULATE(
 ```
 
 Bravo Tuesday!
+
+## Day 11: Customer with the highest customer lifespan?
+
+I have walked around with the `VALUES()` magic but failed with the lifespan calculation.
+Claude helped me with this, and if we can confidently ensure there is no duplicated company name for 2 different companies/customers,
+this is a very concise solution:
+
+```js
+D11 =
+CONCATENATEX (
+    TOPN (
+        1,
+        VALUES ( Customers[CompanyName] ),
+        CALCULATE ( MAX ( Orders[OrderDate] ) - MIN ( Orders[OrderDate] ) ), DESC
+    ),
+    Customers[CompanyName],
+    ", "
+)
+```
+
+The answer is: Richter Supermarkt! Love you.
+
+## Day 12: Which customer had placed most orders?
+
+This time I've successfully implemented this pattern!
+
+```js
+D12 =
+TOPN (
+    1,
+    VALUES ( Customers[CompanyName] ),
+    CALCULATE ( COUNT ( Orders[OrderID] ) ), DESC
+)
+```
+
+This is Save-a-lot Markets!
+
+## Day 13: Top 5 countries with the highest number of customers?
+
+Quick check and I found that no customer in the Customers table did not order any order.
+So we just need to care/count on the Customers table only. Quite straightforwar!
+
+```js
+D13 =
+CONCATENATEX (
+    TOPN (
+        5,
+        VALUES ( Customers[Country] ),
+        CALCULATE ( COUNT ( Customers[CustomerID] ) ), DESC
+    ),
+    Customers[Country],
+    ", ",
+    CALCULATE ( COUNT ( Customers[CustomerID] ) ), DESC
+)
+```
+
+I am in love with this pattern, the answer is: USA, Germany, France, Brazil, UK!
+
+## Day 14: Which customer placed the highest value of order (sales) in 1997?
+
+It's QUICK-Stop!
+
+```js
+D14 =
+TOPN (
+    1,
+    VALUES ( Customers[CompanyName] ),
+    CALCULATE ( [Revenue after discount], YEAR ( Orders[OrderDate] ) = 1997 ), DESC
+)
+```
+
+## Day 15: Customer with the highest number of orders in one single month?
+
+```js
+D15 =
+CONCATENATEX (
+    TOPN (
+        1,
+        ADDCOLUMNS (
+            SUMMARIZE ( Orders, Customers[CompanyName], 'Calendar'[Year-Month] ),
+            "order_count", CALCULATE ( COUNT ( Orders[OrderID] ) )
+        ),
+        [order_count], DESC
+    ),
+    Customers[CompanyName],
+    ", ",
+    Customers[CompanyName], DESC
+)
+```
+
+There are 3 customers have 5 orders in one single month: Bottom-Dollar Markets, Ernst Handel, and Save-a-lot Markets!
