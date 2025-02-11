@@ -213,7 +213,7 @@ COUNTROWS (
 )
 ```
 
-I asked Claude 3.5 Sonnet to optimized this and he said the combination of `FILTER()` and `DATEDIFF` might be expensive, his solution is:
+I asked Claude 3.5 Sonnet to optimized this and he said the combination of `FILTER()` and `DATEDIFF()` might be expensive, his solution is:
 
 ```js
 D8 = 
@@ -225,3 +225,66 @@ CALCULATE(
 ```
 
 Cool! There is 3 such orders.
+
+If we use the logic `Orders[RequiredDate] >= Orders[ShippedDate]`, there is 772 orders. IMHO I think this make more sense!
+
+## Day 9: The single month with highest sales?
+
+```js
+D9 =
+CONCATENATEX (
+    TOPN (
+        1,
+        ADDCOLUMNS (
+            SUMMARIZE ( 'Calendar', 'Calendar'[Year-Month] ),
+            "Total rev", [Revenue after discount]
+        ),
+        [Revenue after discount], DESC
+    ),
+    'Calendar'[Year-Month],
+    ", ",
+    'Calendar'[Year-Month], ASC
+)
+```
+
+Pretty simple, it's 1998-Apr!
+
+## Day 10: Best sales (week) day for queso cabrales?
+
+```js
+D10 =
+CONCATENATEX (
+    TOPN (
+        1,
+        ADDCOLUMNS (
+            SUMMARIZE ( 'Calendar', 'Calendar'[Day Name] ),
+            "Queso Cabrales sales", CALCULATE ( [Revenue after discount], Products[ProductName] = "Queso Cabrales" )
+        ),
+        [Queso Cabrales sales], DESC
+    ),
+    'Calendar'[Day Name],
+    ", ",
+    'Calendar'[Day Name], ASC
+)
+```
+
+This is an enhanced version from Claude 3.5 Sonnet:
+
+```js
+D10a = 
+CALCULATE(
+    MAX('Calendar'[Day Name]), // trickily put an aggregation function here!
+    TOPN(
+        1,
+        VALUES('Calendar'[Day Name]),
+        // Using VALUES() here effectively says "give me the distinct day names, then order them by the sales amount"
+        CALCULATE(
+            [Revenue after discount],
+            Products[ProductName] = "Queso Cabrales"
+        ),
+        DESC
+    )
+)
+```
+
+Bravo Tuesday!
