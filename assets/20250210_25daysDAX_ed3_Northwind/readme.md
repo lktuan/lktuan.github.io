@@ -434,7 +434,7 @@ Janet Leverling!
 
 ## Day 19: Name of all Northwind managers?
 
-Anyone who has a employee reporting to themself is manager! They are Andrew Fuller, Nancy Davolio, Steven Buchanan.
+Anyone who has an employee reporting to themself is a manager! They are Andrew Fuller, Nancy Davolio, Steven Buchanan.
 
 ```js
 D19 =
@@ -464,3 +464,107 @@ CONCATENATEX (
 ```
 
 Margaret Peacock!
+
+## Day 21: Number of suppliers that deliver more product items than average?
+
+There are 16!
+
+```js
+D21 =
+VAR supplier_n_product =
+    ADDCOLUMNS (
+        SUMMARIZE ( Suppliers, Suppliers[SupplierID], Suppliers[CompanyName] ),
+        "count product", CALCULATE ( COUNT ( Products[CategoryID] ) )
+    )
+RETURN
+    COUNTROWS (
+        FILTER (
+            supplier_n_product,
+            [count product] > AVERAGEX ( supplier_n_product, [count product] )
+        )
+    )
+```
+
+## Day 22: Suppliers with most stocked-out products?
+
+Confidently assumed there is no duplicated CompanyName haha:
+
+```js
+D22 =
+CONCATENATEX (
+    TOPN (
+        1,
+        VALUES ( Suppliers[CompanyName] ),
+        CALCULATE ( COUNT ( Products[ProductID] ), Products[UnitsInStock] = 0 ), DESC
+    ),
+    Suppliers[CompanyName],
+    ", "
+)
+```
+
+The answer is: New Orleans Cajun Delights, Pavlova, Ltd., Plutzer Lebensmittelgroßmärkte AG, Formaggi Fortini s.r.l., and "G'day, Mate"!
+
+## Day 23: Which supplier delivers the most expensive product?
+
+We need to focus on the Products table which lists the current price rather than the Orders table contained sold items ~ historical price.
+
+```js
+D23 =
+CONCATENATEX (
+    TOPN (
+        1,
+        VALUES ( Suppliers[CompanyName] ),
+        CALCULATE ( MAX ( Products[UnitPrice] ) ), DESC
+    ),
+    Suppliers[CompanyName],
+    ", "
+)
+```
+
+It's is Aux joyeux ecclésiastiques!
+
+## Day 24: Which supplier has the highest category diversity?
+
+Note that there is no relationship between Suppliers table and Categories table. So we will be using `CategoryID` in the Products table:
+
+```js
+D24 = 
+CONCATENATEX (
+    TOPN (
+        1,
+        VALUES ( Suppliers[CompanyName] ),
+        CALCULATE ( COUNT ( Products[CategoryID] ) ), DESC
+    ),
+    Suppliers[CompanyName],
+    ", "
+)
+```
+
+It's Pavlova, Ltd., Plutzer Lebensmittelgroßmärkte AG.
+
+## Day 25: Supplier with highest number of top 5 selling products?
+
+We need to do 2 steps: listing top 5 selling products, and then filter the top 1 supplier that delivers:
+
+```js
+D25 = 
+VAR Top_5_products = TOPN(
+    5,
+    VALUES(Products[ProductID]),
+    [Revenue after discount]
+)
+RETURN
+CONCATENATEX (
+    TOPN (
+        1,
+        VALUES ( Suppliers[CompanyName] ),
+        CALCULATE ( COUNT ( Products[ProductID] ), Products[ProductID] in Top_5_products ), DESC
+    ),
+    Suppliers[CompanyName],
+    ", "
+)
+```
+
+It's Gai pâturage! Yayyy we completed the challenge!
+
+Happy learning!
