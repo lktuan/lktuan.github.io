@@ -380,3 +380,87 @@ CONCATENATEX (
 ```
 
 There are 3 customers have 5 orders in one single month: Bottom-Dollar Markets, Ernst Handel, and Save-a-lot Markets!
+
+## Day 16: Employee with the highest average order value (in sales)?
+
+```js
+D16 =
+TOPN (
+    1,
+    VALUES ( Employees[Full Name] ),
+    CALCULATE ( DIVIDE ( [Revenue after discount], COUNT ( Orders[OrderID] ) ) ), DESC
+)
+// AVERAGEX wouldn't work here because the measure is already doing a sum across Order_Details
+```
+
+She is Anne Dodsworth.
+
+## Day 17: Employee with the longest average processing order time?
+
+It's also Dodsworth!
+
+```js
+D17 = 
+TOPN(
+    1,
+    VALUES(Employees[Full Name]),
+    CALCULATE( 
+        AVERAGEX(
+            FILTER(Orders, Orders[ShippedDate] <> BLANK()),
+            DATEDIFF(Orders[OrderDate], Orders[ShippedDate], DAY)
+        )
+    ),
+    DESC
+)
+```
+
+## Day 18: Which employee has been in the company the longest?
+
+```js
+D18 = 
+CONCATENATEX(
+    TOPN(
+        1,
+        VALUES(Employees[Full Name]),
+        CALCULATE( MIN( Employees[HireDate]) ),
+        ASC
+    ),
+    Employees[Full Name],
+    ", "
+)
+```
+
+Janet Leverling!
+
+## Day 19: Name of all Northwind managers?
+
+Anyone who has a employee reporting to themself is manager! They are Andrew Fuller, Nancy Davolio, Steven Buchanan.
+
+```js
+D19 =
+CONCATENATEX (
+    FILTER ( Employees, Employees[EmployeeID] IN VALUES ( Employees[ReportsTo] ) ),
+    Employees[Full Name],
+    ", ",
+    Employees[Full Name], ASC
+)
+```
+
+## Day 20: Which employee handle the most unique customers?
+
+There is no direct relationship from Employees to Customers table, we will be working on the Orders table!
+
+```js
+D20 =
+CONCATENATEX (
+    TOPN (
+        1,
+        VALUES ( Employees[Full Name] ),
+        CALCULATE ( DISTINCTCOUNT ( Orders[CustomerID] ) )
+    ),
+    Employees[Full Name],
+    ", "
+)
+```
+
+Margaret Peacock!
