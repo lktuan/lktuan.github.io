@@ -4,8 +4,10 @@ This contains miscellaneous notes/workbooks serving learning which will not be r
 
 Someone is doing the same thing with me: <https://www.ssp.sh/brain/>;
 
-## Miscellaneous to read
+## Miscellaneous to
 
+- Portfolio Credit Risk (by Thomas C. Wilson): <https://www.newyorkfed.org/medialibrary/media/research/epr/98v04n3/9810wils.pdf>;
+- An Unexpected RL Renaissance (by Interconnects AI): <https://www.youtube.com/watch?v=YXTYbr3hiFU>;
 - Mindless data: <https://www.linkedin.com/pulse/mindless-data-paul-golding>;
 - TabPFN: <https://www.nature.com/articles/s41586-024-08328-6>;
 - Fonnesbeck & Wiecki- Probabilistic Programming and Bayesian Computing with PyMC | PyData London 2024: [youtube link](https://www.youtube.com/watch?v=99Rmi_CjqME);
@@ -27,7 +29,7 @@ Someone is doing the same thing with me: <https://www.ssp.sh/brain/>;
 - Causal Inference for The Brave and True: <https://matheusfacure.github.io/python-causality-handbook/landing-page.html>;
 - Causal Book: Design Pattern for Causal inference: <https://causalbook.com/>;
 - Bayesian Modeling and Computation in Python: <https://bayesiancomputationbook.com/>;
-- Forecasting: Principles and Practice (3rd ed): <https://otexts.com/fpp3/>;
+- Forecasting: Principles and Practice (3rd ed): <https://otexts.com/fpp3/> ([Blog](https://robjhyndman.com/hyndsight/) and [Github](https://github.com/robjhyndman>));
 - Gabors Data Analysis: <https://gabors-data-analysis.com/> (Github: <https://github.com/gabors-data-analysis/>);
 - Telling Stories with Data: <https://tellingstorieswithdata.com/>;
 - Applied Data Science for Credit Risk: <https://github.com/andrija-djurovic/adsfcr> (book not available for me);
@@ -58,7 +60,7 @@ Someone is doing the same thing with me: <https://www.ssp.sh/brain/>;
 - Demetri Pananos (Numbers, Letters, Sometimes Both): <https://dpananos.github.io/>;
 - MeyerPerin (AI): <https://meyerperin.org/>;
 - Quoc Pham (Data Scientist): <https://pbcquoc.github.io/>;
-- Advanced Applied Econometrics: <https://registrar.princeton.edu/course-offerings/course-details?term=1244&courseid=015253> ([Github](https://github.com/kolesarm/539b))
+- Advanced Applied Econometrics: <https://registrar.princeton.edu/course-offerings/course-details?term=1244&courseid=015253> ([Github](https://github.com/kolesarm/539b));
 - Learning Machines: <https://blog.ephorie.de/>;
 - `dplyr` with arrow: <https://jthomasmock.github.io/arrow-dplyr/#/>;
 
@@ -80,7 +82,7 @@ Someone is doing the same thing with me: <https://www.ssp.sh/brain/>;
 ### Math
 
 - T's Lab by NNTUAN: <https://nttuan.org/>;
-- Linear Algebra for Data Science: <https://kyunghyuncho.me/linear-algebra-for-data-science/>
+- Linear Algebra for Data Science: <https://kyunghyuncho.me/linear-algebra-for-data-science/>;
 
 ### Programming
 
@@ -129,7 +131,7 @@ Someone is doing the same thing with me: <https://www.ssp.sh/brain/>;
 - `ggplot2` extensions: <https://exts.ggplot2.tidyverse.org/gallery/>;
 - Nguyen Chi Dung (R, Grammar of Graphics): <https://rpubs.com/chidungkt>;
 - Python Graph Gallery: <https://python-graph-gallery.com/>;
-- Excel Chart Gallery: <https://sites.google.com/site/e90e50charts/excel-charts-gallery>
+- Excel Chart Gallery: <https://sites.google.com/site/e90e50charts/excel-charts-gallery>;
 - D3 Gallery: <https://docs.google.com/spreadsheets/d/18zB8uzA54nkcHoV-1cPwRwzOgqFixtC6Ee38-ugZeng>;
 - Mike Bostock (Author of [observablehq](https://observablehq.com/@mbostock/example-authors)): <https://bost.ocks.org/mike/>;
 - Michael Sandberg'S Data Visualization Blog: <https://datavizblog.com/>;
