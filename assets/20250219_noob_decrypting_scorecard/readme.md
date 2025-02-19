@@ -194,4 +194,5 @@ For eg.:
 ## Sources
 
 1. SAS Commumity: <https://communities.sas.com/t5/SAS-Communities-Library/A-n00b-s-Guide-to-Decrypting-Credit-Scoring/ta-p/943475>;
-2. StackExchange: <https://stats.stackexchange.com/questions/504883/how-to-convert-coefficients-of-logistic-regression-into-score-values-when-constr>.
+2. StackExchange: <https://stats.stackexchange.com/questions/504883/how-to-convert-coefficients-of-logistic-regression-into-score-values-when-constr>;
+3. StackExchange: <https://stats.stackexchange.com/questions/116033/regression-for-binary-classification/116056#116056>
