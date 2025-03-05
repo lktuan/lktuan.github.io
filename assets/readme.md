@@ -106,6 +106,7 @@ Someone is doing the same thing with me: <https://www.ssp.sh/brain/>;
 
 - Awesome Causal Inference: <https://github.com/matteocourthoud/awesome-causal-inference>;
 - Le Ngoc Kha Nhi (Biomedical Data Scientist): <https://www.lengockhanhi.com/> (Github: <https://nbviewer.org/github/kinokoberuji/>);
+- Causal Inference, A/B Testing by Svet Semov: <https://svetsemov.substack.com/p/validating-causal-models-is-hardbut>.
 
 ### Bayesian Modeling
 
