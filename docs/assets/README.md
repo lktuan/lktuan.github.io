@@ -4,8 +4,15 @@ This contains miscellaneous notes/workbooks serving learning which will not be r
 
 Someone is doing the same thing with me: <https://www.ssp.sh/brain/>;
 
+## Market Risk and Capital Management
+
+Since I am into the Market Risk, below are resources I found:
+
+- Carol Alexander and her book series: <https://www.coalexander.com/>
+
 ## Miscellaneous to
 
+- A very legacy blog of AI & Deep Learning: <https://distill.pub/>;
 - Portfolio Credit Risk (by Thomas C. Wilson): <https://www.newyorkfed.org/medialibrary/media/research/epr/98v04n3/9810wils.pdf>;
 - An Unexpected RL Renaissance (by Interconnects AI): <https://www.youtube.com/watch?v=YXTYbr3hiFU>;
 - Mindless data: <https://www.linkedin.com/pulse/mindless-data-paul-golding>;

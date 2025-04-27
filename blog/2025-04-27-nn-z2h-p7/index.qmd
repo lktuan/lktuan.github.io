@@ -1,0 +1,64 @@
+---
+title: "Let's build GPT, in code, spelled out!"
+description: "Build a Generatively Pretrained Transformer (GPT), following the paper 'Attention is All You Need' and OpenAI's GPT-2 / GPT-3"
+author:
+  - name: "Tuan Le Khac"
+    url: https://lktuan.github.io/
+categories: [til, python, andrej karpathy, nn-z2h, neural networks] 
+date: 04-27-2024
+date-modified: 04-27-2024
+image: attention.png
+draft: false
+format:
+  html:
+    code-overflow: wrap
+    code-tools: true
+    code-fold: show
+    code-annotations: hover
+execute:
+  eval: false
+---
+
+::: {.callout-important title="This is not orginal content!"}
+Long time no LLMs, past months struggled with job-search and personal stuffs distracted me from learning AI. No I am continuing my favorite AI series Neural Networks, from Zero to Hero by Andrej Karpathy.
+
+I will be learning to build a GPT from scratch. This is my note and hope I'll survive :)
+
+Links: <https://youtu.be/kCc8FmEb1nY?si=4Fa3EAjuTQ5UbOFk>
+:::
+
+# 1 intro: ChatGPT, Transformers, nanoGPT, Shakespeare
+# 2 baseline language modeling, code setup
+## 2.1 reading and exploring the data
+## 2.2 tokenization, train/val split
+## 2.3 data loader: batches of chunks of data
+## 2.4 simplest baseline: bigram language model, loss, generation
+## 2.5 training the bigram model
+## 2.6 port our code to a script
+# 3 Building the "self-attention"
+## 3.1 version 1: averaging past context with for loops, the weakest form of aggregation
+## 3.2 the trick in self-attention: matrix multiply as weighted aggregation
+## 3.3 version 2: using matrix multiply
+## 3.4 version 3: adding softmax
+## 3.5 minor code cleanup
+## 3.6 positional encoding
+## 3.7 THE CRUX OF THE VIDEO: version 4: self-attention
+## 3.8 note 1: attention as communication
+## 3.9 note 2: attention has no notion of space, operates over sets
+## 3.10 note 3: there is no communication across batch dimension
+## 3.11 note 4: encoder blocks vs. decoder blocks
+## 3.12 note 5: attention vs. self-attention vs. cross-attention
+## 3.13 note 6: "scaled" self-attention. why divide by sqrt(head_size)
+# 4 Building the Transformer
+## 4.1 inserting a single self-attention block to our network
+## 4.2 multi-headed self-attention
+## 4.3 feedforward layers of transformer block
+## 4.4 residual connections
+## 4.5 layernorm (and its relationship to our previous batchnorm)
+## 4.6 scaling up the model! creating a few variables. adding dropout
+# 5 Notes on Transformer
+## 5.1 encoder vs. decoder vs. both (?) Transformers
+## 5.2 super quick walkthrough of nanoGPT, batched multi-headed self-attention
+## 5.3 back to ChatGPT, GPT-3, pretraining vs. finetuning, RLHF
+## 5.4 conclusions
+# 6 resources
