@@ -12,6 +12,7 @@ Since I am into the Market Risk, below are resources I found:
 
 ## Miscellaneous to
 
+- Statistical ideas that changed the world: <https://ledaliang.github.io/journalclub/>;
 - Probabilistic Forecasting: <https://www.pymc-labs.com/blog-posts/probabilistic-forecasting/>;
 - Eigenvectors & Eigenvalues : <https://setosa.io/ev/eigenvectors-and-eigenvalues/>;
 - A very legacy blog of AI & Deep Learning: <https://distill.pub/>;
