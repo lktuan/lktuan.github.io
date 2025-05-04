@@ -12,7 +12,9 @@ Since I am into the Market Risk, below are resources I found:
 
 ## Miscellaneous to
 
-- Eigenvectors & Eigenvalues : <https://setosa.io/ev/eigenvectors-and-eigenvalues/>
+- Statistical ideas that changed the world: <https://ledaliang.github.io/journalclub/>;
+- Probabilistic Forecasting: <https://www.pymc-labs.com/blog-posts/probabilistic-forecasting/>;
+- Eigenvectors & Eigenvalues : <https://setosa.io/ev/eigenvectors-and-eigenvalues/>;
 - A very legacy blog of AI & Deep Learning: <https://distill.pub/>;
 - Portfolio Credit Risk (by Thomas C. Wilson): <https://www.newyorkfed.org/medialibrary/media/research/epr/98v04n3/9810wils.pdf>;
 - An Unexpected RL Renaissance (by Interconnects AI): <https://www.youtube.com/watch?v=YXTYbr3hiFU>;

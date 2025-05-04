@@ -6,7 +6,7 @@ author:
     url: https://lktuan.github.io/
 categories: [til, python, andrej karpathy, nn-z2h, neural networks] 
 date: 04-27-2025
-date-modified: 04-27-2025
+date-modified: 05-04-2025
 image: attention.jpg
 draft: false
 format:
@@ -27,11 +27,196 @@ I will be learning to build a GPT from scratch. This is my note and hope I'll su
 Links: <https://youtu.be/kCc8FmEb1nY?si=4Fa3EAjuTQ5UbOFk>
 :::
 
-# 1 intro: ChatGPT, Transformers, nanoGPT, Shakespeare
+# 1 intro: ChatGPT, Transformers, `nanoGPT`, Shakespeare
+
+- ChatGPT (GPT stands for Generative Pre-trained Transformer) is a *probabilistic* system that for anyone's prompt it can give us multiple answers.
+It models sequence of words (or token) and tries to predict the next word to complete the prompt we give;
+- Transformers, proposed by Vaswani et al. in the landmark paper "Attention is All You Need" back in 2017, is an architecture that did all those heavy lifting under the hood of ChatGPT;
+- `nanoGPT` is "the simplest, fastest repository for training/finetuning medium-sized GPTs" written as a side project by Andrej. We gonna follow this code structure in this lecture, but will not rebuild the whole 124M params GPT-2;
+- Shakespearse tiny dataset will be the text data that we'll be working on.
+
 # 2 baseline language modeling, code setup
+
 ## 2.1 reading and exploring the data
+
+The *tinyshakepeare* dataset contains 1,115,394 characters, here are the first 1000 ones look like:
+
+```text
+First Citizen:
+Before we proceed any further, hear me speak.
+
+All:
+Speak, speak.
+
+First Citizen:
+You are all resolved rather to die than to famish?
+
+All:
+Resolved. resolved.
+
+First Citizen:
+First, you know Caius Marcius is chief enemy to the people.
+
+All:
+We know't, we know't.
+
+First Citizen:
+Let us kill him, and we'll have corn at our own price.
+Is't a verdict?
+
+All:
+No more talking on't; let it be done: away, away!
+
+Second Citizen:
+One word, good citizens.
+
+First Citizen:
+We are accounted poor citizens, the patricians good.
+What authority surfeits on would relieve us: if they
+would yield us but the superfluity, while it were
+wholesome, we might guess they relieved us humanely;
+but they think we are too dear: the leanness that
+afflicts us, the object of our misery, is as an
+inventory to particularise their abundance; our
+sufferance is a gain to them Let us revenge this with
+our pikes, ere we become rakes: for the gods know I
+speak this in hunger for bread, not in thirst for revenge.
+```
+
+In contains 65 different characters, the first one was *space*:
+
+```md
+ !$&',-.3:;?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+```
+
+This list of characters can be call the *dictionary*, same with previous lectures, we create mapping from characters to integers/indicesindices `stoi` and vice versa `itos`.
+
 ## 2.2 tokenization, train/val split
-## 2.3 data loader: batches of chunks of data
+
+The two functions `encode` and `decode` can let us transition from string (for human reading) to number (for machine reading) and vice versa.
+
+```python
+print(encode("hii there"))
+print(decode(encode("hii there")))
+```
+```js
+[46, 47, 47, 1, 58, 46, 43, 56, 43]
+hii there
+```
+
+This is a very simple *tokenization and detokenization*, there are more complex/effective ones out there in the industry, for eg., [SentencePiece](https://github.com/google/sentencepiece) by Google, and [tiktoken](https://github.com/openai/tiktoken) by OpenAI, which implement more sophisticated paradigm like [BPE](https://aclanthology.org/P16-1162/).
+
+Then use this set of utility we can convert our dataset to PyTorch tensor:
+
+```python
+import torch # we use PyTorch: https://pytorch.org
+data = torch.tensor(encode(text), dtype=torch.long)
+print(data.shape, data.dtype)
+print(data[:100]) # the first 100 characters we looked at earier will to the GPT look like this
+```
+```js
+torch.Size([1115394]) torch.int64
+tensor([18, 47, 56, 57, 58,  1, 15, 47, 58, 47, 64, 43, 52, 10,  0, 14, 43, 44,
+        53, 56, 43,  1, 61, 43,  1, 54, 56, 53, 41, 43, 43, 42,  1, 39, 52, 63,
+         1, 44, 59, 56, 58, 46, 43, 56,  6,  1, 46, 43, 39, 56,  1, 51, 43,  1,
+        57, 54, 43, 39, 49,  8,  0,  0, 13, 50, 50, 10,  0, 31, 54, 43, 39, 49,
+         6,  1, 57, 54, 43, 39, 49,  8,  0,  0, 18, 47, 56, 57, 58,  1, 15, 47,
+        58, 47, 64, 43, 52, 10,  0, 37, 53, 59])
+```
+
+Finally for the very first pre-processing we want to use the last 10% of out dataset as the validation/development split. We dont want to build a model that mimick the Shakepeare's tone, we want it to be generative/creative.
+
+```python
+n = int(0.9*len(data)) # first 90% will be train, rest val
+train_data = data[:n]
+val_data = data[n:]
+```
+
+## 2.3 data loader, batches of chunks of data
+
+Now the idea of our character-level language model is to predict the next character(s) given a sequence of characters, with a certain maximum length, not the whole previous part of the dataset. Same with previos lecture, we can set it (`block_size`, or `context_length`) to *8*.
+
+And the second constraint that we want to setup is the *batch size* of chunk that we feed to the *transformer*, it will reduce the cost of calculation while retain the efficiency of training. You can imagine the `context` and `target` like this:
+
+```python
+torch.manual_seed(1337)
+batch_size = 4 # how many independent sequences will we process in parallel?
+block_size = 8 # what is the maximum context length for predictions?
+
+def get_batch(split):
+    # generate a small batch of data of inputs x and targets y
+    data = train_data if split == 'train' else val_data
+    ix = torch.randint(len(data) - block_size, (batch_size,))
+    x = torch.stack([data[i:i+block_size] for i in ix])
+    y = torch.stack([data[i+1:i+block_size+1] for i in ix])
+    return x, y
+
+xb, yb = get_batch('train')
+print('inputs:')
+print(xb.shape)
+print(xb)
+print('targets:')
+print(yb.shape)
+print(yb)
+
+print('----')
+
+for b in range(batch_size): # batch dimension
+    for t in range(block_size): # time dimension
+        context = xb[b, :t+1]
+        target = yb[b,t]
+        print(f"when input is {context.tolist()} the target: {target}")
+```
+```js
+inputs:
+torch.Size([4, 8])
+tensor([[24, 43, 58,  5, 57,  1, 46, 43],
+        [44, 53, 56,  1, 58, 46, 39, 58],
+        [52, 58,  1, 58, 46, 39, 58,  1],
+        [25, 17, 27, 10,  0, 21,  1, 54]])
+targets:
+torch.Size([4, 8])
+tensor([[43, 58,  5, 57,  1, 46, 43, 39],
+        [53, 56,  1, 58, 46, 39, 58,  1],
+        [58,  1, 58, 46, 39, 58,  1, 46],
+        [17, 27, 10,  0, 21,  1, 54, 39]])
+----
+when input is [24] the target: 43
+when input is [24, 43] the target: 58
+when input is [24, 43, 58] the target: 5
+when input is [24, 43, 58, 5] the target: 57
+when input is [24, 43, 58, 5, 57] the target: 1
+when input is [24, 43, 58, 5, 57, 1] the target: 46
+when input is [24, 43, 58, 5, 57, 1, 46] the target: 43
+when input is [24, 43, 58, 5, 57, 1, 46, 43] the target: 39
+when input is [44] the target: 53
+when input is [44, 53] the target: 56
+when input is [44, 53, 56] the target: 1
+when input is [44, 53, 56, 1] the target: 58
+when input is [44, 53, 56, 1, 58] the target: 46
+when input is [44, 53, 56, 1, 58, 46] the target: 39
+when input is [44, 53, 56, 1, 58, 46, 39] the target: 58
+when input is [44, 53, 56, 1, 58, 46, 39, 58] the target: 1
+when input is [52] the target: 58
+when input is [52, 58] the target: 1
+when input is [52, 58, 1] the target: 58
+when input is [52, 58, 1, 58] the target: 46
+when input is [52, 58, 1, 58, 46] the target: 39
+when input is [52, 58, 1, 58, 46, 39] the target: 58
+when input is [52, 58, 1, 58, 46, 39, 58] the target: 1
+when input is [52, 58, 1, 58, 46, 39, 58, 1] the target: 46
+when input is [25] the target: 17
+when input is [25, 17] the target: 27
+when input is [25, 17, 27] the target: 10
+when input is [25, 17, 27, 10] the target: 0
+when input is [25, 17, 27, 10, 0] the target: 21
+when input is [25, 17, 27, 10, 0, 21] the target: 1
+when input is [25, 17, 27, 10, 0, 21, 1] the target: 54
+when input is [25, 17, 27, 10, 0, 21, 1, 54] the target: 39
+```
+
+**19.46**
+
 ## 2.4 simplest baseline: bigram language model, loss, generation
 ## 2.5 training the bigram model
 ## 2.6 port our code to a script
@@ -62,3 +247,7 @@ Links: <https://youtu.be/kCc8FmEb1nY?si=4Fa3EAjuTQ5UbOFk>
 ## 5.3 back to ChatGPT, GPT-3, pretraining vs. finetuning, RLHF
 ## 5.4 conclusions
 # 6 resources
+
+- Colab notebook: <https://colab.research.google.com/drive/1JMLa53HDuA-i7ZBmqV7ZnA3c_fvtXnx-?usp=sharing>;
+- `nanoGPT`: <https://github.com/karpathy/nanoGPT>;
+- TinyShakepeare dataset: <https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt>;
