@@ -215,9 +215,81 @@ when input is [25, 17, 27, 10, 0, 21, 1] the target: 54
 when input is [25, 17, 27, 10, 0, 21, 1, 54] the target: 39
 ```
 
-**19.46**
-
 ## 2.4 simplest baseline: bigram language model, loss, generation
+
+We'll go into the most simplest thing in the realm of NLP - the `bigram` language model ~ where the next character is predicted based on 1 single previous character.
+
+Below we are constructing a child class of `nn.Module` which is a `bigram` language model under a `vocab_size` = 65 language space. The state of the model is presented by `token_embedding_table` ~ how it thinks about the next character given one.
+
+We constructed a `loss` function based on `cross_entropy` to quantify the quality of the model, and also implemented a `generate` function to sample from the model.
+
+
+```python
+#| code-fold: true
+import torch
+import torch.nn as nn
+from torch.nn import functional as F
+torch.manual_seed(1337)
+
+class BigramLanguageModel(nn.Module):
+
+    def __init__(self, vocab_size):
+        super().__init__()
+        # each token directly reads off the logits for the next token from a lookup table
+        self.token_embedding_table = nn.Embedding(vocab_size, vocab_size)
+        # 26x26 2D Tensor, represents possibility of each char right after a char.
+
+    def forward(self, idx, targets=None):
+
+        # idx and targets are both (B,T) tensor of integers
+        logits = self.token_embedding_table(idx) # (B,T,C)
+        # (Batch = 4,Time = 8,Channel = 65)
+
+        if targets is None:
+            loss = None
+        else:
+            B, T, C = logits.shape
+            logits = logits.view(B*T, C) # stretch this out of Time dimension
+            targets = targets.view(B*T)
+            loss = F.cross_entropy(logits, targets)
+            # https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.cross_entropy.html
+            # C = number of classes
+            # B or N = Batch size
+
+        return logits, loss
+
+    def generate(self, idx, max_new_tokens):
+        # idx is (B, T) array of indices in the current context
+        for _ in range(max_new_tokens):
+            # get the predictions
+            logits, loss = self(idx)
+            # focus only on the last time step
+            logits = logits[:, -1, :] # becomes (B, C)
+            # apply softmax to get probabilities
+            probs = F.softmax(logits, dim=-1) # (B, C)
+            # sample from the distribution
+            idx_next = torch.multinomial(probs, num_samples=1) # (B, 1)
+            # append sampled index to the running sequence
+            idx = torch.cat((idx, idx_next), dim=1) # (B, T+1)
+        return idx
+
+m = BigramLanguageModel(vocab_size)
+logits, loss = m(xb, yb)
+print(logits.shape)
+print(loss)
+
+print(decode(m.generate(idx = torch.zeros((1, 1), dtype=torch.long), max_new_tokens=100)[0].tolist()))
+```
+```js
+torch.Size([32, 65])
+tensor(4.8786, grad_fn=<NllLossBackward0>)
+
+SKIcLT;AcELMoTbvZv C?nq-QE33:CJqkOKH-q;:la!oiywkHjgChzbQ?u!3bLIgwevmyFJGUGp
+wnYWmnxKWWev-tDqXErVKLgJ
+```
+
+The sampling is garbage, since our model are in a completely random state right now - the loss is `4.88` which is near to probability of each character in the `vocab_size` space (`1/65`). We are going to train the model!
+
 ## 2.5 training the bigram model
 ## 2.6 port our code to a script
 # 3 Building the "self-attention"
