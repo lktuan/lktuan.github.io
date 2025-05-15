@@ -6,7 +6,7 @@
 render:
 	@echo "Rendering all documents"
 	quarto render
-	
+# 	quarto render 学汉语的日记.qmd
 render_main:
 	@echo "Preparing rendering main files"
 	quarto render index.qmd
@@ -14,7 +14,6 @@ render_main:
 	quarto render curriculum\index.qmd
 	quarto render curriculum\resume\index.qmd
 	quarto render blog.qmd
-	quarto render 学汉语的日记.qmd
 	quarto render jiu_jitsu_journal\index.qmd
 	quarto render 404.qmd
 	@echo "Major change process completed."
