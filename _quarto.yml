@@ -5,6 +5,12 @@ project:
   type: website
   output-dir: docs
 
+  render:
+    - "*.qmd"
+    # - "*.md" # avoiding arbitrarily render .md files 1st June'25
+    # - "!etc/"
+    - "!assets/"
+
   resources:
     - "img/**"
     - "assets/**"
@@ -12,17 +18,11 @@ project:
     # - "sitemap.xml"
     # - "_redirects"
 
-  preview: 
+  preview:
     port: 22222
     browser: true
     watch-inputs: true
     navigate: true
-
-render:
-  - "*.qmd"
-  - "*.md"
-  - "!etc/"
-  - "!assets/"
 
 title-meta: "Le Khac Tuan"
 description-meta: "This is Tuan's blog"
@@ -31,7 +31,7 @@ website:
   title: "Le Khac Tuan"
   description: "This is Tuan's blog"
   site-url: "https://lktuan.github.io/"
-  
+
   repo-url: "https://github.com/lktuan/lktuan.github.io"
   repo-branch: main
 
@@ -72,14 +72,14 @@ website:
         href: https://www.youtube.com/@tuan_lekhac
       - icon: envelope
         # text: Email
-        href: "mailto:tuan.lekhac0905@gmail.com"   
+        href: "mailto:tuan.lekhac0905@gmail.com"
 
 # Don't touch unless you know what you are doing :) ------------
-  search: 
+  search:
     location: navbar
     type: textbox
 
-  page-footer: 
+  page-footer:
     left: |
       <span class="faux-block">[{{< fa brands creative-commons >}}](https://creativecommons.org/licenses/by-nc-nd/4.0/) 2023-2025 Le Khac Tuan</span>
     center: |
@@ -92,12 +92,13 @@ website:
 format:
   html:
     fontsize: 1.0em
-    grid: 
+    grid:
       body-width: 900px
-    theme: 
+    theme:
       # - html/styles.scss
       light: simplex
-      dark: superhero
+      dark: cyborg
+      # dark: superhero
     toc: false
     code-link: true
     anchor-sections: true
@@ -116,4 +117,3 @@ editor: source
 
 execute:
   freeze: true
-  

@@ -4,7 +4,7 @@ description: "Become swole doge: build a 2-layer MLP and deep dive to how gradie
 author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
-categories: [til, python, andrej karpathy, nn-z2h, neural networks, backpropagation] 
+categories: [til, python, andrej karpathy, nn-z2h, neural networks, backpropagation]
 date: 12-02-2024
 date-modified: 12-03-2024
 image: backprop_ninja.jpg
@@ -21,6 +21,8 @@ format:
 
 ::: {.callout-important title="This is not orginal content!"}
 This is my study notes / codes along with Andrej Karpathy's "[Neural Networks: Zero to Hero](https://www.youtube.com/watch?v=VMj-3S1tku0&list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ)" series.
+
+*Edit 1st June, 25*: I changed the loop to 5k only, for the shake of time saving when re-rendering this post!
 :::
 
 # intro: why you should care
@@ -224,13 +226,13 @@ Given the matrix mult expression $d = a @ b + c$, we have:
 -   $\frac{\partial L}{\partial \mathbf{c}} = \frac{\partial L}{\partial \mathbf{d}}.sum(0)$
 
 ```{python}
-# Exercise 1: backprop through the whole thing manually, 
-# backpropagating through exactly all of the variables 
+# Exercise 1: backprop through the whole thing manually,
+# backpropagating through exactly all of the variables
 # as they are defined in the forward pass above, one by one
 print("Cross entropy loss".upper())
 dlogprobs = torch.zeros_like(logprobs) # create zeros tensor with same size
 dlogprobs[range(n), Yb] = - 1.0 / n # <1>
-dprobs = torch.zeros_like(probs) 
+dprobs = torch.zeros_like(probs)
 dprobs = (1.0 / probs) * dlogprobs # <2>
 dcounts_sum_inv = (counts * dprobs).sum(1, keepdim=True) # <3>
 dcounts_sum = (-1 * counts_sum**-2) * dcounts_sum_inv
@@ -247,7 +249,7 @@ cmp('norm_logits', dnorm_logits, norm_logits)
 cmp('logit_maxes', dlogit_maxes, logit_maxes)
 
 
-dlogits = (dnorm_logits.clone() 
+dlogits = (dnorm_logits.clone()
           + F.one_hot( logits.max(1).indices, # broadcasting, again
                         num_classes=logits.shape[1]
                         ) * dlogit_maxes) # <5>
@@ -508,7 +510,7 @@ for p in parameters:
   p.requires_grad = True
 
 # same optimization as last time
-max_steps = 200000
+max_steps = 5_000 #200_000
 batch_size = 32
 n = batch_size # convenience
 lossi = []
@@ -646,14 +648,14 @@ Sample from model:
 g = torch.Generator().manual_seed(2147483647 + 10)
 
 for _ in range(20):
-    
+
     out = []
     context = [0] * block_size # initialize with all ...
     while True:
       # ------------
       # forward pass:
       # Embedding
-      emb = C[torch.tensor([context])] # (1,block_size,d)      
+      emb = C[torch.tensor([context])] # (1,block_size,d)
       embcat = emb.view(emb.shape[0], -1) # concat into (N, block_size * n_embd)
       hpreact = embcat @ W1 + b1
       hpreact = bngain * (hpreact - bnmean) * (bnvar + 1e-5)**-0.5 + bnbias
@@ -667,7 +669,7 @@ for _ in range(20):
       out.append(ix)
       if ix == 0:
         break
-    
+
     print(''.join(itos[i] for i in out))
 ```
 

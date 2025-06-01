@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.554">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2024-04-24">
 <meta name="description" content="This is Tuan’s blog">
 
-<title>Le Khac Tuan - Kinh tế lượng với Julia 1: Làm quen với Julia</title>
+<title>Kinh tế lượng với Julia 1: Làm quen với Julia – Le Khac Tuan</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -36,7 +36,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -72,12 +72,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-8e54dfbe729680b42f22c627ac27a053.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-81b089a3b74ed4cf194f083418e7130b.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-9c2a019491df1b80457f29630b20db86.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-415fe45a6e5aa69fa2de9655fe838319.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -129,7 +129,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -177,13 +177,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@tuan_lekhac"> <i class="bi bi-youtube" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
     <a class="nav-link" href="mailto:tuan.lekhac0905@gmail.com"> <i class="bi bi-envelope" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
       </div> <!-- /container-fluid -->
@@ -200,9 +205,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">QEJ</div>
-                <div class="quarto-category">Julia</div>
-                <div class="quarto-category">Quant Econ</div>
+                <div class="quarto-category">qej</div>
+                <div class="quarto-category">julia</div>
               </div>
                   </div>
   </div>
@@ -787,18 +791,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -830,7 +823,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
   const viewSource = window.document.getElementById('quarto-view-source') ||
                      window.document.getElementById('quarto-code-tools-source');
   if (viewSource) {
@@ -889,7 +902,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -986,7 +999,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
@@ -1220,14 +1232,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb18-6"><a href="#cb18-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
 <span id="cb18-7"><a href="#cb18-7"></a><span class="an">date:</span><span class="co"> 04-24-2024</span></span>
 <span id="cb18-8"><a href="#cb18-8"></a><span class="an">date-modified:</span><span class="co"> 04-24-2024</span></span>
-<span id="cb18-9"><a href="#cb18-9"></a><span class="an">categories:</span><span class="co"> [QEJ, Julia, Quant Econ] # self-defined categories</span></span>
-<span id="cb18-10"><a href="#cb18-10"></a><span class="co"># citation: </span></span>
+<span id="cb18-9"><a href="#cb18-9"></a><span class="an">categories:</span><span class="co"> [qej, julia] # self-defined categories</span></span>
+<span id="cb18-10"><a href="#cb18-10"></a><span class="co"># citation:</span></span>
 <span id="cb18-11"><a href="#cb18-11"></a><span class="co">#   url: https://github.com/lktuan/lktuan.github.io/blog/2023-12-24_post/</span></span>
 <span id="cb18-12"><a href="#cb18-12"></a><span class="an">image:</span><span class="co"> julia_logo.jpg</span></span>
 <span id="cb18-13"><a href="#cb18-13"></a><span class="an">draft:</span><span class="co"> false # setting this to `true` will prevent your post from appearing on your listing page until you're ready!</span></span>
 <span id="cb18-14"><a href="#cb18-14"></a></span>
-<span id="cb18-15"><a href="#cb18-15"></a><span class="an">format:</span><span class="co"> </span></span>
-<span id="cb18-16"><a href="#cb18-16"></a><span class="co">  html: </span></span>
+<span id="cb18-15"><a href="#cb18-15"></a><span class="an">format:</span></span>
+<span id="cb18-16"><a href="#cb18-16"></a><span class="co">  html:</span></span>
 <span id="cb18-17"><a href="#cb18-17"></a><span class="co">    code-fold: true</span></span>
 <span id="cb18-18"><a href="#cb18-18"></a><span class="co">    code-summary: "Show the code"</span></span>
 <span id="cb18-19"><a href="#cb18-19"></a><span class="co">    code-line-numbers: true</span></span>
@@ -1313,12 +1325,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb18-111"><a href="#cb18-111"></a><span class="in">#   ≡≡≡≡≡≡≡≡≡≡</span></span>
 <span id="cb18-112"><a href="#cb18-112"></a></span>
 <span id="cb18-113"><a href="#cb18-113"></a><span class="in">#   julia&gt; a = 1//2;</span></span>
-<span id="cb18-114"><a href="#cb18-114"></a><span class="in">  </span></span>
+<span id="cb18-114"><a href="#cb18-114"></a></span>
 <span id="cb18-115"><a href="#cb18-115"></a><span class="in">#   julia&gt; typeof(a)</span></span>
 <span id="cb18-116"><a href="#cb18-116"></a><span class="in">#   Rational{Int64}</span></span>
-<span id="cb18-117"><a href="#cb18-117"></a><span class="in">  </span></span>
+<span id="cb18-117"><a href="#cb18-117"></a></span>
 <span id="cb18-118"><a href="#cb18-118"></a><span class="in">#   julia&gt; M = [1 2; 3.5 4];</span></span>
-<span id="cb18-119"><a href="#cb18-119"></a><span class="in">  </span></span>
+<span id="cb18-119"><a href="#cb18-119"></a></span>
 <span id="cb18-120"><a href="#cb18-120"></a><span class="in">#   julia&gt; typeof(M)</span></span>
 <span id="cb18-121"><a href="#cb18-121"></a><span class="in">#   Matrix{Float64} (alias for Array{Float64, 2})</span></span>
 <span id="cb18-122"><a href="#cb18-122"></a><span class="in">```</span></span>
@@ -1327,7 +1339,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb18-125"><a href="#cb18-125"></a></span>
 <span id="cb18-128"><a href="#cb18-128"></a><span class="in">```{julia}</span></span>
 <span id="cb18-129"><a href="#cb18-129"></a><span class="in"># poor style</span></span>
-<span id="cb18-130"><a href="#cb18-130"></a><span class="in">n = 100 </span></span>
+<span id="cb18-130"><a href="#cb18-130"></a><span class="in">n = 100</span></span>
 <span id="cb18-131"><a href="#cb18-131"></a><span class="in">ep = zeros(n) # create an array with 0.0 as initial value</span></span>
 <span id="cb18-132"><a href="#cb18-132"></a><span class="in">for i in 1:n # the index is looped for all 1:n, but none vector of those indices is created.</span></span>
 <span id="cb18-133"><a href="#cb18-133"></a><span class="in">    ep[i] = randn()</span></span>
@@ -1423,22 +1435,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb18-233"><a href="#cb18-233"></a><span class="fu">## 2.3. Data and Statistics Packages</span></span>
 <span id="cb18-234"><a href="#cb18-234"></a></span>
 <span id="cb18-235"><a href="#cb18-235"></a><span class="fu">## 2.4. Solvers, Optimizers, and Automatic Differentiation</span></span>
-</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2024 Le Khac Tuan</span></p>
+<p><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2025 Le Khac Tuan</span></p>
 </div>   
     <div class="nav-footer-center">
-<p><span class="faux-block">Designed with <i class="fa-solid fa-heart" aria-label="heart"></i></span></p>
+<p><span class="faux-block"> Designed with <i class="fa-solid fa-heart" aria-label="heart"></i>, <span id="commit-info">Loading last commit…</span> </span></p>
 </div>
     <div class="nav-footer-right">
 <p><span class="faux-block">Made with <a href="https://quarto.org/">Quarto</a></span></p>
 </div>
   </div>
 </footer>
+<script type="application/javascript" src="commit_info.js"></script>
 
 
 

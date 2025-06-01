@@ -6,37 +6,38 @@ author:
     url: https://lktuan.github.io/
 date: 06-05-2024
 date-modified: 07-03-2024
-categories: [data quality, name convention, controlled vocabulary, metadata] 
+categories: [data quality]
 image: pepe.jpg
 draft: false
-format: 
-  html: 
+format:
+  html:
     code-fold: false
     code-summary: "Show the code"
     code-line-numbers: true
-css: html/styles.scss
+# css: html/styles.scss
 fig-cap-location: bottom
-editor: visual
+# editor: visual
 ---
-:::{.callout-note name="Edit"}
+
+::: {.callout-note name="Edit"}
 Các bạn cũng có thể xem thêm slide về dbtplyr của Emily trong posit::conf ở [đây](https://www.emilyriederer.com/talk/dbtplyr/).
 :::
 
-----------
+------------------------------------------------------------------------
 
 Đây là keynote từ article [Column Names as Contracts](https://emilyriederer.netlify.app/post/column-name-contracts/) của [Emily Riederer](https://emilyriederer.netlify.app/about).
 
 Các sản phẩm phần mềm luôn tuân theo một quy ước nhất định (về hình ảnh, ký tự) nhằm để người dùng có thể ngay lập tức nắm bắt được cách thức sử dụng, giao tiếp với nó. Ví dụ, nút Home thường sẽ đưa người dùng về trang chủ của một mobile app, nút "blog" trên blog của tôi sẽ đưa các bạn tiếp cận danh mục bài viết, etc. Ở layer phía sau, các API được BE viết cần tuân thủ documented inputs & outputs, để các BE khác hay FE có thể sử dụng.
 
-Tuy nhiên các bảng dữ liệu lại nằm ở một vùng màu xám không rõ ràng. Data service (từ producer i.e DE -> user i.e DA, DS) đủ tĩnh để không được xem là normal service, nhưng cũng đủ thô để người ta ít chú ý đến nó về mặt giao diện. DE cứ thể lấy hết mọi dữ liệu trong hệ thống, DA nhìn dữ liệu và ngay lập tức giả định được nội dung của (cột) dữ liệu đó.
+Tuy nhiên các bảng dữ liệu lại nằm ở một vùng màu xám không rõ ràng. Data service (từ producer i.e DE -\> user i.e DA, DS) đủ tĩnh để không được xem là normal service, nhưng cũng đủ thô để người ta ít chú ý đến nó về mặt giao diện. DE cứ thể lấy hết mọi dữ liệu trong hệ thống, DA nhìn dữ liệu và ngay lập tức giả định được nội dung của (cột) dữ liệu đó.
 
 > Producers wonder why consumers aren’t satisfied, and consumers wonder why the data is never “right”.
 
 Cũng có một cách được nhiều tổ chức sử dụng như là Metadata managament, như:
 
-- Lyft’s [Amundsen](https://eng.lyft.com/amundsen-lyfts-data-discovery-metadata-engine-62d27254fbb9)
-- LinkedIn’s [DataHub](https://www.linkedin.com/blog/engineering/archive/data-hub)
-- Netflix’s [Metacat](https://netflixtechblog.com/building-and-scaling-data-lineage-at-netflix-to-improve-data-infrastructure-reliability-and-1a52526a7977)
+-   Lyft’s [Amundsen](https://eng.lyft.com/amundsen-lyfts-data-discovery-metadata-engine-62d27254fbb9)
+-   LinkedIn’s [DataHub](https://www.linkedin.com/blog/engineering/archive/data-hub)
+-   Netflix’s [Metacat](https://netflixtechblog.com/building-and-scaling-data-lineage-at-netflix-to-improve-data-infrastructure-reliability-and-1a52526a7977)
 
 Tuy nhiên giải pháp này là documentation oriented, producer và user đều phải tuân thủ nghiêm ngặt. Nó không *trực diện* khi DE đặt tên cột, hay DA đọc dữ liệu.
 
@@ -49,20 +50,21 @@ CV là phương pháp sử dụng một tập hợp các từ, cụm từ, từ 
 Ví dụ, 1 ứng dụng booking.
 
 ## Level 1: Kiểu dữ liệu, kiểu đo lường
-- `ID`: chỉ đối tượng, dạng numberic, tối ưu cho việc lưu trữ và thường làm khóa chính các bảng'
-- `IND`: giá trị boolean 0/1, tôi thì thường sử dụng các từ như `IS`, `FLAG`;
-- `N`: chỉ các dạng thông tin *có thể đếm (count)* được;
-- `AMT`: chỉ các dạng thông tin có thể tổng, thường đề cập đến *currency*;
-- `VAL`: cũng là số nhưng không thể tổng được (không có ý nghĩa), ví dụ như *kinh độ*, *vĩ độ*;
-- `DT`: ngày;
-- `TM`: giờ hoặc ngày giờ;
-- `CAT`: category
+
+-   `ID`: chỉ đối tượng, dạng numberic, tối ưu cho việc lưu trữ và thường làm khóa chính các bảng'
+-   `IND`: giá trị boolean 0/1, tôi thì thường sử dụng các từ như `IS`, `FLAG`;
+-   `N`: chỉ các dạng thông tin *có thể đếm (count)* được;
+-   `AMT`: chỉ các dạng thông tin có thể tổng, thường đề cập đến *currency*;
+-   `VAL`: cũng là số nhưng không thể tổng được (không có ý nghĩa), ví dụ như *kinh độ*, *vĩ độ*;
+-   `DT`: ngày;
+-   `TM`: giờ hoặc ngày giờ;
+-   `CAT`: category
 
 Cũng tùy vào dữ liệu, có thể thêm các cụm từ nhất định đề đề cập đến thông tin dữ liệu đó mang lại, ví dụ `ADD` cho address.
 
 ## Level 2: Đối tượng, chủ đề
 
-Mối quan tâm của người dùng dữ liệu cũng giống như nhà quản trị, xung quanh các đối tượng của business: `USER`, `TRANSACTION`, etc. 
+Mối quan tâm của người dùng dữ liệu cũng giống như nhà quản trị, xung quanh các đối tượng của business: `USER`, `TRANSACTION`, etc.
 
 Đối với ứng dụng đặt xe, các chủ thể có thể cần quan tâm là `TRIP`, `TRAVELER`, `ACCOMODATION`, `TRANSPORTATION`, etc.
 
@@ -70,13 +72,13 @@ Mối quan tâm của người dùng dữ liệu cũng giống như nhà quản 
 
 Hai tầng trên về cơ bản đã cho phép chúng ta mô tả được cột thông tin, chúng đều thể hiện được thuộc tính của chủ thể. Ví dụ:
 
-- `AMT_TRIP`: giá trị deal của Trip;
-- `ADD_DESTINATION`: Điểm đến của trip.
+-   `AMT_TRIP`: giá trị deal của Trip;
+-   `ADD_DESTINATION`: Điểm đến của trip.
 
 Tuy nhiên tùy vào từng use case, chúng ta hoàn toàn có thể mở rộng được về cả hai phía. Ví dụ:
 
-- Về phía trước: khi làm việc với nhiều layer dữ liệu, ta có thể dùng `RAW`, `STAGING`, `DW`, `DL`, `DM`, etc  
-- Về phía sau: `DAY` hoặc `MONTH` cho `N_DURATION`, `VND` hoặc `USD` cho currency `AMT`. 
+-   Về phía trước: khi làm việc với nhiều layer dữ liệu, ta có thể dùng `RAW`, `STAGING`, `DW`, `DL`, `DM`, etc\
+-   Về phía sau: `DAY` hoặc `MONTH` cho `N_DURATION`, `VND` hoặc `USD` cho currency `AMT`.
 
 Miễn là có một quy chuẩn, và nó đủ đơn giản để sử dụng.
 
@@ -85,6 +87,7 @@ Miễn là có một quy chuẩn, và nó đủ đơn giản để sử dụng.
 Tất nhiên ràng buộc việc đặt tên như vậy không chỉ để trang trí, nó sẽ giúp chúng ta tự động hóa quy trình kiểm soát chất lượng dữ liệu, .
 
 Tôi sử dụng [bộ dữ liệu](https://www.kaggle.com/datasets/rkiattisak/traveler-trip-data) này để thực hành (cột dữ liệu đã được đổi tên).
+
 ```{r}
 #| eval: true # Do evaluate this chunk
 #| echo: false # Do show this chunk in the final rendered document
@@ -106,8 +109,8 @@ Sử dụng `pointblank` của R để kiếm tra một số tính chất của 
 library(pointblank)
 
 agent <-
-  trip_data  %>% 
-  create_agent(actions = action_levels(stop_at = 0.001)) %>% 
+  trip_data  %>%
+  create_agent(actions = action_levels(stop_at = 0.001)) %>%
   col_vals_gte(starts_with("N"), 0) %>% # check if cols start with N is GTE 0 or not
   col_vals_gte(starts_with("VAL"), 0) %>% # check if cols start with VAL is GTE 0 or not
   col_vals_not_null(starts_with("IND")) %>% # check if cols start with IND contain Null or not
@@ -116,27 +119,28 @@ agent <-
   interrogate()
 ```
 
-:::{.column-margin}
+::: column-margin
 Note: To type `pipe` operator in VS Code, use this in the `keybindings.json` file:
-```json
+
+``` json
 {
-  "key": "Ctrl+Shift+m",             
-  "command": "type", 
+  "key": "Ctrl+Shift+m",
+  "command": "type",
   "args": { "text": " %>% " },
-  "when": "editorTextFocus 
-            && !editorHasSelection 
-            && editorLangId 
-            == 'quarto'" 
+  "when": "editorTextFocus
+            && !editorHasSelection
+            && editorLangId
+            == 'quarto'"
 }
 ```
+
 Then you can get the `pipe` when type `Ctrl + Shift + M`.
 :::
-
-
 
 ```{r}
 agent
 ```
+
 Cool! Không chỉ kiểm tra được tính đúng đắn của dữ liệu, cũng có thể xác định được biến nào không tuân theo quy tắc đặt tên.
 
 # Data Discoverability
@@ -153,21 +157,26 @@ head(cols_components)
 ```
 
 Đây là một cách để xây dựng metadata, chúng ta có thể touch một cách interactive với:
+
 ```{r}
 library(DT)
 datatable(cols_components,  filter = list(position = 'top', clear = FALSE))
 ```
+
 Cũng có thể visualize thành một tree như bên dưới:
+
 ```{r}
 library(collapsibleTree)
-collapsibleTree(cols_components, 
+collapsibleTree(cols_components,
                 hierarchy = paste0("level", 1:2),
                 nodeSize = "leafCount"
                 )
 ```
-Đây là cách xem từ kiểu dữ liệu -> chủ thể, chúng ta cũng có thể làm ngược lại:
+
+Đây là cách xem từ kiểu dữ liệu -\> chủ thể, chúng ta cũng có thể làm ngược lại:
+
 ```{r}
-collapsibleTree(cols_components, 
+collapsibleTree(cols_components,
                 hierarchy = paste0("level", c(2,1)),
                 nodeSize = "leafCount"
                 )
@@ -183,18 +192,19 @@ Tương tự, với việc sử dụng một bộ từ điển có hệ thống,
 library(dplyr)
 trip_data <- as.data.frame(trip_data)
 trip_data %>%
-  filter(if_any(everything(), ~ !is.na(.))) %>% 
+  filter(if_any(everything(), ~ !is.na(.))) %>%
   group_by(CAT_TRAVELER_NATIONALITY) %>%
   summarize(
     across(starts_with("DT_"), c(min,max))
   )
 ```
 
-
 # Other languages
 
 ## Generating SQL
+
 Sử dụng R để generate SQL query
+
 ```{r}
 library(dbplyr)
 library(RSQLite)
@@ -205,42 +215,46 @@ df_mem %>%
   summarize_at(vars(starts_with("N_")), mean, na.rm = TRUE) %>%
   show_query()
 ```
+
 ## R - `base` & `data.table`
+
 sử dụng `base::grep` để tìm tất cả các columns bắt đầu bằng `AMT_`
+
 ```{r}
 cols_n <- grep("^AMT_", names(trip_data), value = TRUE)
 print(cols_n)
 ```
+
 sử dụng vector để lưu các cột chúng ta muốn group by:
+
 ```{r}
 cols_grp <- c("CAT_TRAVELER_NATIONALITY")
 ```
+
 chúng ta có thể dùng vector này trong `stats::aggregate`
+
 ```{r}
-#| eval: false 
+#| eval: false
 #| echo: false
 aggregate(trip_data[cols_n], by = trip_data[cols_grp], FUN = sum)
 ```
-hoặc trong `data.table` 
+
+hoặc trong `data.table`
+
 ```{r}
-#| eval: false 
+#| eval: false
 #| echo: false
 library(data.table)
 dt <- as.data.table(trip_data)
 dt[, lapply(.SD, sum), by = cols_grp, .SDcols = cols_n]
 ```
-## python `pandas`
-tương tự trong python, sử dụng list comprehension:
-```{{python}}
 
-import pandas as pd
-cols_n   = [vbl for vbl in trip_data.columns if vbl[0:2] == 'AMT_']
-cols_grp = ["CAT_TRAVELER_NATIONALITY"]
-trip_data.groupby(cols_grp)[cols_n].sum()
-```
-# Updates by Emily
+## python `pandas`
+
+tương tự trong python, sử dụng list comprehension: 31b8e172-b470-440e-83d8-e6b185028602:dAB5AHAAZQA6AE8AUQBCAGoAQQBHAEkAQQBOAHcAQQA1AEEARwBVAEEATgBnAEIAagBBAEMAMABBAE8AQQBBADQAQQBEAGcAQQBaAEEAQQB0AEEARABRAEEAWQBRAEEAdwBBAEcAVQBBAEwAUQBBADUAQQBHAE0AQQBPAFEAQgBpAEEAQwAwAEEAWgBnAEIAbQBBAEQAWQBBAE4AdwBCAGoAQQBHAFEAQQBOAEEAQQB3AEEARABRAEEAWgBRAEEAMgBBAEQAQQBBAAoAcABvAHMAaQB0AGkAbwBuADoATwBRAEEAeABBAEQAYwBBAE4AZwBBAD0ACgBwAHIAZQBmAGkAeAA6AAoAcwBvAHUAcgBjAGUAOgBZAEEAQgBnAEEARwBBAEEAZQB3AEIANwBBAEgAQQBBAGUAUQBCADAAQQBHAGcAQQBiAHcAQgB1AEEASAAwAEEAZgBRAEEASwBBAEEAbwBBAGEAUQBCAHQAQQBIAEEAQQBiAHcAQgB5AEEASABRAEEASQBBAEIAdwBBAEcARQBBAGIAZwBCAGsAQQBHAEUAQQBjAHcAQQBnAEEARwBFAEEAYwB3AEEAZwBBAEgAQQBBAFoAQQBBAEsAQQBHAE0AQQBiAHcAQgBzAEEASABNAEEAWAB3AEIAdQBBAEMAQQBBAEkAQQBBAGcAQQBEADAAQQBJAEEAQgBiAEEASABZAEEAWQBnAEIAcwBBAEMAQQBBAFoAZwBCAHYAQQBIAEkAQQBJAEEAQgAyAEEARwBJAEEAYgBBAEEAZwBBAEcAawBBAGIAZwBBAGcAQQBIAFEAQQBjAGcAQgBwAEEASABBAEEAWAB3AEIAawBBAEcARQBBAGQAQQBCAGgAQQBDADQAQQBZAHcAQgB2AEEARwB3AEEAZABRAEIAdABBAEcANABBAGMAdwBBAGcAQQBHAGsAQQBaAGcAQQBnAEEASABZAEEAWQBnAEIAcwBBAEYAcwBBAE0AQQBBADYAQQBEAEkAQQBYAFEAQQBnAEEARAAwAEEAUABRAEEAZwBBAEMAYwBBAFEAUQBCAE4AQQBGAFEAQQBYAHcAQQBuAEEARgAwAEEAQwBnAEIAagBBAEcAOABBAGIAQQBCAHoAQQBGADgAQQBaAHcAQgB5AEEASABBAEEASQBBAEEAOQBBAEMAQQBBAFcAdwBBAGkAQQBFAE0AQQBRAFEAQgBVAEEARgA4AEEAVgBBAEIAUwBBAEUARQBBAFYAZwBCAEYAQQBFAHcAQQBSAFEAQgBTAEEARgA4AEEAVABnAEIAQgBBAEYAUQBBAFMAUQBCAFAAQQBFADQAQQBRAFEAQgBNAEEARQBrAEEAVgBBAEIAWgBBAEMASQBBAFgAUQBBAEsAQQBIAFEAQQBjAGcAQgBwAEEASABBAEEAWAB3AEIAawBBAEcARQBBAGQAQQBCAGgAQQBDADQAQQBaAHcAQgB5AEEARwA4AEEAZABRAEIAdwBBAEcASQBBAGUAUQBBAG8AQQBHAE0AQQBiAHcAQgBzAEEASABNAEEAWAB3AEIAbgBBAEgASQBBAGMAQQBBAHAAQQBGAHMAQQBZAHcAQgB2AEEARwB3AEEAYwB3AEIAZgBBAEcANABBAFgAUQBBAHUAQQBIAE0AQQBkAFEAQgB0AEEAQwBnAEEASwBRAEEASwBBAEcAQQBBAFkAQQBCAGcAQQBBAD0APQAKAHMAdQBmAGYAaQB4ADoA:31b8e172-b470-440e-83d8-e6b185028602 \# Updates by Emily
 
 ## Concept Map
+
 ```{mermaid}
 %%{init: {'theme':'dark'}}%%
 flowchart LR
@@ -259,11 +273,13 @@ flowchart LR
   H --> I(data dictionary)
   H --> K(ERD)
 ```
+
 ## New Package (Dec 2020)
+
 [`convo`](https://emilyriederer.github.io/convo/articles/quickstart-guide.html) là một thư viện released bởi Emily phục vụ cho việc quản lý controlled vocabulary:
 
 ```{r}
-#| eval: false 
+#| eval: false
 #| echo: true
 library(convo)
 ```

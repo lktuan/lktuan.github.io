@@ -4,13 +4,13 @@ description: "dive into the internals of MLPs, scrutinize the statistics of the 
 author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
-categories: [til, python, andrej karpathy, nn-z2h, neural networks] 
+categories: [til, python, andrej karpathy, nn-z2h, neural networks]
 date: 11-26-2024
 date-modified: 11-29-2024
 image: resnet50.png
 draft: false
 fig-cap-location: bottom
-editor: visual
+# editor: visual
 format:
   html:
     code-overflow: wrap
@@ -21,6 +21,8 @@ format:
 
 ::: {.callout-important title="This is not orginal content!"}
 This is my study notes / codes along with Andrej Karpathy's "[Neural Networks: Zero to Hero](https://www.youtube.com/watch?v=VMj-3S1tku0&list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ)" series.
+
+*Edit 1st June, 25*: I changed the loop to 5k only, for the shake of time saving when re-rendering this post!
 :::
 
 We want to stay a bit longer with the MLPs, to have more concrete intuitive of the **activations** in the neural nets and **gradients** that flowing backwards. It's good to learn about the development history of these architectures. Since Recurrent Neural Network (RNN), they are although very *expressive* but not easily *optimizable* with current gradient techniques we have so far. Let's get started!
@@ -118,7 +120,7 @@ for p in parameters:
 
 ```{python}
 # Optimization
-max_steps = 50_000 #200_000
+max_steps = 5_000 #50_000 #200_000
 batch_size = 32
 
 # Stats holders
@@ -127,12 +129,12 @@ lossi = []
 # Training on Xtr, Ytr
 for i in range(max_steps):
 
-    # minibatch construct      
-    ix = torch.randint(0, Xtr.shape[0], (batch_size,)) 
+    # minibatch construct
+    ix = torch.randint(0, Xtr.shape[0], (batch_size,))
     Xb, Yb = Xtr[ix], Ytr[ix] # batch X, Y
 
     # forward pass:
-    emb = C[Xb] # embed the characters into vectors   
+    emb = C[Xb] # embed the characters into vectors
     emb_cat = emb.view(emb.shape[0], -1) # concatenate the vectors
     h_pre_act = emb_cat @ W1 + b1 # hidden layer pre-activation
     h = torch.tanh(h_pre_act) # hidden layer
@@ -183,7 +185,7 @@ split_loss('val')
 g = torch.Generator().manual_seed(2147483647 + 10)
 
 for _ in range(20):
-    
+
     out = []
     context = [0] * block_size # initialize with all ...
     while True:
@@ -200,7 +202,7 @@ for _ in range(20):
       # if we sample the special '.' token, break
       if ix == 0:
         break
-    
+
     print(''.join(itos[i] for i in out)) # decode and print the generated word
 ```
 
@@ -225,15 +227,15 @@ parameters = [C, W1, b1, W2, b2]
 for p in parameters:
     p.requires_grad = True
 # Optimization
-max_steps = 50_000 #200_000
+max_steps = 5_000 #50_000 #200_000
 batch_size = 32
 # Training on Xtr, Ytr
 for i in range(max_steps):
-    # minibatch construct      
-    ix = torch.randint(0, Xtr.shape[0], (batch_size,)) 
+    # minibatch construct
+    ix = torch.randint(0, Xtr.shape[0], (batch_size,))
     Xb, Yb = Xtr[ix], Ytr[ix] # batch X, Y
     # forward pass:
-    emb = C[Xb] # embed the characters into vectors   
+    emb = C[Xb] # embed the characters into vectors
     emb_cat = emb.view(emb.shape[0], -1) # concatenate the vectors
     h_pre_act = emb_cat @ W1 + b1 # hidden layer pre-activation
     h = torch.tanh(h_pre_act) # hidden layer
@@ -315,13 +317,13 @@ The same with `logits`, now we want `h` to be more near zero, we add multipliers
 #| eval: false
 # Layer 1 - tanh - 300 neurons
 W1 = torch.randn((block_size * n_emb, n_hidden),      generator=g)  * 0.2
-b1 = torch.randn(n_hidden,                            generator=g) * 0.01 # keep a little bit entropy, 
+b1 = torch.randn(n_hidden,                            generator=g) * 0.01 # keep a little bit entropy,
 # It's okay to initialize the b1 to zero but AK found emperically this will enhance the optimiaztion
 ```
 
 We can see now less peak distribution of `h`:
 
-::: columns
+::::: columns
 ::: {.column width="50%"}
 ![`tanh`](tanh_0.2mult.png)
 :::
@@ -329,7 +331,7 @@ We can see now less peak distribution of `h`:
 ::: {.column width="50%"}
 ![pre-activation `tanh`](pre_act_tanh_0.2mult.png)
 :::
-:::
+:::::
 
 ## calculating the init scale: “Kaiming init”
 
@@ -469,7 +471,7 @@ for p in parameters:
     p.requires_grad = True
 
 # Optimization
-max_steps = 50_000 #200_000
+max_steps = 5_000 #50_000 #200_000
 batch_size = 32
 
 # Stats holders
@@ -478,12 +480,12 @@ lossi = []
 # Training on Xtr, Ytr
 for i in range(max_steps):
 
-    # minibatch construct      
-    ix = torch.randint(0, Xtr.shape[0], (batch_size,)) 
+    # minibatch construct
+    ix = torch.randint(0, Xtr.shape[0], (batch_size,))
     Xb, Yb = Xtr[ix], Ytr[ix] # batch X, Y
 
     # forward pass:
-    emb = C[Xb] # embed the characters into vectors   
+    emb = C[Xb] # embed the characters into vectors
     emb_cat = emb.view(emb.shape[0], -1) # concatenate the vectors
     # Linear layer
     h_pre_act = emb_cat @ W1 # + b1 # hidden layer pre-activation                               # 👈
@@ -529,12 +531,12 @@ def split_loss(split: str):
     'test': (Xte, Yte)
   }[split]
   emb = C[x]
-  emb_cat = emb.view(emb.shape[0], -1) 
-  h_pre_act = emb_cat @ W1 + b1                                                                                         # 👈 
+  emb_cat = emb.view(emb.shape[0], -1)
+  h_pre_act = emb_cat @ W1 + b1                                                                                         # 👈
   # h_pre_act = bngain * ((h_pre_act - h_pre_act.mean(0, keepdim=True)) / h_pre_act.std(0, keepdim=True)) + bnbias      # 👈
   # h_pre_act = bngain * ((h_pre_act - bnmean) / bnstd) + bnbias                                                        # 👈
   h_pre_act = bngain * ((h_pre_act - bnmean_running) / bnstd_running) + bnbias                                          # 👈
-  h = torch.tanh(h_pre_act) 
+  h = torch.tanh(h_pre_act)
   logits = h @ W2 + b2
   loss = F.cross_entropy(logits, y)
   print(split, loss.item())
@@ -602,7 +604,7 @@ class Linear:
 class BatchNorm1d:
     """
     Simplifying Pytorch BatchNorm1D: https://pytorch.org/docs/stable/generated/torch.nn.BatchNorm1d.html
-    """ 
+    """
     def __init__(self, dim, eps=1e-5, momentum=0.1):
         self.eps = eps
         self.momentum = momentum
@@ -681,7 +683,7 @@ lossi = []
 ud = []
 
 for i in range(max_steps):
-  
+
     # minibatch construct
     ix = torch.randint(0, Xtr.shape[0], (batch_size,), generator=g)
     Xb, Yb = Xtr[ix], Ytr[ix] # batch X,Y
@@ -866,7 +868,7 @@ and viz 3:
 
 Pretty decent till now. Let's bring the BatchNorm back.
 
-## bringing back batchnorm, looking at the visualizations
+## bringing back batch norm, looking at the visualizations
 
 We re-define the layers, and change `gamma` in last layer under no gradient instead of `weight`. We also dont want the "manual normalization" fan-in, and the gain `5/3` as well:
 
@@ -941,13 +943,13 @@ for p in parameters:
     p.requires_grad = True
 
 # same optimization as last time
-max_steps = 200000
+max_steps = 5_000 #200_000
 batch_size = 32
 lossi = []
 ud = []
 
 for i in range(max_steps):
-  
+
     # minibatch construct
     ix = torch.randint(0, Xtr.shape[0], (batch_size,), generator=g)
     Xb, Yb = Xtr[ix], Ytr[ix] # batch X,Y
@@ -1034,7 +1036,7 @@ Sample from the model:
 g = torch.Generator().manual_seed(2147483647 + 10)
 
 for _ in range(20):
-    
+
     out = []
     context = [0] * block_size # initialize with all ...
     while True:
@@ -1053,7 +1055,7 @@ for _ in range(20):
       # if we sample the special '.' token, break
       if ix == 0:
         break
-    
+
     print(''.join(itos[i] for i in out)) # decode and print the generated word
 ```
 

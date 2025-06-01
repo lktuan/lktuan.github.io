@@ -4,12 +4,12 @@ description: "implement a multilayer perceptron (MLP) character-level language m
 author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
-categories: [til, python, andrej karpathy, nn-z2h, neural networks] 
+categories: [til, python, andrej karpathy, nn-z2h, neural networks]
 date: 11-20-2024
 date-modified: 11-20-2024
 image: NLM_Bengio_etal.png
 draft: false
-editor: visual
+# editor: visual
 format:
   html:
     code-overflow: wrap
@@ -20,6 +20,8 @@ format:
 
 ::: {.callout-important title="This is not orginal content!"}
 This is my study notes / codes along with Andrej Karpathy's "[Neural Networks: Zero to Hero](https://www.youtube.com/watch?v=VMj-3S1tku0&list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ)" series.
+
+*Edit 1st June, 25*: I changed the loop to 5k only, for the shake of time saving when re-rendering this post!
 :::
 
 In the previous lecture, we built a simple `bigram` character-level language model, using 2 different approaches that are (1) count, and (2) 1 layer neural network. They produced the same (and both poor - since the context is 1 character only) result but the neural network option offers more flexibility so that we can complexify our model to get better performance.
@@ -472,10 +474,10 @@ print("final minibatch loss: ", loss.item())
 The `loss` decrease much much better, although the direction of gradient might be not correct direction. But it is good enough for an approximation. Notice the loss for a minibatch is not the loss of whole dataset.
 
 ```{python}
-emb = C[X] # (32, 3, 2)                                    
+emb = C[X] # (32, 3, 2)
 h = torch.tanh(emb.view(-1, 6) @ W1 + b1) # (32, 100)
 logits = h @ W2 + b2 # (32, 27)
-loss = F.cross_entropy(logits, Y)   
+loss = F.cross_entropy(logits, Y)
 loss.item()
 ```
 
@@ -547,13 +549,13 @@ lri = []
 lossi = []
 
 for i in range(1000):
-    # minibatch construct                                           
-    ix = torch.randint(0, X.shape[0], (32,))                        
+    # minibatch construct
+    ix = torch.randint(0, X.shape[0], (32,))
     # forward pass:
-    emb = C[X[ix]] # (32, 3, 2)                                    
+    emb = C[X[ix]] # (32, 3, 2)
     h = torch.tanh(emb.view(-1, 6) @ W1 + b1) # (32, 100)
     logits = h @ W2 + b2 # (32, 27)
-    loss = F.cross_entropy(logits, Y[ix])                           
+    loss = F.cross_entropy(logits, Y[ix])
     # backward pass:
     for p in parameters:
         p.grad = None
@@ -663,8 +665,8 @@ lossi = []
 stepi = []
 
 # Training on Xtr, Ytr
-for i in range(200_000):
-    # minibatch construct                                           
+for i in range(5_000): #200_000
+    # minibatch construct
     ix = torch.randint(0, Xtr.shape[0], (32,))                       #👈
     # forward pass:
     emb = C[Xtr[ix]] # (32, 3, 2)                                    #👈
@@ -690,20 +692,20 @@ print("Loss on minibatch: ", loss.item())
 Loss on whole training dataset:
 
 ```{python}
-emb = C[Xtr] # (32, 3, 2)                                    
+emb = C[Xtr] # (32, 3, 2)
 h = torch.tanh(emb.view(-1, 6) @ W1 + b1) # (32, 100)
 logits = h @ W2 + b2 # (32, 27)
-loss = F.cross_entropy(logits, Ytr)   
+loss = F.cross_entropy(logits, Ytr)
 loss.item()
 ```
 
 Loss on dev/validation dataset, it's not much different from loss on training as the model is still underfitting, it still generalizes thing:
 
 ```{python}
-emb = C[Xdev] # (32, 3, 2)                                    
+emb = C[Xdev] # (32, 3, 2)
 h = torch.tanh(emb.view(-1, 6) @ W1 + b1) # (32, 100)
 logits = h @ W2 + b2 # (32, 27)
-loss = F.cross_entropy(logits, Ydev)   
+loss = F.cross_entropy(logits, Ydev)
 loss.item()
 ```
 
@@ -791,20 +793,20 @@ lossi = []
 stepi = []
 
 # Training on Xtr, Ytr
-for i in range(200_000):
-    # minibatch construct                                           
-    ix = torch.randint(0, Xtr.shape[0], (batch_size,))                      
+for i in range(5_000): #200_000
+    # minibatch construct
+    ix = torch.randint(0, Xtr.shape[0], (batch_size,))
     # forward pass:
-    emb = C[Xtr[ix]]                                                
+    emb = C[Xtr[ix]]
     h = torch.tanh(emb.view(-1, block_size * emb_size) @ W1 + b1)
     logits = h @ W2 + b2
-    loss = F.cross_entropy(logits, Ytr[ix]) 
+    loss = F.cross_entropy(logits, Ytr[ix])
     # backward pass:
     for p in parameters:
         p.grad = None
     loss.backward()
     # update
-    lr = 0.1 if i <= 100_000 else 0.01 
+    lr = 0.1 if i <= 100_000 else 0.01
     for p in parameters:
         p.data += - lr * p.grad
 
@@ -816,22 +818,22 @@ print("Loss on minibatch: ", loss.item())
 ```
 
 ```{python}
-emb = C[Xtr]                                 
+emb = C[Xtr]
 h = torch.tanh(emb.view(-1, block_size * emb_size) @ W1 + b1)
 logits = h @ W2 + b2
-loss = F.cross_entropy(logits, Ytr)   
+loss = F.cross_entropy(logits, Ytr)
 print("Loss on whole training set: ", loss.item())
 
-emb = C[Xdev]                                
+emb = C[Xdev]
 h = torch.tanh(emb.view(-1, block_size * emb_size) @ W1 + b1)
 logits = h @ W2 + b2
-loss = F.cross_entropy(logits, Ydev)   
+loss = F.cross_entropy(logits, Ydev)
 print("Loss on dev/validation set: ", loss.item())
 
-emb = C[Xte]                                
+emb = C[Xte]
 h = torch.tanh(emb.view(-1, block_size * emb_size) @ W1 + b1)
 logits = h @ W2 + b2
-loss = F.cross_entropy(logits, Yte)   
+loss = F.cross_entropy(logits, Yte)
 print("Loss on test set: ", loss.item())
 ```
 
@@ -861,7 +863,7 @@ But our networks now can generate more name-like name!
 g = torch.Generator().manual_seed(2147483647 + 10)
 
 for _ in range(20):
-    
+
     out = []
     context = [0] * block_size # initialize with all ...
     while True:
@@ -874,7 +876,7 @@ for _ in range(20):
       out.append(ix)
       if ix == 0:
         break
-    
+
     print(''.join(itos[i] for i in out))
 ```
 

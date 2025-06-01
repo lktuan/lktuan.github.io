@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.554">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2024-12-02">
 <meta name="description" content="This is Tuan’s blog">
 
-<title>Le Khac Tuan - NN-Z2H Lesson 5: Building makemore part 4 - Becoming a Backprop Ninja</title>
+<title>NN-Z2H Lesson 5: Building makemore part 4 - Becoming a Backprop Ninja – Le Khac Tuan</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -36,7 +36,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -72,12 +72,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-8e54dfbe729680b42f22c627ac27a053.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-81b089a3b74ed4cf194f083418e7130b.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-89cb849060b93fd12025e4f44aaa3f02.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-27750d9d09892f3d6a52d1fd788c41c6.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -111,7 +111,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
 <link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -155,7 +155,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -203,13 +203,18 @@ window.Quarto = {
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@tuan_lekhac"> <i class="bi bi-youtube" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
     <a class="nav-link" href="mailto:tuan.lekhac0905@gmail.com"> <i class="bi bi-envelope" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
       </div> <!-- /container-fluid -->
@@ -314,6 +319,7 @@ This is not orginal content!
 </div>
 <div class="callout-body-container callout-body">
 <p>This is my study notes / codes along with Andrej Karpathy’s “<a href="https://www.youtube.com/watch?v=VMj-3S1tku0&amp;list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ">Neural Networks: Zero to Hero</a>” series.</p>
+<p><em>Edit 1st June, 25</em>: I changed the loop to 5k only, for the shake of time saving when re-rendering this post!</p>
 </div>
 </div>
 <section id="intro-why-you-should-care" class="level1">
@@ -325,7 +331,7 @@ This is not orginal content!
 </figure>
 </div>
 <p>In the previous lecture, we’re introduced to some common issues with our “shallow” (and of course for deep as well) neural network and how to fix with the initialization setting and Batch Normalization. We’re also learned some diagnostic tools to observe <em>forward pass activations</em>, <em>backward pass gradients</em>, and <em>weights update</em>, to calibrate the training loop. In this lecture, we aim to replace this line of code:</p>
-<div id="7b071bf9" class="cell" data-execution_count="1">
+<div id="384023bc" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>... loss.backward() ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -342,7 +348,7 @@ This is not orginal content!
 <h1>starter code</h1>
 <section id="import-libraries" class="level3">
 <h3 class="anchored" data-anchor-id="import-libraries">import libraries:</h3>
-<div id="1243f470" class="cell" data-execution_count="2">
+<div id="6b6f4fd2" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> torch</span>
@@ -354,7 +360,7 @@ This is not orginal content!
 </section>
 <section id="read-data" class="level3">
 <h3 class="anchored" data-anchor-id="read-data">read data:</h3>
-<div id="103070cd" class="cell" data-execution_count="3">
+<div id="bbaf3172" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -370,7 +376,7 @@ This is not orginal content!
 </section>
 <section id="build-vocab" class="level3">
 <h3 class="anchored" data-anchor-id="build-vocab">build vocab:</h3>
-<div id="8e67c084" class="cell" data-execution_count="4">
+<div id="b6a201d3" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># build the vocabulary of characters and mapping to/from integer</span></span>
@@ -390,7 +396,7 @@ This is not orginal content!
 </section>
 <section id="build-dataset-splits-identical-to-previous-so-i-folded-it" class="level3">
 <h3 class="anchored" data-anchor-id="build-dataset-splits-identical-to-previous-so-i-folded-it">build dataset splits (identical to previous so I folded it):</h3>
-<div id="984c87b0" class="cell" data-execution_count="5">
+<div id="d70e1df6" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>block_size <span class="op">=</span> <span class="dv">3</span> <span class="co"># context length: how many characters do we take to predict the next one.</span></span>
@@ -430,7 +436,7 @@ torch.Size([22866, 3]) torch.Size([22866])</code></pre>
 </section>
 <section id="utility-function-we-will-use-later-when-comparing-manual-gradients-to-pytorch-gradients." class="level3">
 <h3 class="anchored" data-anchor-id="utility-function-we-will-use-later-when-comparing-manual-gradients-to-pytorch-gradients.">utility function we will use later when comparing manual gradients to PyTorch gradients.</h3>
-<div id="e06fbba4" class="cell" data-execution_count="6">
+<div id="e0817df0" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">def</span> <span class="bu">cmp</span>(s, dt, t):</span>
@@ -443,7 +449,7 @@ torch.Size([22866, 3]) torch.Size([22866])</code></pre>
 </section>
 <section id="network-construction" class="level3">
 <h3 class="anchored" data-anchor-id="network-construction">network construction:</h3>
-<div id="8b9e5f6d" class="cell" data-execution_count="7">
+<div id="704daae1" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>n_embd <span class="op">=</span> <span class="dv">10</span> <span class="co"># the dimensionality of the character embedding vectors</span></span>
@@ -477,7 +483,7 @@ torch.Size([22866, 3]) torch.Size([22866])</code></pre>
 </section>
 <section id="mini-batch-construction" class="level3">
 <h3 class="anchored" data-anchor-id="mini-batch-construction">mini-batch construction:</h3>
-<div id="7e0d9c87" class="cell" data-execution_count="8">
+<div id="5a12fa6d" class="cell" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>batch_size <span class="op">=</span> <span class="dv">32</span></span>
@@ -490,7 +496,7 @@ torch.Size([22866, 3]) torch.Size([22866])</code></pre>
 </section>
 <section id="forward-pass-chunkated-into-smaller-steps-that-are-possible-to-backward-one-at-a-time." class="level3">
 <h3 class="anchored" data-anchor-id="forward-pass-chunkated-into-smaller-steps-that-are-possible-to-backward-one-at-a-time.">forward pass, “chunkated” into smaller steps that are possible to backward one at a time.</h3>
-<div id="125c48cb" class="cell" data-execution_count="9">
+<div id="91baf44e" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>emb <span class="op">=</span> C[Xb] <span class="co"># embed the characters into vectors</span></span>
@@ -539,7 +545,7 @@ torch.Size([22866, 3]) torch.Size([22866])</code></pre>
 <span id="cb13-44"><a href="#cb13-44"></a>loss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>tensor(3.3267, grad_fn=&lt;NegBackward0&gt;)</code></pre>
+<pre><code>tensor(3.3424, grad_fn=&lt;NegBackward0&gt;)</code></pre>
 </div>
 </div>
 </section>
@@ -565,16 +571,16 @@ torch.Size([22866, 3]) torch.Size([22866])</code></pre>
 <li><span class="math inline">\(\frac{\partial L}{\partial \mathbf{b}} = \mathbf{a}^T @ \frac{\partial L}{\partial \mathbf{d}}\)</span></li>
 <li><span class="math inline">\(\frac{\partial L}{\partial \mathbf{c}} = \frac{\partial L}{\partial \mathbf{d}}.sum(0)\)</span></li>
 </ul>
-<div id="ab2473d9" class="cell" data-execution_count="10">
+<div id="aeaca19b" class="cell" data-execution_count="10">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="annotated-cell-10"><pre class="sourceCode numberSource python code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode python"><span id="annotated-cell-10-1"><a href="#annotated-cell-10-1"></a><span class="co"># Exercise 1: backprop through the whole thing manually, </span></span>
-<span id="annotated-cell-10-2"><a href="#annotated-cell-10-2"></a><span class="co"># backpropagating through exactly all of the variables </span></span>
+<div class="sourceCode cell-code" id="annotated-cell-10"><pre class="sourceCode numberSource python code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode python"><span id="annotated-cell-10-1"><a href="#annotated-cell-10-1"></a><span class="co"># Exercise 1: backprop through the whole thing manually,</span></span>
+<span id="annotated-cell-10-2"><a href="#annotated-cell-10-2"></a><span class="co"># backpropagating through exactly all of the variables</span></span>
 <span id="annotated-cell-10-3"><a href="#annotated-cell-10-3"></a><span class="co"># as they are defined in the forward pass above, one by one</span></span>
 <span id="annotated-cell-10-4"><a href="#annotated-cell-10-4"></a><span class="bu">print</span>(<span class="st">"Cross entropy loss"</span>.upper())</span>
 <span id="annotated-cell-10-5"><a href="#annotated-cell-10-5"></a>dlogprobs <span class="op">=</span> torch.zeros_like(logprobs) <span class="co"># create zeros tensor with same size</span></span>
 <button class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="1">1</button><span id="annotated-cell-10-6" class="code-annotation-target"><a href="#annotated-cell-10-6"></a>dlogprobs[<span class="bu">range</span>(n), Yb] <span class="op">=</span> <span class="op">-</span> <span class="fl">1.0</span> <span class="op">/</span> n</span>
-<span id="annotated-cell-10-7"><a href="#annotated-cell-10-7"></a>dprobs <span class="op">=</span> torch.zeros_like(probs) </span>
+<span id="annotated-cell-10-7"><a href="#annotated-cell-10-7"></a>dprobs <span class="op">=</span> torch.zeros_like(probs)</span>
 <button class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="2">2</button><span id="annotated-cell-10-8" class="code-annotation-target"><a href="#annotated-cell-10-8"></a>dprobs <span class="op">=</span> (<span class="fl">1.0</span> <span class="op">/</span> probs) <span class="op">*</span> dlogprobs</span>
 <button class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="3">3</button><span id="annotated-cell-10-9" class="code-annotation-target"><a href="#annotated-cell-10-9"></a>dcounts_sum_inv <span class="op">=</span> (counts <span class="op">*</span> dprobs).<span class="bu">sum</span>(<span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
 <span id="annotated-cell-10-10"><a href="#annotated-cell-10-10"></a>dcounts_sum <span class="op">=</span> (<span class="op">-</span><span class="dv">1</span> <span class="op">*</span> counts_sum<span class="op">**-</span><span class="dv">2</span>) <span class="op">*</span> dcounts_sum_inv</span>
@@ -591,7 +597,7 @@ torch.Size([22866, 3]) torch.Size([22866])</code></pre>
 <span id="annotated-cell-10-21"><a href="#annotated-cell-10-21"></a><span class="bu">cmp</span>(<span class="st">'logit_maxes'</span>, dlogit_maxes, logit_maxes)</span>
 <span id="annotated-cell-10-22"><a href="#annotated-cell-10-22"></a></span>
 <span id="annotated-cell-10-23"><a href="#annotated-cell-10-23"></a></span>
-<span id="annotated-cell-10-24"><a href="#annotated-cell-10-24"></a>dlogits <span class="op">=</span> (dnorm_logits.clone() </span>
+<span id="annotated-cell-10-24"><a href="#annotated-cell-10-24"></a>dlogits <span class="op">=</span> (dnorm_logits.clone()</span>
 <span id="annotated-cell-10-25"><a href="#annotated-cell-10-25"></a>          <span class="op">+</span> F.one_hot( logits.<span class="bu">max</span>(<span class="dv">1</span>).indices, <span class="co"># broadcasting, again</span></span>
 <span id="annotated-cell-10-26"><a href="#annotated-cell-10-26"></a>                        num_classes<span class="op">=</span>logits.shape[<span class="dv">1</span>]</span>
 <button class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="5">5</button><span id="annotated-cell-10-27" class="code-annotation-target"><a href="#annotated-cell-10-27"></a>                        ) <span class="op">*</span> dlogit_maxes)</span>
@@ -735,7 +741,7 @@ C               | exact: True  | approximate: True  | maxdiff: 0.0</code></pre>
 <section id="exercise-2-cross-entropy-loss-backward-pass" class="level1">
 <h1>exercise 2: cross entropy loss backward pass</h1>
 <p>We are realizing that we doing too much work since we need to break the <code>loss</code> calculation from <code>logits</code> into too many steps that (1) they are easy enough for us to do backpropagation, but (2) most of them can cancel each other out. So in exercise two, we need to convert those bunch of atomic pieces of calculation to a shorter formula of cross entropy that can facilitate the backpropating.</p>
-<div id="4fae76b8" class="cell" data-execution_count="11">
+<div id="70359676" class="cell" data-execution_count="11">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Exercise 2: backprop through cross_entropy but all in one go</span></span>
@@ -759,7 +765,7 @@ C               | exact: True  | approximate: True  | maxdiff: 0.0</code></pre>
 <span id="cb16-19"><a href="#cb16-19"></a><span class="bu">print</span>(loss_fast.item(), <span class="st">'diff:'</span>, (loss_fast <span class="op">-</span> loss).item())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>3.3267292976379395 diff: 4.76837158203125e-07</code></pre>
+<pre><code>3.3424184322357178 diff: 0.0</code></pre>
 </div>
 </div>
 <p>Mathematically given the Cross-Entropy loss formula:</p>
@@ -775,7 +781,7 @@ C               | exact: True  | approximate: True  | maxdiff: 0.0</code></pre>
 <li><span class="math inline">\(\hat{Y} \in [0,1]^{n \times k}\)</span>: probabilities after softmax layer - <code>probs</code>.</li>
 </ul>
 <p>I actually can not do this exercise so AK’s solution here:</p>
-<div id="916684f2" class="cell" data-execution_count="12">
+<div id="86e297c3" class="cell" data-execution_count="12">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># backward pass</span></span>
@@ -787,7 +793,7 @@ C               | exact: True  | approximate: True  | maxdiff: 0.0</code></pre>
 <span id="cb18-7"><a href="#cb18-7"></a><span class="bu">cmp</span>(<span class="st">'logits'</span>, dlogits, logits) <span class="co"># I can only get approximate to be true, my maxdiff is 6e-9</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>logits          | exact: False | approximate: True  | maxdiff: 6.752088665962219e-09</code></pre>
+<pre><code>logits          | exact: False | approximate: True  | maxdiff: 5.122274160385132e-09</code></pre>
 </div>
 </div>
 <p>I will comeback with another post on thisss: the backward for cross entropy loss.</p>
@@ -795,33 +801,33 @@ C               | exact: True  | approximate: True  | maxdiff: 0.0</code></pre>
 <h3 class="anchored" data-anchor-id="what-is-dlogits-intuitively">what is <code>dlogits</code> intuitively?</h3>
 <p>Now let’s look how <code>dlogits</code> look like.</p>
 <p>This is the first row of <code>logits</code> through softmax layer, it’s probabilities of every possible character in vocab size 27, they are all small and sum of them is 1.</p>
-<div id="15dbe1ac" class="cell" data-execution_count="13">
+<div id="aea29ff1" class="cell" data-execution_count="13">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a>F.softmax(logits, <span class="dv">1</span>)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="12">
-<pre><code>tensor([0.0765, 0.0852, 0.0175, 0.0537, 0.0181, 0.0835, 0.0274, 0.0357, 0.0181,
-        0.0319, 0.0393, 0.0355, 0.0382, 0.0277, 0.0341, 0.0135, 0.0096, 0.0207,
-        0.0163, 0.0540, 0.0484, 0.0206, 0.0263, 0.0672, 0.0549, 0.0257, 0.0205],
+<pre><code>tensor([0.0697, 0.0906, 0.0174, 0.0502, 0.0191, 0.0870, 0.0249, 0.0353, 0.0180,
+        0.0324, 0.0344, 0.0388, 0.0368, 0.0274, 0.0311, 0.0135, 0.0091, 0.0183,
+        0.0166, 0.0539, 0.0503, 0.0199, 0.0247, 0.0729, 0.0634, 0.0246, 0.0198],
        grad_fn=&lt;SelectBackward0&gt;)</code></pre>
 </div>
 </div>
 <p>And this is the first row of <code>dlogits</code> multiplied by <code>n</code> for comparision, it’s all identical excep the 8th probability (<code>Xb[0] = 8</code>). <strong>And sum of them is 0!</strong></p>
-<div id="34526715" class="cell" data-execution_count="14">
+<div id="5ca8f725" class="cell" data-execution_count="14">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a>dlogits[<span class="dv">0</span>] <span class="op">*</span> n</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="13">
-<pre><code>tensor([ 0.0765,  0.0852,  0.0175,  0.0537,  0.0181,  0.0835,  0.0274,  0.0357,
-        -0.9819,  0.0319,  0.0393,  0.0355,  0.0382,  0.0277,  0.0341,  0.0135,
-         0.0096,  0.0207,  0.0163,  0.0540,  0.0484,  0.0206,  0.0263,  0.0672,
-         0.0549,  0.0257,  0.0205], grad_fn=&lt;MulBackward0&gt;)</code></pre>
+<pre><code>tensor([ 0.0697,  0.0906,  0.0174,  0.0502,  0.0191,  0.0870,  0.0249,  0.0353,
+        -0.9820,  0.0324,  0.0344,  0.0388,  0.0368,  0.0274,  0.0311,  0.0135,
+         0.0091,  0.0183,  0.0166,  0.0539,  0.0503,  0.0199,  0.0247,  0.0729,
+         0.0634,  0.0246,  0.0198], grad_fn=&lt;MulBackward0&gt;)</code></pre>
 </div>
 </div>
 <p>So for each data point in the batch of 32, we pushnish super hard the correct character, making the magnitude of it’s grad is so high (negative number), then the prob of that predict-character can change toward to correct one. This push and pull is somehow the way that network learn.</p>
-<div id="1fe23009" class="cell" data-execution_count="15">
+<div id="8c0597db" class="cell" data-execution_count="15">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">8</span>))</span>
@@ -830,7 +836,7 @@ C               | exact: True  | approximate: True  | maxdiff: 0.0</code></pre>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-16-output-1.png" width="544" height="633" class="figure-img"></p>
+<p><img src="index_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -840,7 +846,7 @@ C               | exact: True  | approximate: True  | maxdiff: 0.0</code></pre>
 </section>
 <section id="exercise-3-batch-norm-layer-backward-pass" class="level1">
 <h1>exercise 3: batch norm layer backward pass</h1>
-<div id="eb71c90f" class="cell" data-execution_count="16">
+<div id="8f6be113" class="cell" data-execution_count="16">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># Exercise 3: backprop through batchnorm but all in one go</span></span>
@@ -905,7 +911,7 @@ B(beta) --&gt; Y(y)
 <li>normalize &amp; mini-batch variance: <code>dL/dmu = - SUM[dL/dy * gamma * (sigma^2 + eps)^(-1/2)]</code>, this is path (3.1), we can prove that path (3.2) equal to zero - since <code>mu</code> is average of <code>x</code>, we can think of change in <code>mu</code> will be eliminated by <code>x</code> itself w.r.t. <code>L</code>;</li>
 <li>given all the gradients above, we just write the expressions down and do some transformation, this is the final: <code>dL/dx = gamma * (sigma^2 + eps)^(-1/2) / m { [m * dL/dy] - SUMj[dL/dy] - m/(m-1) * x_hat * SUMj[dL/dy * x_hat]}</code>, where <code>m</code> is mini-batch size (in our data is <code>n</code>)</li>
 </ol>
-<div id="5da129a6" class="cell" data-execution_count="17">
+<div id="234c9623" class="cell" data-execution_count="17">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># backward pass</span></span>
@@ -935,7 +941,7 @@ B(beta) --&gt; Y(y)
 </section>
 <section id="exercise-4-putting-it-all-together" class="level1">
 <h1>exercise 4: putting it all together</h1>
-<div id="c726fc27" class="cell" data-execution_count="18">
+<div id="924ee63a" class="cell" data-execution_count="18">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1"></a><span class="co"># Exercise 4: putting it all together!</span></span>
@@ -963,7 +969,7 @@ B(beta) --&gt; Y(y)
 <span id="cb29-23"><a href="#cb29-23"></a>  p.requires_grad <span class="op">=</span> <span class="va">True</span></span>
 <span id="cb29-24"><a href="#cb29-24"></a></span>
 <span id="cb29-25"><a href="#cb29-25"></a><span class="co"># same optimization as last time</span></span>
-<span id="cb29-26"><a href="#cb29-26"></a>max_steps <span class="op">=</span> <span class="dv">200000</span></span>
+<span id="cb29-26"><a href="#cb29-26"></a>max_steps <span class="op">=</span> <span class="dv">5_000</span> <span class="co">#200_000</span></span>
 <span id="cb29-27"><a href="#cb29-27"></a>batch_size <span class="op">=</span> <span class="dv">32</span></span>
 <span id="cb29-28"><a href="#cb29-28"></a>n <span class="op">=</span> batch_size <span class="co"># convenience</span></span>
 <span id="cb29-29"><a href="#cb29-29"></a>lossi <span class="op">=</span> []</span>
@@ -1046,30 +1052,11 @@ B(beta) --&gt; Y(y)
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>12297
-      0/ 200000: 3.8430
-  10000/ 200000: 2.1560
-  20000/ 200000: 2.4334
-  30000/ 200000: 2.4665
-  40000/ 200000: 1.9888
-  50000/ 200000: 2.3378
-  60000/ 200000: 2.4149
-  70000/ 200000: 2.0440
-  80000/ 200000: 2.3377
-  90000/ 200000: 2.1847
- 100000/ 200000: 1.9861
- 110000/ 200000: 2.2556
- 120000/ 200000: 2.0190
- 130000/ 200000: 2.4322
- 140000/ 200000: 2.3159
- 150000/ 200000: 2.2161
- 160000/ 200000: 1.8835
- 170000/ 200000: 1.8359
- 180000/ 200000: 2.0352
- 190000/ 200000: 1.8955</code></pre>
+      0/   5000: 3.7937</code></pre>
 </div>
 </div>
 <p>We can check gradients using this:</p>
-<div id="a76e3259" class="cell" data-execution_count="19">
+<div id="6ee92efe" class="cell" data-execution_count="19">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1"></a><span class="co"># useful for checking your gradients</span></span>
@@ -1080,7 +1067,7 @@ B(beta) --&gt; Y(y)
 </details>
 </div>
 <p>Calibrate the batch norm at the end of training:</p>
-<div id="5e1f517e" class="cell" data-execution_count="20">
+<div id="220a3702" class="cell" data-execution_count="20">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a><span class="cf">with</span> torch.no_grad():</span>
@@ -1094,7 +1081,7 @@ B(beta) --&gt; Y(y)
 </details>
 </div>
 <p>Evaluate train and val loss:</p>
-<div id="e40f68a9" class="cell" data-execution_count="21">
+<div id="18792970" class="cell" data-execution_count="21">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1"></a><span class="at">@torch.no_grad</span>() <span class="co"># this decorator disables gradient tracking</span></span>
@@ -1117,27 +1104,27 @@ B(beta) --&gt; Y(y)
 <span id="cb33-18"><a href="#cb33-18"></a>split_loss(<span class="st">'val'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>train 2.0704638957977295
-val 2.10821533203125</code></pre>
+<pre><code>train 2.3197696208953857
+val 2.3234214782714844</code></pre>
 </div>
 </div>
 <p>Similar to what we achieved before!</p>
 <p>Sample from model:</p>
-<div id="4cbe2740" class="cell" data-execution_count="22">
+<div id="4b088192" class="cell" data-execution_count="22">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1"></a><span class="co"># sample from the model</span></span>
 <span id="cb35-2"><a href="#cb35-2"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span> <span class="op">+</span> <span class="dv">10</span>)</span>
 <span id="cb35-3"><a href="#cb35-3"></a></span>
 <span id="cb35-4"><a href="#cb35-4"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20</span>):</span>
-<span id="cb35-5"><a href="#cb35-5"></a>    </span>
+<span id="cb35-5"><a href="#cb35-5"></a></span>
 <span id="cb35-6"><a href="#cb35-6"></a>    out <span class="op">=</span> []</span>
 <span id="cb35-7"><a href="#cb35-7"></a>    context <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> block_size <span class="co"># initialize with all ...</span></span>
 <span id="cb35-8"><a href="#cb35-8"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
 <span id="cb35-9"><a href="#cb35-9"></a>      <span class="co"># ------------</span></span>
 <span id="cb35-10"><a href="#cb35-10"></a>      <span class="co"># forward pass:</span></span>
 <span id="cb35-11"><a href="#cb35-11"></a>      <span class="co"># Embedding</span></span>
-<span id="cb35-12"><a href="#cb35-12"></a>      emb <span class="op">=</span> C[torch.tensor([context])] <span class="co"># (1,block_size,d)      </span></span>
+<span id="cb35-12"><a href="#cb35-12"></a>      emb <span class="op">=</span> C[torch.tensor([context])] <span class="co"># (1,block_size,d)</span></span>
 <span id="cb35-13"><a href="#cb35-13"></a>      embcat <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) <span class="co"># concat into (N, block_size * n_embd)</span></span>
 <span id="cb35-14"><a href="#cb35-14"></a>      hpreact <span class="op">=</span> embcat <span class="op">@</span> W1 <span class="op">+</span> b1</span>
 <span id="cb35-15"><a href="#cb35-15"></a>      hpreact <span class="op">=</span> bngain <span class="op">*</span> (hpreact <span class="op">-</span> bnmean) <span class="op">*</span> (bnvar <span class="op">+</span> <span class="fl">1e-5</span>)<span class="op">**-</span><span class="fl">0.5</span> <span class="op">+</span> bnbias</span>
@@ -1151,30 +1138,30 @@ val 2.10821533203125</code></pre>
 <span id="cb35-23"><a href="#cb35-23"></a>      out.append(ix)</span>
 <span id="cb35-24"><a href="#cb35-24"></a>      <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
 <span id="cb35-25"><a href="#cb35-25"></a>        <span class="cf">break</span></span>
-<span id="cb35-26"><a href="#cb35-26"></a>    </span>
+<span id="cb35-26"><a href="#cb35-26"></a></span>
 <span id="cb35-27"><a href="#cb35-27"></a>    <span class="bu">print</span>(<span class="st">''</span>.join(itos[i] <span class="cf">for</span> i <span class="kw">in</span> out))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>mora.
-mayah.
-see.
-madyn.
-alayethruthadra.
-gradelyn.
-elin.
-shi.
-jenleigh.
-sana.
-arleigh.
-malaia.
-noshubergshira.
-sten.
-joselle.
-jose.
-casun.
-macder.
-yarulyeh.
-yuma.</code></pre>
+<pre><code>mriahamyanniee.
+mad.
+ryah.
+remmrettadrlen.
+adee.
+dielin.
+sha.
+jen.
+eden.
+kananaraelle.
+malara.
+nosadbergihahie.
+tyn.
+jowelle.
+jobeulanu.
+zayvda.
+kylene.
+eha.
+kayshastonah.
+halina.</code></pre>
 </div>
 </div>
 </section>
@@ -1375,18 +1362,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1418,7 +1394,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
   const viewSource = window.document.getElementById('quarto-view-source') ||
                      window.document.getElementById('quarto-code-tools-source');
   if (viewSource) {
@@ -1477,7 +1473,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -1574,7 +1570,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
@@ -1845,7 +1840,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb37-4"><a href="#cb37-4"></a><span class="an">author:</span></span>
 <span id="cb37-5"><a href="#cb37-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
 <span id="cb37-6"><a href="#cb37-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
-<span id="cb37-7"><a href="#cb37-7"></a><span class="an">categories:</span><span class="co"> [til, python, andrej karpathy, nn-z2h, neural networks, backpropagation] </span></span>
+<span id="cb37-7"><a href="#cb37-7"></a><span class="an">categories:</span><span class="co"> [til, python, andrej karpathy, nn-z2h, neural networks, backpropagation]</span></span>
 <span id="cb37-8"><a href="#cb37-8"></a><span class="an">date:</span><span class="co"> 12-02-2024</span></span>
 <span id="cb37-9"><a href="#cb37-9"></a><span class="an">date-modified:</span><span class="co"> 12-03-2024</span></span>
 <span id="cb37-10"><a href="#cb37-10"></a><span class="an">image:</span><span class="co"> backprop_ninja.jpg</span></span>
@@ -1862,26 +1857,26 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb37-21"><a href="#cb37-21"></a></span>
 <span id="cb37-22"><a href="#cb37-22"></a>::: {.callout-important title="This is not orginal content!"}</span>
 <span id="cb37-23"><a href="#cb37-23"></a>This is my study notes / codes along with Andrej Karpathy's "<span class="co">[</span><span class="ot">Neural Networks: Zero to Hero</span><span class="co">](https://www.youtube.com/watch?v=VMj-3S1tku0&amp;list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ)</span>" series.</span>
-<span id="cb37-24"><a href="#cb37-24"></a>:::</span>
-<span id="cb37-25"><a href="#cb37-25"></a></span>
-<span id="cb37-26"><a href="#cb37-26"></a><span class="fu"># intro: why you should care</span></span>
+<span id="cb37-24"><a href="#cb37-24"></a></span>
+<span id="cb37-25"><a href="#cb37-25"></a>*Edit 1st June, 25*: I changed the loop to 5k only, for the shake of time saving when re-rendering this post!</span>
+<span id="cb37-26"><a href="#cb37-26"></a>:::</span>
 <span id="cb37-27"><a href="#cb37-27"></a></span>
-<span id="cb37-28"><a href="#cb37-28"></a>!<span class="co">[</span><span class="ot">swole doge style backpropagation, image credit to [this video](https://www.youtube.com/watch?v=LzxnmqnctmA)</span><span class="co">](swole_doggo.jpg)</span></span>
+<span id="cb37-28"><a href="#cb37-28"></a><span class="fu"># intro: why you should care</span></span>
 <span id="cb37-29"><a href="#cb37-29"></a></span>
-<span id="cb37-30"><a href="#cb37-30"></a>In the previous lecture, we're introduced to some common issues with our "shallow" (and of course for deep as well) neural network and how to fix with the initialization setting and Batch Normalization. We're also learned some diagnostic tools to observe *forward pass activations*, *backward pass gradients*, and *weights update*, to calibrate the training loop. In this lecture, we aim to replace this line of code:</span>
+<span id="cb37-30"><a href="#cb37-30"></a>!<span class="co">[</span><span class="ot">swole doge style backpropagation, image credit to [this video](https://www.youtube.com/watch?v=LzxnmqnctmA)</span><span class="co">](swole_doggo.jpg)</span></span>
 <span id="cb37-31"><a href="#cb37-31"></a></span>
-<span id="cb37-34"><a href="#cb37-34"></a><span class="in">```{python}</span></span>
-<span id="cb37-35"><a href="#cb37-35"></a><span class="co">#| eval: false</span></span>
-<span id="cb37-36"><a href="#cb37-36"></a>... loss.backward() ...</span>
-<span id="cb37-37"><a href="#cb37-37"></a><span class="in">```</span></span>
-<span id="cb37-38"><a href="#cb37-38"></a></span>
-<span id="cb37-39"><a href="#cb37-39"></a>with from-scratch-code. It's basically identical to <span class="in">`MicroGrad`</span>, but on *Tensor* rather than *Scalar*. But why we should care?</span>
+<span id="cb37-32"><a href="#cb37-32"></a>In the previous lecture, we're introduced to some common issues with our "shallow" (and of course for deep as well) neural network and how to fix with the initialization setting and Batch Normalization. We're also learned some diagnostic tools to observe *forward pass activations*, *backward pass gradients*, and *weights update*, to calibrate the training loop. In this lecture, we aim to replace this line of code:</span>
+<span id="cb37-33"><a href="#cb37-33"></a></span>
+<span id="cb37-36"><a href="#cb37-36"></a><span class="in">```{python}</span></span>
+<span id="cb37-37"><a href="#cb37-37"></a><span class="co">#| eval: false</span></span>
+<span id="cb37-38"><a href="#cb37-38"></a>... loss.backward() ...</span>
+<span id="cb37-39"><a href="#cb37-39"></a><span class="in">```</span></span>
 <span id="cb37-40"><a href="#cb37-40"></a></span>
-<span id="cb37-41"><a href="#cb37-41"></a><span class="at">&gt; The problem with Backpropagation is that it is a </span><span class="co">[</span><span class="ot">leaky abstraction</span><span class="co">](https://en.wikipedia.org/wiki/Leaky_abstraction)</span><span class="at">. -- Andrej Karpathy</span></span>
+<span id="cb37-41"><a href="#cb37-41"></a>with from-scratch-code. It's basically identical to <span class="in">`MicroGrad`</span>, but on *Tensor* rather than *Scalar*. But why we should care?</span>
 <span id="cb37-42"><a href="#cb37-42"></a></span>
-<span id="cb37-43"><a href="#cb37-43"></a>readmore: </span>
-<span id="cb37-44"><a href="#cb37-44"></a><span class="ss">- </span><span class="ot">&lt;https://karpathy.medium.com/yes-you-should-understand-backprop-e2f06eab496b&gt;</span>, </span>
-<span id="cb37-45"><a href="#cb37-45"></a><span class="ss">- </span>and <span class="ot">&lt;https://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html&gt;</span>.</span>
+<span id="cb37-43"><a href="#cb37-43"></a><span class="at">&gt; The problem with Backpropagation is that it is a </span><span class="co">[</span><span class="ot">leaky abstraction</span><span class="co">](https://en.wikipedia.org/wiki/Leaky_abstraction)</span><span class="at">. -- Andrej Karpathy</span></span>
+<span id="cb37-44"><a href="#cb37-44"></a></span>
+<span id="cb37-45"><a href="#cb37-45"></a>readmore: - <span class="ot">&lt;https://karpathy.medium.com/yes-you-should-understand-backprop-e2f06eab496b&gt;</span>, - and <span class="ot">&lt;https://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html&gt;</span>.</span>
 <span id="cb37-46"><a href="#cb37-46"></a></span>
 <span id="cb37-47"><a href="#cb37-47"></a>inshort, to effectively debug neural network, we should be deeply understanding how back propagation work under the hood. Let's do it!</span>
 <span id="cb37-48"><a href="#cb37-48"></a></span>
@@ -2067,13 +2062,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb37-244"><a href="#cb37-244"></a><span class="ss">-   </span>$\frac{\partial L}{\partial \mathbf{c}} = \frac{\partial L}{\partial \mathbf{d}}.sum(0)$</span>
 <span id="cb37-245"><a href="#cb37-245"></a></span>
 <span id="cb37-248"><a href="#cb37-248"></a><span class="in">```{python}</span></span>
-<span id="cb37-249"><a href="#cb37-249"></a><span class="co"># Exercise 1: backprop through the whole thing manually, </span></span>
-<span id="cb37-250"><a href="#cb37-250"></a><span class="co"># backpropagating through exactly all of the variables </span></span>
+<span id="cb37-249"><a href="#cb37-249"></a><span class="co"># Exercise 1: backprop through the whole thing manually,</span></span>
+<span id="cb37-250"><a href="#cb37-250"></a><span class="co"># backpropagating through exactly all of the variables</span></span>
 <span id="cb37-251"><a href="#cb37-251"></a><span class="co"># as they are defined in the forward pass above, one by one</span></span>
 <span id="cb37-252"><a href="#cb37-252"></a><span class="bu">print</span>(<span class="st">"Cross entropy loss"</span>.upper())</span>
 <span id="cb37-253"><a href="#cb37-253"></a>dlogprobs <span class="op">=</span> torch.zeros_like(logprobs) <span class="co"># create zeros tensor with same size</span></span>
 <span id="cb37-254"><a href="#cb37-254"></a>dlogprobs[<span class="bu">range</span>(n), Yb] <span class="op">=</span> <span class="op">-</span> <span class="fl">1.0</span> <span class="op">/</span> n <span class="co"># &lt;1&gt;</span></span>
-<span id="cb37-255"><a href="#cb37-255"></a>dprobs <span class="op">=</span> torch.zeros_like(probs) </span>
+<span id="cb37-255"><a href="#cb37-255"></a>dprobs <span class="op">=</span> torch.zeros_like(probs)</span>
 <span id="cb37-256"><a href="#cb37-256"></a>dprobs <span class="op">=</span> (<span class="fl">1.0</span> <span class="op">/</span> probs) <span class="op">*</span> dlogprobs <span class="co"># &lt;2&gt;</span></span>
 <span id="cb37-257"><a href="#cb37-257"></a>dcounts_sum_inv <span class="op">=</span> (counts <span class="op">*</span> dprobs).<span class="bu">sum</span>(<span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>) <span class="co"># &lt;3&gt;</span></span>
 <span id="cb37-258"><a href="#cb37-258"></a>dcounts_sum <span class="op">=</span> (<span class="op">-</span><span class="dv">1</span> <span class="op">*</span> counts_sum<span class="op">**-</span><span class="dv">2</span>) <span class="op">*</span> dcounts_sum_inv</span>
@@ -2090,7 +2085,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb37-269"><a href="#cb37-269"></a><span class="bu">cmp</span>(<span class="st">'logit_maxes'</span>, dlogit_maxes, logit_maxes)</span>
 <span id="cb37-270"><a href="#cb37-270"></a></span>
 <span id="cb37-271"><a href="#cb37-271"></a></span>
-<span id="cb37-272"><a href="#cb37-272"></a>dlogits <span class="op">=</span> (dnorm_logits.clone() </span>
+<span id="cb37-272"><a href="#cb37-272"></a>dlogits <span class="op">=</span> (dnorm_logits.clone()</span>
 <span id="cb37-273"><a href="#cb37-273"></a>          <span class="op">+</span> F.one_hot( logits.<span class="bu">max</span>(<span class="dv">1</span>).indices, <span class="co"># broadcasting, again</span></span>
 <span id="cb37-274"><a href="#cb37-274"></a>                        num_classes<span class="op">=</span>logits.shape[<span class="dv">1</span>]</span>
 <span id="cb37-275"><a href="#cb37-275"></a>                        ) <span class="op">*</span> dlogit_maxes) <span class="co"># &lt;5&gt;</span></span>
@@ -2351,7 +2346,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb37-548"><a href="#cb37-548"></a>  p.requires_grad <span class="op">=</span> <span class="va">True</span></span>
 <span id="cb37-549"><a href="#cb37-549"></a></span>
 <span id="cb37-550"><a href="#cb37-550"></a><span class="co"># same optimization as last time</span></span>
-<span id="cb37-551"><a href="#cb37-551"></a>max_steps <span class="op">=</span> <span class="dv">200000</span></span>
+<span id="cb37-551"><a href="#cb37-551"></a>max_steps <span class="op">=</span> <span class="dv">5_000</span> <span class="co">#200_000</span></span>
 <span id="cb37-552"><a href="#cb37-552"></a>batch_size <span class="op">=</span> <span class="dv">32</span></span>
 <span id="cb37-553"><a href="#cb37-553"></a>n <span class="op">=</span> batch_size <span class="co"># convenience</span></span>
 <span id="cb37-554"><a href="#cb37-554"></a>lossi <span class="op">=</span> []</span>
@@ -2489,14 +2484,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb37-694"><a href="#cb37-694"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">2147483647</span> <span class="op">+</span> <span class="dv">10</span>)</span>
 <span id="cb37-695"><a href="#cb37-695"></a></span>
 <span id="cb37-696"><a href="#cb37-696"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20</span>):</span>
-<span id="cb37-697"><a href="#cb37-697"></a>    </span>
+<span id="cb37-697"><a href="#cb37-697"></a></span>
 <span id="cb37-698"><a href="#cb37-698"></a>    out <span class="op">=</span> []</span>
 <span id="cb37-699"><a href="#cb37-699"></a>    context <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> block_size <span class="co"># initialize with all ...</span></span>
 <span id="cb37-700"><a href="#cb37-700"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
 <span id="cb37-701"><a href="#cb37-701"></a>      <span class="co"># ------------</span></span>
 <span id="cb37-702"><a href="#cb37-702"></a>      <span class="co"># forward pass:</span></span>
 <span id="cb37-703"><a href="#cb37-703"></a>      <span class="co"># Embedding</span></span>
-<span id="cb37-704"><a href="#cb37-704"></a>      emb <span class="op">=</span> C[torch.tensor([context])] <span class="co"># (1,block_size,d)      </span></span>
+<span id="cb37-704"><a href="#cb37-704"></a>      emb <span class="op">=</span> C[torch.tensor([context])] <span class="co"># (1,block_size,d)</span></span>
 <span id="cb37-705"><a href="#cb37-705"></a>      embcat <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) <span class="co"># concat into (N, block_size * n_embd)</span></span>
 <span id="cb37-706"><a href="#cb37-706"></a>      hpreact <span class="op">=</span> embcat <span class="op">@</span> W1 <span class="op">+</span> b1</span>
 <span id="cb37-707"><a href="#cb37-707"></a>      hpreact <span class="op">=</span> bngain <span class="op">*</span> (hpreact <span class="op">-</span> bnmean) <span class="op">*</span> (bnvar <span class="op">+</span> <span class="fl">1e-5</span>)<span class="op">**-</span><span class="fl">0.5</span> <span class="op">+</span> bnbias</span>
@@ -2510,7 +2505,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb37-715"><a href="#cb37-715"></a>      out.append(ix)</span>
 <span id="cb37-716"><a href="#cb37-716"></a>      <span class="cf">if</span> ix <span class="op">==</span> <span class="dv">0</span>:</span>
 <span id="cb37-717"><a href="#cb37-717"></a>        <span class="cf">break</span></span>
-<span id="cb37-718"><a href="#cb37-718"></a>    </span>
+<span id="cb37-718"><a href="#cb37-718"></a></span>
 <span id="cb37-719"><a href="#cb37-719"></a>    <span class="bu">print</span>(<span class="st">''</span>.join(itos[i] <span class="cf">for</span> i <span class="kw">in</span> out))</span>
 <span id="cb37-720"><a href="#cb37-720"></a><span class="in">```</span></span>
 <span id="cb37-721"><a href="#cb37-721"></a></span>
@@ -2524,22 +2519,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb37-729"><a href="#cb37-729"></a></span>
 <span id="cb37-730"><a href="#cb37-730"></a><span class="ss">1.  </span>Notebook: <span class="ot">&lt;https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part4_backprop.ipynb&gt;</span>;</span>
 <span id="cb37-731"><a href="#cb37-731"></a><span class="ss">2.  </span>Colab notebook: <span class="ot">&lt;https://colab.research.google.com/drive/1WV2oi2fh9XXyldh02wupFQX0wh5ZC-z-?usp=sharing&gt;</span></span>
-</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2024 Le Khac Tuan</span></p>
+<p><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2025 Le Khac Tuan</span></p>
 </div>   
     <div class="nav-footer-center">
-<p><span class="faux-block">Designed with <i class="fa-solid fa-heart" aria-label="heart"></i></span></p>
+<p><span class="faux-block"> Designed with <i class="fa-solid fa-heart" aria-label="heart"></i>, <span id="commit-info">Loading last commit…</span> </span></p>
 </div>
     <div class="nav-footer-right">
 <p><span class="faux-block">Made with <a href="https://quarto.org/">Quarto</a></span></p>
 </div>
   </div>
 </footer>
+<script type="application/javascript" src="commit_info.js"></script>
 
 
 

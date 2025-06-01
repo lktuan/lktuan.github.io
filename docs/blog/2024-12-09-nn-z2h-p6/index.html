@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.554">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2024-12-09">
 <meta name="description" content="This is Tuan’s blog">
 
-<title>Le Khac Tuan - NN-Z2H Lesson 6: Building makemore part 5 - Building a WaveNet</title>
+<title>NN-Z2H Lesson 6: Building makemore part 5 - Building a WaveNet – Le Khac Tuan</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -36,7 +36,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -72,12 +72,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-8e54dfbe729680b42f22c627ac27a053.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-81b089a3b74ed4cf194f083418e7130b.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-89cb849060b93fd12025e4f44aaa3f02.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-27750d9d09892f3d6a52d1fd788c41c6.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -122,7 +122,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -170,13 +170,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@tuan_lekhac"> <i class="bi bi-youtube" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
     <a class="nav-link" href="mailto:tuan.lekhac0905@gmail.com"> <i class="bi bi-envelope" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
       </div> <!-- /container-fluid -->
@@ -305,7 +310,7 @@ This is not orginal content!
 <h2 class="anchored" data-anchor-id="starter-code-walk-through">starter code walk through</h2>
 <section id="import-libraries" class="level4">
 <h4 class="anchored" data-anchor-id="import-libraries">import libraries</h4>
-<div id="2e5ccfda" class="cell" data-execution_count="1">
+<div id="c0f047f6" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> torch</span>
@@ -318,7 +323,7 @@ This is not orginal content!
 </section>
 <section id="reading-data" class="level4">
 <h4 class="anchored" data-anchor-id="reading-data">reading data</h4>
-<div id="751b09c6" class="cell" data-execution_count="2">
+<div id="e1d665af" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -333,7 +338,7 @@ This is not orginal content!
 </section>
 <section id="building-vocab" class="level4">
 <h4 class="anchored" data-anchor-id="building-vocab">building vocab</h4>
-<div id="5d90dac7" class="cell" data-execution_count="3">
+<div id="2647be2b" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># build the vocabulary of characters and mapping to/from integer</span></span>
@@ -345,8 +350,8 @@ This is not orginal content!
 <span id="cb3-7"><a href="#cb3-7"></a><span class="bu">print</span>(itos)</span>
 <span id="cb3-8"><a href="#cb3-8"></a><span class="bu">print</span>(vocab_size)</span>
 <span id="cb3-9"><a href="#cb3-9"></a></span>
-<span id="cb3-10"><a href="#cb3-10"></a><span class="co"># itos: {1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e', 6: 'f', 7: 'g', 8: 'h', 9: 'i', 10: 'j', </span></span>
-<span id="cb3-11"><a href="#cb3-11"></a><span class="co"># 11: 'k', 12: 'l', 13: 'm', 14: 'n', 15: 'o', 16: 'p', 17: 'q', 18: 'r', 19: 's', 20: 't', </span></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="co"># itos: {1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e', 6: 'f', 7: 'g', 8: 'h', 9: 'i', 10: 'j',</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="co"># 11: 'k', 12: 'l', 13: 'm', 14: 'n', 15: 'o', 16: 'p', 17: 'q', 18: 'r', 19: 's', 20: 't',</span></span>
 <span id="cb3-12"><a href="#cb3-12"></a><span class="co"># 21: 'u', 22: 'v', 23: 'w', 24: 'x', 25: 'y', 26: 'z', 0: '.'}</span></span>
 <span id="cb3-13"><a href="#cb3-13"></a><span class="co"># vocab_size: 27</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -354,7 +359,7 @@ This is not orginal content!
 </section>
 <section id="initializing-randomization" class="level4">
 <h4 class="anchored" data-anchor-id="initializing-randomization">initializing randomization</h4>
-<div id="3359dd8a" class="cell" data-execution_count="4">
+<div id="226cb206" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">import</span> random</span>
@@ -365,7 +370,7 @@ This is not orginal content!
 </section>
 <section id="create-traindevtest-splits" class="level4">
 <h4 class="anchored" data-anchor-id="create-traindevtest-splits">create train/dev/test splits</h4>
-<div id="5dd7e13d" class="cell" data-execution_count="5">
+<div id="0f6eec99" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>block_size <span class="op">=</span> <span class="dv">3</span> <span class="co"># context length: how many characters do we take to predict the next one?</span></span>
@@ -401,7 +406,7 @@ This is not orginal content!
 </section>
 <section id="input-and-response-preview" class="level4">
 <h4 class="anchored" data-anchor-id="input-and-response-preview">input and response preview</h4>
-<div id="f723bfb9" class="cell" data-execution_count="6">
+<div id="f9315522" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="cf">for</span> x, y <span class="kw">in</span> <span class="bu">zip</span>(Xtr[:<span class="dv">20</span>], Ytr[:<span class="dv">20</span>]):</span>
@@ -434,27 +439,27 @@ This is not orginal content!
 <p>Near copy paste of the layers we have developed in Part 3, I added some docstring to the classes.</p>
 <section id="class-linear" class="level5">
 <h5 class="anchored" data-anchor-id="class-linear">class <code>Linear</code></h5>
-<div id="5557ffd8" class="cell" data-execution_count="7">
+<div id="5c4029f3" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">class</span> Linear:</span>
-<span id="cb8-2"><a href="#cb8-2"></a>  <span class="co">"""    </span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>  <span class="co">"""</span></span>
 <span id="cb8-3"><a href="#cb8-3"></a><span class="co">  Applies an affine linear transformation to the incoming data: y = xA^T + b.</span></span>
 <span id="cb8-4"><a href="#cb8-4"></a></span>
-<span id="cb8-5"><a href="#cb8-5"></a><span class="co">  This class implements a linear (fully connected) layer, which performs a linear </span></span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="co">  transformation on the input tensor. It is typically used in neural network architectures </span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="co">  This class implements a linear (fully connected) layer, which performs a linear</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="co">  transformation on the input tensor. It is typically used in neural network architectures</span></span>
 <span id="cb8-7"><a href="#cb8-7"></a><span class="co">  to transform input features between layers.</span></span>
 <span id="cb8-8"><a href="#cb8-8"></a></span>
 <span id="cb8-9"><a href="#cb8-9"></a><span class="co">  Args:</span></span>
 <span id="cb8-10"><a href="#cb8-10"></a><span class="co">      fan_in (int): Number of input features (input dimension).</span></span>
 <span id="cb8-11"><a href="#cb8-11"></a><span class="co">      fan_out (int): Number of output features (output dimension).</span></span>
-<span id="cb8-12"><a href="#cb8-12"></a><span class="co">      bias (bool, optional): Whether to include a learnable bias term. </span></span>
+<span id="cb8-12"><a href="#cb8-12"></a><span class="co">      bias (bool, optional): Whether to include a learnable bias term.</span></span>
 <span id="cb8-13"><a href="#cb8-13"></a><span class="co">          Defaults to True.</span></span>
 <span id="cb8-14"><a href="#cb8-14"></a></span>
 <span id="cb8-15"><a href="#cb8-15"></a><span class="co">  Attributes:</span></span>
-<span id="cb8-16"><a href="#cb8-16"></a><span class="co">      weight (torch.Tensor): Weight matrix of shape (fan_in, fan_out), </span></span>
+<span id="cb8-16"><a href="#cb8-16"></a><span class="co">      weight (torch.Tensor): Weight matrix of shape (fan_in, fan_out),</span></span>
 <span id="cb8-17"><a href="#cb8-17"></a><span class="co">          initialized using Kaiming initialization.</span></span>
-<span id="cb8-18"><a href="#cb8-18"></a><span class="co">      bias (torch.Tensor or None): Bias vector of shape (fan_out), </span></span>
+<span id="cb8-18"><a href="#cb8-18"></a><span class="co">      bias (torch.Tensor or None): Bias vector of shape (fan_out),</span></span>
 <span id="cb8-19"><a href="#cb8-19"></a><span class="co">          initialized to zeros if bias is True, otherwise None.</span></span>
 <span id="cb8-20"><a href="#cb8-20"></a></span>
 <span id="cb8-21"><a href="#cb8-21"></a><span class="co">  Methods:</span></span>
@@ -472,13 +477,13 @@ This is not orginal content!
 <span id="cb8-33"><a href="#cb8-33"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, fan_in, fan_out, bias<span class="op">=</span><span class="va">True</span>):</span>
 <span id="cb8-34"><a href="#cb8-34"></a>    <span class="va">self</span>.weight <span class="op">=</span> torch.randn((fan_in, fan_out)) <span class="op">/</span> fan_in<span class="op">**</span><span class="fl">0.5</span> <span class="co"># note: kaiming init</span></span>
 <span id="cb8-35"><a href="#cb8-35"></a>    <span class="va">self</span>.bias <span class="op">=</span> torch.zeros(fan_out) <span class="cf">if</span> bias <span class="cf">else</span> <span class="va">None</span></span>
-<span id="cb8-36"><a href="#cb8-36"></a>  </span>
+<span id="cb8-36"><a href="#cb8-36"></a></span>
 <span id="cb8-37"><a href="#cb8-37"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
 <span id="cb8-38"><a href="#cb8-38"></a>    <span class="va">self</span>.out <span class="op">=</span> x <span class="op">@</span> <span class="va">self</span>.weight</span>
 <span id="cb8-39"><a href="#cb8-39"></a>    <span class="cf">if</span> <span class="va">self</span>.bias <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
 <span id="cb8-40"><a href="#cb8-40"></a>      <span class="va">self</span>.out <span class="op">+=</span> <span class="va">self</span>.bias</span>
 <span id="cb8-41"><a href="#cb8-41"></a>    <span class="cf">return</span> <span class="va">self</span>.out</span>
-<span id="cb8-42"><a href="#cb8-42"></a>  </span>
+<span id="cb8-42"><a href="#cb8-42"></a></span>
 <span id="cb8-43"><a href="#cb8-43"></a>  <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
 <span id="cb8-44"><a href="#cb8-44"></a>    <span class="cf">return</span> [<span class="va">self</span>.weight] <span class="op">+</span> ([] <span class="cf">if</span> <span class="va">self</span>.bias <span class="kw">is</span> <span class="va">None</span> <span class="cf">else</span> [<span class="va">self</span>.bias])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -486,25 +491,25 @@ This is not orginal content!
 </section>
 <section id="class-batchnorm1d" class="level5">
 <h5 class="anchored" data-anchor-id="class-batchnorm1d">class <code>BatchNorm1d</code></h5>
-<div id="47b91978" class="cell" data-execution_count="8">
+<div id="964c549f" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">class</span> BatchNorm1d:</span>
 <span id="cb9-2"><a href="#cb9-2"></a>  <span class="co">"""</span></span>
-<span id="cb9-3"><a href="#cb9-3"></a><span class="co">  Applies Batch Normalization to the input tensor, a technique to improve </span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="co">  Applies Batch Normalization to the input tensor, a technique to improve</span></span>
 <span id="cb9-4"><a href="#cb9-4"></a><span class="co">  training stability and performance in deep neural networks.</span></span>
 <span id="cb9-5"><a href="#cb9-5"></a></span>
-<span id="cb9-6"><a href="#cb9-6"></a><span class="co">  Batch Normalization normalizes the input across the batch dimension, </span></span>
-<span id="cb9-7"><a href="#cb9-7"></a><span class="co">  reducing internal covariate shift and allowing higher learning rates. </span></span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="co">  Batch Normalization normalizes the input across the batch dimension,</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="co">  reducing internal covariate shift and allowing higher learning rates.</span></span>
 <span id="cb9-8"><a href="#cb9-8"></a><span class="co">  This implementation supports both training and inference modes.</span></span>
 <span id="cb9-9"><a href="#cb9-9"></a></span>
 <span id="cb9-10"><a href="#cb9-10"></a><span class="co">  Args:</span></span>
 <span id="cb9-11"><a href="#cb9-11"></a><span class="co">      dim (int): Number of features or channels to be normalized.</span></span>
-<span id="cb9-12"><a href="#cb9-12"></a><span class="co">      eps (float, optional): A small constant added to the denominator for </span></span>
-<span id="cb9-13"><a href="#cb9-13"></a><span class="co">          numerical stability to prevent division by zero. </span></span>
+<span id="cb9-12"><a href="#cb9-12"></a><span class="co">      eps (float, optional): A small constant added to the denominator for</span></span>
+<span id="cb9-13"><a href="#cb9-13"></a><span class="co">          numerical stability to prevent division by zero.</span></span>
 <span id="cb9-14"><a href="#cb9-14"></a><span class="co">          Defaults to 1e-5.</span></span>
-<span id="cb9-15"><a href="#cb9-15"></a><span class="co">      momentum (float, optional): Momentum for updating running mean and </span></span>
-<span id="cb9-16"><a href="#cb9-16"></a><span class="co">          variance during training. Controls the degree of exponential </span></span>
+<span id="cb9-15"><a href="#cb9-15"></a><span class="co">      momentum (float, optional): Momentum for updating running mean and</span></span>
+<span id="cb9-16"><a href="#cb9-16"></a><span class="co">          variance during training. Controls the degree of exponential</span></span>
 <span id="cb9-17"><a href="#cb9-17"></a><span class="co">          moving average. Defaults to 0.1.</span></span>
 <span id="cb9-18"><a href="#cb9-18"></a></span>
 <span id="cb9-19"><a href="#cb9-19"></a><span class="co">  Attributes:</span></span>
@@ -547,7 +552,7 @@ This is not orginal content!
 <span id="cb9-56"><a href="#cb9-56"></a>    <span class="co"># buffers (trained with a running 'momentum update')</span></span>
 <span id="cb9-57"><a href="#cb9-57"></a>    <span class="va">self</span>.running_mean <span class="op">=</span> torch.zeros(dim)</span>
 <span id="cb9-58"><a href="#cb9-58"></a>    <span class="va">self</span>.running_var <span class="op">=</span> torch.ones(dim)</span>
-<span id="cb9-59"><a href="#cb9-59"></a>  </span>
+<span id="cb9-59"><a href="#cb9-59"></a></span>
 <span id="cb9-60"><a href="#cb9-60"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
 <span id="cb9-61"><a href="#cb9-61"></a>    <span class="co"># calculate the forward pass</span></span>
 <span id="cb9-62"><a href="#cb9-62"></a>    <span class="cf">if</span> <span class="va">self</span>.training:</span>
@@ -564,7 +569,7 @@ This is not orginal content!
 <span id="cb9-73"><a href="#cb9-73"></a>        <span class="va">self</span>.running_mean <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> <span class="va">self</span>.momentum) <span class="op">*</span> <span class="va">self</span>.running_mean <span class="op">+</span> <span class="va">self</span>.momentum <span class="op">*</span> xmean</span>
 <span id="cb9-74"><a href="#cb9-74"></a>        <span class="va">self</span>.running_var <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> <span class="va">self</span>.momentum) <span class="op">*</span> <span class="va">self</span>.running_var <span class="op">+</span> <span class="va">self</span>.momentum <span class="op">*</span> xvar</span>
 <span id="cb9-75"><a href="#cb9-75"></a>    <span class="cf">return</span> <span class="va">self</span>.out</span>
-<span id="cb9-76"><a href="#cb9-76"></a>  </span>
+<span id="cb9-76"><a href="#cb9-76"></a></span>
 <span id="cb9-77"><a href="#cb9-77"></a>  <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
 <span id="cb9-78"><a href="#cb9-78"></a>    <span class="cf">return</span> [<span class="va">self</span>.gamma, <span class="va">self</span>.beta]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -573,20 +578,20 @@ This is not orginal content!
 </section>
 <section id="class-tanh" class="level4">
 <h4 class="anchored" data-anchor-id="class-tanh">class <code>Tanh</code></h4>
-<div id="02fd3e7d" class="cell" data-execution_count="9">
+<div id="e66a8d61" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">class</span> Tanh:</span>
 <span id="cb10-2"><a href="#cb10-2"></a>    <span class="co">"""</span></span>
 <span id="cb10-3"><a href="#cb10-3"></a><span class="co">    Hyperbolic Tangent (Tanh) Activation Function</span></span>
 <span id="cb10-4"><a href="#cb10-4"></a></span>
-<span id="cb10-5"><a href="#cb10-5"></a><span class="co">    Applies the hyperbolic tangent activation function element-wise to the input tensor. </span></span>
-<span id="cb10-6"><a href="#cb10-6"></a><span class="co">    Tanh maps input values to the range [-1, 1], providing a symmetric and non-linear </span></span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="co">    Applies the hyperbolic tangent activation function element-wise to the input tensor.</span></span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="co">    Tanh maps input values to the range [-1, 1], providing a symmetric and non-linear</span></span>
 <span id="cb10-7"><a href="#cb10-7"></a><span class="co">    transformation that helps neural networks learn complex patterns.</span></span>
 <span id="cb10-8"><a href="#cb10-8"></a></span>
 <span id="cb10-9"><a href="#cb10-9"></a><span class="co">    Mathematical Definition:</span></span>
 <span id="cb10-10"><a href="#cb10-10"></a><span class="co">    tanh(x) = (e^x - e^-x) / (e^x + e^-x)</span></span>
-<span id="cb10-11"><a href="#cb10-11"></a><span class="co">    </span></span>
+<span id="cb10-11"><a href="#cb10-11"></a></span>
 <span id="cb10-12"><a href="#cb10-12"></a><span class="co">    Key Characteristics:</span></span>
 <span id="cb10-13"><a href="#cb10-13"></a><span class="co">    - Output Range: [-1, 1]</span></span>
 <span id="cb10-14"><a href="#cb10-14"></a><span class="co">    - Symmetric around the origin</span></span>
@@ -622,7 +627,7 @@ This is not orginal content!
 </div>
 <section id="random-number-generator" class="level5">
 <h5 class="anchored" data-anchor-id="random-number-generator">random number generator</h5>
-<div id="9b15b200" class="cell" data-execution_count="10">
+<div id="812115b1" class="cell" data-execution_count="10">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>torch.manual_seed(<span class="dv">42</span>)<span class="op">;</span> <span class="co"># seed rng for reproducibility</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -631,7 +636,7 @@ This is not orginal content!
 </section>
 <section id="network-architecture" class="level5">
 <h5 class="anchored" data-anchor-id="network-architecture">network architecture</h5>
-<div id="dc0bd9d9" class="cell" data-execution_count="11">
+<div id="a5a47931" class="cell" data-execution_count="11">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># original network</span></span>
@@ -662,7 +667,7 @@ This is not orginal content!
 </section>
 <section id="optimization" class="level4">
 <h4 class="anchored" data-anchor-id="optimization">optimization</h4>
-<div id="2bebbf1e" class="cell" data-execution_count="12">
+<div id="dc2af5a3" class="cell" data-execution_count="12">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># same optimization as last time</span></span>
@@ -671,23 +676,23 @@ This is not orginal content!
 <span id="cb13-4"><a href="#cb13-4"></a>lossi <span class="op">=</span> []</span>
 <span id="cb13-5"><a href="#cb13-5"></a></span>
 <span id="cb13-6"><a href="#cb13-6"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(max_steps):</span>
-<span id="cb13-7"><a href="#cb13-7"></a>  </span>
+<span id="cb13-7"><a href="#cb13-7"></a></span>
 <span id="cb13-8"><a href="#cb13-8"></a>  <span class="co"># minibatch construct</span></span>
 <span id="cb13-9"><a href="#cb13-9"></a>  ix <span class="op">=</span> torch.randint(<span class="dv">0</span>, Xtr.shape[<span class="dv">0</span>], (batch_size,))</span>
 <span id="cb13-10"><a href="#cb13-10"></a>  Xb, Yb <span class="op">=</span> Xtr[ix], Ytr[ix] <span class="co"># batch X,Y</span></span>
-<span id="cb13-11"><a href="#cb13-11"></a>  </span>
+<span id="cb13-11"><a href="#cb13-11"></a></span>
 <span id="cb13-12"><a href="#cb13-12"></a>  <span class="co"># forward pass</span></span>
-<span id="cb13-13"><a href="#cb13-13"></a>  emb <span class="op">=</span> C[Xb] <span class="co"># embed the characters into vectors   </span></span>
+<span id="cb13-13"><a href="#cb13-13"></a>  emb <span class="op">=</span> C[Xb] <span class="co"># embed the characters into vectors</span></span>
 <span id="cb13-14"><a href="#cb13-14"></a>  x <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) <span class="co"># concatenate the vectors</span></span>
 <span id="cb13-15"><a href="#cb13-15"></a>  <span class="cf">for</span> layer <span class="kw">in</span> layers:</span>
 <span id="cb13-16"><a href="#cb13-16"></a>    x <span class="op">=</span> layer(x)</span>
 <span id="cb13-17"><a href="#cb13-17"></a>  loss <span class="op">=</span> F.cross_entropy(x, Yb) <span class="co"># loss function</span></span>
-<span id="cb13-18"><a href="#cb13-18"></a>  </span>
+<span id="cb13-18"><a href="#cb13-18"></a></span>
 <span id="cb13-19"><a href="#cb13-19"></a>  <span class="co"># backward pass</span></span>
 <span id="cb13-20"><a href="#cb13-20"></a>  <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
 <span id="cb13-21"><a href="#cb13-21"></a>    p.grad <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb13-22"><a href="#cb13-22"></a>  loss.backward()</span>
-<span id="cb13-23"><a href="#cb13-23"></a>  </span>
+<span id="cb13-23"><a href="#cb13-23"></a></span>
 <span id="cb13-24"><a href="#cb13-24"></a>  <span class="co"># update: simple SGD</span></span>
 <span id="cb13-25"><a href="#cb13-25"></a>  lr <span class="op">=</span> <span class="fl">0.1</span> <span class="cf">if</span> i <span class="op">&lt;</span> <span class="dv">150000</span> <span class="cf">else</span> <span class="fl">0.01</span> <span class="co"># step learning rate decay</span></span>
 <span id="cb13-26"><a href="#cb13-26"></a>  <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
@@ -722,7 +727,7 @@ This is not orginal content!
 </section>
 <section id="observe-training-processevaluation" class="level4">
 <h4 class="anchored" data-anchor-id="observe-training-processevaluation">observe training process/evaluation</h4>
-<div id="da90737f" class="cell" data-execution_count="13">
+<div id="f2a87323" class="cell" data-execution_count="13">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>plt.plot(lossi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -738,7 +743,7 @@ This is not orginal content!
 <section id="calibrate-the-batchnorm-after-training" class="level4">
 <h4 class="anchored" data-anchor-id="calibrate-the-batchnorm-after-training">calibrate the <code>batchnorm</code> after training</h4>
 <p>We should be using the running mean/variance of the whole dataset splits rather than the last mini-batch.</p>
-<div id="6ed190bf" class="cell" data-execution_count="14">
+<div id="05be87a1" class="cell" data-execution_count="14">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># put layers into eval mode (needed for batchnorm especially)</span></span>
@@ -749,7 +754,7 @@ This is not orginal content!
 </section>
 <section id="calculate-on-whole-training-and-validation-splits" class="level4">
 <h4 class="anchored" data-anchor-id="calculate-on-whole-training-and-validation-splits">calculate on whole training and validation splits</h4>
-<div id="9fb248a8" class="cell" data-execution_count="15">
+<div id="954d7379" class="cell" data-execution_count="15">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># evaluate the loss</span></span>
@@ -801,7 +806,7 @@ This is not orginal content!
 <h2 class="anchored" data-anchor-id="lets-fix-the-learning-rate-plot">let’s fix the learning rate plot</h2>
 <p>The plot for <code>lossi</code> looks very crazy, it’s because the batch size of 32 is way too few so this time we got lucky, and next time we got unlucky. And the mini-batch loss splashed too much. We should probably fix it.</p>
 <p>We pivot to a row for every 1000 observations of <code>lossi</code> and calculate the mean, we end up have 200 observations which is easier to see.</p>
-<div id="26addc8b" class="cell" data-execution_count="16">
+<div id="6f3f4a90" class="cell" data-execution_count="16">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a>plt.plot(torch.tensor(lossi).view(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1000</span>).mean(<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -819,18 +824,18 @@ This is not orginal content!
 <h2 class="anchored" data-anchor-id="pytorchifying-our-code-layers-containers-torch.nn-fun-bugs">pytorchifying our code: layers, containers, <code>torch.nn</code>, fun bugs</h2>
 <p>Now we notice that we still have the embedding operation lying outside the pytorch-ified layers. It basically creating a lookup table <code>C</code>, embedding it with our data <code>Y</code> (or <code>Yb</code>), then stretching out to row with <code>view()</code> which is very cheap in PyTorch as no more memory creation is needed.</p>
 <p>We modulize this by constructing 2 classes:</p>
-<div id="5c3a864e" class="cell" data-execution_count="17">
+<div id="ed88f230" class="cell" data-execution_count="17">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">class</span> Embedding:</span>
-<span id="cb21-2"><a href="#cb21-2"></a>  </span>
+<span id="cb21-2"><a href="#cb21-2"></a></span>
 <span id="cb21-3"><a href="#cb21-3"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, num_embeddings, embedding_dim):</span>
 <span id="cb21-4"><a href="#cb21-4"></a>    <span class="va">self</span>.weight <span class="op">=</span> torch.randn((num_embeddings, embedding_dim))</span>
-<span id="cb21-5"><a href="#cb21-5"></a>    </span>
+<span id="cb21-5"><a href="#cb21-5"></a></span>
 <span id="cb21-6"><a href="#cb21-6"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, IX):</span>
 <span id="cb21-7"><a href="#cb21-7"></a>    <span class="va">self</span>.out <span class="op">=</span> <span class="va">self</span>.weight[IX]</span>
 <span id="cb21-8"><a href="#cb21-8"></a>    <span class="cf">return</span> <span class="va">self</span>.out</span>
-<span id="cb21-9"><a href="#cb21-9"></a>  </span>
+<span id="cb21-9"><a href="#cb21-9"></a></span>
 <span id="cb21-10"><a href="#cb21-10"></a>  <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
 <span id="cb21-11"><a href="#cb21-11"></a>    <span class="cf">return</span> [<span class="va">self</span>.weight]</span>
 <span id="cb21-12"><a href="#cb21-12"></a></span>
@@ -840,13 +845,13 @@ This is not orginal content!
 <span id="cb21-16"><a href="#cb21-16"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
 <span id="cb21-17"><a href="#cb21-17"></a>    <span class="va">self</span>.out <span class="op">=</span> x.view(x.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>)</span>
 <span id="cb21-18"><a href="#cb21-18"></a>    <span class="cf">return</span> <span class="va">self</span>.out</span>
-<span id="cb21-19"><a href="#cb21-19"></a>  </span>
+<span id="cb21-19"><a href="#cb21-19"></a></span>
 <span id="cb21-20"><a href="#cb21-20"></a>  <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
 <span id="cb21-21"><a href="#cb21-21"></a>    <span class="cf">return</span> []</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Now we can re-define the <code>layers</code> like this:</p>
-<div id="35de4af3" class="cell" data-execution_count="18">
+<div id="720dbdaa" class="cell" data-execution_count="18">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a>layers <span class="op">=</span> [</span>
@@ -860,27 +865,27 @@ This is not orginal content!
 </details>
 </div>
 <p>and also remove the <code>C</code>, <code>emb</code> definition in the forward pass construction. Going futher, we will be not only pytorchifying the elements of <code>layers</code> only, but also the <code>layers</code> itself. In PyTorch, we have term <code>containers</code>, which specifying how we organize the layers in a network. And what are we doing here is constructing layers sequentially, which is equivalent to <code>Sequential</code> in the <code>containers</code>:</p>
-<div id="d2bdc1c8" class="cell" data-execution_count="19">
+<div id="e127f831" class="cell" data-execution_count="19">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">class</span> Sequential:</span>
-<span id="cb23-2"><a href="#cb23-2"></a>  </span>
+<span id="cb23-2"><a href="#cb23-2"></a></span>
 <span id="cb23-3"><a href="#cb23-3"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, layers):</span>
 <span id="cb23-4"><a href="#cb23-4"></a>    <span class="va">self</span>.layers <span class="op">=</span> layers</span>
-<span id="cb23-5"><a href="#cb23-5"></a>  </span>
+<span id="cb23-5"><a href="#cb23-5"></a></span>
 <span id="cb23-6"><a href="#cb23-6"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
 <span id="cb23-7"><a href="#cb23-7"></a>    <span class="cf">for</span> layer <span class="kw">in</span> <span class="va">self</span>.layers:</span>
 <span id="cb23-8"><a href="#cb23-8"></a>      x <span class="op">=</span> layer(x)</span>
 <span id="cb23-9"><a href="#cb23-9"></a>    <span class="va">self</span>.out <span class="op">=</span> x</span>
 <span id="cb23-10"><a href="#cb23-10"></a>    <span class="cf">return</span> <span class="va">self</span>.out</span>
-<span id="cb23-11"><a href="#cb23-11"></a>  </span>
+<span id="cb23-11"><a href="#cb23-11"></a></span>
 <span id="cb23-12"><a href="#cb23-12"></a>  <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
 <span id="cb23-13"><a href="#cb23-13"></a>    <span class="co"># get parameters of all layers and stretch them out into one list</span></span>
 <span id="cb23-14"><a href="#cb23-14"></a>    <span class="cf">return</span> [p <span class="cf">for</span> layer <span class="kw">in</span> <span class="va">self</span>.layers <span class="cf">for</span> p <span class="kw">in</span> layer.parameters()]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>and wrapp the layers into our <code>model</code>:</p>
-<div id="44bc2bff" class="cell" data-execution_count="20">
+<div id="560f5a5d" class="cell" data-execution_count="20">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a>model <span class="op">=</span> Sequential([</span>
@@ -961,7 +966,7 @@ This is not orginal content!
 <section id="implementing-wavenet-1" class="level2">
 <h2 class="anchored" data-anchor-id="implementing-wavenet-1">implementing <code>WaveNet</code></h2>
 <p>First, let’s revisit the shape of the tensors along the way of the forward pass in our neural net:</p>
-<div id="add830ca" class="cell" data-execution_count="21">
+<div id="24a32dbb" class="cell" data-execution_count="21">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># Look at a batch of just 4 examples</span></span>
@@ -994,7 +999,7 @@ This is not orginal content!
 </details>
 </div>
 <p>Now look into the Linear layer, which take the input <code>x</code> in the forward pass, multiply by <code>weight</code> and add the <code>bias</code> in (there is broadcasting here). So the transformation in this layer looks like:</p>
-<div id="9f9b90c8" class="cell" data-execution_count="22">
+<div id="ed056309" class="cell" data-execution_count="22">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a>(torch.randn(<span class="dv">4</span>, <span class="dv">80</span>) <span class="op">@</span> torch.randn(<span class="dv">80</span>, <span class="dv">200</span>) <span class="op">+</span> torch.randn(<span class="dv">200</span>)).shape</span>
@@ -1003,7 +1008,7 @@ This is not orginal content!
 </details>
 </div>
 <p>Input <code>x</code> matrix here does not need to be 2 dimensional array. The matrix multiplication in PyTorch is quite powerfull, you can pass more than 2 dimensional array. And all dimensions will be preserved except the last one. Like this:</p>
-<div id="2ce7af19" class="cell" data-execution_count="23">
+<div id="60f6327e" class="cell" data-execution_count="23">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1"></a>(torch.randn(<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">80</span>) <span class="op">@</span> torch.randn(<span class="dv">80</span>, <span class="dv">200</span>) <span class="op">+</span> torch.randn(<span class="dv">200</span>)).shape</span>
@@ -1014,7 +1019,7 @@ This is not orginal content!
 <p>Which we want to improve now is not just flatten the 8 characters input too fast at the beginning, we want to group them pair by pair to process them in parallel.</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode numberSource md number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb30-1"><a href="#cb30-1"></a>(x1 x2) (x3 x4) (x5 x6) (x7 x8)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Particularly for 8 characters block size we want to divide it into 4 groups ~ 4 pair of <em>bigrams</em>. We are increasing <strong>the dimensions of the batch</strong>.</p>
-<div id="79b033d0" class="cell" data-execution_count="24">
+<div id="9df4e45c" class="cell" data-execution_count="24">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1"></a>(torch.randn(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">20</span>) <span class="op">@</span> torch.randn(<span class="dv">20</span>, <span class="dv">200</span>) <span class="op">+</span> torch.randn(<span class="dv">200</span>)).shape</span>
@@ -1023,19 +1028,19 @@ This is not orginal content!
 </details>
 </div>
 <p>How can we achieve this in PyTorch, we can index the odd and even indexes then pair them up.</p>
-<div id="158ed936" class="cell" data-execution_count="25">
+<div id="888b1a66" class="cell" data-execution_count="25">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a>e <span class="op">=</span> torch.randn(<span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">10</span>) <span class="co"># 4 examples, 8 chars context size, 10-d embedding</span></span>
 <span id="cb32-2"><a href="#cb32-2"></a><span class="co"># goal: want this to be (4, 4, 20) where consecutive 10-d vectors get concatenated</span></span>
 <span id="cb32-3"><a href="#cb32-3"></a></span>
 <span id="cb32-4"><a href="#cb32-4"></a>explicit <span class="op">=</span> torch.cat([e[:, ::<span class="dv">2</span>, :], e[:, <span class="dv">1</span>::<span class="dv">2</span>, :]], dim<span class="op">=</span><span class="dv">2</span>) <span class="co"># cat in the third dim</span></span>
-<span id="cb32-5"><a href="#cb32-5"></a>explicit.shape </span>
+<span id="cb32-5"><a href="#cb32-5"></a>explicit.shape</span>
 <span id="cb32-6"><a href="#cb32-6"></a><span class="co"># &gt; torch.Size([4, 4, 20])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Of course, PyTorch provide a more efficient way to do this, using <code>view()</code>:</p>
-<div id="31c1a763" class="cell" data-execution_count="26">
+<div id="7f949bb6" class="cell" data-execution_count="26">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1"></a>(e.view(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">20</span>) <span class="op">==</span> explicit).<span class="bu">all</span>()</span>
@@ -1043,14 +1048,14 @@ This is not orginal content!
 </details>
 </div>
 <p>We are going to modulize the <code>FlattenConsecutive</code>:</p>
-<div id="b97f2bd7" class="cell" data-execution_count="27">
+<div id="a763eb71" class="cell" data-execution_count="27">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1"></a><span class="kw">class</span> FlattenConsecutive:</span>
-<span id="cb34-2"><a href="#cb34-2"></a>  </span>
+<span id="cb34-2"><a href="#cb34-2"></a></span>
 <span id="cb34-3"><a href="#cb34-3"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, n):</span>
 <span id="cb34-4"><a href="#cb34-4"></a>    <span class="va">self</span>.n <span class="op">=</span> n</span>
-<span id="cb34-5"><a href="#cb34-5"></a>    </span>
+<span id="cb34-5"><a href="#cb34-5"></a></span>
 <span id="cb34-6"><a href="#cb34-6"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
 <span id="cb34-7"><a href="#cb34-7"></a>    B, T, C <span class="op">=</span> x.shape</span>
 <span id="cb34-8"><a href="#cb34-8"></a>    x <span class="op">=</span> x.view(B, T<span class="op">//</span><span class="va">self</span>.n, C<span class="op">*</span><span class="va">self</span>.n)</span>
@@ -1058,13 +1063,13 @@ This is not orginal content!
 <span id="cb34-10"><a href="#cb34-10"></a>      x <span class="op">=</span> x.squeeze(<span class="dv">1</span>)</span>
 <span id="cb34-11"><a href="#cb34-11"></a>    <span class="va">self</span>.out <span class="op">=</span> x</span>
 <span id="cb34-12"><a href="#cb34-12"></a>    <span class="cf">return</span> <span class="va">self</span>.out</span>
-<span id="cb34-13"><a href="#cb34-13"></a>  </span>
+<span id="cb34-13"><a href="#cb34-13"></a></span>
 <span id="cb34-14"><a href="#cb34-14"></a>  <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
 <span id="cb34-15"><a href="#cb34-15"></a>    <span class="cf">return</span> []</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>and update the flatten layer to <code>FlattenConsecutive(block_size)</code> (8) in our <code>model</code>. We can observe the dimension of tensors in all layers:</p>
-<div id="22b61dcd" class="cell" data-execution_count="28">
+<div id="39c004d9" class="cell" data-execution_count="28">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1"></a><span class="cf">for</span> layer <span class="kw">in</span> model.layers:</span>
@@ -1079,7 +1084,7 @@ This is not orginal content!
 </details>
 </div>
 <p>This is what we have currently. But as said, we dont want to flatten too fast, so we gonna flatten by 2 character, here is the update of the <code>model</code> - 3 layers present the consecutive flatten <code>4 -&gt; 2 -&gt; 1</code>:</p>
-<div id="5a4b2f0c" class="cell" data-execution_count="29">
+<div id="19f6dec8" class="cell" data-execution_count="29">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a>model <span class="op">=</span> Sequential([</span>
@@ -1134,7 +1139,7 @@ This is not orginal content!
 <section id="fixing-batchnorm1d-bug" class="level2">
 <h2 class="anchored" data-anchor-id="fixing-batchnorm1d-bug">fixing <code>batchnorm1d</code> bug</h2>
 <p>Let’s look at the <code>BatchNorm1d</code> happen in the first flatten layer:</p>
-<div id="caf5b82c" class="cell" data-execution_count="30">
+<div id="926b8f86" class="cell" data-execution_count="30">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1"></a>e <span class="op">=</span> torch.randn(<span class="dv">32</span>, <span class="dv">4</span> , <span class="dv">68</span>)</span>
@@ -1148,7 +1153,7 @@ This is not orginal content!
 </details>
 </div>
 <p>For <code>ehat</code>, everything is calculated properly, mean and variance are calculated to the batch and the 2nd dim <code>4</code> is preserved. But for the <code>running_mean</code>:</p>
-<div id="4be097e7" class="cell" data-execution_count="31">
+<div id="abfeda82" class="cell" data-execution_count="31">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1"></a>model.layers[<span class="dv">3</span>].running_mean.shape</span>
@@ -1157,7 +1162,7 @@ This is not orginal content!
 </details>
 </div>
 <p>We see it is (1, 4, 68) while we are expected it’s 1 dimensional only which is defined in the init method (<code>torch.zeros(dim)</code>). We are maintaining the batch norm in parallel over 4 x 68 channels individually and independently instead of just 68 channels. We want to treat this <code>4</code> just like a batch norm dimension, ie everaging of <code>32 * 4</code> numbers for 68 channels. Fortunately PyTorch <code>mean()</code> method offer the reducing dimension not only for integer but also tuple.</p>
-<div id="35a55976" class="cell" data-execution_count="32">
+<div id="71eb0522" class="cell" data-execution_count="32">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1"></a>e <span class="op">=</span> torch.randn(<span class="dv">32</span>, <span class="dv">4</span> , <span class="dv">68</span>)</span>
@@ -1175,7 +1180,7 @@ This is not orginal content!
 </details>
 </div>
 <p>We now modify the <code>BatchNorm1d</code> definition accordingly, only the training mean/var in the <code>__call__</code> method:</p>
-<div id="074709a9" class="cell" data-execution_count="33">
+<div id="264b096d" class="cell" data-execution_count="33">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1"></a><span class="co"># ---- remains the same</span></span>
@@ -1204,7 +1209,7 @@ This is not orginal content!
 <section id="scaling-up-our-wavenet" class="level2">
 <h2 class="anchored" data-anchor-id="scaling-up-our-wavenet">scaling up our <code>WaveNet</code></h2>
 <p>Now we’re ready to scale up our network and retrain everything, the model now have roughly 76k paramters. We finally passed the <code>2.0</code> threshold and achieved the loss of <code>1.99</code> on the validation split.</p>
-<div id="bd4775e3" class="cell" data-execution_count="34">
+<div id="4b813a84" class="cell" data-execution_count="34">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1"></a>n_embd <span class="op">=</span> <span class="dv">24</span></span>
@@ -1224,7 +1229,7 @@ This is not orginal content!
 <h1>3 conclusions</h1>
 <section id="performance-log" class="level2">
 <h2 class="anchored" data-anchor-id="performance-log">performance log</h2>
-<table class="table-striped table-hover table">
+<table class="table-striped table-hover caption-top table">
 <caption>Loss logs</caption>
 <colgroup>
 <col style="width: 10%">
@@ -1561,18 +1566,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1604,7 +1598,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
   const viewSource = window.document.getElementById('quarto-view-source') ||
                      window.document.getElementById('quarto-code-tools-source');
   if (viewSource) {
@@ -1663,7 +1677,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -1760,7 +1774,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
@@ -2031,7 +2044,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb44-4"><a href="#cb44-4"></a><span class="an">author:</span></span>
 <span id="cb44-5"><a href="#cb44-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
 <span id="cb44-6"><a href="#cb44-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
-<span id="cb44-7"><a href="#cb44-7"></a><span class="an">categories:</span><span class="co"> [til, python, andrej karpathy, nn-z2h, neural networks] </span></span>
+<span id="cb44-7"><a href="#cb44-7"></a><span class="an">categories:</span><span class="co"> [til, python, andrej karpathy, nn-z2h, neural networks]</span></span>
 <span id="cb44-8"><a href="#cb44-8"></a><span class="an">date:</span><span class="co"> 12-09-2024</span></span>
 <span id="cb44-9"><a href="#cb44-9"></a><span class="an">date-modified:</span><span class="co"> 12-09-2024</span></span>
 <span id="cb44-10"><a href="#cb44-10"></a><span class="an">image:</span><span class="co"> wavenet.png</span></span>
@@ -2099,8 +2112,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb44-78"><a href="#cb44-78"></a><span class="bu">print</span>(itos)</span>
 <span id="cb44-79"><a href="#cb44-79"></a><span class="bu">print</span>(vocab_size)</span>
 <span id="cb44-80"><a href="#cb44-80"></a></span>
-<span id="cb44-81"><a href="#cb44-81"></a><span class="co"># itos: {1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e', 6: 'f', 7: 'g', 8: 'h', 9: 'i', 10: 'j', </span></span>
-<span id="cb44-82"><a href="#cb44-82"></a><span class="co"># 11: 'k', 12: 'l', 13: 'm', 14: 'n', 15: 'o', 16: 'p', 17: 'q', 18: 'r', 19: 's', 20: 't', </span></span>
+<span id="cb44-81"><a href="#cb44-81"></a><span class="co"># itos: {1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e', 6: 'f', 7: 'g', 8: 'h', 9: 'i', 10: 'j',</span></span>
+<span id="cb44-82"><a href="#cb44-82"></a><span class="co"># 11: 'k', 12: 'l', 13: 'm', 14: 'n', 15: 'o', 16: 'p', 17: 'q', 18: 'r', 19: 's', 20: 't',</span></span>
 <span id="cb44-83"><a href="#cb44-83"></a><span class="co"># 21: 'u', 22: 'v', 23: 'w', 24: 'x', 25: 'y', 26: 'z', 0: '.'}</span></span>
 <span id="cb44-84"><a href="#cb44-84"></a><span class="co"># vocab_size: 27</span></span>
 <span id="cb44-85"><a href="#cb44-85"></a><span class="in">```</span></span>
@@ -2185,23 +2198,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb44-172"><a href="#cb44-172"></a><span class="in">```{python}</span></span>
 <span id="cb44-173"><a href="#cb44-173"></a><span class="co">#| code-fold: true</span></span>
 <span id="cb44-174"><a href="#cb44-174"></a><span class="kw">class</span> Linear:</span>
-<span id="cb44-175"><a href="#cb44-175"></a>  <span class="co">"""    </span></span>
+<span id="cb44-175"><a href="#cb44-175"></a>  <span class="co">"""</span></span>
 <span id="cb44-176"><a href="#cb44-176"></a><span class="co">  Applies an affine linear transformation to the incoming data: y = xA^T + b.</span></span>
 <span id="cb44-177"><a href="#cb44-177"></a></span>
-<span id="cb44-178"><a href="#cb44-178"></a><span class="co">  This class implements a linear (fully connected) layer, which performs a linear </span></span>
-<span id="cb44-179"><a href="#cb44-179"></a><span class="co">  transformation on the input tensor. It is typically used in neural network architectures </span></span>
+<span id="cb44-178"><a href="#cb44-178"></a><span class="co">  This class implements a linear (fully connected) layer, which performs a linear</span></span>
+<span id="cb44-179"><a href="#cb44-179"></a><span class="co">  transformation on the input tensor. It is typically used in neural network architectures</span></span>
 <span id="cb44-180"><a href="#cb44-180"></a><span class="co">  to transform input features between layers.</span></span>
 <span id="cb44-181"><a href="#cb44-181"></a></span>
 <span id="cb44-182"><a href="#cb44-182"></a><span class="co">  Args:</span></span>
 <span id="cb44-183"><a href="#cb44-183"></a><span class="co">      fan_in (int): Number of input features (input dimension).</span></span>
 <span id="cb44-184"><a href="#cb44-184"></a><span class="co">      fan_out (int): Number of output features (output dimension).</span></span>
-<span id="cb44-185"><a href="#cb44-185"></a><span class="co">      bias (bool, optional): Whether to include a learnable bias term. </span></span>
+<span id="cb44-185"><a href="#cb44-185"></a><span class="co">      bias (bool, optional): Whether to include a learnable bias term.</span></span>
 <span id="cb44-186"><a href="#cb44-186"></a><span class="co">          Defaults to True.</span></span>
 <span id="cb44-187"><a href="#cb44-187"></a></span>
 <span id="cb44-188"><a href="#cb44-188"></a><span class="co">  Attributes:</span></span>
-<span id="cb44-189"><a href="#cb44-189"></a><span class="co">      weight (torch.Tensor): Weight matrix of shape (fan_in, fan_out), </span></span>
+<span id="cb44-189"><a href="#cb44-189"></a><span class="co">      weight (torch.Tensor): Weight matrix of shape (fan_in, fan_out),</span></span>
 <span id="cb44-190"><a href="#cb44-190"></a><span class="co">          initialized using Kaiming initialization.</span></span>
-<span id="cb44-191"><a href="#cb44-191"></a><span class="co">      bias (torch.Tensor or None): Bias vector of shape (fan_out), </span></span>
+<span id="cb44-191"><a href="#cb44-191"></a><span class="co">      bias (torch.Tensor or None): Bias vector of shape (fan_out),</span></span>
 <span id="cb44-192"><a href="#cb44-192"></a><span class="co">          initialized to zeros if bias is True, otherwise None.</span></span>
 <span id="cb44-193"><a href="#cb44-193"></a></span>
 <span id="cb44-194"><a href="#cb44-194"></a><span class="co">  Methods:</span></span>
@@ -2219,13 +2232,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb44-206"><a href="#cb44-206"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, fan_in, fan_out, bias<span class="op">=</span><span class="va">True</span>):</span>
 <span id="cb44-207"><a href="#cb44-207"></a>    <span class="va">self</span>.weight <span class="op">=</span> torch.randn((fan_in, fan_out)) <span class="op">/</span> fan_in<span class="op">**</span><span class="fl">0.5</span> <span class="co"># note: kaiming init</span></span>
 <span id="cb44-208"><a href="#cb44-208"></a>    <span class="va">self</span>.bias <span class="op">=</span> torch.zeros(fan_out) <span class="cf">if</span> bias <span class="cf">else</span> <span class="va">None</span></span>
-<span id="cb44-209"><a href="#cb44-209"></a>  </span>
+<span id="cb44-209"><a href="#cb44-209"></a></span>
 <span id="cb44-210"><a href="#cb44-210"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
 <span id="cb44-211"><a href="#cb44-211"></a>    <span class="va">self</span>.out <span class="op">=</span> x <span class="op">@</span> <span class="va">self</span>.weight</span>
 <span id="cb44-212"><a href="#cb44-212"></a>    <span class="cf">if</span> <span class="va">self</span>.bias <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
 <span id="cb44-213"><a href="#cb44-213"></a>      <span class="va">self</span>.out <span class="op">+=</span> <span class="va">self</span>.bias</span>
 <span id="cb44-214"><a href="#cb44-214"></a>    <span class="cf">return</span> <span class="va">self</span>.out</span>
-<span id="cb44-215"><a href="#cb44-215"></a>  </span>
+<span id="cb44-215"><a href="#cb44-215"></a></span>
 <span id="cb44-216"><a href="#cb44-216"></a>  <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
 <span id="cb44-217"><a href="#cb44-217"></a>    <span class="cf">return</span> [<span class="va">self</span>.weight] <span class="op">+</span> ([] <span class="cf">if</span> <span class="va">self</span>.bias <span class="kw">is</span> <span class="va">None</span> <span class="cf">else</span> [<span class="va">self</span>.bias])</span>
 <span id="cb44-218"><a href="#cb44-218"></a><span class="in">```</span></span>
@@ -2236,20 +2249,20 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb44-225"><a href="#cb44-225"></a><span class="co">#| code-fold: true</span></span>
 <span id="cb44-226"><a href="#cb44-226"></a><span class="kw">class</span> BatchNorm1d:</span>
 <span id="cb44-227"><a href="#cb44-227"></a>  <span class="co">"""</span></span>
-<span id="cb44-228"><a href="#cb44-228"></a><span class="co">  Applies Batch Normalization to the input tensor, a technique to improve </span></span>
+<span id="cb44-228"><a href="#cb44-228"></a><span class="co">  Applies Batch Normalization to the input tensor, a technique to improve</span></span>
 <span id="cb44-229"><a href="#cb44-229"></a><span class="co">  training stability and performance in deep neural networks.</span></span>
 <span id="cb44-230"><a href="#cb44-230"></a></span>
-<span id="cb44-231"><a href="#cb44-231"></a><span class="co">  Batch Normalization normalizes the input across the batch dimension, </span></span>
-<span id="cb44-232"><a href="#cb44-232"></a><span class="co">  reducing internal covariate shift and allowing higher learning rates. </span></span>
+<span id="cb44-231"><a href="#cb44-231"></a><span class="co">  Batch Normalization normalizes the input across the batch dimension,</span></span>
+<span id="cb44-232"><a href="#cb44-232"></a><span class="co">  reducing internal covariate shift and allowing higher learning rates.</span></span>
 <span id="cb44-233"><a href="#cb44-233"></a><span class="co">  This implementation supports both training and inference modes.</span></span>
 <span id="cb44-234"><a href="#cb44-234"></a></span>
 <span id="cb44-235"><a href="#cb44-235"></a><span class="co">  Args:</span></span>
 <span id="cb44-236"><a href="#cb44-236"></a><span class="co">      dim (int): Number of features or channels to be normalized.</span></span>
-<span id="cb44-237"><a href="#cb44-237"></a><span class="co">      eps (float, optional): A small constant added to the denominator for </span></span>
-<span id="cb44-238"><a href="#cb44-238"></a><span class="co">          numerical stability to prevent division by zero. </span></span>
+<span id="cb44-237"><a href="#cb44-237"></a><span class="co">      eps (float, optional): A small constant added to the denominator for</span></span>
+<span id="cb44-238"><a href="#cb44-238"></a><span class="co">          numerical stability to prevent division by zero.</span></span>
 <span id="cb44-239"><a href="#cb44-239"></a><span class="co">          Defaults to 1e-5.</span></span>
-<span id="cb44-240"><a href="#cb44-240"></a><span class="co">      momentum (float, optional): Momentum for updating running mean and </span></span>
-<span id="cb44-241"><a href="#cb44-241"></a><span class="co">          variance during training. Controls the degree of exponential </span></span>
+<span id="cb44-240"><a href="#cb44-240"></a><span class="co">      momentum (float, optional): Momentum for updating running mean and</span></span>
+<span id="cb44-241"><a href="#cb44-241"></a><span class="co">          variance during training. Controls the degree of exponential</span></span>
 <span id="cb44-242"><a href="#cb44-242"></a><span class="co">          moving average. Defaults to 0.1.</span></span>
 <span id="cb44-243"><a href="#cb44-243"></a></span>
 <span id="cb44-244"><a href="#cb44-244"></a><span class="co">  Attributes:</span></span>
@@ -2292,7 +2305,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb44-281"><a href="#cb44-281"></a>    <span class="co"># buffers (trained with a running 'momentum update')</span></span>
 <span id="cb44-282"><a href="#cb44-282"></a>    <span class="va">self</span>.running_mean <span class="op">=</span> torch.zeros(dim)</span>
 <span id="cb44-283"><a href="#cb44-283"></a>    <span class="va">self</span>.running_var <span class="op">=</span> torch.ones(dim)</span>
-<span id="cb44-284"><a href="#cb44-284"></a>  </span>
+<span id="cb44-284"><a href="#cb44-284"></a></span>
 <span id="cb44-285"><a href="#cb44-285"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
 <span id="cb44-286"><a href="#cb44-286"></a>    <span class="co"># calculate the forward pass</span></span>
 <span id="cb44-287"><a href="#cb44-287"></a>    <span class="cf">if</span> <span class="va">self</span>.training:</span>
@@ -2309,7 +2322,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb44-298"><a href="#cb44-298"></a>        <span class="va">self</span>.running_mean <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> <span class="va">self</span>.momentum) <span class="op">*</span> <span class="va">self</span>.running_mean <span class="op">+</span> <span class="va">self</span>.momentum <span class="op">*</span> xmean</span>
 <span id="cb44-299"><a href="#cb44-299"></a>        <span class="va">self</span>.running_var <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> <span class="va">self</span>.momentum) <span class="op">*</span> <span class="va">self</span>.running_var <span class="op">+</span> <span class="va">self</span>.momentum <span class="op">*</span> xvar</span>
 <span id="cb44-300"><a href="#cb44-300"></a>    <span class="cf">return</span> <span class="va">self</span>.out</span>
-<span id="cb44-301"><a href="#cb44-301"></a>  </span>
+<span id="cb44-301"><a href="#cb44-301"></a></span>
 <span id="cb44-302"><a href="#cb44-302"></a>  <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
 <span id="cb44-303"><a href="#cb44-303"></a>    <span class="cf">return</span> [<span class="va">self</span>.gamma, <span class="va">self</span>.beta]</span>
 <span id="cb44-304"><a href="#cb44-304"></a><span class="in">```</span></span>
@@ -2322,13 +2335,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb44-313"><a href="#cb44-313"></a>    <span class="co">"""</span></span>
 <span id="cb44-314"><a href="#cb44-314"></a><span class="co">    Hyperbolic Tangent (Tanh) Activation Function</span></span>
 <span id="cb44-315"><a href="#cb44-315"></a></span>
-<span id="cb44-316"><a href="#cb44-316"></a><span class="co">    Applies the hyperbolic tangent activation function element-wise to the input tensor. </span></span>
-<span id="cb44-317"><a href="#cb44-317"></a><span class="co">    Tanh maps input values to the range [-1, 1], providing a symmetric and non-linear </span></span>
+<span id="cb44-316"><a href="#cb44-316"></a><span class="co">    Applies the hyperbolic tangent activation function element-wise to the input tensor.</span></span>
+<span id="cb44-317"><a href="#cb44-317"></a><span class="co">    Tanh maps input values to the range [-1, 1], providing a symmetric and non-linear</span></span>
 <span id="cb44-318"><a href="#cb44-318"></a><span class="co">    transformation that helps neural networks learn complex patterns.</span></span>
 <span id="cb44-319"><a href="#cb44-319"></a></span>
 <span id="cb44-320"><a href="#cb44-320"></a><span class="co">    Mathematical Definition:</span></span>
 <span id="cb44-321"><a href="#cb44-321"></a><span class="co">    tanh(x) = (e^x - e^-x) / (e^x + e^-x)</span></span>
-<span id="cb44-322"><a href="#cb44-322"></a><span class="co">    </span></span>
+<span id="cb44-322"><a href="#cb44-322"></a></span>
 <span id="cb44-323"><a href="#cb44-323"></a><span class="co">    Key Characteristics:</span></span>
 <span id="cb44-324"><a href="#cb44-324"></a><span class="co">    - Output Range: [-1, 1]</span></span>
 <span id="cb44-325"><a href="#cb44-325"></a><span class="co">    - Symmetric around the origin</span></span>
@@ -2406,23 +2419,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb44-403"><a href="#cb44-403"></a>lossi <span class="op">=</span> []</span>
 <span id="cb44-404"><a href="#cb44-404"></a></span>
 <span id="cb44-405"><a href="#cb44-405"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(max_steps):</span>
-<span id="cb44-406"><a href="#cb44-406"></a>  </span>
+<span id="cb44-406"><a href="#cb44-406"></a></span>
 <span id="cb44-407"><a href="#cb44-407"></a>  <span class="co"># minibatch construct</span></span>
 <span id="cb44-408"><a href="#cb44-408"></a>  ix <span class="op">=</span> torch.randint(<span class="dv">0</span>, Xtr.shape[<span class="dv">0</span>], (batch_size,))</span>
 <span id="cb44-409"><a href="#cb44-409"></a>  Xb, Yb <span class="op">=</span> Xtr[ix], Ytr[ix] <span class="co"># batch X,Y</span></span>
-<span id="cb44-410"><a href="#cb44-410"></a>  </span>
+<span id="cb44-410"><a href="#cb44-410"></a></span>
 <span id="cb44-411"><a href="#cb44-411"></a>  <span class="co"># forward pass</span></span>
-<span id="cb44-412"><a href="#cb44-412"></a>  emb <span class="op">=</span> C[Xb] <span class="co"># embed the characters into vectors   </span></span>
+<span id="cb44-412"><a href="#cb44-412"></a>  emb <span class="op">=</span> C[Xb] <span class="co"># embed the characters into vectors</span></span>
 <span id="cb44-413"><a href="#cb44-413"></a>  x <span class="op">=</span> emb.view(emb.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>) <span class="co"># concatenate the vectors</span></span>
 <span id="cb44-414"><a href="#cb44-414"></a>  <span class="cf">for</span> layer <span class="kw">in</span> layers:</span>
 <span id="cb44-415"><a href="#cb44-415"></a>    x <span class="op">=</span> layer(x)</span>
 <span id="cb44-416"><a href="#cb44-416"></a>  loss <span class="op">=</span> F.cross_entropy(x, Yb) <span class="co"># loss function</span></span>
-<span id="cb44-417"><a href="#cb44-417"></a>  </span>
+<span id="cb44-417"><a href="#cb44-417"></a></span>
 <span id="cb44-418"><a href="#cb44-418"></a>  <span class="co"># backward pass</span></span>
 <span id="cb44-419"><a href="#cb44-419"></a>  <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
 <span id="cb44-420"><a href="#cb44-420"></a>    p.grad <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb44-421"><a href="#cb44-421"></a>  loss.backward()</span>
-<span id="cb44-422"><a href="#cb44-422"></a>  </span>
+<span id="cb44-422"><a href="#cb44-422"></a></span>
 <span id="cb44-423"><a href="#cb44-423"></a>  <span class="co"># update: simple SGD</span></span>
 <span id="cb44-424"><a href="#cb44-424"></a>  lr <span class="op">=</span> <span class="fl">0.1</span> <span class="cf">if</span> i <span class="op">&lt;</span> <span class="dv">150000</span> <span class="cf">else</span> <span class="fl">0.01</span> <span class="co"># step learning rate decay</span></span>
 <span id="cb44-425"><a href="#cb44-425"></a>  <span class="cf">for</span> p <span class="kw">in</span> parameters:</span>
@@ -2550,14 +2563,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb44-555"><a href="#cb44-555"></a></span>
 <span id="cb44-558"><a href="#cb44-558"></a><span class="in">```{python}</span></span>
 <span id="cb44-559"><a href="#cb44-559"></a><span class="kw">class</span> Embedding:</span>
-<span id="cb44-560"><a href="#cb44-560"></a>  </span>
+<span id="cb44-560"><a href="#cb44-560"></a></span>
 <span id="cb44-561"><a href="#cb44-561"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, num_embeddings, embedding_dim):</span>
 <span id="cb44-562"><a href="#cb44-562"></a>    <span class="va">self</span>.weight <span class="op">=</span> torch.randn((num_embeddings, embedding_dim))</span>
-<span id="cb44-563"><a href="#cb44-563"></a>    </span>
+<span id="cb44-563"><a href="#cb44-563"></a></span>
 <span id="cb44-564"><a href="#cb44-564"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, IX):</span>
 <span id="cb44-565"><a href="#cb44-565"></a>    <span class="va">self</span>.out <span class="op">=</span> <span class="va">self</span>.weight[IX]</span>
 <span id="cb44-566"><a href="#cb44-566"></a>    <span class="cf">return</span> <span class="va">self</span>.out</span>
-<span id="cb44-567"><a href="#cb44-567"></a>  </span>
+<span id="cb44-567"><a href="#cb44-567"></a></span>
 <span id="cb44-568"><a href="#cb44-568"></a>  <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
 <span id="cb44-569"><a href="#cb44-569"></a>    <span class="cf">return</span> [<span class="va">self</span>.weight]</span>
 <span id="cb44-570"><a href="#cb44-570"></a></span>
@@ -2567,7 +2580,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb44-574"><a href="#cb44-574"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
 <span id="cb44-575"><a href="#cb44-575"></a>    <span class="va">self</span>.out <span class="op">=</span> x.view(x.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>)</span>
 <span id="cb44-576"><a href="#cb44-576"></a>    <span class="cf">return</span> <span class="va">self</span>.out</span>
-<span id="cb44-577"><a href="#cb44-577"></a>  </span>
+<span id="cb44-577"><a href="#cb44-577"></a></span>
 <span id="cb44-578"><a href="#cb44-578"></a>  <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
 <span id="cb44-579"><a href="#cb44-579"></a>    <span class="cf">return</span> []</span>
 <span id="cb44-580"><a href="#cb44-580"></a><span class="in">```</span></span>
@@ -2589,16 +2602,16 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb44-598"><a href="#cb44-598"></a></span>
 <span id="cb44-601"><a href="#cb44-601"></a><span class="in">```{python}</span></span>
 <span id="cb44-602"><a href="#cb44-602"></a><span class="kw">class</span> Sequential:</span>
-<span id="cb44-603"><a href="#cb44-603"></a>  </span>
+<span id="cb44-603"><a href="#cb44-603"></a></span>
 <span id="cb44-604"><a href="#cb44-604"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, layers):</span>
 <span id="cb44-605"><a href="#cb44-605"></a>    <span class="va">self</span>.layers <span class="op">=</span> layers</span>
-<span id="cb44-606"><a href="#cb44-606"></a>  </span>
+<span id="cb44-606"><a href="#cb44-606"></a></span>
 <span id="cb44-607"><a href="#cb44-607"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
 <span id="cb44-608"><a href="#cb44-608"></a>    <span class="cf">for</span> layer <span class="kw">in</span> <span class="va">self</span>.layers:</span>
 <span id="cb44-609"><a href="#cb44-609"></a>      x <span class="op">=</span> layer(x)</span>
 <span id="cb44-610"><a href="#cb44-610"></a>    <span class="va">self</span>.out <span class="op">=</span> x</span>
 <span id="cb44-611"><a href="#cb44-611"></a>    <span class="cf">return</span> <span class="va">self</span>.out</span>
-<span id="cb44-612"><a href="#cb44-612"></a>  </span>
+<span id="cb44-612"><a href="#cb44-612"></a></span>
 <span id="cb44-613"><a href="#cb44-613"></a>  <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
 <span id="cb44-614"><a href="#cb44-614"></a>    <span class="co"># get parameters of all layers and stretch them out into one list</span></span>
 <span id="cb44-615"><a href="#cb44-615"></a>    <span class="cf">return</span> [p <span class="cf">for</span> layer <span class="kw">in</span> <span class="va">self</span>.layers <span class="cf">for</span> p <span class="kw">in</span> layer.parameters()]</span>
@@ -2756,7 +2769,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb44-779"><a href="#cb44-779"></a><span class="co"># goal: want this to be (4, 4, 20) where consecutive 10-d vectors get concatenated</span></span>
 <span id="cb44-780"><a href="#cb44-780"></a></span>
 <span id="cb44-781"><a href="#cb44-781"></a>explicit <span class="op">=</span> torch.cat([e[:, ::<span class="dv">2</span>, :], e[:, <span class="dv">1</span>::<span class="dv">2</span>, :]], dim<span class="op">=</span><span class="dv">2</span>) <span class="co"># cat in the third dim</span></span>
-<span id="cb44-782"><a href="#cb44-782"></a>explicit.shape </span>
+<span id="cb44-782"><a href="#cb44-782"></a>explicit.shape</span>
 <span id="cb44-783"><a href="#cb44-783"></a><span class="co"># &gt; torch.Size([4, 4, 20])</span></span>
 <span id="cb44-784"><a href="#cb44-784"></a><span class="in">```</span></span>
 <span id="cb44-785"><a href="#cb44-785"></a></span>
@@ -2771,10 +2784,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb44-796"><a href="#cb44-796"></a></span>
 <span id="cb44-799"><a href="#cb44-799"></a><span class="in">```{python}</span></span>
 <span id="cb44-800"><a href="#cb44-800"></a><span class="kw">class</span> FlattenConsecutive:</span>
-<span id="cb44-801"><a href="#cb44-801"></a>  </span>
+<span id="cb44-801"><a href="#cb44-801"></a></span>
 <span id="cb44-802"><a href="#cb44-802"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, n):</span>
 <span id="cb44-803"><a href="#cb44-803"></a>    <span class="va">self</span>.n <span class="op">=</span> n</span>
-<span id="cb44-804"><a href="#cb44-804"></a>    </span>
+<span id="cb44-804"><a href="#cb44-804"></a></span>
 <span id="cb44-805"><a href="#cb44-805"></a>  <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
 <span id="cb44-806"><a href="#cb44-806"></a>    B, T, C <span class="op">=</span> x.shape</span>
 <span id="cb44-807"><a href="#cb44-807"></a>    x <span class="op">=</span> x.view(B, T<span class="op">//</span><span class="va">self</span>.n, C<span class="op">*</span><span class="va">self</span>.n)</span>
@@ -2782,7 +2795,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb44-809"><a href="#cb44-809"></a>      x <span class="op">=</span> x.squeeze(<span class="dv">1</span>)</span>
 <span id="cb44-810"><a href="#cb44-810"></a>    <span class="va">self</span>.out <span class="op">=</span> x</span>
 <span id="cb44-811"><a href="#cb44-811"></a>    <span class="cf">return</span> <span class="va">self</span>.out</span>
-<span id="cb44-812"><a href="#cb44-812"></a>  </span>
+<span id="cb44-812"><a href="#cb44-812"></a></span>
 <span id="cb44-813"><a href="#cb44-813"></a>  <span class="kw">def</span> parameters(<span class="va">self</span>):</span>
 <span id="cb44-814"><a href="#cb44-814"></a>    <span class="cf">return</span> []</span>
 <span id="cb44-815"><a href="#cb44-815"></a><span class="in">```</span></span>
@@ -3016,25 +3029,25 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb44-1057"><a href="#cb44-1057"></a></span>
 <span id="cb44-1058"><a href="#cb44-1058"></a><span class="fu">## `WaveNet` but with “dilated causal convolutions”</span></span>
 <span id="cb44-1059"><a href="#cb44-1059"></a></span>
-<span id="cb44-1060"><a href="#cb44-1060"></a><span class="ss">- </span>Convolution is a "for loop" applying a linear filter over  space of some input sequence;</span>
-<span id="cb44-1061"><a href="#cb44-1061"></a><span class="ss">- </span>Not happen only in Python but also in Kernel</span>
+<span id="cb44-1060"><a href="#cb44-1060"></a><span class="ss">-   </span>Convolution is a "for loop" applying a linear filter over space of some input sequence;</span>
+<span id="cb44-1061"><a href="#cb44-1061"></a><span class="ss">-   </span>Not happen only in Python but also in Kernel</span>
 <span id="cb44-1062"><a href="#cb44-1062"></a></span>
 <span id="cb44-1063"><a href="#cb44-1063"></a><span class="fu">## `torch.nn`</span></span>
 <span id="cb44-1064"><a href="#cb44-1064"></a></span>
 <span id="cb44-1065"><a href="#cb44-1065"></a>We have implement alot of concepts in <span class="in">`torch.nn`</span>:</span>
 <span id="cb44-1066"><a href="#cb44-1066"></a></span>
-<span id="cb44-1067"><a href="#cb44-1067"></a><span class="ss">- </span>containers: <span class="in">`Sequential`</span></span>
-<span id="cb44-1068"><a href="#cb44-1068"></a><span class="ss">- </span><span class="in">`Linear`</span>, <span class="in">`BatchNorm1d`</span>, <span class="in">`Tanh`</span>, <span class="in">`FlattenConsecutive`</span>, ...</span>
+<span id="cb44-1067"><a href="#cb44-1067"></a><span class="ss">-   </span>containers: <span class="in">`Sequential`</span></span>
+<span id="cb44-1068"><a href="#cb44-1068"></a><span class="ss">-   </span><span class="in">`Linear`</span>, <span class="in">`BatchNorm1d`</span>, <span class="in">`Tanh`</span>, <span class="in">`FlattenConsecutive`</span>, ...</span>
 <span id="cb44-1069"><a href="#cb44-1069"></a></span>
 <span id="cb44-1070"><a href="#cb44-1070"></a><span class="fu">## the development process of building deep neural nets &amp; going forward</span></span>
 <span id="cb44-1071"><a href="#cb44-1071"></a></span>
-<span id="cb44-1072"><a href="#cb44-1072"></a><span class="ss">+ </span>Spending a ton of time exploring PyTorch documentation, unfortunately it's not a good one;</span>
-<span id="cb44-1073"><a href="#cb44-1073"></a><span class="ss">+ </span>Ton of time to make the shapes work: fan in, fan out, NLC or NLC, broadcasting, viewing, etc;</span>
-<span id="cb44-1074"><a href="#cb44-1074"></a><span class="ss">+ </span>What we:</span>
-<span id="cb44-1075"><a href="#cb44-1075"></a><span class="ss">  - </span>done: implemented dilated causal convoluntional network;</span>
-<span id="cb44-1076"><a href="#cb44-1076"></a><span class="ss">  - </span>to be explores: residual and skip connections;</span>
-<span id="cb44-1077"><a href="#cb44-1077"></a><span class="ss">  - </span>to be explores: experimental harness;</span>
-<span id="cb44-1078"><a href="#cb44-1078"></a><span class="ss">  - </span>more mordern networks: RNN, LSTM, Transformer.</span>
+<span id="cb44-1072"><a href="#cb44-1072"></a><span class="ss">-   </span>Spending a ton of time exploring PyTorch documentation, unfortunately it's not a good one;</span>
+<span id="cb44-1073"><a href="#cb44-1073"></a><span class="ss">-   </span>Ton of time to make the shapes work: fan in, fan out, NLC or NLC, broadcasting, viewing, etc;</span>
+<span id="cb44-1074"><a href="#cb44-1074"></a><span class="ss">-   </span>What we:</span>
+<span id="cb44-1075"><a href="#cb44-1075"></a><span class="ss">    -   </span>done: implemented dilated causal convoluntional network;</span>
+<span id="cb44-1076"><a href="#cb44-1076"></a><span class="ss">    -   </span>to be explores: residual and skip connections;</span>
+<span id="cb44-1077"><a href="#cb44-1077"></a><span class="ss">    -   </span>to be explores: experimental harness;</span>
+<span id="cb44-1078"><a href="#cb44-1078"></a><span class="ss">    -   </span>more mordern networks: RNN, LSTM, Transformer.</span>
 <span id="cb44-1079"><a href="#cb44-1079"></a></span>
 <span id="cb44-1080"><a href="#cb44-1080"></a><span class="fu"># 4 resources</span></span>
 <span id="cb44-1081"><a href="#cb44-1081"></a></span>
@@ -3042,22 +3055,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb44-1083"><a href="#cb44-1083"></a><span class="ss">2.  </span>Bengio et al. 2003 MLP LM: <span class="ot">&lt;https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf&gt;</span>;</span>
 <span id="cb44-1084"><a href="#cb44-1084"></a><span class="ss">3.  </span>Notebook: <span class="ot">&lt;https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part5_cnn1.ipynb&gt;</span>;</span>
 <span id="cb44-1085"><a href="#cb44-1085"></a><span class="ss">4.  </span>DeepMind's blog post from 2016: <span class="ot">&lt;https://deepmind.google/discover/blog/wavenet-a-generative-model-for-raw-audio/&gt;</span></span>
-</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2024 Le Khac Tuan</span></p>
+<p><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2025 Le Khac Tuan</span></p>
 </div>   
     <div class="nav-footer-center">
-<p><span class="faux-block">Designed with <i class="fa-solid fa-heart" aria-label="heart"></i></span></p>
+<p><span class="faux-block"> Designed with <i class="fa-solid fa-heart" aria-label="heart"></i>, <span id="commit-info">Loading last commit…</span> </span></p>
 </div>
     <div class="nav-footer-right">
 <p><span class="faux-block">Made with <a href="https://quarto.org/">Quarto</a></span></p>
 </div>
   </div>
 </footer>
+<script type="application/javascript" src="commit_info.js"></script>
 
 
 

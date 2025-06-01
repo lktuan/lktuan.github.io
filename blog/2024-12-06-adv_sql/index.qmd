@@ -4,7 +4,7 @@ description: "SQL things that I wish I could know earlier."
 author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
-categories: [til, sql] 
+categories: [til, sql]
 date: 12-06-2024
 date-modified: 12-06-2024
 image: duckdb.jpg
@@ -16,7 +16,7 @@ format:
     code-tools: true
     code-fold: show
     code-annotations: hover
-execute: 
+execute:
   eval: false
 ---
 
@@ -38,8 +38,8 @@ We use `QUALIFY` to filter the output column of `WINDOW` function without creati
 
 ```{sql}
 SELECT
-    o_orderkey, 
-    o_totalprice, 
+    o_orderkey,
+    o_totalprice,
     RANK() OVER (ORDER BY o_totalprice DESC) AS price_rank -- rank the order by `o_totalprice` in desc
 FROM orders
 QUALIFY price_rank <= 10; -- filter top 10
@@ -53,8 +53,8 @@ Orginated from PostgreSQL, now support by some cloud-based like Snowflake but no
 
 ```{sql}
 SELECT DISTINCT ON (o_custkey) -- distinct only `o_custkey`
-    o_custkey, 
-    o_orderdate, 
+    o_custkey,
+    o_orderdate,
     o_totalprice
 FROM orders
 ORDER BY o_custkey, o_orderdate DESC; -- make sure to get the latest order by `o_orderdate`
@@ -64,9 +64,9 @@ ORDER BY o_custkey, o_orderdate DESC; -- make sure to get the latest order by `o
 ## #1.3 This can also be done with `ROW_NUMBER()` + `QUALIFY`:
 
 ```{sql}
-SELECT 
-    o_custkey, 
-    o_orderdate, 
+SELECT
+    o_custkey,
+    o_orderdate,
     o_totalprice,
     ROW_NUMBER() OVER (PARTITION BY o_custkey ORDER BY o_orderdate DESC) AS rn
 FROM orders
@@ -89,14 +89,14 @@ Below picture depicts how struct works:
 
 ```{sql}
 WITH order_struct AS (
-    SELECT 
+    SELECT
         o_orderkey,
         STRUCT_PACK(o_orderdate, o_totalprice, o_orderkey) AS order_info
     FROM orders
 )
-SELECT 
+SELECT
     MIN(order_info) AS min_order_date, -- get min of information from left to right
-    MAX(order_info) AS max_order_date_price -- get of information from left to right, 
+    MAX(order_info) AS max_order_date_price -- get of information from left to right,
     -- if there are many txn in that latest day, get the transaction with max price
 FROM order_struct;
 ```
@@ -107,8 +107,8 @@ FROM order_struct;
 `BOOL_OR()` & `BOOL_AND()` allows you to check a logical statement along all rows of a columns, supported in PostgreSQL, Snowflake, DuckDB, BigQuery, Databricks:
 
 ```{sql}
-SELECT 
-    o_custkey, 
+SELECT
+    o_custkey,
     BOOL_OR(cast(o_shippriority as boolean)) AS has_atleast_one_priority_order, -- check whether AT LEAST 1 order of that customer has Is Priority = True
     BOOL_AND(cast(o_shippriority as boolean)) AS has_all_priority_order -- check whether ALL orders of that customer has Is Priority = True
 FROM orders
@@ -130,10 +130,10 @@ FROM orders;
 Repeating all the columns listed in the `SELECT` statement in `GROUP BY` is annoying, just use `ALL`:
 
 ```{sql}
-SELECT 
-    o_orderkey, 
-    o_custkey, 
-    o_orderstatus, 
+SELECT
+    o_orderkey,
+    o_custkey,
+    o_orderstatus,
     SUM(o_totalprice) AS total_price
 FROM orders
 GROUP BY ALL;
@@ -144,9 +144,9 @@ GROUP BY ALL;
 Filter over rows in specific column:
 
 ```{sql}
-SELECT 
-    o_custkey, 
-    COUNT_IF(o_totalprice > 100000) AS high_value_orders, 
+SELECT
+    o_custkey,
+    COUNT_IF(o_totalprice > 100000) AS high_value_orders,
     -- equivalent to SUM(CASE WHEN o_totalprice > 100000 THEN 1 ELSE 0 END)
     COUNT(o_totalprice) as all_orders
 FROM orders
@@ -175,9 +175,9 @@ WITH fake_orders AS (
     UNION ALL
     SELECT 3 AS o_orderkey, 300 AS o_totalprice, NULL AS discount
 )
-SELECT 
-    o_orderkey, 
-    o_totalprice, 
+SELECT
+    o_orderkey,
+    o_totalprice,
     discount,
     COALESCE(discount, o_totalprice * 0.10) AS final_discount
 FROM fake_orders;
@@ -202,7 +202,7 @@ FROM generate_series('2024-01-01'::DATE, '2024-01-10'::DATE, INTERVAL 1 DAY);
 
 ## #1.12 `UNNEST()`
 
-Unpacking data wrapped in JSON array or list `[...]` using `UNNEST()`: 
+Unpacking data wrapped in JSON array or list `[...]` using `UNNEST()`:
 
 ```{sql}
 WITH nested_data AS (
@@ -210,8 +210,8 @@ WITH nested_data AS (
     UNION ALL
     SELECT 2 AS id, [40, 50] AS values
 )
-SELECT 
-    id, 
+SELECT
+    id,
     UNNEST(values) AS flattened_value
 FROM nested_data;
 ```
@@ -226,10 +226,10 @@ FROM nested_data;
 It checks the existence like `INNER JOIN` but does not join full rows or select columns from the subquery.
 
 ```{sql}
-SELECT 
-    c_custkey, 
+SELECT
+    c_custkey,
     c_name
-FROM customer 
+FROM customer
 WHERE EXISTS (
     SELECT o_orderkey
     FROM orders
@@ -244,10 +244,10 @@ WHERE EXISTS (
 Below query return all `c_custkey` that appears in both `customer` and `orders` table.
 
 ```{sql}
-SELECT c_custkey 
+SELECT c_custkey
 FROM customer
 INTERSECT
-SELECT o_custkey 
+SELECT o_custkey
 FROM orders;
 ```
 
@@ -337,13 +337,13 @@ FROM orders
 WHERE o_totalprice > 20000
 
   AND o_custkey IN (
-    
-      1001, 
-    
-      1002, 
-    
+
+      1001,
+
+      1002,
+
       1003
-    
+
   )
 
 ORDER BY o_totalprice DESC;
@@ -365,7 +365,7 @@ Dive into the table `tables`:
 
 ```{sql}
 SELECT
-table_catalog, table_schema, table_name 
+table_catalog, table_schema, table_name
 from information_schema.tables;
 ```
 ![output - first 10 rows](information_schema_table.png)
@@ -376,7 +376,7 @@ Other useful query for DB admin in DuckDB:
 -- database level settings
 SELECT * FROM duckdb_settings();
 
--- list of all tables in our DuckDB 
+-- list of all tables in our DuckDB
 SELECT schema_name,
     table_name
     FROM duckdb_tables();
@@ -413,14 +413,14 @@ CREATE TABLE dim_customer_scd2 (
 
 -- Insert current data from the TPCH customer table into the SCD2 table
 INSERT INTO dim_customer_scd2
-SELECT 
-    c_custkey, 
-    c_name, 
-    c_address, 
-    c_nationkey, 
-    c_phone, 
-    c_acctbal, 
-    c_mktsegment, 
+SELECT
+    c_custkey,
+    c_name,
+    c_address,
+    c_nationkey,
+    c_phone,
+    c_acctbal,
+    c_mktsegment,
     c_comment,
     '2024-10-17' AS valid_from,
     NULL AS valid_to,  -- NULL means it's the current active record
@@ -432,16 +432,16 @@ This query create a new SCD2 table and UPSERT data into it. When managing a tabl
 
 ```{sql}
 INSERT INTO dim_customer_scd2 (
-    c_custkey, 
-    c_name, 
-    c_address, 
-    c_nationkey, 
-    c_phone, 
-    c_acctbal, 
-    c_mktsegment, 
-    c_comment, 
-    valid_from, 
-    valid_to, 
+    c_custkey,
+    c_name,
+    c_address,
+    c_nationkey,
+    c_phone,
+    c_acctbal,
+    c_mktsegment,
+    c_comment,
+    valid_from,
+    valid_to,
     is_current
 )
 VALUES
@@ -449,7 +449,7 @@ VALUES
     (2, 'Customer#000000002', 'New Address 2', 18, '12-423-790-3665', 879.49, 'FURNITURE', 'comment2', '2024-10-18', NULL, TRUE),
     (1501, 'Customer#000001501', 'New Address 1501', 24, '11-345-678-9012', 500.50, 'MACHINERY', 'comment1501', '2024-10-18', NULL, TRUE),
     (1502, 'Customer#000001502', 'New Address 1502', 21, '22-456-789-0123', 600.75, 'AUTOMOBILE', 'comment1502', '2024-10-18', NULL, TRUE)
-ON CONFLICT (c_custkey) DO 
+ON CONFLICT (c_custkey) DO
 -- Handle existing customers (Customer#000000001 and Customer#000000002) for SCD Type 2
 UPDATE SET valid_to = EXCLUDED.valid_from, is_current = FALSE
 WHERE dim_customer_scd2.c_custkey = EXCLUDED.c_custkey AND dim_customer_scd2.is_current = TRUE;
@@ -566,9 +566,9 @@ LATERAL JOIN is a powerful SQL join type that allows a subquery in the FROM clau
 For e.g, for each row in the orders table (`o`), the subquery in the LATERAL JOIN selects line items (`l`) that match certain conditions.
 
 ```{sql}
-SELECT 
-    o.o_orderkey, 
-    o.o_totalprice, 
+SELECT
+    o.o_orderkey,
+    o.o_totalprice,
     l.l_linenumber,
     l.l_extendedprice
 FROM orders o,
@@ -587,9 +587,9 @@ ORDER BY 1, 3;
 For each row in the orders table (`o`), the subquery in the LATERAL JOIN counts the number of line items (`lineitem_count`) related to that order.
 
 ```{sql}
-SELECT 
-    o.o_orderkey, 
-    o.o_totalprice, 
+SELECT
+    o.o_orderkey,
+    o.o_totalprice,
     l.lineitem_count
 FROM orders o,
 LATERAL (
@@ -610,7 +610,7 @@ Some real business use cases:
 We often want to change a value of a column into individual columns, we can use `CASE ... WHEN ...`:
 
 ```{sql}
-SELECT 
+SELECT
     o_custkey,
     SUM(CASE WHEN o_orderstatus = 'F' THEN o_totalprice ELSE 0 END) AS fulfilled_total,
     SUM(CASE WHEN o_orderstatus = 'O' THEN o_totalprice ELSE 0 END) AS open_total,
@@ -637,7 +637,7 @@ PIVOT (
 ## #8.1 `CUBE`
 
 ```{sql}
-SELECT 
+SELECT
     o_orderpriority,
     o_orderstatus,
     EXTRACT(YEAR FROM o_orderdate) AS order_year,

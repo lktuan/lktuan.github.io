@@ -15,7 +15,7 @@ editor: visual
 code-fold: show
 ---
 
-A from-scratch implementation of Bitcoin in Python under tuturial from Andrej Karpathy. 
+A from-scratch implementation of Bitcoin in Python under tutorial from Andrej Karpathy.
 
 # Motivation
 
@@ -27,13 +27,14 @@ A from-scratch implementation of Bitcoin in Python under tuturial from Andrej Ka
 
 , cách tốt nhất để học nó là thực hiện nó. Tôi cũng cho là thế!
 
-::: {layout-ncol=1}
-![Andrej Karpathy trong podcast với Lex Fridman](karpathy-podcast.jpg){width=100%}
+::: {layout-ncol="1"}
+![Andrej Karpathy trong podcast với Lex Fridman](karpathy-podcast.jpg){width="100%"}
 :::
 
 Phạm vi bài thực hành này là **tạo, ký số, phát hành các giao dịch Bitcoin thuần Python, từ con số 0, không thư viện phụ thuộc**.
 
 Đây là môi trường Python của mình:
+
 ```{python}
 #| code-fold: true
 import sys
@@ -42,39 +43,40 @@ print(sys.version)
 
 # Step 1: generating a crypto identity
 
-Một trong những đặc tính quan trọng nhất của Bitcoin nói riêng và Blockchain (chuỗi khối) nói chung là tính bảo mật. Blockchain sử dụng các phương thức bảo mật như: **ECC**, **ECDH** hoặc **ECDSA**, trong đó `EC` chính là viết tắt của Elliptic Curve. Không chỉ trong lĩnh vực blockchain, `EC` còn được sử dụng rộng rãi trong bảo mật [`TLS`](https://datatracker.ietf.org/doc/html/rfc4492), [`PGP`](https://datatracker.ietf.org/doc/html/rfc6637), [`SSH`](https://datatracker.ietf.org/doc/html/rfc5656). 
+Một trong những đặc tính quan trọng nhất của Bitcoin nói riêng và Blockchain (chuỗi khối) nói chung là tính bảo mật. Blockchain sử dụng các phương thức bảo mật như: **ECC**, **ECDH** hoặc **ECDSA**, trong đó `EC` chính là viết tắt của Elliptic Curve. Không chỉ trong lĩnh vực blockchain, `EC` còn được sử dụng rộng rãi trong bảo mật [`TLS`](https://datatracker.ietf.org/doc/html/rfc4492), [`PGP`](https://datatracker.ietf.org/doc/html/rfc6637), [`SSH`](https://datatracker.ietf.org/doc/html/rfc5656).
 
-Khác với các bảo mật **đối xứng** thông thường, ta có một key duy nhất để mã hóa và giải mã ~ có key là có tất cả, không có key là không có gì, các thuật toán mã hóa EC là **Bất đối xứng**. Trong đó, ta có một cặp `private key`/`public key` (khóa bí mật và khóa công khai). Khóa bí mật chỉ là một con số ngẫu nhiên, cần được chủ nhân của nó **giữ bí mật hoàn toàn**, ví nó là thứ duy nhất tạo ra được **chữ kí** cho họ. Khác với khóa bí mật, khóa công khai được công khai cho tất cả mọi người. `public key` được tạo ra bởi **phép nhân** với `private key` trong **đường cong Elliptic**. Phép nhân đường cong Elliptic là một phép toán **trap door** (cửa lật), có nghĩa là nó dễ tính theo **một chiều** (phép nhân) và không thể tính được theo chiều ngược lại (phép chia) ~ đó là lý do ta gọi nó là mã hóa bất đối xứng.
+Khác với các bảo mật **đối xứng** thông thường, ta có một key duy nhất để mã hóa và giải mã \~ có key là có tất cả, không có key là không có gì, các thuật toán mã hóa EC là **Bất đối xứng**. Trong đó, ta có một cặp `private key`/`public key` (khóa bí mật và khóa công khai). Khóa bí mật chỉ là một con số ngẫu nhiên, cần được chủ nhân của nó **giữ bí mật hoàn toàn**, ví nó là thứ duy nhất tạo ra được **chữ kí** cho họ. Khác với khóa bí mật, khóa công khai được công khai cho tất cả mọi người. `public key` được tạo ra bởi **phép nhân** với `private key` trong **đường cong Elliptic**. Phép nhân đường cong Elliptic là một phép toán **trap door** (cửa lật), có nghĩa là nó dễ tính theo **một chiều** (phép nhân) và không thể tính được theo chiều ngược lại (phép chia) \~ đó là lý do ta gọi nó là mã hóa bất đối xứng.
 
 Bitcoin sử dụng Hệ mật trên đường cong Elliptic (ECC) để bảo mật giao dịch [Xem thêm: 1. [Viblo](https://viblo.asia/p/gioi-thieu-ve-he-mat-tren-duong-cong-elliptic-ecc-XL6lA2PR5ek), 2. [Wiki](https://en.wikipedia.org/wiki/Elliptic-curve_cryptography), 3. [Wolfram](https://mathworld.wolfram.com/EllipticCurve.html), quá khó cho tôi tại thời điểm bây giờ - nên tôi sẽ tạm bỏ qua, dù gì cũng cần phác thảo một khung tranh "mờ mờ" trước, việc vẽ chi tiết để sau.]{.aside}.
 
 Đường cong $E: y^2 = x^3 + ax + b \:(mod\:p)$ trên trường hữu hạn $Z_p$ (cũng có người gọi là $Z/p$,$GF_(p)$,hoặc $F_p$, với p là số nguyên tố) được xác định bởi 6 tham số $T = (p,a,b,G,n,h)$ sau:
 
-- $p = FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE FFFFFC2F$
+-   $p = FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE FFFFFC2F$
 
     $= 2^{256} - 2^{32} - 2^9 - 2^8 - 2^7 - 2^6 - 2^4 - 1$
 
     $= 2^{256} - 2^{32} - 977$
 
--  $a = 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000$
--  $b = 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000007$
+-   $a = 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000$
+
+-   $b = 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000007$
 
 Vì được xác định trên $Z_p$, nên trên thực tế nó là một đường không liên lục, và trông sẽ như các điểm ngẫu nhiên trên một biểu đồ phân tán. Để dễ tưởng tượng và min họa, khi xác định trên trường số thực, EC sẽ trông như thế này:
 
-::: {layout-ncol=1}
-![[What does the curve used in Bitcoin, secp256k1, look like?](https://bitcoin.stackexchange.com/questions/21907/what-does-the-curve-used-in-bitcoin-secp256k1-look-like)](what_does_ec_look_like.png){width=100%}
+::: {layout-ncol="1"}
+![[What does the curve used in Bitcoin, secp256k1, look like?](https://bitcoin.stackexchange.com/questions/21907/what-does-the-curve-used-in-bitcoin-secp256k1-look-like)](what_does_ec_look_like.png){width="100%"}
 :::
 
 Đây là tài liệu mà Andrej gợi ý cho chúng ta đọc về ECC: [blog post](https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/) của Andrea Corbellini. Bài viết đầu tiên của ông giới thiệu EC trên **trường số thực và luật nhóm**. Theo đó, với EC được xác định bằng $\{(x,y)\in R^2 | y^2 = x^3 + ax + b, 4a^3 + 27b^2 \neq 0\} \cup \{0\}$, trong đó ($4a^3 + 27b^2 \neq 0$ là để tránh điểm kỳ dị singular), cùng với các tiên đề về phép toán cộng ($+$) được trang bị gồm:
 
-1. Tính đóng (closure): nếu $a$ và $b$ thuộc $G$, thì $a+b$ cũng thuộc $G$;
-2. Tính kết hợp (associativity): $(a+b)+c = a + (b+c)$;
-3. Sự tồn tại của phần tử đơn vị (identity element 0): $a+0=0+a=a$;
-4. Tính khả nghịch (commutativity): với mọi $a$, tồn tại $b$ sao cho $a+b=0$;
+1.  Tính đóng (closure): nếu $a$ và $b$ thuộc $G$, thì $a+b$ cũng thuộc $G$;
+2.  Tính kết hợp (associativity): $(a+b)+c = a + (b+c)$;
+3.  Sự tồn tại của phần tử đơn vị (identity element 0): $a+0=0+a=a$;
+4.  Tính khả nghịch (commutativity): với mọi $a$, tồn tại $b$ sao cho $a+b=0$;
 
 Nếu chúng ta có thêm tính chất thứ 5 sau:
 
-5. Tính giao hoán (commutativity): $a+b = b+a$.
+5.  Tính giao hoán (commutativity): $a+b = b+a$.
 
 Thì nhóm đó được xem là một nhóm Abel (Ví dụ: tập hợp các số nguyên $Z$ là một nhóm - Abel).
 
@@ -114,8 +116,7 @@ bitcoin_curve = Curve(
 )
 ```
 
-Chúng ta chưa thấy phương trình của EC được thể hiện trong class `Curve`, chúng ta implement nó bằng cách tạo một class `Point`.
-Sau khi xác định curve, ta xác định generator - điểm sinh G (là một điểm dùng để khởi tạo quá trình "walk" trên đường cong)
+Chúng ta chưa thấy phương trình của EC được thể hiện trong class `Curve`, chúng ta implement nó bằng cách tạo một class `Point`. Sau khi xác định curve, ta xác định generator - điểm sinh G (là một điểm dùng để khởi tạo quá trình "walk" trên đường cong)
 
 ```{python}
 @dataclass

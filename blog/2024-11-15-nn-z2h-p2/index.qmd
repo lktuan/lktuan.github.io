@@ -4,14 +4,14 @@ description: "implement a bigram character-level language model, focus on (1) in
 author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
-categories: [til, python, andrej karpathy, nn-z2h, bigram, neural networks] 
+categories: [python, andrej karpathy, nn-z2h, neural networks]
 date: 11-15-2024
 date-modified: 11-18-2024
 image: andrej_new.jpg
 draft: false
-css: html/styles.scss
+# css: html/styles.scss
 fig-cap-location: bottom
-editor: visual
+# editor: visual
 format:
   html:
     code-overflow: wrap
@@ -108,7 +108,7 @@ This will collect all the characters used in our dataset (join all words to a ma
 
 ```{python}
 chars = sorted(list(set(''.join(words))))
-len(chars) # 26 
+len(chars) # 26
 
 # with index
 stoi = {s:i for i,s in enumerate(chars)}
@@ -236,7 +236,7 @@ And more, joining the last result to single word, and make new 10 names:
 g = torch.Generator().manual_seed(2147483647)
 
 for i in range(10):
-  
+
   out = []
   ix = 0
   while True:
@@ -269,7 +269,7 @@ P /= P.sum(1, keepdim=True)
 g = torch.Generator().manual_seed(2147483647)
 
 for i in range(10):
-  
+
   out = []
   ix = 0
   while True:
@@ -431,7 +431,7 @@ This is 1 neuron only, now we want to evaluate all 27 characters using only 5 in
 
 ```{python}
 W = torch.randn((27, 27))
-xenc @ W 
+xenc @ W
 # (5, 27) @ (27, 27) will result (5, 27) matrix
 # no bias is added for now
 ```
@@ -539,7 +539,7 @@ W = torch.randn((27, 27), generator=g, requires_grad=True)
 ```{python}
 # gradient descent
 for k in range(1): # after run 100 times, shorten the notebook
-  
+
   # forward pass
   xenc = F.one_hot(xs, num_classes=27).float() # input to the network: one-hot encoding
   logits = xenc @ W # predict log-counts
@@ -547,22 +547,22 @@ for k in range(1): # after run 100 times, shorten the notebook
   probs = counts / counts.sum(1, keepdims=True) # probabilities for next character
   loss = -probs[torch.arange(num), ys].log().mean() + 0.01*(W**2).mean() # regularization loss
   print(loss.item())
-  
+
   # backward pass
   W.grad = None # set to zero the gradient
   loss.backward()
-  
+
   # update
   W.data += -50 * W.grad
 ```
 
 Looking back to the backprogation in the [lesson 1](https://lktuan.github.io/blog/2024-06-17-nn-z2h-p1/#doing-gradient-descent-optimization-manually-training-the-network), everything look similar here:
 
-| Part          | This neural nets for bigram language modeling                                | Neural nets introduced in the lesson 1                                                        |
+| Part | This neural nets for bigram language modeling | Neural nets introduced in the lesson 1 |
 |------------------|----------------------------|--------------------------|
-| Forward pass  | `probs` , use negative log likelihood as loss function, doing classification | `ypred` , use MSE for loss function, doing regression                                         |
-| Backward pass | Same, offered by Torch.                                                      | Set grad of params to be zeros and do backpropagation.                                        |
-| Update loss   | Same                                                                         | Update the parameters, change the parameters following opposite direction to reduce the loss. |
+| Forward pass | `probs` , use negative log likelihood as loss function, doing classification | `ypred` , use MSE for loss function, doing regression |
+| Backward pass | Same, offered by Torch. | Set grad of params to be zeros and do backpropagation. |
+| Update loss | Same | Update the parameters, change the parameters following opposite direction to reduce the loss. |
 
 ## note 1: one-hot encoding really just selects a row of the next Linear layer's weight matrix
 
@@ -595,11 +595,11 @@ loss = -probs[torch.arange(num), ys].log().mean() + 0.01*(W**2).mean()
 g = torch.Generator().manual_seed(2147483647)
 
 for i in range(5):
-  
+
   out = []
   ix = 0
   while True:
-    
+
     # ----------
     # BEFORE:
     # p = P[ix]
@@ -610,7 +610,7 @@ for i in range(5):
     counts = logits.exp() # counts, equivalent to N
     p = counts / counts.sum(1, keepdims=True) # probabilities for next character
     # ----------
-    
+
     ix = torch.multinomial(p, num_samples=1, replacement=True, generator=g).item()
     out.append(itos[ix])
     if ix == 0:
