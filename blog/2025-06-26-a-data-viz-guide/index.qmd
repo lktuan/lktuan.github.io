@@ -1,0 +1,303 @@
+---
+title: "A data visualization guide, based on IBCS"
+description: "A data visualization guide made by Anton Zhianov, based on IBCS standard, which is based on previous work of Edward Tufte and Stephen Few"
+author:
+  - name: "Tuan Le Khac"
+    url: https://lktuan.github.io/
+categories: [visualization]
+date: 06-26-2025
+date-modified: 06-26-2025
+image: img/ibcs_pnl.png
+draft: false
+format:
+  html:
+    code-overflow: wrap
+    code-tools: true
+    code-fold: show
+    code-annotations: hover
+    page-layout: full
+---
+
+# 1 Motivation
+
+I've been inspired by the visualization standard proposed by the [IBCS](https://www.ibcs.com/ibcs-institute/) and always tried to pursue such style when doing data visualization stuff. They have a [practical guide](https://www.ibcs.com/ibcs-standards-1-2) presented on their website, and imho it's not really readable and generally downloadable.
+
+Today, when working around an implementation of the IBCS standard for a Power BI report, I came across a wonderful material made by [Anton Zhianov](https://antonz.org/#about). He made the resource more available at:
+
+- his blog: <https://antonz.org/dataviz-guide/>;
+- his github: <https://github.com/nalgeon/dataviz>.
+
+# 2 The `SUCCESS` formula
+
+I created these cards as a brief summary, utilizing the assistance of Gemini 2.5 Pro in [Google AI Studio](https://aistudio.google.com/) and my preferred Claude 4.0 Sonnet.
+
+While the original version from IBCS sequentially constructs a `SUCCESS` formula, I am leaning toward the way Anton had presented the rule ~ depicting how I am normally making a chart:
+
+> The message to deliver → The canvas to paste the data → The chart to use → Removing redundant things → Condensing more information → Revisiting integrity & unification.
+
+:::{.column-screen-inset}
+```{=html}
+<style>
+/* --- Main Framework for 4-3 Layout --- */
+.ibcs-framework {
+    display: flex;
+    flex-direction: column; /* Stack the rows vertically */
+    align-items: center; /* Center the rows horizontally */
+    gap: 30px; /* Increased space between the two rows */
+    margin: 40px 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* --- Row Styling --- */
+.ibcs-row {
+    display: flex;
+    justify-content: center; /* Center cards within the row */
+    flex-wrap: wrap; /* Allow cards to wrap on smaller screens */
+    gap: 30px; /* Increased space between cards */
+    width: 100%;
+    max-width: 1800px; /* Max width for the entire grid */
+}
+
+/* --- Card Styling (Bigger and Refined) --- */
+.ibcs-card {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 30px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    /* Defines card width - it will try to be 400px but can shrink */
+    flex: 1 1 400px;
+    max-width: 450px; /* Prevents cards from getting too wide on large screens */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.ibcs-card:hover {
+    border-color: #0d6efd;
+    box-shadow: 0 10px 25px rgba(13, 110, 253, 0.15);
+    transform: translateY(-8px);
+}
+
+.ibcs-card.negative:hover {
+    border-color: #dc3545;
+    box-shadow: 0 10px 25px rgba(220, 53, 69, 0.15);
+}
+
+/* --- Card Content --- */
+.ibcs-header {
+    display: flex;
+    align-items: baseline;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.ibcs-number {
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #f1f3f5;
+}
+
+.ibcs-title-group { flex-grow: 1; }
+.ibcs-title { font-size: 1.8em; font-weight: 700; color: #212529; }
+.ibcs-subtitle { color: #6c757d; font-size: 1.1em; font-style: italic; }
+
+/* --- Image Container and Image Fill --- */
+.ibcs-image {
+    width: 100%;
+    height: 220px; /* Taller for horizontal images */
+    border: 2px dashed #d1d5db; /* Dotted border */
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden; /* Crucial for containing the image */
+    background: #f8f9fa;
+    display: flex;
+}
+
+.ibcs-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* This makes the image fill the container */
+    transition: transform 0.4s ease;
+}
+
+.ibcs-card:hover .ibcs-image img {
+    transform: scale(1.08); /* More pronounced zoom on hover */
+}
+
+/* --- Hover Details --- */
+.ibcs-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+    color: #343a40;
+    font-size: 1.05em;
+    line-height: 1.6;
+    border-top: 1px solid #e9ecef;
+    padding-top: 0;
+}
+
+.ibcs-card:hover .ibcs-details {
+    max-height: 600px; /* Increased to accommodate more text */
+    transition: max-height 0.5s ease-in;
+    padding-top: 20px; /* Add padding only when details are shown */
+}
+
+.ibcs-details ul { padding-left: 20px; margin: 0; }
+.ibcs-details li { margin-bottom: 10px; }
+.ibcs-key { font-weight: 600; color: #198754; }
+.ibcs-avoid { font-weight: 600; color: #dc3545; }
+</style>
+
+<div class="ibcs-framework">
+    <!-- Top Row with 4 Cards -->
+    <div class="ibcs-row">
+        <div class="ibcs-card">
+            <div class="ibcs-header">
+                <div class="ibcs-number">1</div>
+                <div class="ibcs-title-group">
+                    <div class="ibcs-title">SAY</div>
+                    <div class="ibcs-subtitle">Convey a Message</div>
+                </div>
+            </div>
+            <div class="ibcs-image">
+                <img src="img/1_say.png" alt="A chart with a clear title and a highlighted key finding">
+            </div>
+            <div class="ibcs-details">
+                A report's purpose is to deliver an actionable message, not just data.
+                <ul>
+                    <li><span class="ibcs-key">Action:</span> Structure your narrative with the <strong>Situation-Problem-Question</strong> framework to provide context and focus.</li>
+                    <li><span class="ibcs-key">Action:</span> State your main message—be it a <em>detection</em>, <em>explanation</em>, or <em>suggestion</em>—upfront (Pyramid Principle).</li>
+                    <li><span class="ibcs-avoid">Trap:</span> Creating "data dumps" that force the audience to find the story themselves.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="ibcs-card">
+            <div class="ibcs-header">
+                <div class="ibcs-number">2</div>
+                <div class="ibcs-title-group">
+                    <div class="ibcs-title">STRUCTURE</div>
+                    <div class="ibcs-subtitle">Organize Content</div>
+                </div>
+            </div>
+            <div class="ibcs-image">
+                <img src="img/2_structure.png" alt="A MECE diagram showing logical, non-overlapping groups">
+            </div>
+            <div class="ibcs-details">
+                A logical structure forms a convincing and easily digestible storyline.
+                <ul>
+                    <li><span class="ibcs-key">Action:</span> Ensure all categories are <strong>MECE</strong> (Mutually Exclusive, Collectively Exhaustive) to avoid confusion and gaps.</li>
+                    <li><span class="ibcs-key">Action:</span> Maintain consistency in wording, item types, and visualizations within any group.</li>
+                    <li><span class="ibcs-avoid">Trap:</span> Presenting flat lists of information without clear hierarchy or logical flow.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="ibcs-card">
+            <div class="ibcs-header">
+                <div class="ibcs-number">3</div>
+                <div class="ibcs-title-group">
+                    <div class="ibcs-title">EXPRESS</div>
+                    <div class="ibcs-subtitle">Choose Proper Visualization</div>
+                </div>
+            </div>
+            <div class="ibcs-image">
+                <img src="img/3_express.png" alt="A bar chart for comparison next to a crossed-out pie chart">
+            </div>
+            <div class="ibcs-details">
+                Select visuals based on the task: charts for patterns, tables for precision.
+                <ul>
+                    <li><span class="ibcs-key">Action:</span> Use column/line charts for <strong>time-series</strong> analysis and bar charts for <strong>structural</strong> comparisons.</li>
+                    <li><span class="ibcs-key">Action:</span> Use tables when users need to look up precise numerical values.</li>
+                    <li><span class="ibcs-avoid">Trap:</span> Defaulting to visually weak charts like pies, gauges, and radar charts that distort data.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="ibcs-card negative">
+            <div class="ibcs-header">
+                <div class="ibcs-number">4</div>
+                <div class="ibcs-title-group">
+                    <div class="ibcs-title">SIMPLIFY</div>
+                    <div class="ibcs-subtitle">Eliminate Clutter</div>
+                </div>
+            </div>
+            <div class="ibcs-image">
+                <img src="img/4_simplify.png" alt="A before-and-after comparison showing a cluttered chart made clean">
+            </div>
+            <div class="ibcs-details">
+                Every element must serve a purpose. If it doesn't help, remove it.
+                <ul>
+                    <li><span class="ibcs-key">Action:</span> Maximize the <strong>data-ink ratio</strong> by removing all decorative elements (shadows, 3D, backgrounds, borders).</li>
+                    <li><span class="ibcs-key">Action:</span> Replace gridlines and axes with direct data labels for a cleaner look.</li>
+                    <li><span class="ibcs-avoid">Trap:</span> "Chartjunk" that distracts from the core message and reduces clarity.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Bottom Row with 3 Cards -->
+    <div class="ibcs-row">
+        <div class="ibcs-card">
+            <div class="ibcs-header">
+                <div class="ibcs-number">5</div>
+                <div class="ibcs-title-group">
+                    <div class="ibcs-title">CONDENSE</div>
+                    <div class="ibcs-subtitle">Increase Information Density</div>
+                </div>
+            </div>
+            <div class="ibcs-image">
+                <img src="img/5_condense.png" alt="A dashboard with multiple small, related charts (small multiples)">
+            </div>
+            <div class="ibcs-details">
+                Provide richer context by showing more relevant data on a single page.
+                <ul>
+                    <li><span class="ibcs-key">Action:</span> Use <strong>small multiples</strong> to enable easy comparison across many categories at once.</li>
+                    <li><span class="ibcs-key">Action:</span> Embed visuals like sparklines or bars directly into tables to add context without taking up space.</li>
+                    <li><span class="ibcs-avoid">Trap:</span> Using low-density visuals that force users to flip between pages to connect ideas.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="ibcs-card negative">
+            <div class="ibcs-header">
+                <div class="ibcs-number">6</div>
+                <div class="ibcs-title-group">
+                    <div class="ibcs-title">CHECK</div>
+                    <div class="ibcs-subtitle">Ensure Visual Integrity</div>
+                </div>
+            </div>
+            <div class="ibcs-image">
+                <img src="img/6_check.png" alt="A bar chart with its axis correctly starting at zero to show true proportions">
+            </div>
+            <div class="ibcs-details">
+                Your visuals must be honest. Follow non-negotiable rules of representation.
+                <ul>
+                    <li><span class="ibcs-avoid">Rule:</span> Bar and column chart value axes <strong>must</strong> start at zero to avoid distorting proportions.</li>
+                    <li><span class="ibcs-avoid">Rule:</span> When using areas (e.g., bubbles), scale the <strong>area</strong> to the value, not the diameter.</li>
+                    <li><span class="ibcs-key">Action:</span> Use identical scales for all charts on a page that share the same unit.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="ibcs-card">
+            <div class="ibcs-header">
+                <div class="ibcs-number">7</div>
+                <div class="ibcs-title-group">
+                    <div class="ibcs-title">UNIFY</div>
+                    <div class="ibcs-subtitle">Apply Semantic Notation</div>
+                </div>
+            </div>
+            <div class="ibcs-image">
+                <img src="img/7_unify.png" alt="A legend showing IBCS standards for colors and fills for scenarios">
+            </div>
+            <div class="ibcs-details">
+                Create a consistent visual language: <em>What looks the same should mean the same.</em>
+                <ul>
+                    <li><span class="ibcs-key">Notation:</span> Use consistent fills for scenarios: <strong>Solid</strong> for Actual (AC), <strong>Outlined</strong> for Plan (PL), <strong>Hatched</strong> for Forecast (FC).</li>
+                    <li><span class="ibcs-key">Notation:</span> Use <span style="color:#198754; font-weight:600;">Green</span> for positive impacts (e.g., profit up) and <span style="color:#dc3545; font-weight:600;">Red</span> for negative.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+```
+:::
+
+Happy visualizing! happy vibing! - Tuan.

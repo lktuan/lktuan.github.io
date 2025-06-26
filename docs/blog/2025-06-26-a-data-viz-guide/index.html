@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Tuan Le Khac">
+<meta name="dcterms.date" content="2025-06-26">
+<meta name="description" content="This is Tuan’s blog">
+
+<title>A data visualization guide, based on IBCS – Le Khac Tuan</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../img/rocket_1613268.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-8e54dfbe729680b42f22c627ac27a053.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-81b089a3b74ed4cf194f083418e7130b.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-89cb849060b93fd12025e4f44aaa3f02.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-27750d9d09892f3d6a52d1fd788c41c6.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Le Khac Tuan</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../curriculum/index.html"> 
+<span class="menu-text">Curriculum</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../学汉语的日记.html"> 
+<span class="menu-text">学汉语的日记</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../jiu_jitsu_journal/index.html"> 
+<span class="menu-text">Jiu Jitsu Journal</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/lktuan"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/tuanlekhac/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.facebook.com/toilatuan.lk/"> <i class="bi bi-facebook" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/Halle4231"> <i class="bi bi-twitter-x" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@tuan_lekhac"> <i class="bi bi-youtube" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:tuan.lekhac0905@gmail.com"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <div class="quarto-title-block"><div><h1 class="title">A data visualization guide, based on IBCS</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+                  <div>
+        <div class="description">
+          A data visualization guide made by Anton Zhianov, based on IBCS standard, which is based on previous work of Edward Tufte and Stephen Few
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">visualization</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-body">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p><a href="https://lktuan.github.io/">Tuan Le Khac</a> </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">June 26, 2025</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">June 26, 2025</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation">1 Motivation</a></li>
+  <li><a href="#the-success-formula" id="toc-the-success-formula" class="nav-link" data-scroll-target="#the-success-formula">2 The <code>SUCCESS</code> formula</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block page-columns page-full column-body" id="quarto-document-content">
+
+
+
+
+
+<section id="motivation" class="level1">
+<h1>1 Motivation</h1>
+<p>I’ve been inspired by the visualization standard proposed by the <a href="https://www.ibcs.com/ibcs-institute/">IBCS</a> and always tried to pursue such style when doing data visualization stuff. They have a <a href="https://www.ibcs.com/ibcs-standards-1-2">practical guide</a> presented on their website, and imho it’s not really readable and generally downloadable.</p>
+<p>Today, when working around an implementation of the IBCS standard for a Power BI report, I came across a wonderful material made by <a href="https://antonz.org/#about">Anton Zhianov</a>. He made the resource more available at:</p>
+<ul>
+<li>his blog: <a href="https://antonz.org/dataviz-guide/" class="uri">https://antonz.org/dataviz-guide/</a>;</li>
+<li>his github: <a href="https://github.com/nalgeon/dataviz" class="uri">https://github.com/nalgeon/dataviz</a>.</li>
+</ul>
+</section>
+<section id="the-success-formula" class="level1 page-columns page-full">
+<h1>2 The <code>SUCCESS</code> formula</h1>
+<p>I created these cards as a brief summary, utilizing the assistance of Gemini 2.5 Pro in <a href="https://aistudio.google.com/">Google AI Studio</a> and my preferred Claude 4.0 Sonnet.</p>
+<p>While the original version from IBCS sequentially constructs a <code>SUCCESS</code> formula, I am leaning toward the way Anton had presented the rule ~ depicting how I am normally making a chart:</p>
+<blockquote class="blockquote">
+<p>The message to deliver → The canvas to paste the data → The chart to use → Removing redundant things → Condensing more information → Revisiting integrity &amp; unification.</p>
+</blockquote>
+<div class="column-screen-inset">
+<style>
+/* --- Main Framework for 4-3 Layout --- */
+.ibcs-framework {
+    display: flex;
+    flex-direction: column; /* Stack the rows vertically */
+    align-items: center; /* Center the rows horizontally */
+    gap: 30px; /* Increased space between the two rows */
+    margin: 40px 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* --- Row Styling --- */
+.ibcs-row {
+    display: flex;
+    justify-content: center; /* Center cards within the row */
+    flex-wrap: wrap; /* Allow cards to wrap on smaller screens */
+    gap: 30px; /* Increased space between cards */
+    width: 100%;
+    max-width: 1800px; /* Max width for the entire grid */
+}
+
+/* --- Card Styling (Bigger and Refined) --- */
+.ibcs-card {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 30px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    /* Defines card width - it will try to be 400px but can shrink */
+    flex: 1 1 400px;
+    max-width: 450px; /* Prevents cards from getting too wide on large screens */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.ibcs-card:hover {
+    border-color: #0d6efd;
+    box-shadow: 0 10px 25px rgba(13, 110, 253, 0.15);
+    transform: translateY(-8px);
+}
+
+.ibcs-card.negative:hover {
+    border-color: #dc3545;
+    box-shadow: 0 10px 25px rgba(220, 53, 69, 0.15);
+}
+
+/* --- Card Content --- */
+.ibcs-header {
+    display: flex;
+    align-items: baseline;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.ibcs-number {
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #f1f3f5;
+}
+
+.ibcs-title-group { flex-grow: 1; }
+.ibcs-title { font-size: 1.8em; font-weight: 700; color: #212529; }
+.ibcs-subtitle { color: #6c757d; font-size: 1.1em; font-style: italic; }
+
+/* --- Image Container and Image Fill --- */
+.ibcs-image {
+    width: 100%;
+    height: 220px; /* Taller for horizontal images */
+    border: 2px dashed #d1d5db; /* Dotted border */
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden; /* Crucial for containing the image */
+    background: #f8f9fa;
+    display: flex;
+}
+
+.ibcs-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* This makes the image fill the container */
+    transition: transform 0.4s ease;
+}
+
+.ibcs-card:hover .ibcs-image img {
+    transform: scale(1.08); /* More pronounced zoom on hover */
+}
+
+/* --- Hover Details --- */
+.ibcs-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+    color: #343a40;
+    font-size: 1.05em;
+    line-height: 1.6;
+    border-top: 1px solid #e9ecef;
+    padding-top: 0;
+}
+
+.ibcs-card:hover .ibcs-details {
+    max-height: 600px; /* Increased to accommodate more text */
+    transition: max-height 0.5s ease-in;
+    padding-top: 20px; /* Add padding only when details are shown */
+}
+
+.ibcs-details ul { padding-left: 20px; margin: 0; }
+.ibcs-details li { margin-bottom: 10px; }
+.ibcs-key { font-weight: 600; color: #198754; }
+.ibcs-avoid { font-weight: 600; color: #dc3545; }
+</style>
+
+<div class="ibcs-framework">
+    <!-- Top Row with 4 Cards -->
+    <div class="ibcs-row">
+        <div class="ibcs-card">
+            <div class="ibcs-header">
+                <div class="ibcs-number">1</div>
+                <div class="ibcs-title-group">
+                    <div class="ibcs-title">SAY</div>
+                    <div class="ibcs-subtitle">Convey a Message</div>
+                </div>
+            </div>
+            <div class="ibcs-image">
+                <img src="img/1_say.png" alt="A chart with a clear title and a highlighted key finding">
+            </div>
+            <div class="ibcs-details">
+                A report's purpose is to deliver an actionable message, not just data.
+                <ul>
+                    <li><span class="ibcs-key">Action:</span> Structure your narrative with the <strong>Situation-Problem-Question</strong> framework to provide context and focus.</li>
+                    <li><span class="ibcs-key">Action:</span> State your main message—be it a <em>detection</em>, <em>explanation</em>, or <em>suggestion</em>—upfront (Pyramid Principle).</li>
+                    <li><span class="ibcs-avoid">Trap:</span> Creating "data dumps" that force the audience to find the story themselves.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="ibcs-card">
+            <div class="ibcs-header">
+                <div class="ibcs-number">2</div>
+                <div class="ibcs-title-group">
+                    <div class="ibcs-title">STRUCTURE</div>
+                    <div class="ibcs-subtitle">Organize Content</div>
+                </div>
+            </div>
+            <div class="ibcs-image">
+                <img src="img/2_structure.png" alt="A MECE diagram showing logical, non-overlapping groups">
+            </div>
+            <div class="ibcs-details">
+                A logical structure forms a convincing and easily digestible storyline.
+                <ul>
+                    <li><span class="ibcs-key">Action:</span> Ensure all categories are <strong>MECE</strong> (Mutually Exclusive, Collectively Exhaustive) to avoid confusion and gaps.</li>
+                    <li><span class="ibcs-key">Action:</span> Maintain consistency in wording, item types, and visualizations within any group.</li>
+                    <li><span class="ibcs-avoid">Trap:</span> Presenting flat lists of information without clear hierarchy or logical flow.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="ibcs-card">
+            <div class="ibcs-header">
+                <div class="ibcs-number">3</div>
+                <div class="ibcs-title-group">
+                    <div class="ibcs-title">EXPRESS</div>
+                    <div class="ibcs-subtitle">Choose Proper Visualization</div>
+                </div>
+            </div>
+            <div class="ibcs-image">
+                <img src="img/3_express.png" alt="A bar chart for comparison next to a crossed-out pie chart">
+            </div>
+            <div class="ibcs-details">
+                Select visuals based on the task: charts for patterns, tables for precision.
+                <ul>
+                    <li><span class="ibcs-key">Action:</span> Use column/line charts for <strong>time-series</strong> analysis and bar charts for <strong>structural</strong> comparisons.</li>
+                    <li><span class="ibcs-key">Action:</span> Use tables when users need to look up precise numerical values.</li>
+                    <li><span class="ibcs-avoid">Trap:</span> Defaulting to visually weak charts like pies, gauges, and radar charts that distort data.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="ibcs-card negative">
+            <div class="ibcs-header">
+                <div class="ibcs-number">4</div>
+                <div class="ibcs-title-group">
+                    <div class="ibcs-title">SIMPLIFY</div>
+                    <div class="ibcs-subtitle">Eliminate Clutter</div>
+                </div>
+            </div>
+            <div class="ibcs-image">
+                <img src="img/4_simplify.png" alt="A before-and-after comparison showing a cluttered chart made clean">
+            </div>
+            <div class="ibcs-details">
+                Every element must serve a purpose. If it doesn't help, remove it.
+                <ul>
+                    <li><span class="ibcs-key">Action:</span> Maximize the <strong>data-ink ratio</strong> by removing all decorative elements (shadows, 3D, backgrounds, borders).</li>
+                    <li><span class="ibcs-key">Action:</span> Replace gridlines and axes with direct data labels for a cleaner look.</li>
+                    <li><span class="ibcs-avoid">Trap:</span> "Chartjunk" that distracts from the core message and reduces clarity.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Bottom Row with 3 Cards -->
+    <div class="ibcs-row">
+        <div class="ibcs-card">
+            <div class="ibcs-header">
+                <div class="ibcs-number">5</div>
+                <div class="ibcs-title-group">
+                    <div class="ibcs-title">CONDENSE</div>
+                    <div class="ibcs-subtitle">Increase Information Density</div>
+                </div>
+            </div>
+            <div class="ibcs-image">
+                <img src="img/5_condense.png" alt="A dashboard with multiple small, related charts (small multiples)">
+            </div>
+            <div class="ibcs-details">
+                Provide richer context by showing more relevant data on a single page.
+                <ul>
+                    <li><span class="ibcs-key">Action:</span> Use <strong>small multiples</strong> to enable easy comparison across many categories at once.</li>
+                    <li><span class="ibcs-key">Action:</span> Embed visuals like sparklines or bars directly into tables to add context without taking up space.</li>
+                    <li><span class="ibcs-avoid">Trap:</span> Using low-density visuals that force users to flip between pages to connect ideas.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="ibcs-card negative">
+            <div class="ibcs-header">
+                <div class="ibcs-number">6</div>
+                <div class="ibcs-title-group">
+                    <div class="ibcs-title">CHECK</div>
+                    <div class="ibcs-subtitle">Ensure Visual Integrity</div>
+                </div>
+            </div>
+            <div class="ibcs-image">
+                <img src="img/6_check.png" alt="A bar chart with its axis correctly starting at zero to show true proportions">
+            </div>
+            <div class="ibcs-details">
+                Your visuals must be honest. Follow non-negotiable rules of representation.
+                <ul>
+                    <li><span class="ibcs-avoid">Rule:</span> Bar and column chart value axes <strong>must</strong> start at zero to avoid distorting proportions.</li>
+                    <li><span class="ibcs-avoid">Rule:</span> When using areas (e.g., bubbles), scale the <strong>area</strong> to the value, not the diameter.</li>
+                    <li><span class="ibcs-key">Action:</span> Use identical scales for all charts on a page that share the same unit.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="ibcs-card">
+            <div class="ibcs-header">
+                <div class="ibcs-number">7</div>
+                <div class="ibcs-title-group">
+                    <div class="ibcs-title">UNIFY</div>
+                    <div class="ibcs-subtitle">Apply Semantic Notation</div>
+                </div>
+            </div>
+            <div class="ibcs-image">
+                <img src="img/7_unify.png" alt="A legend showing IBCS standards for colors and fills for scenarios">
+            </div>
+            <div class="ibcs-details">
+                Create a consistent visual language: <em>What looks the same should mean the same.</em>
+                <ul>
+                    <li><span class="ibcs-key">Notation:</span> Use consistent fills for scenarios: <strong>Solid</strong> for Actual (AC), <strong>Outlined</strong> for Plan (PL), <strong>Hatched</strong> for Forecast (FC).</li>
+                    <li><span class="ibcs-key">Notation:</span> Use <span style="color:#198754; font-weight:600;">Green</span> for positive impacts (e.g., profit up) and <span style="color:#dc3545; font-weight:600;">Red</span> for negative.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<p>Happy visualizing! happy vibing! - Tuan.</p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/lktuan\.github\.io\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'left'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">---</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="an">title:</span><span class="co"> "A data visualization guide, based on IBCS"</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="an">description:</span><span class="co"> "A data visualization guide made by Anton Zhianov, based on IBCS standard, which is based on previous work of Edward Tufte and Stephen Few"</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="an">author:</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co">  - name: "Tuan Le Khac"</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="co">    url: https://lktuan.github.io/</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="an">categories:</span><span class="co"> [visualization]</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="an">date:</span><span class="co"> 06-26-2025</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="an">date-modified:</span><span class="co"> 06-26-2025</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="an">image:</span><span class="co"> img/ibcs_pnl.png</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="an">draft:</span><span class="co"> false</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="an">format:</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="co">  html:</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="co">    code-overflow: wrap</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a><span class="co">    code-tools: true</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a><span class="co">    code-fold: show</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a><span class="co">    code-annotations: hover</span></span>
+<span id="cb1-18"><a href="#cb1-18"></a><span class="co">    page-layout: full</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a><span class="co">---</span></span>
+<span id="cb1-20"><a href="#cb1-20"></a></span>
+<span id="cb1-21"><a href="#cb1-21"></a><span class="fu"># 1 Motivation</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a></span>
+<span id="cb1-23"><a href="#cb1-23"></a>I've been inspired by the visualization standard proposed by the <span class="co">[</span><span class="ot">IBCS</span><span class="co">](https://www.ibcs.com/ibcs-institute/)</span> and always tried to pursue such style when doing data visualization stuff. They have a <span class="co">[</span><span class="ot">practical guide</span><span class="co">](https://www.ibcs.com/ibcs-standards-1-2)</span> presented on their website, and imho it's not really readable and generally downloadable.</span>
+<span id="cb1-24"><a href="#cb1-24"></a></span>
+<span id="cb1-25"><a href="#cb1-25"></a>Today, when working around an implementation of the IBCS standard for a Power BI report, I came across a wonderful material made by <span class="co">[</span><span class="ot">Anton Zhianov</span><span class="co">](https://antonz.org/#about)</span>. He made the resource more available at:</span>
+<span id="cb1-26"><a href="#cb1-26"></a></span>
+<span id="cb1-27"><a href="#cb1-27"></a><span class="ss">- </span>his blog: <span class="ot">&lt;https://antonz.org/dataviz-guide/&gt;</span>;</span>
+<span id="cb1-28"><a href="#cb1-28"></a><span class="ss">- </span>his github: <span class="ot">&lt;https://github.com/nalgeon/dataviz&gt;</span>.</span>
+<span id="cb1-29"><a href="#cb1-29"></a></span>
+<span id="cb1-30"><a href="#cb1-30"></a><span class="fu"># 2 The `SUCCESS` formula</span></span>
+<span id="cb1-31"><a href="#cb1-31"></a></span>
+<span id="cb1-32"><a href="#cb1-32"></a>I created these cards as a brief summary, utilizing the assistance of Gemini 2.5 Pro in <span class="co">[</span><span class="ot">Google AI Studio</span><span class="co">](https://aistudio.google.com/)</span> and my preferred Claude 4.0 Sonnet.</span>
+<span id="cb1-33"><a href="#cb1-33"></a></span>
+<span id="cb1-34"><a href="#cb1-34"></a>While the original version from IBCS sequentially constructs a <span class="in">`SUCCESS`</span> formula, I am leaning toward the way Anton had presented the rule ~ depicting how I am normally making a chart:</span>
+<span id="cb1-35"><a href="#cb1-35"></a></span>
+<span id="cb1-36"><a href="#cb1-36"></a><span class="at">&gt; The message to deliver → The canvas to paste the data → The chart to use → Removing redundant things → Condensing more information → Revisiting integrity &amp; unification.</span></span>
+<span id="cb1-37"><a href="#cb1-37"></a></span>
+<span id="cb1-38"><a href="#cb1-38"></a>:::{.column-screen-inset}</span>
+<span id="cb1-39"><a href="#cb1-39"></a><span class="in">```{=html}</span></span>
+<span id="cb1-40"><a href="#cb1-40"></a><span class="in">&lt;style&gt;</span></span>
+<span id="cb1-41"><a href="#cb1-41"></a><span class="in">/* --- Main Framework for 4-3 Layout --- */</span></span>
+<span id="cb1-42"><a href="#cb1-42"></a><span class="in">.ibcs-framework {</span></span>
+<span id="cb1-43"><a href="#cb1-43"></a><span class="in">    display: flex;</span></span>
+<span id="cb1-44"><a href="#cb1-44"></a><span class="in">    flex-direction: column; /* Stack the rows vertically */</span></span>
+<span id="cb1-45"><a href="#cb1-45"></a><span class="in">    align-items: center; /* Center the rows horizontally */</span></span>
+<span id="cb1-46"><a href="#cb1-46"></a><span class="in">    gap: 30px; /* Increased space between the two rows */</span></span>
+<span id="cb1-47"><a href="#cb1-47"></a><span class="in">    margin: 40px 0;</span></span>
+<span id="cb1-48"><a href="#cb1-48"></a><span class="in">    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;</span></span>
+<span id="cb1-49"><a href="#cb1-49"></a><span class="in">}</span></span>
+<span id="cb1-50"><a href="#cb1-50"></a></span>
+<span id="cb1-51"><a href="#cb1-51"></a><span class="in">/* --- Row Styling --- */</span></span>
+<span id="cb1-52"><a href="#cb1-52"></a><span class="in">.ibcs-row {</span></span>
+<span id="cb1-53"><a href="#cb1-53"></a><span class="in">    display: flex;</span></span>
+<span id="cb1-54"><a href="#cb1-54"></a><span class="in">    justify-content: center; /* Center cards within the row */</span></span>
+<span id="cb1-55"><a href="#cb1-55"></a><span class="in">    flex-wrap: wrap; /* Allow cards to wrap on smaller screens */</span></span>
+<span id="cb1-56"><a href="#cb1-56"></a><span class="in">    gap: 30px; /* Increased space between cards */</span></span>
+<span id="cb1-57"><a href="#cb1-57"></a><span class="in">    width: 100%;</span></span>
+<span id="cb1-58"><a href="#cb1-58"></a><span class="in">    max-width: 1800px; /* Max width for the entire grid */</span></span>
+<span id="cb1-59"><a href="#cb1-59"></a><span class="in">}</span></span>
+<span id="cb1-60"><a href="#cb1-60"></a></span>
+<span id="cb1-61"><a href="#cb1-61"></a><span class="in">/* --- Card Styling (Bigger and Refined) --- */</span></span>
+<span id="cb1-62"><a href="#cb1-62"></a><span class="in">.ibcs-card {</span></span>
+<span id="cb1-63"><a href="#cb1-63"></a><span class="in">    background: #ffffff;</span></span>
+<span id="cb1-64"><a href="#cb1-64"></a><span class="in">    border: 1px solid #dee2e6;</span></span>
+<span id="cb1-65"><a href="#cb1-65"></a><span class="in">    border-radius: 12px;</span></span>
+<span id="cb1-66"><a href="#cb1-66"></a><span class="in">    padding: 30px;</span></span>
+<span id="cb1-67"><a href="#cb1-67"></a><span class="in">    transition: all 0.3s ease;</span></span>
+<span id="cb1-68"><a href="#cb1-68"></a><span class="in">    overflow: hidden;</span></span>
+<span id="cb1-69"><a href="#cb1-69"></a><span class="in">    display: flex;</span></span>
+<span id="cb1-70"><a href="#cb1-70"></a><span class="in">    flex-direction: column;</span></span>
+<span id="cb1-71"><a href="#cb1-71"></a><span class="in">    /* Defines card width - it will try to be 400px but can shrink */</span></span>
+<span id="cb1-72"><a href="#cb1-72"></a><span class="in">    flex: 1 1 400px;</span></span>
+<span id="cb1-73"><a href="#cb1-73"></a><span class="in">    max-width: 450px; /* Prevents cards from getting too wide on large screens */</span></span>
+<span id="cb1-74"><a href="#cb1-74"></a><span class="in">    box-shadow: 0 4px 6px rgba(0,0,0,0.05);</span></span>
+<span id="cb1-75"><a href="#cb1-75"></a><span class="in">}</span></span>
+<span id="cb1-76"><a href="#cb1-76"></a></span>
+<span id="cb1-77"><a href="#cb1-77"></a><span class="in">.ibcs-card:hover {</span></span>
+<span id="cb1-78"><a href="#cb1-78"></a><span class="in">    border-color: #0d6efd;</span></span>
+<span id="cb1-79"><a href="#cb1-79"></a><span class="in">    box-shadow: 0 10px 25px rgba(13, 110, 253, 0.15);</span></span>
+<span id="cb1-80"><a href="#cb1-80"></a><span class="in">    transform: translateY(-8px);</span></span>
+<span id="cb1-81"><a href="#cb1-81"></a><span class="in">}</span></span>
+<span id="cb1-82"><a href="#cb1-82"></a></span>
+<span id="cb1-83"><a href="#cb1-83"></a><span class="in">.ibcs-card.negative:hover {</span></span>
+<span id="cb1-84"><a href="#cb1-84"></a><span class="in">    border-color: #dc3545;</span></span>
+<span id="cb1-85"><a href="#cb1-85"></a><span class="in">    box-shadow: 0 10px 25px rgba(220, 53, 69, 0.15);</span></span>
+<span id="cb1-86"><a href="#cb1-86"></a><span class="in">}</span></span>
+<span id="cb1-87"><a href="#cb1-87"></a></span>
+<span id="cb1-88"><a href="#cb1-88"></a><span class="in">/* --- Card Content --- */</span></span>
+<span id="cb1-89"><a href="#cb1-89"></a><span class="in">.ibcs-header {</span></span>
+<span id="cb1-90"><a href="#cb1-90"></a><span class="in">    display: flex;</span></span>
+<span id="cb1-91"><a href="#cb1-91"></a><span class="in">    align-items: baseline;</span></span>
+<span id="cb1-92"><a href="#cb1-92"></a><span class="in">    gap: 15px;</span></span>
+<span id="cb1-93"><a href="#cb1-93"></a><span class="in">    margin-bottom: 20px;</span></span>
+<span id="cb1-94"><a href="#cb1-94"></a><span class="in">}</span></span>
+<span id="cb1-95"><a href="#cb1-95"></a></span>
+<span id="cb1-96"><a href="#cb1-96"></a><span class="in">.ibcs-number {</span></span>
+<span id="cb1-97"><a href="#cb1-97"></a><span class="in">    font-size: 2.5em;</span></span>
+<span id="cb1-98"><a href="#cb1-98"></a><span class="in">    font-weight: 700;</span></span>
+<span id="cb1-99"><a href="#cb1-99"></a><span class="in">    color: #f1f3f5;</span></span>
+<span id="cb1-100"><a href="#cb1-100"></a><span class="in">}</span></span>
+<span id="cb1-101"><a href="#cb1-101"></a></span>
+<span id="cb1-102"><a href="#cb1-102"></a><span class="in">.ibcs-title-group { flex-grow: 1; }</span></span>
+<span id="cb1-103"><a href="#cb1-103"></a><span class="in">.ibcs-title { font-size: 1.8em; font-weight: 700; color: #212529; }</span></span>
+<span id="cb1-104"><a href="#cb1-104"></a><span class="in">.ibcs-subtitle { color: #6c757d; font-size: 1.1em; font-style: italic; }</span></span>
+<span id="cb1-105"><a href="#cb1-105"></a></span>
+<span id="cb1-106"><a href="#cb1-106"></a><span class="in">/* --- Image Container and Image Fill --- */</span></span>
+<span id="cb1-107"><a href="#cb1-107"></a><span class="in">.ibcs-image {</span></span>
+<span id="cb1-108"><a href="#cb1-108"></a><span class="in">    width: 100%;</span></span>
+<span id="cb1-109"><a href="#cb1-109"></a><span class="in">    height: 220px; /* Taller for horizontal images */</span></span>
+<span id="cb1-110"><a href="#cb1-110"></a><span class="in">    border: 2px dashed #d1d5db; /* Dotted border */</span></span>
+<span id="cb1-111"><a href="#cb1-111"></a><span class="in">    border-radius: 8px;</span></span>
+<span id="cb1-112"><a href="#cb1-112"></a><span class="in">    margin-bottom: 20px;</span></span>
+<span id="cb1-113"><a href="#cb1-113"></a><span class="in">    overflow: hidden; /* Crucial for containing the image */</span></span>
+<span id="cb1-114"><a href="#cb1-114"></a><span class="in">    background: #f8f9fa;</span></span>
+<span id="cb1-115"><a href="#cb1-115"></a><span class="in">    display: flex;</span></span>
+<span id="cb1-116"><a href="#cb1-116"></a><span class="in">}</span></span>
+<span id="cb1-117"><a href="#cb1-117"></a></span>
+<span id="cb1-118"><a href="#cb1-118"></a><span class="in">.ibcs-image img {</span></span>
+<span id="cb1-119"><a href="#cb1-119"></a><span class="in">    width: 100%;</span></span>
+<span id="cb1-120"><a href="#cb1-120"></a><span class="in">    height: 100%;</span></span>
+<span id="cb1-121"><a href="#cb1-121"></a><span class="in">    object-fit: cover; /* This makes the image fill the container */</span></span>
+<span id="cb1-122"><a href="#cb1-122"></a><span class="in">    transition: transform 0.4s ease;</span></span>
+<span id="cb1-123"><a href="#cb1-123"></a><span class="in">}</span></span>
+<span id="cb1-124"><a href="#cb1-124"></a></span>
+<span id="cb1-125"><a href="#cb1-125"></a><span class="in">.ibcs-card:hover .ibcs-image img {</span></span>
+<span id="cb1-126"><a href="#cb1-126"></a><span class="in">    transform: scale(1.08); /* More pronounced zoom on hover */</span></span>
+<span id="cb1-127"><a href="#cb1-127"></a><span class="in">}</span></span>
+<span id="cb1-128"><a href="#cb1-128"></a></span>
+<span id="cb1-129"><a href="#cb1-129"></a><span class="in">/* --- Hover Details --- */</span></span>
+<span id="cb1-130"><a href="#cb1-130"></a><span class="in">.ibcs-details {</span></span>
+<span id="cb1-131"><a href="#cb1-131"></a><span class="in">    max-height: 0;</span></span>
+<span id="cb1-132"><a href="#cb1-132"></a><span class="in">    overflow: hidden;</span></span>
+<span id="cb1-133"><a href="#cb1-133"></a><span class="in">    transition: max-height 0.4s ease-out;</span></span>
+<span id="cb1-134"><a href="#cb1-134"></a><span class="in">    color: #343a40;</span></span>
+<span id="cb1-135"><a href="#cb1-135"></a><span class="in">    font-size: 1.05em;</span></span>
+<span id="cb1-136"><a href="#cb1-136"></a><span class="in">    line-height: 1.6;</span></span>
+<span id="cb1-137"><a href="#cb1-137"></a><span class="in">    border-top: 1px solid #e9ecef;</span></span>
+<span id="cb1-138"><a href="#cb1-138"></a><span class="in">    padding-top: 0;</span></span>
+<span id="cb1-139"><a href="#cb1-139"></a><span class="in">}</span></span>
+<span id="cb1-140"><a href="#cb1-140"></a></span>
+<span id="cb1-141"><a href="#cb1-141"></a><span class="in">.ibcs-card:hover .ibcs-details {</span></span>
+<span id="cb1-142"><a href="#cb1-142"></a><span class="in">    max-height: 600px; /* Increased to accommodate more text */</span></span>
+<span id="cb1-143"><a href="#cb1-143"></a><span class="in">    transition: max-height 0.5s ease-in;</span></span>
+<span id="cb1-144"><a href="#cb1-144"></a><span class="in">    padding-top: 20px; /* Add padding only when details are shown */</span></span>
+<span id="cb1-145"><a href="#cb1-145"></a><span class="in">}</span></span>
+<span id="cb1-146"><a href="#cb1-146"></a></span>
+<span id="cb1-147"><a href="#cb1-147"></a><span class="in">.ibcs-details ul { padding-left: 20px; margin: 0; }</span></span>
+<span id="cb1-148"><a href="#cb1-148"></a><span class="in">.ibcs-details li { margin-bottom: 10px; }</span></span>
+<span id="cb1-149"><a href="#cb1-149"></a><span class="in">.ibcs-key { font-weight: 600; color: #198754; }</span></span>
+<span id="cb1-150"><a href="#cb1-150"></a><span class="in">.ibcs-avoid { font-weight: 600; color: #dc3545; }</span></span>
+<span id="cb1-151"><a href="#cb1-151"></a><span class="in">&lt;/style&gt;</span></span>
+<span id="cb1-152"><a href="#cb1-152"></a></span>
+<span id="cb1-153"><a href="#cb1-153"></a><span class="in">&lt;div class="ibcs-framework"&gt;</span></span>
+<span id="cb1-154"><a href="#cb1-154"></a><span class="in">    &lt;!-- Top Row with 4 Cards --&gt;</span></span>
+<span id="cb1-155"><a href="#cb1-155"></a><span class="in">    &lt;div class="ibcs-row"&gt;</span></span>
+<span id="cb1-156"><a href="#cb1-156"></a><span class="in">        &lt;div class="ibcs-card"&gt;</span></span>
+<span id="cb1-157"><a href="#cb1-157"></a><span class="in">            &lt;div class="ibcs-header"&gt;</span></span>
+<span id="cb1-158"><a href="#cb1-158"></a><span class="in">                &lt;div class="ibcs-number"&gt;1&lt;/div&gt;</span></span>
+<span id="cb1-159"><a href="#cb1-159"></a><span class="in">                &lt;div class="ibcs-title-group"&gt;</span></span>
+<span id="cb1-160"><a href="#cb1-160"></a><span class="in">                    &lt;div class="ibcs-title"&gt;SAY&lt;/div&gt;</span></span>
+<span id="cb1-161"><a href="#cb1-161"></a><span class="in">                    &lt;div class="ibcs-subtitle"&gt;Convey a Message&lt;/div&gt;</span></span>
+<span id="cb1-162"><a href="#cb1-162"></a><span class="in">                &lt;/div&gt;</span></span>
+<span id="cb1-163"><a href="#cb1-163"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-164"><a href="#cb1-164"></a><span class="in">            &lt;div class="ibcs-image"&gt;</span></span>
+<span id="cb1-165"><a href="#cb1-165"></a><span class="in">                &lt;img src="img/1_say.png" alt="A chart with a clear title and a highlighted key finding"&gt;</span></span>
+<span id="cb1-166"><a href="#cb1-166"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-167"><a href="#cb1-167"></a><span class="in">            &lt;div class="ibcs-details"&gt;</span></span>
+<span id="cb1-168"><a href="#cb1-168"></a><span class="in">                A report's purpose is to deliver an actionable message, not just data.</span></span>
+<span id="cb1-169"><a href="#cb1-169"></a><span class="in">                &lt;ul&gt;</span></span>
+<span id="cb1-170"><a href="#cb1-170"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-key"&gt;Action:&lt;/span&gt; Structure your narrative with the &lt;strong&gt;Situation-Problem-Question&lt;/strong&gt; framework to provide context and focus.&lt;/li&gt;</span></span>
+<span id="cb1-171"><a href="#cb1-171"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-key"&gt;Action:&lt;/span&gt; State your main message—be it a &lt;em&gt;detection&lt;/em&gt;, &lt;em&gt;explanation&lt;/em&gt;, or &lt;em&gt;suggestion&lt;/em&gt;—upfront (Pyramid Principle).&lt;/li&gt;</span></span>
+<span id="cb1-172"><a href="#cb1-172"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-avoid"&gt;Trap:&lt;/span&gt; Creating "data dumps" that force the audience to find the story themselves.&lt;/li&gt;</span></span>
+<span id="cb1-173"><a href="#cb1-173"></a><span class="in">                &lt;/ul&gt;</span></span>
+<span id="cb1-174"><a href="#cb1-174"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-175"><a href="#cb1-175"></a><span class="in">        &lt;/div&gt;</span></span>
+<span id="cb1-176"><a href="#cb1-176"></a><span class="in">        &lt;div class="ibcs-card"&gt;</span></span>
+<span id="cb1-177"><a href="#cb1-177"></a><span class="in">            &lt;div class="ibcs-header"&gt;</span></span>
+<span id="cb1-178"><a href="#cb1-178"></a><span class="in">                &lt;div class="ibcs-number"&gt;2&lt;/div&gt;</span></span>
+<span id="cb1-179"><a href="#cb1-179"></a><span class="in">                &lt;div class="ibcs-title-group"&gt;</span></span>
+<span id="cb1-180"><a href="#cb1-180"></a><span class="in">                    &lt;div class="ibcs-title"&gt;STRUCTURE&lt;/div&gt;</span></span>
+<span id="cb1-181"><a href="#cb1-181"></a><span class="in">                    &lt;div class="ibcs-subtitle"&gt;Organize Content&lt;/div&gt;</span></span>
+<span id="cb1-182"><a href="#cb1-182"></a><span class="in">                &lt;/div&gt;</span></span>
+<span id="cb1-183"><a href="#cb1-183"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-184"><a href="#cb1-184"></a><span class="in">            &lt;div class="ibcs-image"&gt;</span></span>
+<span id="cb1-185"><a href="#cb1-185"></a><span class="in">                &lt;img src="img/2_structure.png" alt="A MECE diagram showing logical, non-overlapping groups"&gt;</span></span>
+<span id="cb1-186"><a href="#cb1-186"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-187"><a href="#cb1-187"></a><span class="in">            &lt;div class="ibcs-details"&gt;</span></span>
+<span id="cb1-188"><a href="#cb1-188"></a><span class="in">                A logical structure forms a convincing and easily digestible storyline.</span></span>
+<span id="cb1-189"><a href="#cb1-189"></a><span class="in">                &lt;ul&gt;</span></span>
+<span id="cb1-190"><a href="#cb1-190"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-key"&gt;Action:&lt;/span&gt; Ensure all categories are &lt;strong&gt;MECE&lt;/strong&gt; (Mutually Exclusive, Collectively Exhaustive) to avoid confusion and gaps.&lt;/li&gt;</span></span>
+<span id="cb1-191"><a href="#cb1-191"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-key"&gt;Action:&lt;/span&gt; Maintain consistency in wording, item types, and visualizations within any group.&lt;/li&gt;</span></span>
+<span id="cb1-192"><a href="#cb1-192"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-avoid"&gt;Trap:&lt;/span&gt; Presenting flat lists of information without clear hierarchy or logical flow.&lt;/li&gt;</span></span>
+<span id="cb1-193"><a href="#cb1-193"></a><span class="in">                &lt;/ul&gt;</span></span>
+<span id="cb1-194"><a href="#cb1-194"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-195"><a href="#cb1-195"></a><span class="in">        &lt;/div&gt;</span></span>
+<span id="cb1-196"><a href="#cb1-196"></a><span class="in">        &lt;div class="ibcs-card"&gt;</span></span>
+<span id="cb1-197"><a href="#cb1-197"></a><span class="in">            &lt;div class="ibcs-header"&gt;</span></span>
+<span id="cb1-198"><a href="#cb1-198"></a><span class="in">                &lt;div class="ibcs-number"&gt;3&lt;/div&gt;</span></span>
+<span id="cb1-199"><a href="#cb1-199"></a><span class="in">                &lt;div class="ibcs-title-group"&gt;</span></span>
+<span id="cb1-200"><a href="#cb1-200"></a><span class="in">                    &lt;div class="ibcs-title"&gt;EXPRESS&lt;/div&gt;</span></span>
+<span id="cb1-201"><a href="#cb1-201"></a><span class="in">                    &lt;div class="ibcs-subtitle"&gt;Choose Proper Visualization&lt;/div&gt;</span></span>
+<span id="cb1-202"><a href="#cb1-202"></a><span class="in">                &lt;/div&gt;</span></span>
+<span id="cb1-203"><a href="#cb1-203"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-204"><a href="#cb1-204"></a><span class="in">            &lt;div class="ibcs-image"&gt;</span></span>
+<span id="cb1-205"><a href="#cb1-205"></a><span class="in">                &lt;img src="img/3_express.png" alt="A bar chart for comparison next to a crossed-out pie chart"&gt;</span></span>
+<span id="cb1-206"><a href="#cb1-206"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-207"><a href="#cb1-207"></a><span class="in">            &lt;div class="ibcs-details"&gt;</span></span>
+<span id="cb1-208"><a href="#cb1-208"></a><span class="in">                Select visuals based on the task: charts for patterns, tables for precision.</span></span>
+<span id="cb1-209"><a href="#cb1-209"></a><span class="in">                &lt;ul&gt;</span></span>
+<span id="cb1-210"><a href="#cb1-210"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-key"&gt;Action:&lt;/span&gt; Use column/line charts for &lt;strong&gt;time-series&lt;/strong&gt; analysis and bar charts for &lt;strong&gt;structural&lt;/strong&gt; comparisons.&lt;/li&gt;</span></span>
+<span id="cb1-211"><a href="#cb1-211"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-key"&gt;Action:&lt;/span&gt; Use tables when users need to look up precise numerical values.&lt;/li&gt;</span></span>
+<span id="cb1-212"><a href="#cb1-212"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-avoid"&gt;Trap:&lt;/span&gt; Defaulting to visually weak charts like pies, gauges, and radar charts that distort data.&lt;/li&gt;</span></span>
+<span id="cb1-213"><a href="#cb1-213"></a><span class="in">                &lt;/ul&gt;</span></span>
+<span id="cb1-214"><a href="#cb1-214"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-215"><a href="#cb1-215"></a><span class="in">        &lt;/div&gt;</span></span>
+<span id="cb1-216"><a href="#cb1-216"></a><span class="in">        &lt;div class="ibcs-card negative"&gt;</span></span>
+<span id="cb1-217"><a href="#cb1-217"></a><span class="in">            &lt;div class="ibcs-header"&gt;</span></span>
+<span id="cb1-218"><a href="#cb1-218"></a><span class="in">                &lt;div class="ibcs-number"&gt;4&lt;/div&gt;</span></span>
+<span id="cb1-219"><a href="#cb1-219"></a><span class="in">                &lt;div class="ibcs-title-group"&gt;</span></span>
+<span id="cb1-220"><a href="#cb1-220"></a><span class="in">                    &lt;div class="ibcs-title"&gt;SIMPLIFY&lt;/div&gt;</span></span>
+<span id="cb1-221"><a href="#cb1-221"></a><span class="in">                    &lt;div class="ibcs-subtitle"&gt;Eliminate Clutter&lt;/div&gt;</span></span>
+<span id="cb1-222"><a href="#cb1-222"></a><span class="in">                &lt;/div&gt;</span></span>
+<span id="cb1-223"><a href="#cb1-223"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-224"><a href="#cb1-224"></a><span class="in">            &lt;div class="ibcs-image"&gt;</span></span>
+<span id="cb1-225"><a href="#cb1-225"></a><span class="in">                &lt;img src="img/4_simplify.png" alt="A before-and-after comparison showing a cluttered chart made clean"&gt;</span></span>
+<span id="cb1-226"><a href="#cb1-226"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-227"><a href="#cb1-227"></a><span class="in">            &lt;div class="ibcs-details"&gt;</span></span>
+<span id="cb1-228"><a href="#cb1-228"></a><span class="in">                Every element must serve a purpose. If it doesn't help, remove it.</span></span>
+<span id="cb1-229"><a href="#cb1-229"></a><span class="in">                &lt;ul&gt;</span></span>
+<span id="cb1-230"><a href="#cb1-230"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-key"&gt;Action:&lt;/span&gt; Maximize the &lt;strong&gt;data-ink ratio&lt;/strong&gt; by removing all decorative elements (shadows, 3D, backgrounds, borders).&lt;/li&gt;</span></span>
+<span id="cb1-231"><a href="#cb1-231"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-key"&gt;Action:&lt;/span&gt; Replace gridlines and axes with direct data labels for a cleaner look.&lt;/li&gt;</span></span>
+<span id="cb1-232"><a href="#cb1-232"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-avoid"&gt;Trap:&lt;/span&gt; "Chartjunk" that distracts from the core message and reduces clarity.&lt;/li&gt;</span></span>
+<span id="cb1-233"><a href="#cb1-233"></a><span class="in">                &lt;/ul&gt;</span></span>
+<span id="cb1-234"><a href="#cb1-234"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-235"><a href="#cb1-235"></a><span class="in">        &lt;/div&gt;</span></span>
+<span id="cb1-236"><a href="#cb1-236"></a><span class="in">    &lt;/div&gt;</span></span>
+<span id="cb1-237"><a href="#cb1-237"></a><span class="in">    &lt;!-- Bottom Row with 3 Cards --&gt;</span></span>
+<span id="cb1-238"><a href="#cb1-238"></a><span class="in">    &lt;div class="ibcs-row"&gt;</span></span>
+<span id="cb1-239"><a href="#cb1-239"></a><span class="in">        &lt;div class="ibcs-card"&gt;</span></span>
+<span id="cb1-240"><a href="#cb1-240"></a><span class="in">            &lt;div class="ibcs-header"&gt;</span></span>
+<span id="cb1-241"><a href="#cb1-241"></a><span class="in">                &lt;div class="ibcs-number"&gt;5&lt;/div&gt;</span></span>
+<span id="cb1-242"><a href="#cb1-242"></a><span class="in">                &lt;div class="ibcs-title-group"&gt;</span></span>
+<span id="cb1-243"><a href="#cb1-243"></a><span class="in">                    &lt;div class="ibcs-title"&gt;CONDENSE&lt;/div&gt;</span></span>
+<span id="cb1-244"><a href="#cb1-244"></a><span class="in">                    &lt;div class="ibcs-subtitle"&gt;Increase Information Density&lt;/div&gt;</span></span>
+<span id="cb1-245"><a href="#cb1-245"></a><span class="in">                &lt;/div&gt;</span></span>
+<span id="cb1-246"><a href="#cb1-246"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-247"><a href="#cb1-247"></a><span class="in">            &lt;div class="ibcs-image"&gt;</span></span>
+<span id="cb1-248"><a href="#cb1-248"></a><span class="in">                &lt;img src="img/5_condense.png" alt="A dashboard with multiple small, related charts (small multiples)"&gt;</span></span>
+<span id="cb1-249"><a href="#cb1-249"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-250"><a href="#cb1-250"></a><span class="in">            &lt;div class="ibcs-details"&gt;</span></span>
+<span id="cb1-251"><a href="#cb1-251"></a><span class="in">                Provide richer context by showing more relevant data on a single page.</span></span>
+<span id="cb1-252"><a href="#cb1-252"></a><span class="in">                &lt;ul&gt;</span></span>
+<span id="cb1-253"><a href="#cb1-253"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-key"&gt;Action:&lt;/span&gt; Use &lt;strong&gt;small multiples&lt;/strong&gt; to enable easy comparison across many categories at once.&lt;/li&gt;</span></span>
+<span id="cb1-254"><a href="#cb1-254"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-key"&gt;Action:&lt;/span&gt; Embed visuals like sparklines or bars directly into tables to add context without taking up space.&lt;/li&gt;</span></span>
+<span id="cb1-255"><a href="#cb1-255"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-avoid"&gt;Trap:&lt;/span&gt; Using low-density visuals that force users to flip between pages to connect ideas.&lt;/li&gt;</span></span>
+<span id="cb1-256"><a href="#cb1-256"></a><span class="in">                &lt;/ul&gt;</span></span>
+<span id="cb1-257"><a href="#cb1-257"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-258"><a href="#cb1-258"></a><span class="in">        &lt;/div&gt;</span></span>
+<span id="cb1-259"><a href="#cb1-259"></a><span class="in">        &lt;div class="ibcs-card negative"&gt;</span></span>
+<span id="cb1-260"><a href="#cb1-260"></a><span class="in">            &lt;div class="ibcs-header"&gt;</span></span>
+<span id="cb1-261"><a href="#cb1-261"></a><span class="in">                &lt;div class="ibcs-number"&gt;6&lt;/div&gt;</span></span>
+<span id="cb1-262"><a href="#cb1-262"></a><span class="in">                &lt;div class="ibcs-title-group"&gt;</span></span>
+<span id="cb1-263"><a href="#cb1-263"></a><span class="in">                    &lt;div class="ibcs-title"&gt;CHECK&lt;/div&gt;</span></span>
+<span id="cb1-264"><a href="#cb1-264"></a><span class="in">                    &lt;div class="ibcs-subtitle"&gt;Ensure Visual Integrity&lt;/div&gt;</span></span>
+<span id="cb1-265"><a href="#cb1-265"></a><span class="in">                &lt;/div&gt;</span></span>
+<span id="cb1-266"><a href="#cb1-266"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-267"><a href="#cb1-267"></a><span class="in">            &lt;div class="ibcs-image"&gt;</span></span>
+<span id="cb1-268"><a href="#cb1-268"></a><span class="in">                &lt;img src="img/6_check.png" alt="A bar chart with its axis correctly starting at zero to show true proportions"&gt;</span></span>
+<span id="cb1-269"><a href="#cb1-269"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-270"><a href="#cb1-270"></a><span class="in">            &lt;div class="ibcs-details"&gt;</span></span>
+<span id="cb1-271"><a href="#cb1-271"></a><span class="in">                Your visuals must be honest. Follow non-negotiable rules of representation.</span></span>
+<span id="cb1-272"><a href="#cb1-272"></a><span class="in">                &lt;ul&gt;</span></span>
+<span id="cb1-273"><a href="#cb1-273"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-avoid"&gt;Rule:&lt;/span&gt; Bar and column chart value axes &lt;strong&gt;must&lt;/strong&gt; start at zero to avoid distorting proportions.&lt;/li&gt;</span></span>
+<span id="cb1-274"><a href="#cb1-274"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-avoid"&gt;Rule:&lt;/span&gt; When using areas (e.g., bubbles), scale the &lt;strong&gt;area&lt;/strong&gt; to the value, not the diameter.&lt;/li&gt;</span></span>
+<span id="cb1-275"><a href="#cb1-275"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-key"&gt;Action:&lt;/span&gt; Use identical scales for all charts on a page that share the same unit.&lt;/li&gt;</span></span>
+<span id="cb1-276"><a href="#cb1-276"></a><span class="in">                &lt;/ul&gt;</span></span>
+<span id="cb1-277"><a href="#cb1-277"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-278"><a href="#cb1-278"></a><span class="in">        &lt;/div&gt;</span></span>
+<span id="cb1-279"><a href="#cb1-279"></a><span class="in">        &lt;div class="ibcs-card"&gt;</span></span>
+<span id="cb1-280"><a href="#cb1-280"></a><span class="in">            &lt;div class="ibcs-header"&gt;</span></span>
+<span id="cb1-281"><a href="#cb1-281"></a><span class="in">                &lt;div class="ibcs-number"&gt;7&lt;/div&gt;</span></span>
+<span id="cb1-282"><a href="#cb1-282"></a><span class="in">                &lt;div class="ibcs-title-group"&gt;</span></span>
+<span id="cb1-283"><a href="#cb1-283"></a><span class="in">                    &lt;div class="ibcs-title"&gt;UNIFY&lt;/div&gt;</span></span>
+<span id="cb1-284"><a href="#cb1-284"></a><span class="in">                    &lt;div class="ibcs-subtitle"&gt;Apply Semantic Notation&lt;/div&gt;</span></span>
+<span id="cb1-285"><a href="#cb1-285"></a><span class="in">                &lt;/div&gt;</span></span>
+<span id="cb1-286"><a href="#cb1-286"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-287"><a href="#cb1-287"></a><span class="in">            &lt;div class="ibcs-image"&gt;</span></span>
+<span id="cb1-288"><a href="#cb1-288"></a><span class="in">                &lt;img src="img/7_unify.png" alt="A legend showing IBCS standards for colors and fills for scenarios"&gt;</span></span>
+<span id="cb1-289"><a href="#cb1-289"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-290"><a href="#cb1-290"></a><span class="in">            &lt;div class="ibcs-details"&gt;</span></span>
+<span id="cb1-291"><a href="#cb1-291"></a><span class="in">                Create a consistent visual language: &lt;em&gt;What looks the same should mean the same.&lt;/em&gt;</span></span>
+<span id="cb1-292"><a href="#cb1-292"></a><span class="in">                &lt;ul&gt;</span></span>
+<span id="cb1-293"><a href="#cb1-293"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-key"&gt;Notation:&lt;/span&gt; Use consistent fills for scenarios: &lt;strong&gt;Solid&lt;/strong&gt; for Actual (AC), &lt;strong&gt;Outlined&lt;/strong&gt; for Plan (PL), &lt;strong&gt;Hatched&lt;/strong&gt; for Forecast (FC).&lt;/li&gt;</span></span>
+<span id="cb1-294"><a href="#cb1-294"></a><span class="in">                    &lt;li&gt;&lt;span class="ibcs-key"&gt;Notation:&lt;/span&gt; Use &lt;span style="color:#198754; font-weight:600;"&gt;Green&lt;/span&gt; for positive impacts (e.g., profit up) and &lt;span style="color:#dc3545; font-weight:600;"&gt;Red&lt;/span&gt; for negative.&lt;/li&gt;</span></span>
+<span id="cb1-295"><a href="#cb1-295"></a><span class="in">                &lt;/ul&gt;</span></span>
+<span id="cb1-296"><a href="#cb1-296"></a><span class="in">            &lt;/div&gt;</span></span>
+<span id="cb1-297"><a href="#cb1-297"></a><span class="in">        &lt;/div&gt;</span></span>
+<span id="cb1-298"><a href="#cb1-298"></a><span class="in">    &lt;/div&gt;</span></span>
+<span id="cb1-299"><a href="#cb1-299"></a><span class="in">&lt;/div&gt;</span></span>
+<span id="cb1-300"><a href="#cb1-300"></a><span class="in">```</span></span>
+<span id="cb1-301"><a href="#cb1-301"></a>:::</span>
+<span id="cb1-302"><a href="#cb1-302"></a></span>
+<span id="cb1-303"><a href="#cb1-303"></a>Happy visualizing! happy vibing! - Tuan.</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><span class="faux-block"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i></a> 2023-2025 Le Khac Tuan</span></p>
+</div>   
+    <div class="nav-footer-center">
+<p><span class="faux-block"> Designed with <i class="fa-solid fa-heart" aria-label="heart"></i>, <span id="commit-info">Loading last commit…</span> </span></p>
+</div>
+    <div class="nav-footer-right">
+<p><span class="faux-block">Made with <a href="https://quarto.org/">Quarto</a></span></p>
+</div>
+  </div>
+</footer>
+<script type="application/javascript" src="commit_info.js"></script>
+
+
+
+
+</body></html>
