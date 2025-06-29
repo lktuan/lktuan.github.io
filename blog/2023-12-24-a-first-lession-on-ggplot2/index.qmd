@@ -5,7 +5,7 @@ author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
 date: 12-24-2023
-date-modified: 05-28-2024
+date-modified: 06-29-2025
 categories: [r, ggplot2, visualization]
 image: ggplot2.png
 draft: false
@@ -13,9 +13,7 @@ code-tools: true
 code-fold: false
 ---
 
-# 0. Preparation
-
-------------------------------------------------------------------------
+# 0 Preparation
 
 I need to install the following packages:
 
@@ -75,9 +73,7 @@ update.packages(repos='http://cran.rstudio.com/', ask=FALSE, checkBuilt=TRUE)
 
 **Oops I was should be using "'devtools'" instead of "devtools"!!! Problem solved**
 
-# 1. The Dataset
-
-------------------------------------------------------------------------
+# 1 The Dataset
 
 I was using the dataset: "*National Morbidity and Mortality Air Pollution Study* (NMMAPS)"
 
@@ -89,7 +85,7 @@ install.packages('readr')
 # install.packages("quarto")
 ```
 
-### Import data
+## 1.1 Import data
 
 The `::` here call the namespace and can be used to access a function without loading the package.
 
@@ -107,26 +103,22 @@ tibble::glimpse(chic)
 head(chic,10)
 ```
 
-# 3. The `{ggplot2}` Package
-
-------------------------------------------------------------------------
+# 3 The `{ggplot2}` package
 
 A ggplot is built up from a few basic elements:
 
 1.  **Data**;
-2.  **Geometries** `geom_`: the geometric shape (hình học) that will represent the data;
-3.  **Aesthetics** `aes_`: aesthetics (tính thẩm mỹ) of the geometric or statistical objects, such as postition, color, size, shape, and transparency;
+2.  **Geometries** `geom_`: the geometric shape (hình dạng) that will represent the data;
+3.  **Aesthetics** `aes_`: aesthetics (thẩm mỹ) of the geometric or statistical objects, such as postition, color, size, shape, and transparency;
 4.  **Scales** `scale_`: map between the data and the aesthetics dimensions (ánh xạ từ dữ liệu đến đồ thị), such as data range to plot width or factor values to colors;
 5.  **Statistical transformations** `stat_`: statistical summaries (thống kê) of data, such as quantitles, fitted curves, and sums;
 6.  **Coordinate system** `coord_`: the transformation used for mapping data coordinates into the plane of the data rectangles (hệ tọa độ);
 7.  **Facets** `facet_`: the arrangement of the data into a grid of plots;
 8.  **Visual themes** `theme()`: the overall visual defaults of a plot, such as background, grids, axes, default typeface, sizes and colors (tông).
 
-🚀 **Không nhất thiết một phần tử được gọi, và chúng cũng có thể được gọi nhiều lần.**
+Each of above elements can be ignored, but can be also called multiple times.
 
-# 4. A default `ggplot`
-
-------------------------------------------------------------------------
+# 4 A default `ggplot`
 
 Load the package for ability to use the functionality:
 
@@ -135,33 +127,29 @@ library(ggplot2)
 # library(tidyverse) # can also be imported from the tidy-universe!
 ```
 
-A default ggplot needs three things that you have to specify: the *data*, *aesthetics*, and a *geometry.*
+A default `ggplot` needs three things that you have to specify: the *data*, *aesthetics*, and a *geometry.*:
 
--   starting define a plot by using `ggplot(data = df)`;
+-   starting to define a plot by using `ggplot(data = df)`;
 
 -   if we want to plot (in most cases) 2 variables, we must add *positional aesthetics* `aes(x = var1, y = var2);`
 
-🚀 **Data được đề cập *bên ngoài* `aes()`, trong khi đó biến/variables được đề cập *bên trong* `aes()`.**
+Notice that `data` was mentioned outside the scope of `aes()`, while variables are being mentioned inside `aes()`.
 
-Ví dụ:
+For instance:
 
 ```{r}
 (g <- ggplot(chic, aes(x = date, y = temp)))
 ```
 
-Just a blank panel, because `{ggplot2}` *does not know* how we plot data \~ we still need to provide geometry.
+Just a blank panel, because `{ggplot2}` *does not know* how we plot data \~ we still need to provide geometry. `ggplot2` allows use to store the `ggobject` to a variable inside the environment - in this case, `g` - which can be extended later on (by adding more layers). We can print out the plot to the R interactive but putting all inside the `()`.
 
-🚀 **`ggplot2` cho phép chúng ta lưu `ggobject` thành một biến, trong trường hợp này là `g` . Chúng ta có thể **mở rộng** `g` bằng cách thêm cách layers về sau.**
-
-🚀 **Bằng cách dùng dấu `()`, chúng ta có thể *in* ngay object được gán ra.**
-
-Many different geometries to use (called `geoms` because each function usually starts with `geom_`). For e.g., if we want to plot a scatter plot.
+We have different geometries to use (called `geoms` because each function usually starts with `geom_`). For e.g., if we want to plot a scatter plot.
 
 ```{r}
 g + geom_point()
 ```
 
-also a lineplot which our managers always like:
+also a line plot which our managers always like:
 
 ```{r}
 g + geom_line()
@@ -174,7 +162,7 @@ cool but the plot does not look optimal, we can also using mutiple layers of geo
 g + geom_point() + geom_line()
 ```
 
-### Change properties of geometries
+## 4.1 Change properties of geometries
 
 Turn all points to large fire-red diamonds:
 
@@ -182,16 +170,18 @@ Turn all points to large fire-red diamonds:
 g + geom_point(color = 'firebrick', shape = 'diamond', size = 2)
 ```
 
-🚀 **`ggplot2` hiểu khi chúng ta dùng `color`, `colour`, cũng như `col`.**
+::: {.callout-note}
+- `ggplot2` can unsderstand when we use `color`, `colour`, as well as `col`;
 
-🚀 **Có thể dùng [màu mặc định](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf) hoặc [màu hex](https://www.techopedia.com/definition/29788/color-hex-code), hoặc thậm chí là màu RGB/RGBA với hàm `rgb()`. Ví dụ:**
+- We can use the [default color](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf) or [hex](https://www.techopedia.com/definition/29788/color-hex-code), or even RGB/RGBA with `rgb()`. For example:
 
 ```{r}
 g + geom_point(color = "#b22222", shape = "diamond", size = 2)
 g + geom_point(color = rgb(178, 34, 34, maxColorValue = 255), shape = "diamond", size = 2)
 ```
+:::
 
-#### Replacing the default `ggplot2` theme
+## 4.1 Replacing the default `ggplot2` theme
 
 Calling eg `theme_bw()` using `theme_set()`, all following plots will have same blank'n'white theme.
 
@@ -201,13 +191,11 @@ theme_set(theme_bw())
 g + geom_point(color = 'firebrick')
 ```
 
-🚀 **`theme()` is also a useful function to modify all kinds of theme elements (texts, rectangles, and lines).**
+`theme()` is also a useful function to modify all kinds of theme elements (texts, rectangles, and lines).
 
 # 5. Axes
 
-------------------------------------------------------------------------
-
-### Change Axis Titles
+## 5.1 Change axis titles
 
 Use `labs()` to assign character string for each lable.
 
@@ -234,7 +222,7 @@ ggplot(chic, aes(x = date, y = temp)) +
   labs(x = "Year", y = expression(paste("Temperature (", degree ~ F, ")"^"(Hey, why should we use metric units?!)")))
 ```
 
-### Increase space between Axis and Axis Titles.
+## 5.2 Increase space between axis and axis titles.
 
 Overwrite the default `element_text()` within the `theme()` call:
 
@@ -258,7 +246,7 @@ ggplot(chic, aes(x = date, y = temp)) +
 
 `r` and `t` in the `margin` are **top** and **right**. Margin has 4 arguments: `margin(t, r, b, l)`. A good way to remember the order of the margin sides is “***t-r***-ou-***b-l***-e”.
 
-### Change Aesthetics of the Axis Titles
+## 5.3 Change aesthetics of the axis titles
 
 Again, we use `theme()` function and modify the `axis.tile` and/or the subordinated elements `axis.tile.x` and `axis.tile.y` . Within `element_text()` we can modify the default of `size`, `color`, and `face`.
 
@@ -300,7 +288,7 @@ ggplot(chic, aes(x = date, y = temp)) +
         axis.title.y = element_text(face = "bold.italic"))
 ```
 
-### Change Aesthetics of Axis Text
+## 5.4 Change aesthetics of axis text
 
 Similar to the `title`, we can change the appearance of the axis text (number indeed) by using `axis.text` and/or the subordinated elements `axis.text.x` and `axis.text.y`.
 
@@ -312,7 +300,7 @@ ggplot(chic, aes(x = date, y = temp)) +
          axis.text.x = element_text(face = 'italic'))
 ```
 
-### Rotate Axis Text
+## 5.5 Rotate axis text
 
 Specifying an `angle` help us to rotate any text elements. With `hjust` and `vjust` we can adjust the position of text afterwards horizontally (0 = left, 1 = right), and vertically (0 = top, 1 = bottom).
 
@@ -324,7 +312,7 @@ ggplot(chic, aes(x = date, y = temp)) +
 # 50 means 50 degrees, not % =)))
 ```
 
-### Remove Axis Text & Ticks
+## 5.6 Remove axis text & ticks
 
 Rarely a reason to do this but this is how it works.
 
@@ -336,9 +324,9 @@ ggplot(chic, aes(x = date, y = temp)) +
         axis.text.y = element_blank())
 ```
 
-**🚀If you want to get rid of a theme element, the element is always `element_blank`.**
+If you want to get rid of a theme element, the element is always `element_blank`.
 
-### Remove Axis Titles
+## 5.7 Remove Axis Titles
 
 We could again use `element_blank()` but it is way simpler to just remove the label in the `labs()` (or `xlab()`) call:
 
@@ -350,7 +338,7 @@ ggplot(chic, aes(x = date, y = temp)) +
 
 Note that `NULL` removes the element (similarly to `element_blank()`) while empty quotes `""` will keep the spacing for the axis title and simply print nothing.
 
-### Limit Axis Range
+## 5.8 Limit axis range
 
 Some time you want to take a closer look at some range of you data. You can do this without subsetting your data:
 
@@ -363,7 +351,7 @@ ggplot(chic, aes(x = date, y = temp)) +
 
 Alternatively you can use `scale_y_continuous(limits = c(0, 50))` (subset) or `coord_cartesian(ylim = c(0, 50))`. The former removes all data points outside the range while the second adjusts the visible area (zooming) and is similar to `ylim(c(0, 50))` (subset).
 
-### Force Plot to start at the origin
+## 5.9 Force plot to start at the origin
 
 ```{r}
 chic_high <- dplyr::filter(chic, temp > 25, o3 > 20)
@@ -398,9 +386,9 @@ ggplot(chic_high, aes(x = temp, y = o3)) +
   coord_cartesian(expand = FALSE, clip = "off")
 ```
 
-🚀 **The argument `clip = "off"` in any coordinate system, always starting with `coord_*`, allows to draw outside of the panel area. Call it here to make sure that the tick marks at `c(0, 0)` are not cut.**
+The argument `clip = "off"` in any coordinate system, always starting with `coord_*`, allows to draw outside of the panel area. Call it here to make sure that the tick marks at `c(0, 0)` are not cut.
 
-### Axes with Same Scaling
+## 5.10 Axes with same scaling
 
 Use `coord_equal()` with default `ratio = 1` to ensure the units are equally scaled on the x-axis and on the y-axis. We can set the aspect ratio of a plot with `coord_fixed()` or `coord_equal()`. Both use `aspect = 1` (1:1) as a default.
 
@@ -422,7 +410,7 @@ ggplot(chic, aes(x = temp, y = temp + rnorm(nrow(chic), sd = 20))) +
   coord_fixed(ratio = 1/5)
 ```
 
-### Use a Function to Alter Labels
+## 5.11 Use a function to alter labels
 
 In case you want to format (eg adding % sign) without change the data.
 
@@ -433,11 +421,9 @@ ggplot(chic, aes(x = date, y = temp)) +
   scale_y_continuous(label = function(x) {return(paste(x, "Degrees Fahrenheit"))})
 ```
 
-# 6. Titles
+# 6 Titles
 
-------------------------------------------------------------------------
-
-### Add a Title
+## 6.1 Add a title
 
 We can add a title via `ggtitle()` function.
 
@@ -460,66 +446,83 @@ ggplot(chic, aes(x = date, y = temp)) +
         tag = "Fig 1")
 ```
 
-### Make title bold & add a space at the baseline
+## 6.2 Make title bold & add a space at the baseline
+
+## 6.3 Adjust the position of titles
+
+## 6.4 Use a non-traditional font in your title
+
+## 6.5 Change spacing in multi-line text
 
 # 7. Legends
 
-------------------------------------------------------------------------
+## 7.1 Turn off the legend
 
-# 8. Backgrounds & Grid Lines
+## 7.2 Remove legend titles
 
-------------------------------------------------------------------------
+## 7.3 Change legend position
 
-# 9. Margins
+## 7.4 Change legend direction
 
-------------------------------------------------------------------------
+## 7.5 Change style of the legend title
 
-# 10. Multi-panel Plots
+## 7.6 Change legend title
 
-------------------------------------------------------------------------
+## 7.7 Change order of legend keys
+
+## 7.8 Change legend labels
+
+## 7.9 Change background boxes in the legend
+
+## 7.10 Change size of legend symbols
+
+## 7.11 Leave a layer of the legend
+
+## 7.12 Manuallt adding legend items
+
+## 7.13 Use other legend styles
+
+# 8 Backgrounds & Grid lines
+
+## 8.1 Change the panel background color
+
+## 8.2 Change grid lines
+
+## 8.3 Change spacing of grid lines
+
+## 8.4 Change the plot background color
+
+# 9 Margins
+
+# 10 Multi-panel plots
+
+## 10.1 Create a small multiples based on two variables
+
+## 10.2 Create a small mutilples based on one variables
+
+## 10.3 Allow axes to roan free
 
 # 11. Colors
 
-------------------------------------------------------------------------
 
 # 12. Themes
 
-------------------------------------------------------------------------
-
 # 13. Lines
-
-------------------------------------------------------------------------
 
 # 14. Text
 
-------------------------------------------------------------------------
-
 # 15. Coordinates
-
-------------------------------------------------------------------------
 
 # 16. Chart Types
 
-------------------------------------------------------------------------
-
 # 17. Ribbons (AUC, CI, etc.)
-
-------------------------------------------------------------------------
 
 # 18. Smoothings
 
-------------------------------------------------------------------------
-
 # 19. Interactive Plots
-
-------------------------------------------------------------------------
 
 # 20. Remarks, Tipps & Resources
 
-------------------------------------------------------------------------
-
 # References
 
-------------------------------------------------------------------------
-
-Source: <https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/>
+- Source: <https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/>;
