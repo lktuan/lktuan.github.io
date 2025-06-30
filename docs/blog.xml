@@ -10,7 +10,1946 @@
 <atom:link href="https://lktuan.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>This is Tuan&#39;s blog</description>
 <generator>quarto-1.6.40</generator>
-<lastBuildDate>Wed, 25 Jun 2025 17:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 29 Jun 2025 17:00:00 GMT</lastBuildDate>
+<item>
+  <title>A tutorial of ggplot2
+</title>
+  <dc:creator>Tuan Le Khac</dc:creator>
+  <link>https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/</link>
+  <description><![CDATA[ <section id="preparation" class="level1"><h1>0 Preparation</h1>
+<p>The following packages need to be installed:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># install CRAN packages</span></span>
+<span id="cb1-2">pkg_install <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span>   <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ggplot2"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"tibble"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"tidyr"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"forcats"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"purrr"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"prismatic"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"corrr"</span>,</span>
+<span id="cb1-3">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cowplot"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ggforce"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ggrepel"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ggridges"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ggsci"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ggtext"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ggthemes"</span>,</span>
+<span id="cb1-4">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"grid"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"gridExtra"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"patchwork"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"rcartocolor"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"scico"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"showtext"</span>,</span>
+<span id="cb1-5">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"shiny"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"plotly"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"highcharter"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"echarts4r"</span>)</span>
+<span id="cb1-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(pkg_install)</span></code></pre></div>
+</div>
+<p>In which:</p>
+<ul>
+<li>
+<code>ggplot2</code>: part of the <code>tidyverse</code>;</li>
+<li>
+<code>tidyverse</code>:
+<ul>
+<li>
+<code>tibble</code>: mordern data frames;</li>
+<li>
+<code>dplyr</code>: data wrangling;</li>
+<li>
+<code>tidyr</code>: data cleaning;</li>
+<li>
+<code>forcats</code>: handling factors;</li>
+</ul>
+</li>
+<li>
+<code>corrr</code>: correlation matrices;</li>
+<li>
+<code>cowplot</code>: composing ggplots;</li>
+<li>
+<code>ggforce</code>: sina plots and other cool stuffs;</li>
+<li>
+<code>ggrepel</code>: nice text labeling;</li>
+<li>
+<code>ggridges</code>: rigde plots;</li>
+<li>
+<code>ggsci</code>: nice color palettes;</li>
+<li>
+<code>ggtext</code>: advanced text rendering;</li>
+<li>
+<code>ggthemes</code>: additional themes;</li>
+<li>
+<code>grid</code>: creating graphical objects;</li>
+<li>
+<code>gridExtra</code>: additional functions for <code>grid</code> graphics;</li>
+<li>
+<code>patchwork</code>: multiple panel plots;</li>
+<li>
+<code>prismatic</code>: minipulating colors;</li>
+<li>
+<code>rcartocolor</code>: great color palettes;</li>
+<li>
+<code>scico</code>: perceptional uniform palettes;</li>
+<li>
+<code>showtext</code>: custom fonts;</li>
+<li>
+<code>shiny</code>: interactive applications;</li>
+<li>
+<code>charter</code>, <code>echarts4r</code>, <code>ggiraph</code>, <code>highcharter</code>, <code>plotly</code>: interactive visualization.</li>
+</ul>
+<p>We also need to install <code>devtools</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># install from GitHub since not on CRAN</span></span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'devtools'</span>)</span>
+<span id="cb2-3">devtools<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install_github</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"JohnCoene/charter"</span>)</span></code></pre></div>
+</div>
+</section><section id="the-dataset" class="level1"><h1>1 The Dataset</h1>
+<p>I was using the dataset: “<em>National Morbidity and Mortality Air Pollution Study</em>&nbsp;(NMMAPS)”</p>
+<p>Install the <code>readr</code> first:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'readr'</span>)</span></code></pre></div>
+</div>
+<section id="import-data" class="level2"><h2 class="anchored" data-anchor-id="import-data">1.1 Import data</h2>
+<p>The <code>::</code> here call the namespace and can be used to access a function without loading the package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1">chic <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> readr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_csv</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://cedricscherer.com/data/chicago-nmmaps-custom.csv"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1461 Columns: 10
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (3): city, season, month
+dbl  (6): temp, o3, dewpoint, pm10, yday, year
+date (1): date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>view some data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1">tibble<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glimpse</span>(chic)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1,461
+Columns: 10
+$ city     &lt;chr&gt; "chic", "chic", "chic", "chic", "chic", "chic", "chic", "chic…
+$ date     &lt;date&gt; 1997-01-01, 1997-01-02, 1997-01-03, 1997-01-04, 1997-01-05, …
+$ temp     &lt;dbl&gt; 36.0, 45.0, 40.0, 51.5, 27.0, 17.0, 16.0, 19.0, 26.0, 16.0, 1…
+$ o3       &lt;dbl&gt; 5.659256, 5.525417, 6.288548, 7.537758, 20.760798, 14.940874,…
+$ dewpoint &lt;dbl&gt; 37.500, 47.250, 38.000, 45.500, 11.250, 5.750, 7.000, 17.750,…
+$ pm10     &lt;dbl&gt; 13.052268, 41.948600, 27.041751, 25.072573, 15.343121, 9.3646…
+$ season   &lt;chr&gt; "Winter", "Winter", "Winter", "Winter", "Winter", "Winter", "…
+$ yday     &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18…
+$ month    &lt;chr&gt; "Jan", "Jan", "Jan", "Jan", "Jan", "Jan", "Jan", "Jan", "Jan"…
+$ year     &lt;dbl&gt; 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1…</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(chic,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 10
+   city  date        temp    o3 dewpoint  pm10 season  yday month  year
+   &lt;chr&gt; &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;
+ 1 chic  1997-01-01  36    5.66    37.5  13.1  Winter     1 Jan    1997
+ 2 chic  1997-01-02  45    5.53    47.2  41.9  Winter     2 Jan    1997
+ 3 chic  1997-01-03  40    6.29    38    27.0  Winter     3 Jan    1997
+ 4 chic  1997-01-04  51.5  7.54    45.5  25.1  Winter     4 Jan    1997
+ 5 chic  1997-01-05  27   20.8     11.2  15.3  Winter     5 Jan    1997
+ 6 chic  1997-01-06  17   14.9      5.75  9.36 Winter     6 Jan    1997
+ 7 chic  1997-01-07  16   11.9      7    20.2  Winter     7 Jan    1997
+ 8 chic  1997-01-08  19    8.68    17.8  33.1  Winter     8 Jan    1997
+ 9 chic  1997-01-09  26   13.4     24    12.1  Winter     9 Jan    1997
+10 chic  1997-01-10  16   10.4      5.38 24.8  Winter    10 Jan    1997</code></pre>
+</div>
+</div>
+</section></section><section id="the-ggplot2-package" class="level1"><h1>3 The <code>{ggplot2}</code> package</h1>
+<p>A <code>ggplot</code> is built up from a few basic elements:</p>
+<ol type="1">
+<li>
+<strong>Data</strong>;</li>
+<li>
+<strong>Geometries</strong> <code>geom_</code>: the geometric shape (hình dạng) that will represent the data;</li>
+<li>
+<strong>Aesthetics</strong> <code>aes_</code>: aesthetics (thẩm mỹ) of the geometric or statistical objects, such as postition, color, size, shape, and transparency;</li>
+<li>
+<strong>Scales</strong> <code>scale_</code>: map between the data and the aesthetics dimensions (ánh xạ từ dữ liệu đến đồ thị), such as data range to plot width or factor values to colors;</li>
+<li>
+<strong>Statistical transformations</strong> <code>stat_</code>: statistical summaries (thống kê) of data, such as quantitles, fitted curves, and sums;</li>
+<li>
+<strong>Coordinate system</strong> <code>coord_</code>: the transformation used for mapping data coordinates into the plane of the data rectangles (hệ tọa độ);</li>
+<li>
+<strong>Facets</strong> <code>facet_</code>: the arrangement of the data into a grid of plots;</li>
+<li>
+<strong>Visual themes</strong> <code>theme()</code>: the overall visual defaults of a plot, such as background, grids, axes, default typeface, sizes and colors (tông).</li>
+</ol>
+<p>Each of above elements can be ignored, but can be also called multiple times.</p>
+</section><section id="a-default-ggplot" class="level1"><h1>4 A default <code>ggplot</code>
+</h1>
+<p>Load the package for ability to use the functionality:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb10-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># library(tidyverse) # can also be imported from the tidy-universe!</span></span></code></pre></div>
+</div>
+<p>A default <code>ggplot</code> needs three things that you have to specify: the&nbsp;<em>data</em>,&nbsp;<em>aesthetics</em>, and a&nbsp;<em>geometry.</em>:</p>
+<ul>
+<li><p>starting to define a plot by using <code>ggplot(data = df)</code>;</p></li>
+<li><p>if we want to plot (in most cases) 2 variables, we must add <em>positional aesthetics</em> <code>aes(x = var1, y = var2);</code></p></li>
+</ul>
+<p>Notice that <code>data</code> was mentioned outside the scope of <code>aes()</code>, while variables are being mentioned inside <code>aes()</code>.</p>
+<p>For instance:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1">(g <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)))</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Just a blank panel, because <a href="https://ggplot2.tidyverse.org">ggplot2</a> <em>does not know</em> how we plot data ~ we still need to provide geometry. <code>ggplot2</code> allows use to store the <code>ggobject</code> to a variable inside the environment - in this case, <code>g</code> - which can be extended later on (by adding more layers). We can print out the plot to the R interactive but putting all inside the <code>()</code>.</p>
+<p>We have different geometries to use (called <code>geoms</code> because each function usually starts with <code>geom_</code>). For e.g., if we want to plot a scatter plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1">g <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>()</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>also a line plot which our managers always like:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1">g <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_line</span>()</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>cool but the plot does not look optimal, we can also using mutiple layers of geometry, where the magic and fun start.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># it's the same if we write g + geom_line() + geom_point()</span></span>
+<span id="cb14-2">g <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_line</span>()</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="change-properties-of-geometries" class="level2"><h2 class="anchored" data-anchor-id="change-properties-of-geometries">4.1 Change properties of geometries</h2>
+<p>Turn all points to large fire-red diamonds:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1">g <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'firebrick'</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">shape =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'diamond'</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p><code>ggplot2</code> can unsderstand when we use <code>color</code>, <code>colour</code>, as well as <code>col</code>;</p></li>
+<li><p>We can use the <a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf">default color</a> or <a href="https://www.techopedia.com/definition/29788/color-hex-code">hex</a>, or even RGB/RGBA with <code><a href="https://rdrr.io/r/grDevices/rgb.html">rgb()</a></code>. For example:</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1">g <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#b22222"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">shape =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"diamond"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1">g <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rgb</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">178</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">34</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">34</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">maxColorValue =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">255</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">shape =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"diamond"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section><section id="replacing-the-default-ggplot2-theme" class="level2"><h2 class="anchored" data-anchor-id="replacing-the-default-ggplot2-theme">4.1 Replacing the default <code>ggplot2</code> theme</h2>
+<p>Calling eg <code>theme_bw()</code> using <code>theme_set()</code>, all following plots will have same blank’n’white theme.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_set</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_bw</span>())</span>
+<span id="cb18-2"></span>
+<span id="cb18-3">g <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'firebrick'</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>theme()</code> is also a useful function to modify all kinds of theme elements (texts, rectangles, and lines).</p>
+</section></section><section id="axes" class="level1"><h1>5 Axes</h1>
+<section id="change-axis-titles" class="level2"><h2 class="anchored" data-anchor-id="change-axis-titles">5.1 Change axis titles</h2>
+<p>Use <code>labs()</code> to assign character string for each lable.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb19-2">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'firebrick'</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb19-3">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Year'</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Temperature (°F)'</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Can also using <code>xlab()</code> and <code>ylab()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb20-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"firebrick"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb20-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">xlab</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb20-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ylab</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F)"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Not only the degree symbol before F, but also the supper script:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb21-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"firebrick"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb21-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">expression</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature ("</span>, degree <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> F, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">")"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">^</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"(Hey, why should we use metric units?!)"</span>)))</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section id="increase-space-between-axis-and-axis-titles." class="level2"><h2 class="anchored" data-anchor-id="increase-space-between-axis-and-axis-titles.">5.2 Increase space between axis and axis titles.</h2>
+<p>Overwrite the default <code>element_text()</code> within the <code>theme()</code> call:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb22-2">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'firebrick'</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb22-3">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Year'</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Temperature (°F)'</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb22-4">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.title.x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">vjust =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">30</span>),</span>
+<span id="cb22-5">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.title.y =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">vjust =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">30</span>))</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>vjust</code> refer to vertical alignment. We can also change the distance by specifying the margin of both text elements.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb23-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"firebrick"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb23-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F)"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb23-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.title.x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">margin =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">margin</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">t =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>),</span>
+<span id="cb23-5">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.title.y =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">margin =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">margin</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">r =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>))</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>r</code> and <code>t</code> in the <code>margin</code> are <strong>top</strong> and <strong>right</strong>. Margin has 4 arguments: <code>margin(t, r, b, l)</code>. A good way to remember the order of the margin sides is “<strong><em>t-r</em></strong>-ou-<strong><em>b-l</em></strong>-e”.</p>
+</section><section id="change-aesthetics-of-the-axis-titles" class="level2"><h2 class="anchored" data-anchor-id="change-aesthetics-of-the-axis-titles">5.3 Change aesthetics of the axis titles</h2>
+<p>Again, we use <code>theme()</code> function and modify the <code>axis.tile</code> and/or the subordinated elements <code>axis.tile.x</code> and <code>axis.tile.y</code> . Within <code>element_text()</code> we can modify the default of <code>size</code>, <code>color</code>, and <code>face</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb24-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"firebrick"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb24-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F)"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb24-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"firebrick"</span>,</span>
+<span id="cb24-5">                                  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">face =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"italic"</span>))</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>the <code>face</code> argument can be used to make the font <code>bold</code>, <code>italic</code>, or even <code>bold.italic</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb25-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"firebrick"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb25-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F)"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb25-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.title.x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"sienna"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">face =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bold'</span>),</span>
+<span id="cb25-5">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.title.y =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"orangered"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">face =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bold.italic'</span>))</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You could also use a combination of <code>axis.title</code> and <code>axis.title.y</code>, since <code>axis.title.x</code> inherits the values from <code>axis.title</code>. Eg:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb26-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"firebrick"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb26-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F)"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb26-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"sienna"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>),</span>
+<span id="cb26-5">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.title.y =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"orangered"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>))</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>One can modify some properties for both axis titles and other only for one or properties for each on its own:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb27-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"firebrick"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb27-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F)"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb27-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"sienna"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">face =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bold"</span>),</span>
+<span id="cb27-5">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.title.y =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">face =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bold.italic"</span>))</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section id="change-aesthetics-of-axis-text" class="level2"><h2 class="anchored" data-anchor-id="change-aesthetics-of-axis-text">5.4 Change aesthetics of axis text</h2>
+<p>Similar to the <code>title</code>, we can change the appearance of the axis text (number indeed) by using <code>axis.text</code> and/or the subordinated elements <code>axis.text.x</code> and <code>axis.text.y</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb28-2">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'firebrick'</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb28-3">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">expression</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature("</span>,degree <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> F, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">")"</span>))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb28-4">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.text =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"dodgerblue"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">13</span>),</span>
+<span id="cb28-5">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.text.x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">face =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'italic'</span>))</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section id="rotate-axis-text" class="level2"><h2 class="anchored" data-anchor-id="rotate-axis-text">5.5 Rotate axis text</h2>
+<p>Specifying an <code>angle</code> help us to rotate any text elements. With <code>hjust</code> and <code>vjust</code> we can adjust the position of text afterwards horizontally (0 = left, 1 = right), and vertically (0 = top, 1 = bottom).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb29-2">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'firebrick'</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb29-3">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">expression</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature("</span>,degree <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> F, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">")"</span>))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb29-4">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.text.x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">angle =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">vjust =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hjust =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">13</span>))</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 50 means 50 degrees, not % =)))</span></span></code></pre></div>
+</div>
+</section><section id="remove-axis-text-ticks" class="level2"><h2 class="anchored" data-anchor-id="remove-axis-text-ticks">5.6 Remove axis text &amp; ticks</h2>
+<p>Rarely a reason to do this but this is how it works.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb31-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"firebrick"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb31-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F)"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb31-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.ticks.y =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_blank</span>(),</span>
+<span id="cb31-5">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.text.y =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_blank</span>())</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>If you want to get rid of a theme element, the element is always <code>element_blank</code>.</p>
+</section><section id="remove-axis-titles" class="level2"><h2 class="anchored" data-anchor-id="remove-axis-titles">5.7 Remove Axis Titles</h2>
+<p>We could again use <code>element_blank()</code> but it is way simpler to just remove the label in the <code>labs()</code> (or <code>xlab()</code>) call:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb32-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"firebrick"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb32-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Note that <code>NULL</code> removes the element (similarly to <code>element_blank()</code>) while empty quotes <code>""</code> will keep the spacing for the axis title and simply print nothing.</p>
+</section><section id="limit-axis-range" class="level2"><h2 class="anchored" data-anchor-id="limit-axis-range">5.8 Limit axis range</h2>
+<p>Some time you want to take a closer look at some range of you data. You can do this without subsetting your data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb33-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"firebrick"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb33-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F)"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb33-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ylim</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span>))</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 777 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Alternatively you can use <code>scale_y_continuous(limits = c(0, 50))</code> (subset) or <code>coord_cartesian(ylim = c(0, 50))</code>. The former removes all data points outside the range while the second adjusts the visible area (zooming) and is similar to <code>ylim(c(0, 50))</code> (subset).</p>
+</section><section id="force-plot-to-start-at-the-origin" class="level2"><h2 class="anchored" data-anchor-id="force-plot-to-start-at-the-origin">5.9 Force plot to start at the origin</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1">chic_high <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> dplyr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(chic, temp <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">25</span>, o3 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>)</span>
+<span id="cb35-2"></span>
+<span id="cb35-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic_high, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> temp, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> o3)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb35-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"darkcyan"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb35-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature higher than 25°F"</span>,</span>
+<span id="cb35-6">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Ozone higher than 20 ppb"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb35-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">expand_limits</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Using <code>coord_cartesian(xlim = c(0,NA), ylim = c(0,NA))</code> will lead to the same result.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1">chic_high <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> dplyr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(chic, temp <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">25</span>, o3 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>)</span>
+<span id="cb36-2"></span>
+<span id="cb36-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic_high, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> temp, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> o3)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb36-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"darkcyan"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb36-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature higher than 25°F"</span>,</span>
+<span id="cb36-6">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Ozone higher than 20 ppb"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb36-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coord_cartesian</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">xlim =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NA</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ylim =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NA</span>))</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>But we can also force it to <em>literally</em> start at the origin!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic_high, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> temp, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> o3)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb37-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"darkcyan"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb37-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature higher than 25°F"</span>,</span>
+<span id="cb37-4">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Ozone higher than 20 ppb"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb37-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">expand_limits</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb37-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coord_cartesian</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">expand =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">clip =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"off"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The argument <code>clip = "off"</code> in any coordinate system, always starting with <code>coord_*</code>, allows to draw outside of the panel area. Call it here to make sure that the tick marks at <code>c(0, 0)</code> are not cut.</p>
+</section><section id="axes-with-same-scaling" class="level2"><h2 class="anchored" data-anchor-id="axes-with-same-scaling">5.10 Axes with same scaling</h2>
+<p>Use <code>coord_equal()</code> with default <code>ratio = 1</code> to ensure the units are equally scaled on the x-axis and on the y-axis. We can set the aspect ratio of a plot with <code>coord_fixed()</code> or <code>coord_equal()</code>. Both use <code>aspect = 1</code> (1:1) as a default.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> temp, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rnorm</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">nrow</span>(chic), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sd =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb38-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"sienna"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb38-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F)"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F) + random noise"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb38-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">xlim</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ylim</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">150</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb38-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coord_fixed</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 55 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ratios higher than one make units on the y axis longer than units on the x-axis, and vice versa:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> temp, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rnorm</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">nrow</span>(chic), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sd =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb40-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"sienna"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb40-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F)"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F) + random noise"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb40-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">xlim</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ylim</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">150</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb40-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coord_fixed</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ratio =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 49 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section id="use-a-function-to-alter-labels" class="level2"><h2 class="anchored" data-anchor-id="use-a-function-to-alter-labels">5.11 Use a function to alter labels</h2>
+<p>In case you want to format (eg adding % sign) without change the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb42-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"firebrick"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb42-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb42-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(x) {<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">return</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(x, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Degrees Fahrenheit"</span>))})</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section></section><section id="titles" class="level1"><h1>6 Titles</h1>
+<section id="add-a-title" class="level2"><h2 class="anchored" data-anchor-id="add-a-title">6.1 Add a title</h2>
+<p>We can add a title via <code>ggtitle()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb43-2">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"firebrick"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb43-3">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F)"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb43-4">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperatures in Chicago"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Alternatively, we can use <code>labs()</code>, where we can add serveral arguments ~ metadata of the plot (a sub-title, a caption, and a tag):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb44-2">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"firebrick"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb44-3">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F)"</span>,</span>
+<span id="cb44-4">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperatures in Chicago"</span>,</span>
+<span id="cb44-5">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Seasonal pattern of daily temperatures from 1997 to 2001"</span>,</span>
+<span id="cb44-6">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Data: NMMAPS"</span>,</span>
+<span id="cb44-7">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">tag =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Fig 1"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section id="make-title-bold-add-a-space-at-the-baseline" class="level2"><h2 class="anchored" data-anchor-id="make-title-bold-add-a-space-at-the-baseline">6.2 Make title bold &amp; add a space at the baseline</h2>
+</section><section id="adjust-the-position-of-titles" class="level2"><h2 class="anchored" data-anchor-id="adjust-the-position-of-titles">6.3 Adjust the position of titles</h2>
+</section><section id="use-a-non-traditional-font-in-your-title" class="level2"><h2 class="anchored" data-anchor-id="use-a-non-traditional-font-in-your-title">6.4 Use a non-traditional font in your title</h2>
+</section><section id="change-spacing-in-multi-line-text" class="level2"><h2 class="anchored" data-anchor-id="change-spacing-in-multi-line-text">6.5 Change spacing in multi-line text</h2>
+</section></section><section id="legends" class="level1"><h1>7 Legends</h1>
+<section id="turn-off-the-legend" class="level2"><h2 class="anchored" data-anchor-id="turn-off-the-legend">7.1 Turn off the legend</h2>
+</section><section id="remove-legend-titles" class="level2"><h2 class="anchored" data-anchor-id="remove-legend-titles">7.2 Remove legend titles</h2>
+</section><section id="change-legend-position" class="level2"><h2 class="anchored" data-anchor-id="change-legend-position">7.3 Change legend position</h2>
+</section><section id="change-legend-direction" class="level2"><h2 class="anchored" data-anchor-id="change-legend-direction">7.4 Change legend direction</h2>
+</section><section id="change-style-of-the-legend-title" class="level2"><h2 class="anchored" data-anchor-id="change-style-of-the-legend-title">7.5 Change style of the legend title</h2>
+</section><section id="change-legend-title" class="level2"><h2 class="anchored" data-anchor-id="change-legend-title">7.6 Change legend title</h2>
+</section><section id="change-order-of-legend-keys" class="level2"><h2 class="anchored" data-anchor-id="change-order-of-legend-keys">7.7 Change order of legend keys</h2>
+</section><section id="change-legend-labels" class="level2"><h2 class="anchored" data-anchor-id="change-legend-labels">7.8 Change legend labels</h2>
+</section><section id="change-background-boxes-in-the-legend" class="level2"><h2 class="anchored" data-anchor-id="change-background-boxes-in-the-legend">7.9 Change background boxes in the legend</h2>
+</section><section id="change-size-of-legend-symbols" class="level2"><h2 class="anchored" data-anchor-id="change-size-of-legend-symbols">7.10 Change size of legend symbols</h2>
+</section><section id="leave-a-layer-of-the-legend" class="level2"><h2 class="anchored" data-anchor-id="leave-a-layer-of-the-legend">7.11 Leave a layer of the legend</h2>
+</section><section id="manuallt-adding-legend-items" class="level2"><h2 class="anchored" data-anchor-id="manuallt-adding-legend-items">7.12 Manuallt adding legend items</h2>
+</section><section id="use-other-legend-styles" class="level2"><h2 class="anchored" data-anchor-id="use-other-legend-styles">7.13 Use other legend styles</h2>
+</section></section><section id="backgrounds-grid-lines" class="level1"><h1>8 Backgrounds &amp; Grid lines</h1>
+<section id="change-the-panel-background-color" class="level2"><h2 class="anchored" data-anchor-id="change-the-panel-background-color">8.1 Change the panel background color</h2>
+</section><section id="change-grid-lines" class="level2"><h2 class="anchored" data-anchor-id="change-grid-lines">8.2 Change grid lines</h2>
+</section><section id="change-spacing-of-grid-lines" class="level2"><h2 class="anchored" data-anchor-id="change-spacing-of-grid-lines">8.3 Change spacing of grid lines</h2>
+</section><section id="change-the-plot-background-color" class="level2"><h2 class="anchored" data-anchor-id="change-the-plot-background-color">8.4 Change the plot background color</h2>
+</section></section><section id="margins" class="level1"><h1>9 Margins</h1>
+</section><section id="multi-panel-plots" class="level1"><h1>10 Multi-panel plots</h1>
+<section id="create-a-small-multiples-based-on-two-variables" class="level2"><h2 class="anchored" data-anchor-id="create-a-small-multiples-based-on-two-variables">10.1 Create a small multiples based on two variables</h2>
+</section><section id="create-a-small-mutilples-based-on-one-variables" class="level2"><h2 class="anchored" data-anchor-id="create-a-small-mutilples-based-on-one-variables">10.2 Create a small mutilples based on one variables</h2>
+</section><section id="allow-axes-to-roam-free" class="level2"><h2 class="anchored" data-anchor-id="allow-axes-to-roam-free">10.3 Allow axes to roam free</h2>
+</section></section><section id="colors" class="level1"><h1>11. Colors</h1>
+<section id="specify-single-colors" class="level2"><h2 class="anchored" data-anchor-id="specify-single-colors">11.1 Specify single colors</h2>
+</section><section id="asign-colors-to-variables" class="level2"><h2 class="anchored" data-anchor-id="asign-colors-to-variables">11.2 Asign colors to variables</h2>
+</section><section id="qualitative-variables" class="level2"><h2 class="anchored" data-anchor-id="qualitative-variables">11.3 Qualitative variables</h2>
+<section id="manually-select-qualitative-colors" class="level3"><h3 class="anchored" data-anchor-id="manually-select-qualitative-colors">11.3.1 Manually select qualitative colors</h3>
+</section><section id="use-built-in-qualitative-color-palettes" class="level3"><h3 class="anchored" data-anchor-id="use-built-in-qualitative-color-palettes">11.3.2 Use built-in qualitative color palettes</h3>
+</section><section id="use-qualitative-colors-palettes-from-extension-packages" class="level3"><h3 class="anchored" data-anchor-id="use-qualitative-colors-palettes-from-extension-packages">11.3.3 Use qualitative colors palettes from extension packages</h3>
+</section></section><section id="quantitiave-variables" class="level2"><h2 class="anchored" data-anchor-id="quantitiave-variables">11.4 Quantitiave variables</h2>
+</section></section><section id="themes" class="level1"><h1>12. Themes</h1>
+</section><section id="lines" class="level1"><h1>13. Lines</h1>
+</section><section id="text" class="level1"><h1>14. Text</h1>
+</section><section id="coordinates" class="level1"><h1>15. Coordinates</h1>
+</section><section id="chart-types" class="level1"><h1>16. Chart Types</h1>
+</section><section id="ribbons-auc-ci-etc." class="level1"><h1>17. Ribbons (AUC, CI, etc.)</h1>
+</section><section id="smoothings" class="level1"><h1>18. Smoothings</h1>
+</section><section id="interactive-plots" class="level1"><h1>19. Interactive Plots</h1>
+</section><section id="remarks-tipps-resources" class="level1"><h1>20. Remarks, Tipps &amp; Resources</h1>
+</section><section id="references" class="level1"><h1>References</h1>
+<ul>
+<li>Source: <a href="https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/" class="uri">https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/</a>;</li>
+</ul>
+
+
+<!-- -->
+
+</section> ]]></description>
+  <category>r</category>
+  <category>ggplot2</category>
+  <category>visualization</category>
+  <guid>https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/</guid>
+  <pubDate>Sun, 29 Jun 2025 17:00:00 GMT</pubDate>
+  <media:content url="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/ggplot2.png" medium="image" type="image/png" height="167" width="144"/>
+</item>
 <item>
   <title>A data visualization guide, based on IBCS</title>
   <dc:creator>Tuan Le Khac</dc:creator>
@@ -26769,476 +28708,6 @@ font-style: inherit;">8</span>)</span></code></pre></div>
   <guid>https://lktuan.github.io/blog/2024-07-17-prefect-workshop/</guid>
   <pubDate>Tue, 16 Jul 2024 17:00:00 GMT</pubDate>
   <media:content url="https://lktuan.github.io/blog/2024-07-17-prefect-workshop/adam_hill.png" medium="image" type="image/png" height="179" width="144"/>
-</item>
-<item>
-  <title>Vim 101</title>
-  <dc:creator>Tuan Le Khac</dc:creator>
-  <link>https://lktuan.github.io/blog/2024-07-12-vim/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p>source: <a href="https://www.youtube.com/watch?v=RZ4p-saaQkc">Vim tutorial for Beginners</a> by freeCodeCamp.</p>
-<p>in an effort not to give Vim up from the very first day. inspired by James Powell’s Vim skill in his every Python lecture.</p>
-<p>after a few days of rolling with neovim i already have a somewhat calls sense of how to install, make the <code>nvim</code> config folder, do some <code>git clone</code> stuffs to download a bunch of i have no idea what they are to use vim in my damn window machine. can do <code>nvim file1</code>, <code>:qw</code>, <code>:below terminal</code>, <code>:vsplit</code>, but in general lots of actions i am not yet familiar with so actually could not stick with this editor.</p>
-<p>now back to basics, i am spending Friyay night starting from scratch. Florian Dedov uses vim while i use nvim expecting both to be the same.</p>
-<div>
-
-</div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://lktuan.github.io/blog/2024-07-12-vim/programmerhumor-io-linux_meme.jpg" class="img-fluid figure-img"></p>
-<figcaption>source <a href="https://programmerhumor.io/memes/vim/">programmerhumor</a></figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<section id="intro-why-vim" class="level1">
-<h1>intro &amp; why vim?</h1>
-<ul>
-<li>less stick with your mouse, speed up your coding speed;</li>
-<li>all settings are customizable;</li>
-<li>dont need to stick with your terminal, you can use Vim keybindings in any IDE or text editor: Jupyter Notebook, VS Code, etc</li>
-</ul>
-</section>
-<section id="installation" class="level1 page-columns page-full">
-<h1>installation</h1>
-<ul>
-<li>i use window, i dont want to install more package manager like <code>scoop</code>, i dont like to use WSL, so just simply run <code>winget install Neovim.Neovim</code>; </li>
-<li>this neovim version will not include <em>Neovim QT</em>, alright, i will use my terminal <code>pwsh</code>;</li>
-</ul>
-<div class="no-row-height column-margin column-container"><span class="margin-aside">neovim installation <a href="https://github.com/neovim/neovim/blob/master/INSTALL.md">page</a></span></div></section>
-<section id="basics" class="level1">
-<h1>basics</h1>
-<ul>
-<li><code>nvim file_name</code> will open a file or create a file if it did not exist (but the file will not be actually created if we dont write <code>:w</code> ~ this is just <strong>buffer</strong>);</li>
-</ul>
-</section>
-<section id="exit" class="level1">
-<h1>exit</h1>
-<ul>
-<li>now if we create a file (e.g.&nbsp;<code>client.py</code>), when we press <code>:q</code> in will return this message:</li>
-</ul>
-<pre><code>E37: No write since last change
-E162: No write since last change for buffer "client.py"   </code></pre>
-<ul>
-<li>what you need to do is <code>:q!</code> (exclamation mark ~ saying you quite and dismiss any change you’ve made);</li>
-<li>notice that <code>q</code> first and <code>!</code> after. <code>:!</code> will open the terminal, so <code>:!q</code> will pass the command <code>q</code> to the terminal (window CMD), which returns “<em>‘q’ is not recognized as an internal or external command, operable program or batch file.</em>”</li>
-</ul>
-</section>
-<section id="insert-and-normal-modes" class="level1">
-<h1>insert and normal modes</h1>
-<ul>
-<li>when we enter vim, we are in <strong>NORMAL</strong> mode. press the <code>i</code> or <code>I</code> will get you into the <strong>INSERT</strong> mode, press <code>esc</code> to enter the <strong>NORMAL</strong> mode;</li>
-<li><strong>INSERT</strong> mode: any thing we press does not have functionality, just text;</li>
-<li><strong>NORMAL</strong> mode: execute a command;</li>
-<li>in normal mode, press <code>:w</code> to save/write file;</li>
-<li><code>:wq</code> write and quit;</li>
-<li>in <strong>INSERT</strong> mode, cursor points between 2 characters; in <strong>NORMAL</strong> mode cursor points a character;</li>
-<li>from <strong>INSERT</strong> mode, press <code>esc</code> and cursor will point to the <strong>up-front</strong> character, press <code>i</code> in the cursor will point to <strong>before</strong> that character, press <code>a</code> and for cursor <strong>after</strong> character;</li>
-<li><code>I = shift + i</code> will let you get into insert mode with cursor at the <strong>begin</strong> of the line;</li>
-<li><code>A = shift + a</code> for the <strong>end</strong> of the line;</li>
-<li>from normal mode, <code>o</code> let you create a new line below and cursor at that line;</li>
-<li><code>O = shift + o</code> for creating line above.</li>
-</ul>
-</section>
-<section id="line-numbers" class="level1">
-<h1>line numbers</h1>
-<ul>
-<li>in normal mode, <code>:set number</code> will activate line number;</li>
-<li><code>:set nonumber</code> to turn off the line number;</li>
-<li>now this is important pattern: “an action can be repeated x times” ~ in normal mode we can move cursor up and down using up and down arrow -&gt; if we press <code>5 + down arrow</code> we will move to the 5th line below;</li>
-<li><code>10 + right arrow</code> will move the cursor to 10th character to the right, in the same line (?, or in the end of the line);</li>
-<li>you can also use <code>h</code>, <code>j</code>, <code>k</code>, <code>l</code> instead of the arrow keys, they stand for <code>⬅</code>, <code>⬇</code>, <code>⬆</code>, <code>➡</code>, respectively (extremely usefull if you can type with 10 fingers);</li>
-</ul>
-</section>
-<section id="relative-line-numbers" class="level1">
-<h1>relative line numbers</h1>
-<ul>
-<li>certainly you can use <em>number</em> with <code>h</code>, <code>j</code>, <code>k</code>, <code>l</code>. now if you <code>:set relativenumber</code>, you can have your current line indexed as <code>0</code> and easily know the number to move up &amp; down-ward;</li>
-</ul>
-<div>
-
-</div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://lktuan.github.io/blog/2024-07-12-vim/relative_line_number.png" class="img-fluid figure-img"></p>
-<figcaption>now if i type <code>14 + k</code> i will move to the 3rd line</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<ul>
-<li>easy to know that <code>:set norelativenumber</code> will turn this option off.</li>
-</ul>
-</section>
-<section id="various-options" class="level1 page-columns page-full">
-<h1>various options</h1>
-<ul>
-<li><code>:set mouse=a</code> activate the mouse, you can scroll or select text;</li>
-<li><code>:set mouse-=a</code> to inactivate, the pattern <code>-=</code> is to inactivate any option;</li>
-<li><code>:set tabstop=4</code> set tab as 4 spaces</li>
-<li><code>:set shiftwidth=4</code> set shift width as 4 spaces </li>
-<li><code>:colorscheme slate</code> to set the color scheme, before type “state” you can tab to select the scheme too (remember the space);</li>
-</ul>
-<div class="no-row-height column-margin column-container"><span class="margin-aside">this is <a href="https://stackoverflow.com/questions/1878974/redefine-tab-as-4-spaces">recommended</a></span></div><div>
-
-</div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://lktuan.github.io/blog/2024-07-12-vim/choosing_colorscheme.png" class="img-fluid figure-img"></p>
-<figcaption><code>:colorscheme</code> and <code>tab</code> to select color scheme</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<ul>
-<li>every single time you close and re-open vim, these settings is by far - all gone.</li>
-</ul>
-</section>
-<section id="vimrc" class="level1 page-columns page-full">
-<h1><code>.vimrc</code></h1>
-<ul>
-<li>so you need a configuration file and every time vim or nvim is opened your config will be loaded;</li>
-<li>neovim will lookfor <code>init.vim</code> or <code>init.lua</code> when start; </li>
-<li>in terminal (pwsn in user folder window), input:</li>
-</ul>
-<div class="no-row-height column-margin column-container"><span class="margin-aside">refer <a href="https://vi.stackexchange.com/questions/13505/where-do-i-put-my-vimrc-file-for-neovim-on-windows">here</a></span></div><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource bass number-lines code-with-copy"><code class="sourceCode"><span id="cb2-1">cd %AppData%</span>
-<span id="cb2-2">cd .. # to get out of Roaming folder</span>
-<span id="cb2-3">cd .\Local\</span>
-<span id="cb2-4">mkdir nvim</span>
-<span id="cb2-5">cd nvim</span>
-<span id="cb2-6">nvim init.vim</span></code></pre></div>
-<ul>
-<li>then i set these config in my <code>init.vim</code> file:</li>
-</ul>
-<div class="sourceCode" id="cb3" data-filname="init.vim" style="background: #f1f3f5;"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">set</span> number</span>
-<span id="cb3-2"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">set</span> relativenumber</span>
-<span id="cb3-3"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">set</span> tabstop<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span></span>
-<span id="cb3-4"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">set</span> shiftwidth<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span></span>
-<span id="cb3-5"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">set</span> autoindent</span>
-<span id="cb3-6"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">set</span> mouse<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span>a</span>
-<span id="cb3-7">colorscheme slate</span></code></pre></div>
-<ul>
-<li>then <code>:wq</code>. now we’ve already have some handy settings when go into nvim.</li>
-</ul>
-</section>
-<section id="keybindings" class="level1">
-<h1>keybindings</h1>
-<table class="table-striped table-hover caption-top table">
-<caption>helpful keybindings</caption>
-<colgroup>
-<col style="width: 24%">
-<col style="width: 75%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Keybindings</th>
-<th>Actions</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>u</code></td>
-<td>undid the actions, vim show “… change; before #x xx seconds ago”</td>
-</tr>
-<tr class="even">
-<td><code>Ctrl + R</code></td>
-<td>redo</td>
-</tr>
-<tr class="odd">
-<td><p><code>ntimes u</code></p>
-<p><code>ntimes Ctrl + R</code></p></td>
-<td>repeat to press <code>u</code> for multiple undo, or you can <code>3 + u</code> for 3 times undo. same for redo</td>
-</tr>
-<tr class="even">
-<td><code>i</code>, <code>I</code>, <code>a</code>, <code>A</code>, <code>o</code>, <code>O</code></td>
-<td>back to insert mode in different ways</td>
-</tr>
-<tr class="odd">
-<td><code>v</code></td>
-<td>enter VISUAL mode</td>
-</tr>
-<tr class="even">
-<td><code>V</code></td>
-<td>enter VISUAL model and select the whole line</td>
-</tr>
-<tr class="odd">
-<td><code>d</code></td>
-<td>deleting</td>
-</tr>
-<tr class="even">
-<td><code>y</code></td>
-<td>yanking ~ equivalent to copying</td>
-</tr>
-<tr class="odd">
-<td><code>p</code></td>
-<td>pasting what we yank before (<strong>after or below</strong> the cursor)</td>
-</tr>
-<tr class="even">
-<td><code>dd</code></td>
-<td>delete the whole line</td>
-</tr>
-<tr class="odd">
-<td><code>5dd</code></td>
-<td>delete the next whole 5 lines</td>
-</tr>
-<tr class="even">
-<td><code>D</code></td>
-<td>delete from the cursor to the end of line</td>
-</tr>
-<tr class="odd">
-<td><code>yy</code></td>
-<td>yank the full line in NORMAL mode, same with <code>V</code> then <code>y</code> ~ select the whole line and yank</td>
-</tr>
-<tr class="even">
-<td><code>Y</code></td>
-<td>same at <code>yy</code></td>
-</tr>
-<tr class="odd">
-<td><code>P</code></td>
-<td><p>pasting what we yank before (<strong>before or above</strong> the cursor)</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>again remember the pattern of <strong>lowercase</strong> and <strong>uppercase</strong></p>
-</div>
-</div></td>
-</tr>
-<tr class="even">
-<td><code>c</code></td>
-<td>delete the selection (from VISUAL mode) and enter to INSERT mode</td>
-</tr>
-<tr class="odd">
-<td><code>cc</code></td>
-<td>delete the whole text in the line (the line was kept) enter to INSERT mode</td>
-</tr>
-<tr class="even">
-<td><code>C</code></td>
-<td>delete from cursor to end of line (what <code>c</code> does is change, what <code>d</code> does is delete)</td>
-</tr>
-<tr class="odd">
-<td><code>r</code></td>
-<td><p>replacing the current cursor in NORMAL mode with 1 character press after <code>r</code></p>
-<p>replacing all selection (include cursor) in VISUAL mode</p></td>
-</tr>
-<tr class="even">
-<td><code>w</code></td>
-<td>Jump to the next word (split by space or “-”)</td>
-</tr>
-<tr class="odd">
-<td><code>W</code></td>
-<td>Jump to the next word (accept only space at delimiter)</td>
-</tr>
-<tr class="even">
-<td><code>b</code>, <code>B</code></td>
-<td>The same thing for <em>backward</em></td>
-</tr>
-<tr class="odd">
-<td><code>dw</code></td>
-<td>delete a word</td>
-</tr>
-<tr class="even">
-<td><code>2dw</code> , <code>d2w</code></td>
-<td>delete 2 words (forward, current cursor and the next one)</td>
-</tr>
-<tr class="odd">
-<td><code>2db</code>, <code>d2b</code></td>
-<td>delete 2 words (backward, <strong>before</strong> the cursor)</td>
-</tr>
-<tr class="even">
-<td><code>diw</code></td>
-<td>delete in a words</td>
-</tr>
-<tr class="odd">
-<td><code>ciw</code> , <code>cw</code>, <code>cb</code></td>
-<td>change in a words, next word, previous word and go into INSERT mode</td>
-</tr>
-<tr class="even">
-<td><code>e</code></td>
-<td>Jump to the end of the word (<code>E</code> will be more strictly, only accept space as delimiter)</td>
-</tr>
-<tr class="odd">
-<td><code>0</code>, <code>$</code></td>
-<td>Jump to the begin / and the end of the line respectively</td>
-</tr>
-<tr class="even">
-<td><code>d0</code>, <code>d$</code></td>
-<td><p>delete everything from cursor to the begin / end of the line, respectively</p>
-<p>-&gt; think of <code>c0</code>, and <code>c$</code> for aha</p></td>
-</tr>
-<tr class="odd">
-<td><code>:h ...</code></td>
-<td>seek help, <code>:q</code> to quite the help window</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="intermediate-stuff" class="level1">
-<h1>intermediate stuff</h1>
-<p><strong>go and cook your meal:</strong></p>
-<ul>
-<li><p><code>i</code> - <strong>before</strong> and <code>I</code> - <strong>beginning</strong>, <code>a</code> - <strong>after</strong> and <code>A</code> - <strong>ending</strong> for navigating to INSERT mode;</p></li>
-<li><p><code>o</code> - <strong>below</strong>, <code>O</code> - <strong>above</strong> to insert line;</p></li>
-<li><p><code>u</code> - <strong>undo</strong>, <code>Ctrl + R</code> - <strong>redo</strong>;</p></li>
-<li><p><code>v</code> - <strong>individual</strong> visual, <code>V</code> - visual the <strong>whole</strong> line;</p></li>
-<li><p><code>y</code> - yanking <strong>current</strong>, <code>Y</code>, <code>yy</code> - yanking <strong>whole</strong> line;</p></li>
-<li><p><code>p</code> - pasting <strong>after</strong> or <strong>below</strong>, <code>P</code> - pasting <strong>before</strong> or <strong>above</strong>;</p></li>
-<li><p><code>d</code> - deleting <strong>current</strong>, <code>dd</code> - deleting <strong>whole</strong> line, <code>D</code> - deleting to the <strong>end</strong> of line;</p></li>
-<li><p><code>c</code> - same with <code>d</code> but for <strong>changing</strong>;</p></li>
-<li><p><code>r</code> - replacing <strong>current</strong> with 1 character, <code>R</code> - enter the REPLACE mode and replace with <strong>multiple</strong> characters;</p></li>
-<li><p><code>w</code>, <code>W</code> - jump word <strong>forward</strong>, <code>b</code>, <code>B</code> - jump word <strong>backward</strong>;</p></li>
-<li><p><code>i</code> - <strong>inside</strong> the word, <code>e</code> - <strong>end</strong> of the word;</p></li>
-<li><p><code>0</code> - <strong>begin</strong>, <code>$</code> - <strong>end</strong> of the line;</p></li>
-<li><p>repeat by press key <strong>multiple</strong> times or <code>n</code> - number before command;</p></li>
-<li><p><code>%</code> - jump to the <strong>closing</strong> bracket if you are on the opening one;</p></li>
-<li><p><code>t</code> follow by a character will let you jump cursor to <strong>before</strong> the next nearest one;</p></li>
-<li><p><code>f</code> same with <code>t</code>, but to the <strong>character’s position</strong>;</p></li>
-<li><p><code>T</code> and <code>F</code> for the <strong>backward</strong>;</p></li>
-<li><p><code>gg</code> - go to the <strong>begin</strong> of the line, <code>G</code> for the <strong>end</strong> of the file;</p></li>
-<li><p><code>123G</code> or <code>:123</code> will bring you to the line 123; ….</p></li>
-</ul>
-<p><strong>now:</strong></p>
-<ul>
-<li><p><code>ciw</code> - changing the whole word; but</p></li>
-<li><p><code>cib</code> , <code>ciB</code> - changing the text inside the current set of parenthesis () or braces {}, respectively, you can also <code>ci(</code> , <code>ci{</code> , <code>ci&lt;</code> for the specific.</p></li>
-<li><p><code>ci"</code> - changing the text inside double quote;</p></li>
-<li><p>if you want delete <code>d</code>, or yank <code>y</code> - replace the <code>c</code>;</p></li>
-<li><p><code>5dw</code> will delete 5 words, <code>5d5w</code> will delete 5 words 5 times!;</p></li>
-<li><p><code>5yy</code> copying 5 lines;</p></li>
-<li><p><code>dt(</code> deleting everything up till the opening bracket, <code>df(</code> will delete the bracket also; …</p></li>
-</ul>
-<p><strong>even more advanced stuff:</strong></p>
-<ul>
-<li>indentation: <code>&gt;&gt;</code> to the right, <code>&lt;&lt;</code> to the left;</li>
-<li><code>V</code> for Visual Line mode, which will automatically select entire lines;</li>
-<li><code>Ctrl + v</code> for Block Visual mode, which will select rectangular regions of the text;</li>
-<li><code>=</code> for auto indentation;</li>
-<li><code>gg=G</code> will start at the begin of the file, auto indentation till the end of file (and end of at the end of file);</li>
-<li><code>/</code> and word follow to search the word, then <code>n</code> to jump to the next found, <code>N</code> to jump to the previous one;</li>
-</ul>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Re-note about the search:</p>
-<ul>
-<li><code>/pattern</code> - search for pattern;</li>
-<li><code>?pattern</code> - search backward for pattern;</li>
-<li><code>\vpattern</code> - ‘very magic’ pattern: non-alphanumeric characters are interpreted as special regex symbols (no escaping needed);</li>
-<li><code>n</code> - repeat search in same direction;</li>
-<li><code>N</code> - repeat search in opposite direction;</li>
-<li><code>#</code> go up, <code>*</code> go down.</li>
-</ul>
-</div>
-</div>
-<ul>
-<li><code>ma</code>: mark A -&gt; to explore later;</li>
-<li><code>zz</code>: centre the screen;</li>
-<li><code>:%s/old/new/g</code> - replace all old with new throughout file;</li>
-<li><code>:%s/old/new/gc</code> - replace all old with new throughout file with confirmations (without <code>c</code> is without confirmation);</li>
-<li><code>.</code> repeat the last command;</li>
-<li><code>"+</code> and <code>"*</code> are the special registers, which you copied in the system</li>
-</ul>
-</section>
-<section id="registers-and-macros" class="level1">
-<h1>registers and macros</h1>
-<ul>
-<li><code>d</code> deleting is also copying ~ cutting, so if you <code>y</code> then <code>d</code> you will lost the current clipboard</li>
-<li><code>:reg</code> to see the history of the clipboard;</li>
-<li><code>"7p</code> will paste the 7th register;</li>
-<li><code>"7yy</code> yanks the whole line into 7th register;</li>
-<li><code>"0p</code> the last thing that i actually yanked, not <code>d</code>;</li>
-<li><code>qa</code> recording macro <span class="citation" data-cites="a">@a</span>, <code>q</code> quits recording;</li>
-<li>you can see the macro in <code>:reg</code>, <code>@a</code> to use the macro; …</li>
-</ul>
-</section>
-<section id="neovim-plugins" class="level1">
-<h1>neovim &amp; plugins</h1>
-<ul>
-<li>better, have more pluggins supported;</li>
-<li>config in <code>./nvim</code> using <code>init.vim</code> or <code>init.lua</code>;</li>
-</ul>
-</section>
-<section id="vim-support" class="level1">
-<h1>vim support</h1>
-<ul>
-<li>can use vim bindings in VS Code, Pycharm</li>
-</ul>
-</section>
-<section id="outro" class="level1">
-<h1>outro</h1>
-<ul>
-<li>it is recommended to use vim bindings while coding, even if you dont like the command line.</li>
-</ul>
-</section>
-<section id="other-resources" class="level1">
-<h1>other resources</h1>
-<ol type="1">
-<li><a href="https://vim.rtorr.com/">Vim cheat sheet</a></li>
-<li><a href="https://github.com/junegunn/vim-plug">Vim plug</a></li>
-</ol>
-
-
-<!-- -->
-
-</section>
-
- ]]></description>
-  <category>python</category>
-  <category>vim</category>
-  <guid>https://lktuan.github.io/blog/2024-07-12-vim/</guid>
-  <pubDate>Thu, 11 Jul 2024 17:00:00 GMT</pubDate>
-  <media:content url="https://lktuan.github.io/blog/2024-07-12-vim/vim.png" medium="image" type="image/png" height="127" width="144"/>
 </item>
 </channel>
 </rss>
