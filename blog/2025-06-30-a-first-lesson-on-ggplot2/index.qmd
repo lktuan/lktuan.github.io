@@ -5,12 +5,17 @@ author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
 date: 06-30-2025
-date-modified: 06-30-2025
+date-modified: 07-01-2025
 categories: [r, ggplot2, visualization]
-image: ggplot2.png
+image: grammar-of-graphics.png
 draft: false
-code-tools: true
-code-fold: false
+format:
+  html:
+    code-overflow: wrap
+    code-tools: true
+    code-fold: show
+    code-annotations: hover
+    page-layout: full
 ---
 
 # 0 Preparation
@@ -36,7 +41,7 @@ In which:
   - `tidyr`: data cleaning;
   - `forcats`: handling factors;
 - `corrr`: correlation matrices;
-- `cowplot`: composing ggplots;
+- `cowplot`: composing `ggplots`;
 - `ggforce`: sina plots and other cool stuffs;
 - `ggrepel`: nice text labeling;
 - `ggridges`: rigde plots;
@@ -129,7 +134,7 @@ For instance:
 (g <- ggplot(chic, aes(x = date, y = temp)))
 ```
 
-Just a blank panel, because `{ggplot2}` *does not know* how we plot data \~ we still need to provide geometry. `ggplot2` allows use to store the `ggobject` to a variable inside the environment - in this case, `g` - which can be extended later on (by adding more layers). We can print out the plot to the R interactive but putting all inside the `()`.
+Just a blank panel, because `{ggplot2}` *does not know* how we plot data \~ we still need to provide geometry. `ggplot2` allows us to store the `ggobject` to a variable inside the environment - in this case, `g` - which can be extended later on (by adding more layers). We can print out the plot to the R interactive by putting all inside the `()`.
 
 We have different geometries to use (called `geoms` because each function usually starts with `geom_`). For e.g., if we want to plot a scatter plot.
 
@@ -179,7 +184,7 @@ theme_set(theme_bw())
 g + geom_point(color = 'firebrick')
 ```
 
-`theme()` is also a useful function to modify all kinds of theme elements (texts, rectangles, and lines).
+`theme()` is also a useful function to modify all kinds of theme elements (texts, rectangles, and lines). Refer this [page](https://ggplot2.tidyverse.org/reference/theme.html) for the full list.
 
 # 5 Axes
 
@@ -232,11 +237,11 @@ ggplot(chic, aes(x = date, y = temp)) +
         axis.title.y = element_text(margin = margin(r = 10), size = 15))
 ```
 
-`r` and `t` in the `margin` are **top** and **right**. Margin has 4 arguments: `margin(t, r, b, l)`. A good way to remember the order of the margin sides is “***t-r***-ou-***b-l***-e”.
+`t` and `r` in the `margin` are **top** and **right**. Margin has 4 arguments: `margin(t, r, b, l)`. A good way to remember the order of the margin sides is “***t-r***-ou-***b-l***-e”.
 
 ## 5.3 Change aesthetics of the axis titles
 
-Again, we use `theme()` function and modify the `axis.tile` and/or the subordinated elements `axis.tile.x` and `axis.tile.y` . Within `element_text()` we can modify the default of `size`, `color`, and `face`.
+Again, we use `theme()` function and modify the `axis.title` and/or the subordinated elements `axis.title.x` and `axis.title.y` . Within `element_text()`, we can modify the default of `size`, `color`, and `face`.
 
 ```{r}
 ggplot(chic, aes(x = date, y = temp)) +
@@ -296,8 +301,8 @@ Specifying an `angle` help us to rotate any text elements. With `hjust` and `vju
 ggplot(chic, aes(x = date, y = temp)) +
     geom_point(color = 'firebrick') +
     labs(x= "Year", y = expression(paste("Temperature(",degree ~ F, ")"))) +
+    # 50 means 50 degrees, not % =)))
     theme(axis.text.x = element_text(angle = 50, vjust = 1, hjust = 1, size = 13))
-# 50 means 50 degrees, not % =)))
 ```
 
 ## 5.6 Remove axis text & ticks
@@ -337,7 +342,7 @@ ggplot(chic, aes(x = date, y = temp)) +
   ylim(c(0, 50))
 ```
 
-Alternatively you can use `scale_y_continuous(limits = c(0, 50))` (subset) or `coord_cartesian(ylim = c(0, 50))`. The former removes all data points outside the range while the second adjusts the visible area (zooming) and is similar to `ylim(c(0, 50))` (subset).
+Alternatively you can use `scale_y_continuous(limits = c(0, 50))` (subsetting) or `coord_cartesian(ylim = c(0, 50))`. The former removes all data points outside the range while the second adjusts the visible area (**zooming**) and is similar to `ylim(c(0, 50))` (**subsetting**).
 
 ## 5.9 Force plot to start at the origin
 
@@ -400,7 +405,7 @@ ggplot(chic, aes(x = temp, y = temp + rnorm(nrow(chic), sd = 20))) +
 
 ## 5.11 Use a function to alter labels
 
-In case you want to format (eg adding % sign) without change the data.
+In case you want to format (eg. adding % sign) without change the data. It's like `lambda` in Python!
 
 ```{r}
 ggplot(chic, aes(x = date, y = temp)) +
@@ -436,9 +441,86 @@ ggplot(chic, aes(x = date, y = temp)) +
 
 ## 6.2 Make title bold & add a space at the baseline
 
+We want to, again, modify the properties of a theme element, we use `theme()` with it elements & conjunctions.
+These settings not only work for the title, but also for `plot.subtitle`, `plot.caption`, `plot.tag`, `legend.title`, `legend.text`, `axis.title`, and `axis.text`.
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)",
+       title = "Temperatures in Chicago") +
+  theme(plot.title = element_text(face = "bold",
+                                  margin = margin(10, 0, 10, 0),
+                                  size = 14))
+```
+
 ## 6.3 Adjust the position of titles
 
+We can use the `hjust` and `vjust` for horizontal and vertical alighment:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = NULL,
+       title = "Temperatures in Chicago",
+       caption = "Data: NMMAPS") +
+  theme(plot.title = element_text(hjust = 1, size = 16, face = "bold.italic"))
+```
+
+But since 2019, we can also use `plot.title.position` and `plot.caption.position`.
+This fit better for the case of long long axis that makes the alignment looks terrible.
+
+The old way:
+
+```{r}
+(g <- ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  scale_y_continuous(label = function(x) {return(paste(x, "Degrees Fahrenheit"))}) +
+  labs(x = "Year", y = NULL,
+       title = "Temperatures in Chicago between 1997 and 2001 in Degrees Fahrenheit",
+       caption = "Data: NMMAPS") +
+  theme(plot.title = element_text(size = 14, face = "bold.italic"),
+        plot.caption = element_text(hjust = 0)))
+```
+
+The new one:
+
+```{r}
+g + theme(plot.title.position = "plot",
+          plot.caption.position = "plot")
+```
+
 ## 6.4 Use a non-traditional font in your title
+
+The fonts you can use are not limited by the ones provided by `ggplot2`, and the OS/fonts installed as well.
+We can use [`showtext`](https://github.com/yixuan/showtext) for various types of font (TrueType, OpenType, Type 1, web fonts, etc.).
+The `font_acc_google()` and `font_add()` also work well, especially for [Google fonts](https://fonts.google.com/). But note that you must have the fonts installed, then re-load the IDE (Rstudio or VS Code) to use them.
+
+```{r}
+library(showtext)
+font_add_google("Playfair Display", ## name of Google font
+                "Playfair")  ## name that will be used in R
+font_add_google("Bangers", "Bangers")
+```
+
+And then voila we can use them with, again, `theme()`:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)",
+       title = "Temperatures in Chicago",
+       subtitle = "Daily temperatures in °F from 1997 to 2001") +
+  theme(plot.title = element_text(family = "Bangers", hjust = .5, size = 25),
+        plot.subtitle = element_text(family = "Playfair", hjust = .5, size = 15))
+```
+
+We can also set a font for all elements of our plot globally:
+
+```{r}
+font_add_google("Roboto Condensed", "Roboto Condensed")
+theme_set(theme_bw(base_size = 12, base_family = "Roboto Condensed"))
+```
 
 ## 6.5 Change spacing in multi-line text
 
