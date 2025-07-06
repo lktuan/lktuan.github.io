@@ -4512,7 +4512,7 @@
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html",
     "title": "A tutorial of ggplot2\n",
     "section": "",
-    "text": "The following packages need to be installed:\n\nShow the code# install CRAN packages\npkg_install =   c(\"ggplot2\", \"tibble\", \"tidyr\", \"forcats\", \"purrr\", \"prismatic\", \"corrr\",\n    \"cowplot\", \"ggforce\", \"ggrepel\", \"ggridges\", \"ggsci\", \"ggtext\", \"ggthemes\",\n    \"grid\", \"gridExtra\", \"patchwork\", \"rcartocolor\", \"scico\", \"showtext\",\n    \"shiny\", \"plotly\", \"highcharter\", \"echarts4r\")\ninstall.packages(pkg_install)\n\n\nIn which:\n\n\nggplot2: part of the tidyverse;\n\ntidyverse:\n\n\ntibble: mordern data frames;\n\ndplyr: data wrangling;\n\ntidyr: data cleaning;\n\nforcats: handling factors;\n\n\n\ncorrr: correlation matrices;\n\ncowplot: composing ggplots;\n\nggforce: sina plots and other cool stuffs;\n\nggrepel: nice text labeling;\n\nggridges: rigde plots;\n\nggsci: nice color palettes;\n\nggtext: advanced text rendering;\n\nggthemes: additional themes;\n\ngrid: creating graphical objects;\n\ngridExtra: additional functions for grid graphics;\n\npatchwork: multiple panel plots;\n\nprismatic: minipulating colors;\n\nrcartocolor: great color palettes;\n\nscico: perceptional uniform palettes;\n\nshowtext: custom fonts;\n\nshiny: interactive applications;\n\ncharter, echarts4r, ggiraph, highcharter, plotly: interactive visualization.\n\nWe also need to install devtools:\n\nShow the code# install from GitHub since not on CRAN\ninstall.packages('devtools')\ndevtools::install_github(\"JohnCoene/charter\")"
+    "text": "The following packages need to be installed:\n\nShow the code# install CRAN packages\npkg_install =   c(\"ggplot2\", \"tibble\", \"tidyr\", \"forcats\", \"purrr\", \"prismatic\", \"corrr\",\n    \"cowplot\", \"ggforce\", \"ggrepel\", \"ggridges\", \"ggsci\", \"ggtext\", \"ggthemes\",\n    \"grid\", \"gridExtra\", \"patchwork\", \"rcartocolor\", \"scico\", \"showtext\",\n    \"shiny\", \"plotly\", \"highcharter\", \"echarts4r\")\ninstall.packages(pkg_install)\n\n\nIn which:\n\n\nggplot2: part of the tidyverse, implementing the grammar of graphic;\n\ntidyverse:\n\n\ntibble: mordern data frames;\n\ndplyr: data wrangling;\n\ntidyr: data cleaning;\n\nforcats: handling factors;\n\n\n\ncorrr: correlation matrices;\n\ncowplot: composing ggplots;\n\nggforce: sina plots and other cool stuffs;\n\nggrepel: nice text labeling;\n\nggridges: rigde plots;\n\nggsci: nice color palettes;\n\nggtext: advanced text rendering;\n\nggthemes: additional themes;\n\ngrid: creating graphical objects;\n\ngridExtra: additional functions for grid graphics;\n\npatchwork: multiple panel plots;\n\nprismatic: minipulating colors;\n\nrcartocolor: great color palettes;\n\nscico: perceptional uniform palettes;\n\nshowtext: custom fonts;\n\nshiny: interactive applications;\n\ncharter, echarts4r, ggiraph, highcharter, plotly: interactive visualization.\n\nWe also need to install devtools:\n\nShow the code# install from GitHub since not on CRAN\ninstall.packages('devtools')\ndevtools::install_github(\"JohnCoene/charter\")"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#import-data",
@@ -4603,7 +4603,7 @@
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#axes-with-same-scaling",
     "title": "A tutorial of ggplot2\n",
     "section": "5.10 Axes with same scaling",
-    "text": "5.10 Axes with same scaling\nUse coord_equal() with default ratio = 1 to ensure the units are equally scaled on the x-axis and on the y-axis. We can set the aspect ratio of a plot with coord_fixed() or coord_equal(). Both use aspect = 1 (1:1) as a default.\n\nShow the codeggplot(chic, aes(x = temp, y = temp + rnorm(nrow(chic), sd = 20))) +\n  geom_point(color = \"sienna\") +\n  labs(x = \"Temperature (°F)\", y = \"Temperature (°F) + random noise\") +\n  xlim(c(0, 100)) + ylim(c(0, 150)) +\n  coord_fixed()\n\nWarning: Removed 57 rows containing missing values or values outside the scale range\n(`geom_point()`).\n\n\n\n\n\n\n\n\nRatios higher than one make units on the y axis longer than units on the x-axis, and vice versa:\n\nShow the codeggplot(chic, aes(x = temp, y = temp + rnorm(nrow(chic), sd = 20))) +\n  geom_point(color = \"sienna\") +\n  labs(x = \"Temperature (°F)\", y = \"Temperature (°F) + random noise\") +\n  xlim(c(0, 100)) + ylim(c(0, 150)) +\n  coord_fixed(ratio = 1/5)\n\nWarning: Removed 60 rows containing missing values or values outside the scale range\n(`geom_point()`)."
+    "text": "5.10 Axes with same scaling\nUse coord_equal() with default ratio = 1 to ensure the units are equally scaled on the x-axis and on the y-axis. We can set the aspect ratio of a plot with coord_fixed() or coord_equal(). Both use aspect = 1 (1:1) as a default.\n\nShow the codeggplot(chic, aes(x = temp, y = temp + rnorm(nrow(chic), sd = 20))) +\n  geom_point(color = \"sienna\") +\n  labs(x = \"Temperature (°F)\", y = \"Temperature (°F) + random noise\") +\n  xlim(c(0, 100)) + ylim(c(0, 150)) +\n  coord_fixed()\n\nWarning: Removed 46 rows containing missing values or values outside the scale range\n(`geom_point()`).\n\n\n\n\n\n\n\n\nRatios higher than one make units on the y axis longer than units on the x-axis, and vice versa:\n\nShow the codeggplot(chic, aes(x = temp, y = temp + rnorm(nrow(chic), sd = 20))) +\n  geom_point(color = \"sienna\") +\n  labs(x = \"Temperature (°F)\", y = \"Temperature (°F) + random noise\") +\n  xlim(c(0, 100)) + ylim(c(0, 150)) +\n  coord_fixed(ratio = 1/5)\n\nWarning: Removed 50 rows containing missing values or values outside the scale range\n(`geom_point()`)."
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#use-a-function-to-alter-labels",
@@ -4638,91 +4638,91 @@
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#use-a-non-traditional-font-in-your-title",
     "title": "A tutorial of ggplot2\n",
     "section": "6.4 Use a non-traditional font in your title",
-    "text": "6.4 Use a non-traditional font in your title\nThe fonts you can use are not limited by the ones provided by ggplot2, and the OS/fonts installed as well. We can use showtext for various types of font (TrueType, OpenType, Type 1, web fonts, etc.). The font_acc_google() and font_add() also work well, especially for Google fonts. But note that you must have the fonts installed, then re-load the IDE (Rstudio or VS Code) to use them.\n\nShow the codelibrary(showtext)\n\nWarning: package 'showtext' was built under R version 4.4.3\n\n\nLoading required package: sysfonts\n\n\nLoading required package: showtextdb\n\nShow the codefont_add_google(\"Playfair Display\", ## name of Google font\n                \"Playfair\")  ## name that will be used in R\nfont_add_google(\"Bangers\", \"Bangers\")\n\n\nAnd then voila we can use them with, again, theme():\n\nShow the codeggplot(chic, aes(x = date, y = temp)) +\n  geom_point(color = \"firebrick\") +\n  labs(x = \"Year\", y = \"Temperature (°F)\",\n       title = \"Temperatures in Chicago\",\n       subtitle = \"Daily temperatures in °F from 1997 to 2001\") +\n  theme(plot.title = element_text(family = \"Bangers\", hjust = .5, size = 25),\n        plot.subtitle = element_text(family = \"Playfair\", hjust = .5, size = 15))\n\nWarning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family\nnot found in Windows font database\nWarning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family\nnot found in Windows font database\n\n\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\n\n\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\n\n\n\n\n\n\n\n\nWe can also set a font for all elements of our plot globally:\n\nShow the codefont_add_google(\"Roboto Condensed\", \"Roboto Condensed\")\ntheme_set(theme_bw(base_size = 12, base_family = \"Roboto Condensed\"))"
+    "text": "6.4 Use a non-traditional font in your title\nThe fonts you can use are not limited by the ones provided by ggplot2, and the OS/fonts installed as well. We can use showtext for various types of font (TrueType, OpenType, Type 1, web fonts, etc.). The font_acc_google() and font_add() also work well, especially for Google fonts. But note that you must have the fonts installed, then re-load the IDE (Rstudio or VS Code) to use them.\n\nShow the codelibrary(showtext)\n\nWarning: package 'showtext' was built under R version 4.4.3\n\n\nLoading required package: sysfonts\n\n\nLoading required package: showtextdb\n\nShow the codefont_add_google(\"Playfair Display\", ## name of Google font\n                \"Playfair\")  ## name that will be used in R\nfont_add_google(\"Bangers\", \"Bangers\")\n\n\nAnd then voila we can use them with, again, theme():\n\nShow the code# From author's code, I've added `showtext_auto()`, then it worked!\n# https://stackoverflow.com/questions/56072340/fonts-not-available-in-r-after-importing\nshowtext_auto()\nggplot(chic, aes(x = date, y = temp)) +\n  geom_point(color = \"firebrick\") +\n  labs(x = \"Year\", y = \"Temperature (°F)\",\n       title = \"Temperatures in Chicago\",\n       subtitle = \"Daily temperatures in °F from 1997 to 2001\") +\n  theme(plot.title = element_text(family = \"Bangers\", hjust = .5, size = 25),\n        plot.subtitle = element_text(family = \"Playfair\", hjust = .5, size = 15))\n\n\n\n\n\n\n\nWe can also set a font for all elements of our plot globally:\n\nShow the codefont_add_google(\"Roboto Condensed\", \"Roboto Condensed\")\ntheme_set(theme_bw(base_size = 12, base_family = \"Roboto Condensed\"))"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-spacing-in-multi-line-text",
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-spacing-in-multi-line-text",
     "title": "A tutorial of ggplot2\n",
     "section": "6.5 Change spacing in multi-line text",
-    "text": "6.5 Change spacing in multi-line text"
+    "text": "6.5 Change spacing in multi-line text\nWe can use the lineheight to change the spacing between lines, as how we squeezed the lines together below:\n\nShow the codeggplot(chic, aes(x = date, y = temp)) +\n  geom_point(color = \"firebrick\") +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  ggtitle(\"Temperatures in Chicago\\nfrom 1997 to 2001\") +\n  theme(plot.title = element_text(lineheight = .95, size = 16))"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#turn-off-the-legend",
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#turn-off-the-legend",
     "title": "A tutorial of ggplot2\n",
     "section": "7.1 Turn off the legend",
-    "text": "7.1 Turn off the legend"
+    "text": "7.1 Turn off the legend\nUse the theme(legend.position = 'none') to remove the legend:\n\nShow the codeggplot(chic,\n       aes(x = date, y = temp, color = season)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  theme(legend.position = 'none')\n\n\n\n\n\n\n\nBased on specific case, we can also use the guides(color = 'none') or scale_color_discrete(guide = 'none'). Below we remove the color legend, but retain the shape legend.\n\nShow the codeggplot(chic,\n       aes(x = date, y = temp,\n           color = season, shape = season)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  guides(color = \"none\")"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#remove-legend-titles",
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#remove-legend-titles",
     "title": "A tutorial of ggplot2\n",
     "section": "7.2 Remove legend titles",
-    "text": "7.2 Remove legend titles"
+    "text": "7.2 Remove legend titles\nAs learned before, we can use element_blank() to draw nothing.\n\nShow the codeggplot(chic, aes(x = date, y = temp, color = season)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  theme(legend.title = element_blank())\n\n\n\n\n\n\n\nEither using scale_color_discrete(name = NULL) or labs(color = NULL) would drive the same result."
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-legend-position",
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-legend-position",
     "title": "A tutorial of ggplot2\n",
     "section": "7.3 Change legend position",
-    "text": "7.3 Change legend position"
+    "text": "7.3 Change legend position\nBasically, we can control the position of legend using legend.position in theme. There are top, right (default), bottom, and left:\n\nShow the codeggplot(chic, aes(x = date, y = temp, color = season)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  theme(legend.position = \"top\")\n\n\n\n\n\n\n\nFurthermore, ggplot offers full control as we can specify legend position using “latitude” & “longtitude”. Below we also modified the rectangle’s background color to transparent.\n\nShow the codeggplot(chic, aes(x = date, y = temp, color = season)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\",\n       color = NULL) +\n  theme(legend.position = c(.15, .15),\n        legend.background = element_rect(fill = \"transparent\"))\n\nWarning: A numeric `legend.position` argument in `theme()` was deprecated in ggplot2\n3.5.0.\nℹ Please use the `legend.position.inside` argument of `theme()` instead.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nUpdate\n\n\n\nUpdate:\n\nA numeric legend.position argument in theme() was deprecated in ggplot2 3.5.0.\nℹ Please use the legend.position.inside argument of theme() instead."
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-legend-direction",
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-legend-direction",
     "title": "A tutorial of ggplot2\n",
     "section": "7.4 Change legend direction",
-    "text": "7.4 Change legend direction"
+    "text": "7.4 Change legend direction\nYou can switch the direction of legend as you like:\n\nShow the codeggplot(chic, aes(x = date, y = temp, color = season)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\",\n       color = NULL) +\n  theme(legend.position = c(.15, .15),\n        legend.background = element_rect(fill = \"transparent\")) +\n  guides(color = guide_legend(direction = 'horizontal'))"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-style-of-the-legend-title",
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-style-of-the-legend-title",
     "title": "A tutorial of ggplot2\n",
     "section": "7.5 Change style of the legend title",
-    "text": "7.5 Change style of the legend title"
+    "text": "7.5 Change style of the legend title\nBy modifying the element_text() of legend.title inside theme, we can change the style of legend title.\n\nShow the codeggplot(chic, aes(x = date, y = temp, color = season)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  theme(legend.title = element_text(family = \"Playfair\",\n                                    color = \"chocolate\",\n                                    size = 14, face = \"bold\"))"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-legend-title",
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-legend-title",
     "title": "A tutorial of ggplot2\n",
     "section": "7.6 Change legend title",
-    "text": "7.6 Change legend title"
+    "text": "7.6 Change legend title\nThe easiest way - labs():\n\nShow the codeggplot(chic, aes(x = date, y = temp, color = season)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\",\n       color = \"Seasons\\nindicated\\nby colors:\") +\n  theme(legend.title = element_text(family = \"Playfair\",\n                                    color = \"chocolate\",\n                                    size = 14, face = \"bold\"))\n\n\n\n\n\n\n\nThe other ways are: scale_color_discretet(name = \"title\"), or `guides(color = guide_legend(“title”))."
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-order-of-legend-keys",
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-order-of-legend-keys",
     "title": "A tutorial of ggplot2\n",
     "section": "7.7 Change order of legend keys",
-    "text": "7.7 Change order of legend keys"
+    "text": "7.7 Change order of legend keys\nMost of the time we want the full control on the order of legend keys. From Credric tutorial we can only change it by modifying the level of variable:\n\nShow the codechic$season &lt;-\n  factor(chic$season,\n         levels = c(\"Winter\", \"Spring\", \"Summer\", \"Autumn\"))\n\nggplot(chic, aes(x = date, y = temp, color = season)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\")\n\n\n\n\n\n\n\nMore discussion on the internet, for eg., here."
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-legend-labels",
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-legend-labels",
     "title": "A tutorial of ggplot2\n",
     "section": "7.8 Change legend labels",
-    "text": "7.8 Change legend labels"
+    "text": "7.8 Change legend labels\nThis can be achived by providing information for label in scale_color_discrete():\n\nShow the codeggplot(chic, aes(x = date, y = temp, color = season)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  scale_color_discrete(\n    name = \"Seasons:\",\n    labels = c(\"Mar—May\", \"Jun—Aug\", \"Sep—Nov\", \"Dec—Feb\")\n  ) +\n  theme(legend.title = element_text(\n    family = \"Playfair\", color = \"chocolate\", size = 14, face = 2\n  ))"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-background-boxes-in-the-legend",
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-background-boxes-in-the-legend",
     "title": "A tutorial of ggplot2\n",
     "section": "7.9 Change background boxes in the legend",
-    "text": "7.9 Change background boxes in the legend"
+    "text": "7.9 Change background boxes in the legend\nLies beside the labels are the keys. We can change their background color by modifying the element rectangle of theme legend.key:\n\nShow the codeggplot(chic, aes(x = date, y = temp, color = season)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  theme(legend.key = element_rect(fill = \"darkgoldenrod1\"),\n        # fill = NA, fill = \"transparent\" would remove bg.\n        legend.title = element_text(family = \"Playfair\",\n                                    color = \"chocolate\",\n                                    size = 14, face = 2)) +\n  scale_color_discrete(\"Seasons:\")"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-size-of-legend-symbols",
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-size-of-legend-symbols",
     "title": "A tutorial of ggplot2\n",
     "section": "7.10 Change size of legend symbols",
-    "text": "7.10 Change size of legend symbols"
+    "text": "7.10 Change size of legend symbols\nThe default size is a litle lost in the plot, we can increase it by override the aesthetic using the guides layer again:\n\nShow the codeggplot(chic, aes(x = date, y = temp, color = season)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  theme(legend.key = element_rect(fill = NA),\n        legend.title = element_text(color = \"chocolate\",\n                                    size = 14, face = 2)) +\n  scale_color_discrete(\"Seasons:\") +\n  guides(color = guide_legend(override.aes = list(size = 6)))"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#leave-a-layer-of-the-legend",
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#leave-a-layer-of-the-legend",
     "title": "A tutorial of ggplot2\n",
     "section": "7.11 Leave a layer of the legend",
-    "text": "7.11 Leave a layer of the legend"
+    "text": "7.11 Leave a layer of the legend\nDuplicate legend happens when we use multiple geom for one data. Like this:\n\nShow the codeggplot(chic, aes(x = date, y = temp, color = season)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  geom_rug()\n\n\n\n\n\n\n\nWe can turn those redundant ones off by show.legend = FALSE:\n\nShow the codeggplot(chic, aes(x = date, y = temp, color = season)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  geom_rug(show.legend = FALSE)"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#manuallt-adding-legend-items",
@@ -4736,7 +4736,7 @@
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#use-other-legend-styles",
     "title": "A tutorial of ggplot2\n",
     "section": "7.13 Use other legend styles",
-    "text": "7.13 Use other legend styles"
+    "text": "7.13 Use other legend styles\nThe guide_legend() would work for categorical variable only. It will us guide_colorbar() (or guide_colourbar()) by default for continuous variable.\n\nShow the codeggplot(chic,\n       aes(x = date, y = temp, color = temp)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\", color = \"Temperature (°F)\")\n\n\n\n\n\n\n\nBut guide_legend() still can help you force legend to show discrete colors:\n\nShow the codeggplot(chic,\n       aes(x = date, y = temp, color = temp)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\", color = \"Temperature (°F)\") +\n  guides(color = guide_legend())\n\n\n\n\n\n\n\nWe can also use binned scale:\n\nShow the codeggplot(chic,\n       aes(x = date, y = temp, color = temp)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\", color = \"Temperature (°F)\") +\n  guides(color = guide_bins())\n\n\n\n\n\n\n\nor binned scales as discrete colorbars:\n\nShow the codeggplot(chic,\n       aes(x = date, y = temp, color = temp)) +\n  geom_point() +\n  labs(x = \"Year\", y = \"Temperature (°F)\", color = \"Temperature (°F)\") +\n  guides(color = guide_colorsteps())"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-the-panel-background-color",
@@ -4828,5 +4828,12 @@
     "title": "My Jiu Jitsu Journal",
     "section": "",
     "text": "07.06.2025 | BJJ definition by John Danaher\n\n\n\n\n\n\nLex: Can you explain the fundamentals of Jiu-jitsu?\nJohn: Jiu-jitsu is art and science which looks to use a combination of tactical and mechanical advantage to focus a very high percentage of my strength against a very low percentage of my opponent’s strength at a critical point on their body such that if I were to exert my strength upon that critical point, they could no longer continue to fight.\nLex: Well, that’s about weapons and defenses. But then is there something more to be said about the set of tools that we’re talking about…?\nJohn: That’s where the art comes in. Because ultimately, you have a set of choices, and those choices that you make will be an act of self-expression on your part. Some will prefer this some will prefer that. That’s where you come in as an individual.\n\nMình nghe podcast của Lex Fridman cùng John Danaher về cách để master Jiu Jitsu, Grappling, Judo, và MMA."
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#manually-adding-legend-items",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#manually-adding-legend-items",
+    "title": "A tutorial of ggplot2\n",
+    "section": "7.12 Manually adding legend items",
+    "text": "7.12 Manually adding legend items\nggplot2 will not add legend unless you map aesthetic (color, size, etc) to a variable. But there are sometime we want it.\n\nShow the codeggplot(chic, aes(x = date, y = o3)) +\n  geom_line(color = \"gray\") +\n  geom_point(color = \"darkorange2\") +\n  labs(x = \"Year\", y = \"Ozone\")\n\n\n\n\n\n\n\nWe force legend by providing the color aesthetic mapping to geom:\n\nShow the codeggplot(chic, aes(x = date, y = o3)) +\n  geom_line(aes(color = \"line\")) +\n  geom_point(aes(color = \"points\")) +\n  labs(x = \"Year\", y = \"Ozone\") +\n  scale_color_discrete(\"Type:\")\n\n\n\n\n\n\n\nThen use the scale_color_manual() to change the color, and override the legend aesthetic using guides() function:\n\nShow the codeggplot(chic, aes(x = date, y = o3)) +\n  geom_line(aes(color = \"line\")) +\n  geom_point(aes(color = \"points\")) +\n  labs(x = \"Year\", y = \"Ozone\") +\n  scale_color_manual(name = NULL,\n                     guide = \"legend\",\n                     values = c(\"points\" = \"darkorange2\",\n                                \"line\" = \"gray\")) +\n  guides(color = guide_legend(override.aes = list(linetype = c(1, 0),\n                                                  shape = c(NA, 16))))"
   }
 ]
