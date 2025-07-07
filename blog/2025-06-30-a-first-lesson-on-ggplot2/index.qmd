@@ -84,6 +84,7 @@ install.packages('readr')
 The `::` here call the namespace and can be used to access a function without loading the package.
 
 ```{r}
+library(readr)
 chic <- readr::read_csv("https://cedricscherer.com/data/chicago-nmmaps-custom.csv")
 ```
 
@@ -820,25 +821,191 @@ ggplot(chic,
   guides(color = guide_colorsteps())
 ```
 
-# 8 Backgrounds & Grid lines
+# 8 Backgrounds & grid lines
+
+Several ways to change the overall look of your plot as depicted above (see working with themes). But you can also change a particular
+element of the plotting panel.
 
 ## 8.1 Change the panel background color
 
+By simply specifying the `element_rect`angle of `panel.background` inside `theme`:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "#1D8565", size = 2) +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(panel.background = element_rect(
+    fill = "#64D2AA", color = "#64D2AA", linewidth = 2)
+  )
+```
+
+Remember that there is `panel.border` layer on top of the background (and data), which is also an `element_rect`angle. So we should use a transparent color here not to hide the data.
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "#1D8565", size = 2) +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(panel.border = element_rect(
+    fill = "#64D2AA99", color = "#64D2AA", linewidth = 2)
+  )
+```
+
 ## 8.2 Change grid lines
+
+There are 2 type of grid lines and you can change their characteristics using `panel.grid.major` and `panel.grid.minor`.
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(panel.grid.major = element_line(color = "gray10", linewidth = .5),
+        panel.grid.minor = element_line(color = "gray70", linewidth = .25))
+```
+
+We can further make it complex by specifying all 4 different levels:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(panel.grid.major = element_line(linewidth = .5, linetype = "dashed"),
+        panel.grid.minor = element_line(linewidth = .25, linetype = "dotted"),
+        panel.grid.major.x = element_line(color = "red1"),
+        panel.grid.major.y = element_line(color = "blue1"),
+        panel.grid.minor.x = element_line(color = "red4"),
+        panel.grid.minor.y = element_line(color = "blue4"))
+```
+
+My taste is always remove them:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(panel.grid.minor = element_blank())
+```
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(panel.grid = element_blank())
+```
 
 ## 8.3 Change spacing of grid lines
 
+We can also change the spacing behaviour:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  scale_y_continuous(breaks = seq(0, 100, 10),
+                     minor_breaks = seq(0, 100, 2.5))
+```
+
 ## 8.4 Change the plot background color
+
+Similar to the plotting panel, we can change the whole plot background color:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(plot.background = element_rect(fill = "gray60",
+                                       color = "gray30", linewidth = 2))
+```
+
+By specifying the same color for both plot and panel, you can achive a unified plot color.
 
 # 9 Margins
 
+Sometime we need more space between the plot border to the plot panel/area - so called the margin. We can use `plot.margin` in this circumstance:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(plot.background = element_rect(fill = "gray60"),
+        plot.margin = margin(t = 1, r = 3, b = 1, l = 8, unit = "cm"))
+        # can also use plot.margin = unit(c(1, 3, 1, 8), "cm"))
+```
+
 # 10 Multi-panel plots
+
+`ggplot2` offers 2 handy functions for *multiple-small* visualization: `facet_grid()` and `facet_wrap()`.
 
 ## 10.1 Create a small multiples based on two variables
 
+In case of 2 variables, `facet_grid` does the job.
+
+```{r}
+ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "orangered", alpha = .3) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+  labs(x = "Year", y = "Temperature (°F)") +
+  facet_grid(year ~ season)
+  # remember year ~ season != season ~ year
+```
+
 ## 10.2 Create a small mutilples based on one variables
 
+`facet_wrap` create a facet from single a variable, the appearance of subplots is controlled by `ncol` and `nrow`.
+
+```{r}
+g <-
+  ggplot(chic, aes(x = date, y = temp)) +
+    geom_point(color = "chartreuse4", alpha = .3) +
+    labs(x = "Year", y = "Temperature (°F)") +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+
+g + facet_wrap(~ year)
+```
+
+1 rows matrix:
+
+```{r}
+g + facet_wrap(~ year, nrow = 1)
+```
+
+or whatever we like"
+
+```{r}
+g + facet_wrap(~ year, ncol = 3) + theme(axis.title.x = element_text(hjust = .15))
+```
+
 ## 10.3 Allow axes to roam free
+
+Sometime you want the `x` and `y` axis to roam free according to data. This is not a good idea as it makes plots are quite un-comparable. But there it is:
+
+```{r}
+g + facet_wrap(~ year, nrow = 2, scales = "free")
+```
+
+## 10.4 Use `facet_wrap` with two variables
+
+The function `facet_wrap` is more versatile:
+
+```{r}
+g + facet_wrap(year ~ season, nrow = 4, scales = "free_x")
+```
+
+It gives you more control of the plot design. In contrast, `facet_grid` while also have roam free ability, but just column-wise or row-wise:
+
+```{r}
+g + facet_grid(year ~ season, scales = "free_x")
+```
+
+## 10.5 Modify the strip text
+
+Strip texts and strip text boxes are the title of each subplot, you can modify them using `theme`:
+
+```{r}
+g + facet_wrap(~ year, nrow = 1, scales = "free_x") +
+  theme(strip.text = element_text(face = "bold", color = "chartreuse4",
+                                  hjust = 0, size = 20),
+        strip.background = element_rect(fill = "chartreuse3", linetype = "dotted"))
+```
 
 # 11. Colors
 

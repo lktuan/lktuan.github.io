@@ -4519,7 +4519,7 @@
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#import-data",
     "title": "A tutorial of ggplot2\n",
     "section": "1.1 Import data",
-    "text": "1.1 Import data\nThe :: here call the namespace and can be used to access a function without loading the package.\n\nShow the codechic &lt;- readr::read_csv(\"https://cedricscherer.com/data/chicago-nmmaps-custom.csv\")\n\nRows: 1461 Columns: 10\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (3): city, season, month\ndbl  (6): temp, o3, dewpoint, pm10, yday, year\ndate (1): date\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\nview some data:\n\nShow the codetibble::glimpse(chic)\n\nRows: 1,461\nColumns: 10\n$ city     &lt;chr&gt; \"chic\", \"chic\", \"chic\", \"chic\", \"chic\", \"chic\", \"chic\", \"chic…\n$ date     &lt;date&gt; 1997-01-01, 1997-01-02, 1997-01-03, 1997-01-04, 1997-01-05, …\n$ temp     &lt;dbl&gt; 36.0, 45.0, 40.0, 51.5, 27.0, 17.0, 16.0, 19.0, 26.0, 16.0, 1…\n$ o3       &lt;dbl&gt; 5.659256, 5.525417, 6.288548, 7.537758, 20.760798, 14.940874,…\n$ dewpoint &lt;dbl&gt; 37.500, 47.250, 38.000, 45.500, 11.250, 5.750, 7.000, 17.750,…\n$ pm10     &lt;dbl&gt; 13.052268, 41.948600, 27.041751, 25.072573, 15.343121, 9.3646…\n$ season   &lt;chr&gt; \"Winter\", \"Winter\", \"Winter\", \"Winter\", \"Winter\", \"Winter\", \"…\n$ yday     &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18…\n$ month    &lt;chr&gt; \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\"…\n$ year     &lt;dbl&gt; 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1…\n\n\n\nShow the codehead(chic,10)\n\n# A tibble: 10 × 10\n   city  date        temp    o3 dewpoint  pm10 season  yday month  year\n   &lt;chr&gt; &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;\n 1 chic  1997-01-01  36    5.66    37.5  13.1  Winter     1 Jan    1997\n 2 chic  1997-01-02  45    5.53    47.2  41.9  Winter     2 Jan    1997\n 3 chic  1997-01-03  40    6.29    38    27.0  Winter     3 Jan    1997\n 4 chic  1997-01-04  51.5  7.54    45.5  25.1  Winter     4 Jan    1997\n 5 chic  1997-01-05  27   20.8     11.2  15.3  Winter     5 Jan    1997\n 6 chic  1997-01-06  17   14.9      5.75  9.36 Winter     6 Jan    1997\n 7 chic  1997-01-07  16   11.9      7    20.2  Winter     7 Jan    1997\n 8 chic  1997-01-08  19    8.68    17.8  33.1  Winter     8 Jan    1997\n 9 chic  1997-01-09  26   13.4     24    12.1  Winter     9 Jan    1997\n10 chic  1997-01-10  16   10.4      5.38 24.8  Winter    10 Jan    1997"
+    "text": "1.1 Import data\nThe :: here call the namespace and can be used to access a function without loading the package.\n\nShow the codelibrary(readr)\n\nWarning: package 'readr' was built under R version 4.4.3\n\nShow the codechic &lt;- readr::read_csv(\"https://cedricscherer.com/data/chicago-nmmaps-custom.csv\")\n\nRows: 1461 Columns: 10\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (3): city, season, month\ndbl  (6): temp, o3, dewpoint, pm10, yday, year\ndate (1): date\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\nview some data:\n\nShow the codetibble::glimpse(chic)\n\nRows: 1,461\nColumns: 10\n$ city     &lt;chr&gt; \"chic\", \"chic\", \"chic\", \"chic\", \"chic\", \"chic\", \"chic\", \"chic…\n$ date     &lt;date&gt; 1997-01-01, 1997-01-02, 1997-01-03, 1997-01-04, 1997-01-05, …\n$ temp     &lt;dbl&gt; 36.0, 45.0, 40.0, 51.5, 27.0, 17.0, 16.0, 19.0, 26.0, 16.0, 1…\n$ o3       &lt;dbl&gt; 5.659256, 5.525417, 6.288548, 7.537758, 20.760798, 14.940874,…\n$ dewpoint &lt;dbl&gt; 37.500, 47.250, 38.000, 45.500, 11.250, 5.750, 7.000, 17.750,…\n$ pm10     &lt;dbl&gt; 13.052268, 41.948600, 27.041751, 25.072573, 15.343121, 9.3646…\n$ season   &lt;chr&gt; \"Winter\", \"Winter\", \"Winter\", \"Winter\", \"Winter\", \"Winter\", \"…\n$ yday     &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18…\n$ month    &lt;chr&gt; \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\", \"Jan\"…\n$ year     &lt;dbl&gt; 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1997, 1…\n\n\n\nShow the codehead(chic,10)\n\n# A tibble: 10 × 10\n   city  date        temp    o3 dewpoint  pm10 season  yday month  year\n   &lt;chr&gt; &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;\n 1 chic  1997-01-01  36    5.66    37.5  13.1  Winter     1 Jan    1997\n 2 chic  1997-01-02  45    5.53    47.2  41.9  Winter     2 Jan    1997\n 3 chic  1997-01-03  40    6.29    38    27.0  Winter     3 Jan    1997\n 4 chic  1997-01-04  51.5  7.54    45.5  25.1  Winter     4 Jan    1997\n 5 chic  1997-01-05  27   20.8     11.2  15.3  Winter     5 Jan    1997\n 6 chic  1997-01-06  17   14.9      5.75  9.36 Winter     6 Jan    1997\n 7 chic  1997-01-07  16   11.9      7    20.2  Winter     7 Jan    1997\n 8 chic  1997-01-08  19    8.68    17.8  33.1  Winter     8 Jan    1997\n 9 chic  1997-01-09  26   13.4     24    12.1  Winter     9 Jan    1997\n10 chic  1997-01-10  16   10.4      5.38 24.8  Winter    10 Jan    1997"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-properties-of-geometries",
@@ -4603,7 +4603,7 @@
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#axes-with-same-scaling",
     "title": "A tutorial of ggplot2\n",
     "section": "5.10 Axes with same scaling",
-    "text": "5.10 Axes with same scaling\nUse coord_equal() with default ratio = 1 to ensure the units are equally scaled on the x-axis and on the y-axis. We can set the aspect ratio of a plot with coord_fixed() or coord_equal(). Both use aspect = 1 (1:1) as a default.\n\nShow the codeggplot(chic, aes(x = temp, y = temp + rnorm(nrow(chic), sd = 20))) +\n  geom_point(color = \"sienna\") +\n  labs(x = \"Temperature (°F)\", y = \"Temperature (°F) + random noise\") +\n  xlim(c(0, 100)) + ylim(c(0, 150)) +\n  coord_fixed()\n\nWarning: Removed 46 rows containing missing values or values outside the scale range\n(`geom_point()`).\n\n\n\n\n\n\n\n\nRatios higher than one make units on the y axis longer than units on the x-axis, and vice versa:\n\nShow the codeggplot(chic, aes(x = temp, y = temp + rnorm(nrow(chic), sd = 20))) +\n  geom_point(color = \"sienna\") +\n  labs(x = \"Temperature (°F)\", y = \"Temperature (°F) + random noise\") +\n  xlim(c(0, 100)) + ylim(c(0, 150)) +\n  coord_fixed(ratio = 1/5)\n\nWarning: Removed 50 rows containing missing values or values outside the scale range\n(`geom_point()`)."
+    "text": "5.10 Axes with same scaling\nUse coord_equal() with default ratio = 1 to ensure the units are equally scaled on the x-axis and on the y-axis. We can set the aspect ratio of a plot with coord_fixed() or coord_equal(). Both use aspect = 1 (1:1) as a default.\n\nShow the codeggplot(chic, aes(x = temp, y = temp + rnorm(nrow(chic), sd = 20))) +\n  geom_point(color = \"sienna\") +\n  labs(x = \"Temperature (°F)\", y = \"Temperature (°F) + random noise\") +\n  xlim(c(0, 100)) + ylim(c(0, 150)) +\n  coord_fixed()\n\nWarning: Removed 63 rows containing missing values or values outside the scale range\n(`geom_point()`).\n\n\n\n\n\n\n\n\nRatios higher than one make units on the y axis longer than units on the x-axis, and vice versa:\n\nShow the codeggplot(chic, aes(x = temp, y = temp + rnorm(nrow(chic), sd = 20))) +\n  geom_point(color = \"sienna\") +\n  labs(x = \"Temperature (°F)\", y = \"Temperature (°F) + random noise\") +\n  xlim(c(0, 100)) + ylim(c(0, 150)) +\n  coord_fixed(ratio = 1/5)\n\nWarning: Removed 58 rows containing missing values or values outside the scale range\n(`geom_point()`)."
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#use-a-function-to-alter-labels",
@@ -4743,42 +4743,42 @@
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-the-panel-background-color",
     "title": "A tutorial of ggplot2\n",
     "section": "8.1 Change the panel background color",
-    "text": "8.1 Change the panel background color"
+    "text": "8.1 Change the panel background color\nBy simply specifying the element_rectangle of panel.background inside theme:\n\nShow the codeggplot(chic, aes(x = date, y = temp)) +\n  geom_point(color = \"#1D8565\", size = 2) +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  theme(panel.background = element_rect(\n    fill = \"#64D2AA\", color = \"#64D2AA\", linewidth = 2)\n  )\n\n\n\n\n\n\n\nRemember that there is panel.border layer on top of the background (and data), which is also an element_rectangle. So we should use a transparent color here not to hide the data.\n\nShow the codeggplot(chic, aes(x = date, y = temp)) +\n  geom_point(color = \"#1D8565\", size = 2) +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  theme(panel.border = element_rect(\n    fill = \"#64D2AA99\", color = \"#64D2AA\", linewidth = 2)\n  )"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-grid-lines",
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-grid-lines",
     "title": "A tutorial of ggplot2\n",
     "section": "8.2 Change grid lines",
-    "text": "8.2 Change grid lines"
+    "text": "8.2 Change grid lines\nThere are 2 type of grid lines and you can change their characteristics using panel.grid.major and panel.grid.minor.\n\nShow the codeggplot(chic, aes(x = date, y = temp)) +\n  geom_point(color = \"firebrick\") +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  theme(panel.grid.major = element_line(color = \"gray10\", linewidth = .5),\n        panel.grid.minor = element_line(color = \"gray70\", linewidth = .25))\n\n\n\n\n\n\n\nWe can further make it complex by specifying all 4 different levels:\n\nShow the codeggplot(chic, aes(x = date, y = temp)) +\n  geom_point(color = \"firebrick\") +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  theme(panel.grid.major = element_line(linewidth = .5, linetype = \"dashed\"),\n        panel.grid.minor = element_line(linewidth = .25, linetype = \"dotted\"),\n        panel.grid.major.x = element_line(color = \"red1\"),\n        panel.grid.major.y = element_line(color = \"blue1\"),\n        panel.grid.minor.x = element_line(color = \"red4\"),\n        panel.grid.minor.y = element_line(color = \"blue4\"))\n\n\n\n\n\n\n\nMy taste is always remove them:\n\nShow the codeggplot(chic, aes(x = date, y = temp)) +\n  geom_point(color = \"firebrick\") +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  theme(panel.grid.minor = element_blank())\n\n\n\n\n\n\n\n\nShow the codeggplot(chic, aes(x = date, y = temp)) +\n  geom_point(color = \"firebrick\") +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  theme(panel.grid = element_blank())"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-spacing-of-grid-lines",
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-spacing-of-grid-lines",
     "title": "A tutorial of ggplot2\n",
     "section": "8.3 Change spacing of grid lines",
-    "text": "8.3 Change spacing of grid lines"
+    "text": "8.3 Change spacing of grid lines\nWe can also change the spacing behaviour:\n\nShow the codeggplot(chic, aes(x = date, y = temp)) +\n  geom_point(color = \"firebrick\") +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  scale_y_continuous(breaks = seq(0, 100, 10),\n                     minor_breaks = seq(0, 100, 2.5))"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-the-plot-background-color",
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#change-the-plot-background-color",
     "title": "A tutorial of ggplot2\n",
     "section": "8.4 Change the plot background color",
-    "text": "8.4 Change the plot background color"
+    "text": "8.4 Change the plot background color\nSimilar to the plotting panel, we can change the whole plot background color:\n\nShow the codeggplot(chic, aes(x = date, y = temp)) +\n  geom_point(color = \"firebrick\") +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  theme(plot.background = element_rect(fill = \"gray60\",\n                                       color = \"gray30\", linewidth = 2))\n\n\n\n\n\n\n\nBy specifying the same color for both plot and panel, you can achive a unified plot color."
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#create-a-small-multiples-based-on-two-variables",
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#create-a-small-multiples-based-on-two-variables",
     "title": "A tutorial of ggplot2\n",
     "section": "10.1 Create a small multiples based on two variables",
-    "text": "10.1 Create a small multiples based on two variables"
+    "text": "10.1 Create a small multiples based on two variables\nIn case of 2 variables, facet_grid does the job.\n\nShow the codeggplot(chic, aes(x = date, y = temp)) +\n  geom_point(color = \"orangered\", alpha = .3) +\n  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +\n  labs(x = \"Year\", y = \"Temperature (°F)\") +\n  facet_grid(year ~ season)\n\n\n\n\n\n\nShow the code  # remember year ~ season != season ~ year"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#create-a-small-mutilples-based-on-one-variables",
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#create-a-small-mutilples-based-on-one-variables",
     "title": "A tutorial of ggplot2\n",
     "section": "10.2 Create a small mutilples based on one variables",
-    "text": "10.2 Create a small mutilples based on one variables"
+    "text": "10.2 Create a small mutilples based on one variables\nfacet_wrap create a facet from single a variable, the appearance of subplots is controlled by ncol and nrow.\n\nShow the codeg &lt;-\n  ggplot(chic, aes(x = date, y = temp)) +\n    geom_point(color = \"chartreuse4\", alpha = .3) +\n    labs(x = \"Year\", y = \"Temperature (°F)\") +\n    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))\n\ng + facet_wrap(~ year)\n\n\n\n\n\n\n\n1 rows matrix:\n\nShow the codeg + facet_wrap(~ year, nrow = 1)\n\n\n\n\n\n\n\nor whatever we like”\n\nShow the codeg + facet_wrap(~ year, ncol = 3) + theme(axis.title.x = element_text(hjust = .15))"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#allow-axes-to-roan-free",
@@ -4792,7 +4792,7 @@
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#allow-axes-to-roam-free",
     "title": "A tutorial of ggplot2\n",
     "section": "10.3 Allow axes to roam free",
-    "text": "10.3 Allow axes to roam free"
+    "text": "10.3 Allow axes to roam free\nSometime you want the x and y axis to roam free according to data. This is not a good idea as it makes plots are quite un-comparable. But there it is:\n\nShow the codeg + facet_wrap(~ year, nrow = 2, scales = \"free\")"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#specify-single-colors",
@@ -4835,5 +4835,19 @@
     "title": "A tutorial of ggplot2\n",
     "section": "7.12 Manually adding legend items",
     "text": "7.12 Manually adding legend items\nggplot2 will not add legend unless you map aesthetic (color, size, etc) to a variable. But there are sometime we want it.\n\nShow the codeggplot(chic, aes(x = date, y = o3)) +\n  geom_line(color = \"gray\") +\n  geom_point(color = \"darkorange2\") +\n  labs(x = \"Year\", y = \"Ozone\")\n\n\n\n\n\n\n\nWe force legend by providing the color aesthetic mapping to geom:\n\nShow the codeggplot(chic, aes(x = date, y = o3)) +\n  geom_line(aes(color = \"line\")) +\n  geom_point(aes(color = \"points\")) +\n  labs(x = \"Year\", y = \"Ozone\") +\n  scale_color_discrete(\"Type:\")\n\n\n\n\n\n\n\nThen use the scale_color_manual() to change the color, and override the legend aesthetic using guides() function:\n\nShow the codeggplot(chic, aes(x = date, y = o3)) +\n  geom_line(aes(color = \"line\")) +\n  geom_point(aes(color = \"points\")) +\n  labs(x = \"Year\", y = \"Ozone\") +\n  scale_color_manual(name = NULL,\n                     guide = \"legend\",\n                     values = c(\"points\" = \"darkorange2\",\n                                \"line\" = \"gray\")) +\n  guides(color = guide_legend(override.aes = list(linetype = c(1, 0),\n                                                  shape = c(NA, 16))))"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#use-facet_wrap-with-two-variables",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#use-facet_wrap-with-two-variables",
+    "title": "A tutorial of ggplot2\n",
+    "section": "10.4 Use facet_wrap with two variables",
+    "text": "10.4 Use facet_wrap with two variables\nThe function facet_wrap is more versatile:\n\nShow the codeg + facet_wrap(year ~ season, nrow = 4, scales = \"free_x\")\n\n\n\n\n\n\n\nIt gives you more control of the plot design. In contrast, facet_grid while also have roam free ability, but just column-wise or row-wise:\n\nShow the codeg + facet_grid(year ~ season, scales = \"free_x\")"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#modify-the-strip-text",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#modify-the-strip-text",
+    "title": "A tutorial of ggplot2\n",
+    "section": "10.5 Modify the strip text",
+    "text": "10.5 Modify the strip text\nStrip texts and strip text boxes are the title of each subplot, you can modify them using theme:\n\nShow the codeg + facet_wrap(~ year, nrow = 1, scales = \"free_x\") +\n  theme(strip.text = element_text(face = \"bold\", color = \"chartreuse4\",\n                                  hjust = 0, size = 20),\n        strip.background = element_rect(fill = \"chartreuse3\", linetype = \"dotted\"))"
   }
 ]
