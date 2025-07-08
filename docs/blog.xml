@@ -1635,7 +1635,7 @@ font-style: inherit;">+</span></span>
 background-color: null;
 font-style: inherit;">coord_fixed</span>()</span></code></pre></div>
 </details><div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 63 rows containing missing values or values outside the scale range
+<pre><code>Warning: Removed 70 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
@@ -1723,7 +1723,7 @@ font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">5</span>)</span></code></pre></div>
 </details><div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 58 rows containing missing values or values outside the scale range
+<pre><code>Warning: Removed 49 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
@@ -4757,13 +4757,1169 @@ font-style: inherit;">"dotted"</span>))</span></code></pre></div>
 </div>
 </div>
 </div>
+<p>These 2 functions are adapted by Cedric from <a href="https://stackoverflow.com/questions/60332202/conditionally-fill-ggtext-text-boxes-in-facet-wrap">this answer</a> of Claus Wilke, author of <a href="https://wilkelab.org/ggtext/"><code>ggtext</code></a>, allowing to hightlight specific labels:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb100" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb100-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggtext)</span></code></pre></div>
+</details><div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ggtext' was built under R version 4.4.3</code></pre>
+</div>
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb102" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb102-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(purrr) <span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## for %||%</span></span></code></pre></div>
+</details><div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'purrr' was built under R version 4.4.3</code></pre>
+</div>
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb104" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb104-1">element_textbox_highlight <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(..., <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.labels =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.fill =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>,</span>
+<span id="cb104-2">                                      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.col =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.box.col =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.family =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>) {</span>
+<span id="cb104-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">structure</span>(</span>
+<span id="cb104-4">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_textbox</span>(...),</span>
+<span id="cb104-5">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.labels =</span> hi.labels, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.fill =</span> hi.fill, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.col =</span> hi.col, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.box.col =</span> hi.box.col, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.family =</span> hi.family)</span>
+<span id="cb104-6">    ),</span>
+<span id="cb104-7">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">class =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"element_textbox_highlight"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"element_textbox"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"element_text"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"element"</span>)</span>
+<span id="cb104-8">  )</span>
+<span id="cb104-9">}</span>
+<span id="cb104-10"></span>
+<span id="cb104-11">element_grob.element_textbox_highlight <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(element, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, ...) {</span>
+<span id="cb104-12">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> (label <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%in%</span> element<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>hi.labels) {</span>
+<span id="cb104-13">    element<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>fill <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> element<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>hi.fill <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%||%</span> element<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>fill</span>
+<span id="cb104-14">    element<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>colour <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> element<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>hi.col <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%||%</span> element<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>colour</span>
+<span id="cb104-15">    element<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>box.colour <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> element<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>hi.box.col <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%||%</span> element<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>box.colour</span>
+<span id="cb104-16">    element<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>family <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> element<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>hi.family <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%||%</span> element<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>family</span>
+<span id="cb104-17">  }</span>
+<span id="cb104-18">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">NextMethod</span>()</span>
+<span id="cb104-19">}</span></code></pre></div>
+</details>
+</div>
+<p>Use it for all strip texts:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb105" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1">g <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">facet_wrap</span>(year <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> season, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nrow =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">scales =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"free_x"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb105-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(</span>
+<span id="cb105-3">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strip.background =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_blank</span>(),</span>
+<span id="cb105-4">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strip.text =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_textbox_highlight</span>(</span>
+<span id="cb105-5">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Playfair"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">face =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bold"</span>,</span>
+<span id="cb105-6">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"white"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">box.color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"chartreuse4"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"chartreuse4"</span>,</span>
+<span id="cb105-7">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">halign =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">linetype =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">r =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unit</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pt"</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unit</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"npc"</span>),</span>
+<span id="cb105-8">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">padding =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">margin</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">margin =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">margin</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>),</span>
+<span id="cb105-9">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.labels =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"1997"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"1998"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"1999"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2000"</span>),</span>
+<span id="cb105-10">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"chartreuse4"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.box.col =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"black"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.col =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"white"</span></span>
+<span id="cb105-11">    )</span>
+<span id="cb105-12">  )</span></code></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-85-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Or hightlight one among others:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb106" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb106-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb106-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> season <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Summer"</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">alpha =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb106-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F)"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb106-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">facet_wrap</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> season, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nrow =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb106-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_manual</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"gray40"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"firebrick"</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">guide =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"none"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb106-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(</span>
+<span id="cb106-7">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.text.x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">angle =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">45</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">vjust =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hjust =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>),</span>
+<span id="cb106-8">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strip.background =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_blank</span>(),</span>
+<span id="cb106-9">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strip.text =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_textbox_highlight</span>(</span>
+<span id="cb106-10">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">face =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bold"</span>,</span>
+<span id="cb106-11">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"white"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">box.color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"white"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"gray40"</span>,</span>
+<span id="cb106-12">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">halign =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">linetype =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">r =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unit</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pt"</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unit</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"npc"</span>),</span>
+<span id="cb106-13">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">padding =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">margin</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">margin =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">margin</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>),</span>
+<span id="cb106-14">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.labels =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Summer"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Bangers"</span>,</span>
+<span id="cb106-15">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"firebrick"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.box.col =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"firebrick"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hi.col =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"white"</span></span>
+<span id="cb106-16">    )</span>
+<span id="cb106-17">  )</span></code></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-86-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section id="create-a-panel-of-different-plots" class="level2"><h2 class="anchored" data-anchor-id="create-a-panel-of-different-plots">10.6 Create a panel of different plots</h2>
+<p>Extension is all you need, and in this case is <a href="https://github.com/thomasp85/patchwork"><code>patchwork</code></a> by Thomas Lin Pedersen:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb107" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb107-1">p1 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp,</span>
+<span id="cb107-2">                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> season)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb107-3">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb107-4">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_rug</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb107-5">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F)"</span>)</span>
+<span id="cb107-6"></span>
+<span id="cb107-7">p2 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> o3)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb107-8">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_line</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"gray"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb107-9">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"darkorange2"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb107-10">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Ozone"</span>)</span>
+<span id="cb107-11"></span>
+<span id="cb107-12"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span></code></pre></div>
+</details><div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'patchwork' was built under R version 4.4.3</code></pre>
+</div>
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb109" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb109-1">p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p2</span></code></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-87-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Make them vertically aligned by “dividing” them:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb110" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb110-1">p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> p2</span></code></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-88-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And more fun :)</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb111" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb111-1">(g <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p2) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> p1</span></code></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-89-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>An alternative is <a href="https://wilkelab.org/cowplot/articles/introduction.html"><code>cowplot</code></a> by Claus Wilke:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb112" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb112-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(cowplot)</span></code></pre></div>
+</details><div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'cowplot' was built under R version 4.4.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'cowplot'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:patchwork':
+
+    align_plots</code></pre>
+</div>
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb116" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb116-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_grid</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_grid</span>(g, p1), p2, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span></code></pre></div>
+</details><div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family
+'Roboto Condensed' not found in PostScript font database</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database
+Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+family 'Roboto Condensed' not found in PostScript font database</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-90-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And the <a href="https://cran.r-project.org/web/packages/gridExtra/vignettes/arrangeGrob.html"><code>gridExtra</code></a> as well.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb122" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb122-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(gridExtra)</span></code></pre></div>
+</details><div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'gridExtra' was built under R version 4.4.3</code></pre>
+</div>
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb124" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb124-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grid.arrange</span>(g, p1, p2,</span>
+<span id="cb124-2">             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">layout_matrix =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rbind</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)))</span></code></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-91-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>More complex layouts can be defined using <code>patchwork</code>:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb125" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb125-1">layout <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb125-2"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">AABBBB#</span></span>
+<span id="cb125-3"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">AACCDDE</span></span>
+<span id="cb125-4"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">##CCDD#</span></span>
+<span id="cb125-5"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">##CC###</span></span>
+<span id="cb125-6"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb125-7"></span>
+<span id="cb125-8">p2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> g <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_layout</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">design =</span> layout)</span></code></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-92-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section></section><section id="colors" class="level1"><h1>11. Colors</h1>
+<p>In <code>ggplot2</code>, both <code>color</code> and <code>fill</code> can be:</p>
+<ol type="1">
+<li>specified as single color, or</li>
+<li>assigned to variables.</li>
+</ol>
+<p>Those variables that are inside the <code>aes</code>thetic have mapping encoded, and those are outside are unrelated properties.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb126" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb126-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(year)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb126-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_bar</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> season), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"grey"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">linewidth =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb126-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Observations"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Season:"</span>)</span></code></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-93-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <section id="specify-single-colors" class="level2"><h2 class="anchored" data-anchor-id="specify-single-colors">11.1 Specify single colors</h2>
+<p>We can specify single color for a <code>geom</code>:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb127" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb127-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb127-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"steelblue"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb127-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F)"</span>)</span></code></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-94-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And if provide both, <code>color</code> (outline) and <code>fill</code> (fill):</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb128" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb128-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb128-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">shape =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">21</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">stroke =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,</span>
+<span id="cb128-3">             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#3cc08f"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#c08f3c"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb128-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F)"</span>)</span></code></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-95-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Refer then <a href="https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf">PDF of R color</a>. You can also use hex, RGB or RGBA (via <code>rgb(red, green, blue, alpha)</code>).</p>
 </section><section id="asign-colors-to-variables" class="level2"><h2 class="anchored" data-anchor-id="asign-colors-to-variables">11.2 Asign colors to variables</h2>
+<p>In <code>ggplot2</code>, colors that are assigned to a variables are modified via <code>scale_color_*</code> or <code>scale_fill_*</code>. You should understand what kind of variable you are dealing with (categorical or continuous) to effectively encode those (sequential, deverging, qualitative, etc).</p>
 </section><section id="qualitative-variables" class="level2"><h2 class="anchored" data-anchor-id="qualitative-variables">11.3 Qualitative variables</h2>
+<p>Qualitative can be <strong>nominal</strong>, <strong>ordinal</strong>, or <strong>binary</strong>. By defalt the categorical color paletted looks like this:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb129" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb129-1">(ga <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(chic, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> temp, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> season)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb129-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb129-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Temperature (°F)"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>))</span></code></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-96-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <section id="manually-select-qualitative-colors" class="level3"><h3 class="anchored" data-anchor-id="manually-select-qualitative-colors">11.3.1 Manually select qualitative colors</h3>
+<p>You can manually assign a set of colors to each category of qualitative colors (number of color has to match number of category) via <code>scale_*_manual()</code> (<code>color</code>, <code>colour</code>, or <code>fill</code>):</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb130" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb130-1">ga <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_manual</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"dodgerblue4"</span>,</span>
+<span id="cb130-2">                                   <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"darkolivegreen4"</span>,</span>
+<span id="cb130-3">                                   <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"darkorchid3"</span>,</span>
+<span id="cb130-4">                                   <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"goldenrod1"</span>))</span></code></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-97-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section><section id="use-built-in-qualitative-color-palettes" class="level3"><h3 class="anchored" data-anchor-id="use-built-in-qualitative-color-palettes">11.3.2 Use built-in qualitative color palettes</h3>
+<p>There are <code>scale_*_brewer()</code> implemented the <a href="https://colorbrewer2.org/#type=sequential&amp;scheme=BuGn&amp;n=9">ColorBrewer palettes</a> already:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb131" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb131-1">ga <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_brewer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Set1"</span>)</span></code></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-98-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section><section id="use-qualitative-colors-palettes-from-extension-packages" class="level3"><h3 class="anchored" data-anchor-id="use-qualitative-colors-palettes-from-extension-packages">11.3.3 Use qualitative colors palettes from extension packages</h3>
+<p>There are several packages are created for this, and we can check it at this <a href="https://github.com/EmilHvitfeldt/r-color-palettes/blob/main/README.md#comprehensive-list-of-color-palettes-in-r">collection</a> of Emil Hvitfeldt. For eg, <a href="https://github.com/EmilHvitfeldt/paletteer"><code>paletteer</code></a> or <a href="https://jrnold.github.io/ggthemes/"><code>ggthemes</code></a>:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb132" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb132-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggthemes)</span></code></pre></div>
+</details><div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ggthemes' was built under R version 4.4.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'ggthemes'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:cowplot':
+
+    theme_map</code></pre>
+</div>
+<details open="" class="code-fold"><summary>Show the code</summary><div class="sourceCode cell-code" id="cb136" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb136-1">ga <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_tableau</span>()</span></code></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="https://lktuan.github.io/blog/2025-06-30-a-first-lesson-on-ggplot2/index_files/figure-html/unnamed-chunk-99-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section></section><section id="quantitiave-variables" class="level2"><h2 class="anchored" data-anchor-id="quantitiave-variables">11.4 Quantitiave variables</h2>
 </section></section><section id="themes" class="level1"><h1>12. Themes</h1>
 </section><section id="lines" class="level1"><h1>13. Lines</h1>
