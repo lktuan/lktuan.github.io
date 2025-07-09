@@ -1212,9 +1212,62 @@ library(ggthemes)
 ga + scale_color_tableau()
 ```
 
+`ggsci` provide the scientific journal and sci-fi themed color palettes:
 
+```{r}
+library(ggsci)
+g1 <- ga + scale_color_aaas()
+g2 <- ga + scale_color_npg()
+
+library(patchwork)
+(g1 + g2) * theme(legend.position = "top")
+```
 
 ## 11.4 Quantitiave variables
+
+This is default function for **sequential** color scheme for continuous variables:
+
+```{r}
+gb <- ggplot(chic, aes(x = date, y = temp, color = temp)) +
+  geom_point() +
+  labs(x = "Year", y = "Temperature (°F)", color = "Temperature (°F):")
+
+gb + scale_color_continuous()
+```
+
+The `scale_*_gradient()` would do the same:
+
+```{r}
+gb + scale_color_gradient()
+```
+
+And the `scale_*_gradient2()` would do the **divergent** color scheme:
+
+```{r}
+mid <- mean(chic$temp)  ## midpoint
+
+gb + scale_color_gradient2(midpoint = mid)
+```
+
+###  11.4.1 Manually set a sequential color scheme
+
+By providing information to the argument of `scale_*_gradient()`:
+
+```{r}
+gb + scale_color_gradient(low = "darkkhaki",
+                          high = "darkgreen")
+```
+
+How about `scale_*_gradient2()`:
+
+```{r}
+gb + scale_color_gradient2(midpoint = mid, low = "#dd8a0b",
+                           mid = "grey92", high = "#32a676")
+```
+
+### 14.4.2 The beautiful Viridis color palette
+
+
 
 # 12. Themes
 
