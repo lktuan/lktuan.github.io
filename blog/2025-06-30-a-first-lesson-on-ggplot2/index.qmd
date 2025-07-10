@@ -1265,9 +1265,80 @@ gb + scale_color_gradient2(midpoint = mid, low = "#dd8a0b",
                            mid = "grey92", high = "#32a676")
 ```
 
-### 14.4.2 The beautiful Viridis color palette
+### 11.4.2 The beautiful Viridis color palette
 
+The [viridis color palettes](https://sjmgarnier.github.io/viridis/articles/intro-to-viridis.html) will make your chart:
 
+- looks more pretty;
+- well prints in grey scale;
+- easier to read by colorblindess. (refer [`dichromat`](https://cran.r-project.org/web/packages/dichromat/index.html) package)
+
+and it is built in function in `ggplot2`:
+
+```{r}
+p1 <- gb + scale_color_viridis_c() + ggtitle("'viridis' (default)")
+p2 <- gb + scale_color_viridis_c(option = "inferno") + ggtitle("'inferno'")
+p3 <- gb + scale_color_viridis_c(option = "plasma") + ggtitle("'plasma'")
+p4 <- gb + scale_color_viridis_c(option = "cividis") + ggtitle("'cividis'")
+
+library(patchwork)
+(p1 + p2 + p3 + p4) * theme(legend.position = "bottom")
+```
+
+as well as discrete colors:
+
+```{r}
+ga + scale_color_viridis_d(guide = "none")
+```
+
+### 11.4.3 Extension packages
+
+There are several packages are created for this, and we can check it at this [collection](https://github.com/EmilHvitfeldt/r-color-palettes/blob/main/README.md) of Emil Hvitfeldt. For example, the [`rcartocolors`](https://github.com/Nowosad/rcartocolor) ports the [CARTOcolors](https://carto.com/carto-colors/) to `ggplot2`:
+
+```{r}
+library(rcartocolor)
+g1 <- gb + scale_color_carto_c(palette = "BurgYl")
+g2 <- gb + scale_color_carto_c(palette = "Earth")
+
+(g1 + g2) * theme(legend.position = "bottom")
+```
+
+The second one is [`scico`](https://github.com/thomasp85/scico), provides the access to [scientific color maps](https://www.fabiocrameri.ch/colourmaps/) developed by Fabio Crameri.
+
+```{r}
+library(scico)
+g1 <- gb + scale_color_scico(palette = "berlin")
+g2 <- gb + scale_color_scico(palette = "hawaii", direction = -1)
+
+(g1 + g2) * theme(legend.position = "bottom")
+```
+
+## 11.5 Modify color palettes afterwards
+
+```{r}
+library(prismatic)
+
+ggplot(chic, aes(date, temp, color = temp)) +
+  geom_point(size = 5) +
+  geom_point(aes(color = temp,
+                 color = after_scale(clr_negate(color))),
+             size = 2) +
+  scale_color_scico(palette = "hawaii", guide = "none") +
+  labs(x = "Year", y = "Temperature (°F)")
+```
+
+```{r}
+library(prismatic)
+
+ggplot(chic, aes(date, temp)) +
+  geom_boxplot(
+    aes(color = season,
+        fill = after_scale(clr_desaturate(clr_lighten(color, .6), .6))),
+    linewidth = 1
+  ) +
+  scale_color_brewer(palette = "Dark2", guide = "none") +
+  labs(x = "Year", y = "Temperature (°F)")
+```
 
 # 12. Themes
 
