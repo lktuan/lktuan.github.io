@@ -5,7 +5,7 @@ author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
 date: 06-30-2025
-date-modified: 07-06-2025
+date-modified: 07-11-2025
 categories: [r, ggplot2, visualization]
 image: grammar-of-graphics.png
 draft: false
@@ -29,7 +29,7 @@ The following packages need to be installed:
 pkg_install =   c("ggplot2", "tibble", "tidyr", "forcats", "purrr", "prismatic", "corrr",
     "cowplot", "ggforce", "ggrepel", "ggridges", "ggsci", "ggtext", "ggthemes",
     "grid", "gridExtra", "patchwork", "rcartocolor", "scico", "showtext",
-    "shiny", "plotly", "highcharter", "echarts4r")
+    "shiny", "plotly", "highcharter", "echarts4r", "hrbrthemes")
 install.packages(pkg_install)
 ```
 
@@ -1315,6 +1315,10 @@ g2 <- gb + scale_color_scico(palette = "hawaii", direction = -1)
 
 ## 11.5 Modify color palettes afterwards
 
+Why should we do that? Current we know that the `ggplot2` can only hanle one `color` and one `fill` scale, this funtionality, which the package had already provide `after_scale()`, can help us flag an evaluation mapping between these two after data had been scaled.
+
+Below example is an usage of `clr_negate()` from the package [`primastic`](https://emilhvitfeldt.github.io/prismatic/):
+
 ```{r}
 library(prismatic)
 
@@ -1326,6 +1330,8 @@ ggplot(chic, aes(date, temp, color = temp)) +
   scale_color_scico(palette = "hawaii", guide = "none") +
   labs(x = "Year", y = "Temperature (°F)")
 ```
+
+There are also lot of fun work with the package: `clr_negate()`, `clr_lighten()`, `clr_darken()` and `clr_desaturate()`.
 
 ```{r}
 library(prismatic)
@@ -1340,7 +1346,211 @@ ggplot(chic, aes(date, temp)) +
   labs(x = "Year", y = "Temperature (°F)")
 ```
 
+Read more on the [control aesthetic evaluation](https://ggplot2.tidyverse.org/reference/aes_eval.html).
+
 # 12. Themes
+
+## 12.1 Change the overall plotting themes
+
+By default `ggplot2` provides eight themes, but there are several packages provide additional themes. For example [`ggthemes`](https://github.com/jrnold/ggthemes). We can simply have The Economist [plotting style](https://www.google.de/search?q=economist+graphic&udm=2) with `theme_economist()` và `scale_color_economist()`:
+
+```{r}
+library(ggthemes)
+
+ggplot(chic, aes(x = date, y = temp, color = season)) +
+  geom_point() +
+  labs(x = "Year", y = "Temperature (°F)") +
+  ggtitle("Ups and Downs of Chicago's Daily Temperatures") +
+  theme_economist() +
+  scale_color_economist(name = NULL)
+```
+
+Another style that follow the famous author Edward Tufte of the book "The  Visual Display of Quantitative Information":
+
+```{r}
+library(dplyr)
+chic_2000 <- filter(chic, year == 2000)
+
+ggplot(chic_2000, aes(x = temp, y = o3)) +
+  geom_point() +
+  labs(x = "Temperature (°F)", y = "Ozone") +
+  ggtitle("Temperature and Ozone Levels During the Year 2000 in Chicago") +
+  theme_tufte()
+```
+
+Another packages, [`hrbrthemes`](https://github.com/hrbrmstr/hrbrthemes) by Bob Rudis:
+
+```{r}
+library(hrbrthemes)
+
+ggplot(chic, aes(x = temp, y = o3)) +
+  geom_point(aes(color = dewpoint), show.legend = FALSE) +
+  labs(x = "Temperature (°F)", y = "Ozone") +
+  ggtitle("Temperature and Ozone Levels in Chicago")
+```
+
+## 12.2 Change the font of all text elelments
+
+Incredibly easy, using `base_family`:
+
+```{r}
+g <- ggplot(chic, aes(x = date, y = temp)) +
+  geom_point(color = "firebrick") +
+  labs(x = "Year", y = "Temperature (°F)",
+       title = "Temperatures in Chicago")
+
+g + theme_bw(base_family = "Playfair")
+```
+
+## 12.3 Change the size of all text elements
+
+`theme_bw` also comes with several `base_*` argument, here for the text size:
+
+```{r}
+g + theme_bw(base_size = 30, base_family = "Roboto Condensed")
+```
+
+## 12.4 Change the size of all lines and rect elements
+
+```{r}
+g + theme_bw(base_line_size = 1, base_rect_size = 1)
+```
+
+## 12.5 Create your own theme
+
+You can control for an entire session using `theme_set` as in `theme_set(theme_bw())`, the default is called `theme_gray`:
+
+You can view the code inside a theme for modification of your own:
+
+```{r}
+theme_gray
+```
+
+We can literally modify *everything* in the theme:
+
+```{r}
+theme_custom <- function (base_size = 12, base_family = "Roboto Condensed") {
+  half_line <- base_size/2
+  theme(
+    line = element_line(color = "black", linewidth = .5,
+                        linetype = 1, lineend = "butt"),
+    rect = element_rect(fill = "white", color = "black",
+                        linewidth = .5, linetype = 1),
+    text = element_text(family = base_family, face = "plain",
+                        color = "black", size = base_size,
+                        lineheight = .9, hjust = .5, vjust = .5,
+                        angle = 0, margin = margin(), debug = FALSE),
+    axis.line = element_blank(),
+    axis.line.x = NULL,
+    axis.line.y = NULL,
+    axis.text = element_text(size = base_size * 1.1, color = "gray30"),
+    axis.text.x = element_text(margin = margin(t = .8 * half_line/2),
+                               vjust = 1),
+    axis.text.x.top = element_text(margin = margin(b = .8 * half_line/2),
+                                   vjust = 0),
+    axis.text.y = element_text(margin = margin(r = .8 * half_line/2),
+                               hjust = 1),
+    axis.text.y.right = element_text(margin = margin(l = .8 * half_line/2),
+                                     hjust = 0),
+    axis.ticks = element_line(color = "gray30", linewidth = .7),
+    axis.ticks.length = unit(half_line / 1.5, "pt"),
+    axis.ticks.length.x = NULL,
+    axis.ticks.length.x.top = NULL,
+    axis.ticks.length.x.bottom = NULL,
+    axis.ticks.length.y = NULL,
+    axis.ticks.length.y.left = NULL,
+    axis.ticks.length.y.right = NULL,
+    axis.title.x = element_text(margin = margin(t = half_line),
+                                vjust = 1, size = base_size * 1.3,
+                                face = "bold"),
+    axis.title.x.top = element_text(margin = margin(b = half_line),
+                                    vjust = 0),
+    axis.title.y = element_text(angle = 90, vjust = 1,
+                                margin = margin(r = half_line),
+                                size = base_size * 1.3, face = "bold"),
+    axis.title.y.right = element_text(angle = -90, vjust = 0,
+                                      margin = margin(l = half_line)),
+    legend.background = element_rect(color = NA),
+    legend.spacing = unit(.4, "cm"),
+    legend.spacing.x = NULL,
+    legend.spacing.y = NULL,
+    legend.margin = margin(.2, .2, .2, .2, "cm"),
+    legend.key = element_rect(fill = "gray95", color = "white"),
+    legend.key.size = unit(1.2, "lines"),
+    legend.key.height = NULL,
+    legend.key.width = NULL,
+    legend.text = element_text(size = rel(.8)),
+    legend.text.align = NULL,
+    legend.title = element_text(hjust = 0),
+    legend.title.align = NULL,
+    legend.position = "right",
+    legend.direction = NULL,
+    legend.justification = "center",
+    legend.box = NULL,
+    legend.box.margin = margin(0, 0, 0, 0, "cm"),
+    legend.box.background = element_blank(),
+    legend.box.spacing = unit(.4, "cm"),
+    panel.background = element_rect(fill = "white", color = NA),
+    panel.border = element_rect(color = "gray30",
+                                fill = NA, linewidth = .7),
+    panel.grid.major = element_line(color = "gray90", linewidth = 1),
+    panel.grid.minor = element_line(color = "gray90", linewidth = .5,
+                                    linetype = "dashed"),
+    panel.spacing = unit(base_size, "pt"),
+    panel.spacing.x = NULL,
+    panel.spacing.y = NULL,
+    panel.ontop = FALSE,
+    strip.background = element_rect(fill = "white", color = "gray30"),
+    strip.text = element_text(color = "black", size = base_size),
+    strip.text.x = element_text(margin = margin(t = half_line,
+                                                b = half_line)),
+    strip.text.y = element_text(angle = -90,
+                                margin = margin(l = half_line,
+                                                r = half_line)),
+    strip.text.y.left = element_text(angle = 90),
+    strip.placement = "inside",
+    strip.placement.x = NULL,
+    strip.placement.y = NULL,
+    strip.switch.pad.grid = unit(0.1, "cm"),
+    strip.switch.pad.wrap = unit(0.1, "cm"),
+    plot.background = element_rect(color = NA),
+    plot.title = element_text(size = base_size * 1.8, hjust = .5,
+                              vjust = 1, face = "bold",
+                              margin = margin(b = half_line * 1.2)),
+    plot.title.position = "panel",
+    plot.subtitle = element_text(size = base_size * 1.3,
+                                 hjust = .5, vjust = 1,
+                                 margin = margin(b = half_line * .9)),
+    plot.caption = element_text(size = rel(0.9), hjust = 1, vjust = 1,
+                                margin = margin(t = half_line * .9)),
+    plot.caption.position = "panel",
+    plot.tag = element_text(size = rel(1.2), hjust = .5, vjust = .5),
+    plot.tag.position = "topleft",
+    plot.margin = margin(rep(base_size, 4)),
+    complete = TRUE
+  )
+}
+```
+
+Then use it:
+
+```{r}
+theme_set(theme_custom())
+
+ggplot(chic, aes(x = date, y = temp, color = season)) +
+  geom_point() + labs(x = "Year", y = "Temperature (°F)") + guides(color = "none")
+```
+
+## 12.6 Update the current theme
+
+A `ggplot` is extendable, so is `theme` - using `theme_update`:
+
+```{r}
+theme_custom <- theme_update(panel.background = element_rect(fill = "gray60"))
+
+ggplot(chic, aes(x = date, y = temp, color = season)) +
+  geom_point() + labs(x = "Year", y = "Temperature (°F)") + guides(color = "none")
+```
 
 # 13. Lines
 
