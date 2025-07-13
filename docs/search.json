@@ -4603,7 +4603,7 @@
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#axes-with-same-scaling",
     "title": "A tutorial of ggplot2\n",
     "section": "5.10 Axes with same scaling",
-    "text": "5.10 Axes with same scaling\nUse coord_equal() with default ratio = 1 to ensure the units are equally scaled on the x-axis and on the y-axis. We can set the aspect ratio of a plot with coord_fixed() or coord_equal(). Both use aspect = 1 (1:1) as a default.\n\nShow the codeggplot(chic, aes(x = temp, y = temp + rnorm(nrow(chic), sd = 20))) +\n  geom_point(color = \"sienna\") +\n  labs(x = \"Temperature (°F)\", y = \"Temperature (°F) + random noise\") +\n  xlim(c(0, 100)) + ylim(c(0, 150)) +\n  coord_fixed()\n\nWarning: Removed 48 rows containing missing values or values outside the scale range\n(`geom_point()`).\n\n\n\n\n\n\n\n\nRatios higher than one make units on the y axis longer than units on the x-axis, and vice versa:\n\nShow the codeggplot(chic, aes(x = temp, y = temp + rnorm(nrow(chic), sd = 20))) +\n  geom_point(color = \"sienna\") +\n  labs(x = \"Temperature (°F)\", y = \"Temperature (°F) + random noise\") +\n  xlim(c(0, 100)) + ylim(c(0, 150)) +\n  coord_fixed(ratio = 1/5)\n\nWarning: Removed 59 rows containing missing values or values outside the scale range\n(`geom_point()`)."
+    "text": "5.10 Axes with same scaling\nUse coord_equal() with default ratio = 1 to ensure the units are equally scaled on the x-axis and on the y-axis. We can set the aspect ratio of a plot with coord_fixed() or coord_equal(). Both use aspect = 1 (1:1) as a default.\n\nShow the codeggplot(chic, aes(x = temp, y = temp + rnorm(nrow(chic), sd = 20))) +\n  geom_point(color = \"sienna\") +\n  labs(x = \"Temperature (°F)\", y = \"Temperature (°F) + random noise\") +\n  xlim(c(0, 100)) + ylim(c(0, 150)) +\n  coord_fixed()\n\nWarning: Removed 59 rows containing missing values or values outside the scale range\n(`geom_point()`).\n\n\n\n\n\n\n\n\nRatios higher than one make units on the y axis longer than units on the x-axis, and vice versa:\n\nShow the codeggplot(chic, aes(x = temp, y = temp + rnorm(nrow(chic), sd = 20))) +\n  geom_point(color = \"sienna\") +\n  labs(x = \"Temperature (°F)\", y = \"Temperature (°F) + random noise\") +\n  xlim(c(0, 100)) + ylim(c(0, 150)) +\n  coord_fixed(ratio = 1/5)\n\nWarning: Removed 57 rows containing missing values or values outside the scale range\n(`geom_point()`)."
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#use-a-function-to-alter-labels",
@@ -4897,7 +4897,7 @@
     "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#create-your-own-theme",
     "title": "A tutorial of ggplot2\n",
     "section": "12.5 Create your own theme",
-    "text": "12.5 Create your own theme\nYou can control for an entire session using theme_set as in theme_set(theme_bw()), the default is called theme_gray:\nYou can view the code inside a theme for modification of your own:\n\nShow the codetheme_gray\n\nfunction (base_size = 11, base_family = \"\", base_line_size = base_size/22, \n    base_rect_size = base_size/22) \n{\n    half_line &lt;- base_size/2\n    t &lt;- theme(line = element_line(colour = \"black\", linewidth = base_line_size, \n        linetype = 1, lineend = \"butt\"), rect = element_rect(fill = \"white\", \n        colour = \"black\", linewidth = base_rect_size, linetype = 1), \n        text = element_text(family = base_family, face = \"plain\", \n            colour = \"black\", size = base_size, lineheight = 0.9, \n            hjust = 0.5, vjust = 0.5, angle = 0, margin = margin(), \n            debug = FALSE), axis.line = element_blank(), axis.line.x = NULL, \n        axis.line.y = NULL, axis.text = element_text(size = rel(0.8), \n            colour = \"grey30\"), axis.text.x = element_text(margin = margin(t = 0.8 * \n            half_line/2), vjust = 1), axis.text.x.top = element_text(margin = margin(b = 0.8 * \n            half_line/2), vjust = 0), axis.text.y = element_text(margin = margin(r = 0.8 * \n            half_line/2), hjust = 1), axis.text.y.right = element_text(margin = margin(l = 0.8 * \n            half_line/2), hjust = 0), axis.text.r = element_text(margin = margin(l = 0.8 * \n            half_line/2, r = 0.8 * half_line/2), hjust = 0.5), \n        axis.ticks = element_line(colour = \"grey20\"), axis.ticks.length = unit(half_line/2, \n            \"pt\"), axis.ticks.length.x = NULL, axis.ticks.length.x.top = NULL, \n        axis.ticks.length.x.bottom = NULL, axis.ticks.length.y = NULL, \n        axis.ticks.length.y.left = NULL, axis.ticks.length.y.right = NULL, \n        axis.minor.ticks.length = rel(0.75), axis.title.x = element_text(margin = margin(t = half_line/2), \n            vjust = 1), axis.title.x.top = element_text(margin = margin(b = half_line/2), \n            vjust = 0), axis.title.y = element_text(angle = 90, \n            margin = margin(r = half_line/2), vjust = 1), axis.title.y.right = element_text(angle = -90, \n            margin = margin(l = half_line/2), vjust = 1), legend.background = element_rect(colour = NA), \n        legend.spacing = unit(2 * half_line, \"pt\"), legend.spacing.x = NULL, \n        legend.spacing.y = NULL, legend.margin = margin(half_line, \n            half_line, half_line, half_line), legend.key = NULL, \n        legend.key.size = unit(1.2, \"lines\"), legend.key.height = NULL, \n        legend.key.width = NULL, legend.key.spacing = unit(half_line, \n            \"pt\"), legend.text = element_text(size = rel(0.8)), \n        legend.title = element_text(hjust = 0), legend.ticks.length = rel(0.2), \n        legend.position = \"right\", legend.direction = NULL, legend.justification = \"center\", \n        legend.box = NULL, legend.box.margin = margin(0, 0, 0, \n            0, \"cm\"), legend.box.background = element_blank(), \n        legend.box.spacing = unit(2 * half_line, \"pt\"), panel.background = element_rect(fill = \"grey92\", \n            colour = NA), panel.border = element_blank(), panel.grid = element_line(colour = \"white\"), \n        panel.grid.minor = element_line(linewidth = rel(0.5)), \n        panel.spacing = unit(half_line, \"pt\"), panel.spacing.x = NULL, \n        panel.spacing.y = NULL, panel.ontop = FALSE, strip.background = element_rect(fill = \"grey85\", \n            colour = NA), strip.clip = \"inherit\", strip.text = element_text(colour = \"grey10\", \n            size = rel(0.8), margin = margin(0.8 * half_line, \n                0.8 * half_line, 0.8 * half_line, 0.8 * half_line)), \n        strip.text.x = NULL, strip.text.y = element_text(angle = -90), \n        strip.text.y.left = element_text(angle = 90), strip.placement = \"inside\", \n        strip.placement.x = NULL, strip.placement.y = NULL, strip.switch.pad.grid = unit(half_line/2, \n            \"pt\"), strip.switch.pad.wrap = unit(half_line/2, \n            \"pt\"), plot.background = element_rect(colour = \"white\"), \n        plot.title = element_text(size = rel(1.2), hjust = 0, \n            vjust = 1, margin = margin(b = half_line)), plot.title.position = \"panel\", \n        plot.subtitle = element_text(hjust = 0, vjust = 1, margin = margin(b = half_line)), \n        plot.caption = element_text(size = rel(0.8), hjust = 1, \n            vjust = 1, margin = margin(t = half_line)), plot.caption.position = \"panel\", \n        plot.tag = element_text(size = rel(1.2), hjust = 0.5, \n            vjust = 0.5), plot.tag.position = \"topleft\", plot.margin = margin(half_line, \n            half_line, half_line, half_line), complete = TRUE)\n    ggplot_global$theme_all_null %+replace% t\n}\n&lt;bytecode: 0x0000025ddf20b8c0&gt;\n&lt;environment: namespace:ggplot2&gt;\n\n\nWe can literally modify everything in the theme:\n\nShow the codetheme_custom &lt;- function (base_size = 12, base_family = \"Roboto Condensed\") {\n  half_line &lt;- base_size/2\n  theme(\n    line = element_line(color = \"black\", linewidth = .5,\n                        linetype = 1, lineend = \"butt\"),\n    rect = element_rect(fill = \"white\", color = \"black\",\n                        linewidth = .5, linetype = 1),\n    text = element_text(family = base_family, face = \"plain\",\n                        color = \"black\", size = base_size,\n                        lineheight = .9, hjust = .5, vjust = .5,\n                        angle = 0, margin = margin(), debug = FALSE),\n    axis.line = element_blank(),\n    axis.line.x = NULL,\n    axis.line.y = NULL,\n    axis.text = element_text(size = base_size * 1.1, color = \"gray30\"),\n    axis.text.x = element_text(margin = margin(t = .8 * half_line/2),\n                               vjust = 1),\n    axis.text.x.top = element_text(margin = margin(b = .8 * half_line/2),\n                                   vjust = 0),\n    axis.text.y = element_text(margin = margin(r = .8 * half_line/2),\n                               hjust = 1),\n    axis.text.y.right = element_text(margin = margin(l = .8 * half_line/2),\n                                     hjust = 0),\n    axis.ticks = element_line(color = \"gray30\", linewidth = .7),\n    axis.ticks.length = unit(half_line / 1.5, \"pt\"),\n    axis.ticks.length.x = NULL,\n    axis.ticks.length.x.top = NULL,\n    axis.ticks.length.x.bottom = NULL,\n    axis.ticks.length.y = NULL,\n    axis.ticks.length.y.left = NULL,\n    axis.ticks.length.y.right = NULL,\n    axis.title.x = element_text(margin = margin(t = half_line),\n                                vjust = 1, size = base_size * 1.3,\n                                face = \"bold\"),\n    axis.title.x.top = element_text(margin = margin(b = half_line),\n                                    vjust = 0),\n    axis.title.y = element_text(angle = 90, vjust = 1,\n                                margin = margin(r = half_line),\n                                size = base_size * 1.3, face = \"bold\"),\n    axis.title.y.right = element_text(angle = -90, vjust = 0,\n                                      margin = margin(l = half_line)),\n    legend.background = element_rect(color = NA),\n    legend.spacing = unit(.4, \"cm\"),\n    legend.spacing.x = NULL,\n    legend.spacing.y = NULL,\n    legend.margin = margin(.2, .2, .2, .2, \"cm\"),\n    legend.key = element_rect(fill = \"gray95\", color = \"white\"),\n    legend.key.size = unit(1.2, \"lines\"),\n    legend.key.height = NULL,\n    legend.key.width = NULL,\n    legend.text = element_text(size = rel(.8)),\n    legend.text.align = NULL,\n    legend.title = element_text(hjust = 0),\n    legend.title.align = NULL,\n    legend.position = \"right\",\n    legend.direction = NULL,\n    legend.justification = \"center\",\n    legend.box = NULL,\n    legend.box.margin = margin(0, 0, 0, 0, \"cm\"),\n    legend.box.background = element_blank(),\n    legend.box.spacing = unit(.4, \"cm\"),\n    panel.background = element_rect(fill = \"white\", color = NA),\n    panel.border = element_rect(color = \"gray30\",\n                                fill = NA, linewidth = .7),\n    panel.grid.major = element_line(color = \"gray90\", linewidth = 1),\n    panel.grid.minor = element_line(color = \"gray90\", linewidth = .5,\n                                    linetype = \"dashed\"),\n    panel.spacing = unit(base_size, \"pt\"),\n    panel.spacing.x = NULL,\n    panel.spacing.y = NULL,\n    panel.ontop = FALSE,\n    strip.background = element_rect(fill = \"white\", color = \"gray30\"),\n    strip.text = element_text(color = \"black\", size = base_size),\n    strip.text.x = element_text(margin = margin(t = half_line,\n                                                b = half_line)),\n    strip.text.y = element_text(angle = -90,\n                                margin = margin(l = half_line,\n                                                r = half_line)),\n    strip.text.y.left = element_text(angle = 90),\n    strip.placement = \"inside\",\n    strip.placement.x = NULL,\n    strip.placement.y = NULL,\n    strip.switch.pad.grid = unit(0.1, \"cm\"),\n    strip.switch.pad.wrap = unit(0.1, \"cm\"),\n    plot.background = element_rect(color = NA),\n    plot.title = element_text(size = base_size * 1.8, hjust = .5,\n                              vjust = 1, face = \"bold\",\n                              margin = margin(b = half_line * 1.2)),\n    plot.title.position = \"panel\",\n    plot.subtitle = element_text(size = base_size * 1.3,\n                                 hjust = .5, vjust = 1,\n                                 margin = margin(b = half_line * .9)),\n    plot.caption = element_text(size = rel(0.9), hjust = 1, vjust = 1,\n                                margin = margin(t = half_line * .9)),\n    plot.caption.position = \"panel\",\n    plot.tag = element_text(size = rel(1.2), hjust = .5, vjust = .5),\n    plot.tag.position = \"topleft\",\n    plot.margin = margin(rep(base_size, 4)),\n    complete = TRUE\n  )\n}\n\n\nThen use it:\n\nShow the codetheme_set(theme_custom())\n\nggplot(chic, aes(x = date, y = temp, color = season)) +\n  geom_point() + labs(x = \"Year\", y = \"Temperature (°F)\") + guides(color = \"none\")"
+    "text": "12.5 Create your own theme\nYou can control for an entire session using theme_set as in theme_set(theme_bw()), the default is called theme_gray:\nYou can view the code inside a theme for modification of your own:\n\nShow the codetheme_gray\n\nfunction (base_size = 11, base_family = \"\", base_line_size = base_size/22, \n    base_rect_size = base_size/22) \n{\n    half_line &lt;- base_size/2\n    t &lt;- theme(line = element_line(colour = \"black\", linewidth = base_line_size, \n        linetype = 1, lineend = \"butt\"), rect = element_rect(fill = \"white\", \n        colour = \"black\", linewidth = base_rect_size, linetype = 1), \n        text = element_text(family = base_family, face = \"plain\", \n            colour = \"black\", size = base_size, lineheight = 0.9, \n            hjust = 0.5, vjust = 0.5, angle = 0, margin = margin(), \n            debug = FALSE), axis.line = element_blank(), axis.line.x = NULL, \n        axis.line.y = NULL, axis.text = element_text(size = rel(0.8), \n            colour = \"grey30\"), axis.text.x = element_text(margin = margin(t = 0.8 * \n            half_line/2), vjust = 1), axis.text.x.top = element_text(margin = margin(b = 0.8 * \n            half_line/2), vjust = 0), axis.text.y = element_text(margin = margin(r = 0.8 * \n            half_line/2), hjust = 1), axis.text.y.right = element_text(margin = margin(l = 0.8 * \n            half_line/2), hjust = 0), axis.text.r = element_text(margin = margin(l = 0.8 * \n            half_line/2, r = 0.8 * half_line/2), hjust = 0.5), \n        axis.ticks = element_line(colour = \"grey20\"), axis.ticks.length = unit(half_line/2, \n            \"pt\"), axis.ticks.length.x = NULL, axis.ticks.length.x.top = NULL, \n        axis.ticks.length.x.bottom = NULL, axis.ticks.length.y = NULL, \n        axis.ticks.length.y.left = NULL, axis.ticks.length.y.right = NULL, \n        axis.minor.ticks.length = rel(0.75), axis.title.x = element_text(margin = margin(t = half_line/2), \n            vjust = 1), axis.title.x.top = element_text(margin = margin(b = half_line/2), \n            vjust = 0), axis.title.y = element_text(angle = 90, \n            margin = margin(r = half_line/2), vjust = 1), axis.title.y.right = element_text(angle = -90, \n            margin = margin(l = half_line/2), vjust = 1), legend.background = element_rect(colour = NA), \n        legend.spacing = unit(2 * half_line, \"pt\"), legend.spacing.x = NULL, \n        legend.spacing.y = NULL, legend.margin = margin(half_line, \n            half_line, half_line, half_line), legend.key = NULL, \n        legend.key.size = unit(1.2, \"lines\"), legend.key.height = NULL, \n        legend.key.width = NULL, legend.key.spacing = unit(half_line, \n            \"pt\"), legend.text = element_text(size = rel(0.8)), \n        legend.title = element_text(hjust = 0), legend.ticks.length = rel(0.2), \n        legend.position = \"right\", legend.direction = NULL, legend.justification = \"center\", \n        legend.box = NULL, legend.box.margin = margin(0, 0, 0, \n            0, \"cm\"), legend.box.background = element_blank(), \n        legend.box.spacing = unit(2 * half_line, \"pt\"), panel.background = element_rect(fill = \"grey92\", \n            colour = NA), panel.border = element_blank(), panel.grid = element_line(colour = \"white\"), \n        panel.grid.minor = element_line(linewidth = rel(0.5)), \n        panel.spacing = unit(half_line, \"pt\"), panel.spacing.x = NULL, \n        panel.spacing.y = NULL, panel.ontop = FALSE, strip.background = element_rect(fill = \"grey85\", \n            colour = NA), strip.clip = \"inherit\", strip.text = element_text(colour = \"grey10\", \n            size = rel(0.8), margin = margin(0.8 * half_line, \n                0.8 * half_line, 0.8 * half_line, 0.8 * half_line)), \n        strip.text.x = NULL, strip.text.y = element_text(angle = -90), \n        strip.text.y.left = element_text(angle = 90), strip.placement = \"inside\", \n        strip.placement.x = NULL, strip.placement.y = NULL, strip.switch.pad.grid = unit(half_line/2, \n            \"pt\"), strip.switch.pad.wrap = unit(half_line/2, \n            \"pt\"), plot.background = element_rect(colour = \"white\"), \n        plot.title = element_text(size = rel(1.2), hjust = 0, \n            vjust = 1, margin = margin(b = half_line)), plot.title.position = \"panel\", \n        plot.subtitle = element_text(hjust = 0, vjust = 1, margin = margin(b = half_line)), \n        plot.caption = element_text(size = rel(0.8), hjust = 1, \n            vjust = 1, margin = margin(t = half_line)), plot.caption.position = \"panel\", \n        plot.tag = element_text(size = rel(1.2), hjust = 0.5, \n            vjust = 0.5), plot.tag.position = \"topleft\", plot.margin = margin(half_line, \n            half_line, half_line, half_line), complete = TRUE)\n    ggplot_global$theme_all_null %+replace% t\n}\n&lt;bytecode: 0x0000017c7f5104a0&gt;\n&lt;environment: namespace:ggplot2&gt;\n\n\nWe can literally modify everything in the theme:\n\nShow the codetheme_custom &lt;- function (base_size = 12, base_family = \"Roboto Condensed\") {\n  half_line &lt;- base_size/2\n  theme(\n    line = element_line(color = \"black\", linewidth = .5,\n                        linetype = 1, lineend = \"butt\"),\n    rect = element_rect(fill = \"white\", color = \"black\",\n                        linewidth = .5, linetype = 1),\n    text = element_text(family = base_family, face = \"plain\",\n                        color = \"black\", size = base_size,\n                        lineheight = .9, hjust = .5, vjust = .5,\n                        angle = 0, margin = margin(), debug = FALSE),\n    axis.line = element_blank(),\n    axis.line.x = NULL,\n    axis.line.y = NULL,\n    axis.text = element_text(size = base_size * 1.1, color = \"gray30\"),\n    axis.text.x = element_text(margin = margin(t = .8 * half_line/2),\n                               vjust = 1),\n    axis.text.x.top = element_text(margin = margin(b = .8 * half_line/2),\n                                   vjust = 0),\n    axis.text.y = element_text(margin = margin(r = .8 * half_line/2),\n                               hjust = 1),\n    axis.text.y.right = element_text(margin = margin(l = .8 * half_line/2),\n                                     hjust = 0),\n    axis.ticks = element_line(color = \"gray30\", linewidth = .7),\n    axis.ticks.length = unit(half_line / 1.5, \"pt\"),\n    axis.ticks.length.x = NULL,\n    axis.ticks.length.x.top = NULL,\n    axis.ticks.length.x.bottom = NULL,\n    axis.ticks.length.y = NULL,\n    axis.ticks.length.y.left = NULL,\n    axis.ticks.length.y.right = NULL,\n    axis.title.x = element_text(margin = margin(t = half_line),\n                                vjust = 1, size = base_size * 1.3,\n                                face = \"bold\"),\n    axis.title.x.top = element_text(margin = margin(b = half_line),\n                                    vjust = 0),\n    axis.title.y = element_text(angle = 90, vjust = 1,\n                                margin = margin(r = half_line),\n                                size = base_size * 1.3, face = \"bold\"),\n    axis.title.y.right = element_text(angle = -90, vjust = 0,\n                                      margin = margin(l = half_line)),\n    legend.background = element_rect(color = NA),\n    legend.spacing = unit(.4, \"cm\"),\n    legend.spacing.x = NULL,\n    legend.spacing.y = NULL,\n    legend.margin = margin(.2, .2, .2, .2, \"cm\"),\n    legend.key = element_rect(fill = \"gray95\", color = \"white\"),\n    legend.key.size = unit(1.2, \"lines\"),\n    legend.key.height = NULL,\n    legend.key.width = NULL,\n    legend.text = element_text(size = rel(.8)),\n    legend.text.align = NULL,\n    legend.title = element_text(hjust = 0),\n    legend.title.align = NULL,\n    legend.position = \"right\",\n    legend.direction = NULL,\n    legend.justification = \"center\",\n    legend.box = NULL,\n    legend.box.margin = margin(0, 0, 0, 0, \"cm\"),\n    legend.box.background = element_blank(),\n    legend.box.spacing = unit(.4, \"cm\"),\n    panel.background = element_rect(fill = \"white\", color = NA),\n    panel.border = element_rect(color = \"gray30\",\n                                fill = NA, linewidth = .7),\n    panel.grid.major = element_line(color = \"gray90\", linewidth = 1),\n    panel.grid.minor = element_line(color = \"gray90\", linewidth = .5,\n                                    linetype = \"dashed\"),\n    panel.spacing = unit(base_size, \"pt\"),\n    panel.spacing.x = NULL,\n    panel.spacing.y = NULL,\n    panel.ontop = FALSE,\n    strip.background = element_rect(fill = \"white\", color = \"gray30\"),\n    strip.text = element_text(color = \"black\", size = base_size),\n    strip.text.x = element_text(margin = margin(t = half_line,\n                                                b = half_line)),\n    strip.text.y = element_text(angle = -90,\n                                margin = margin(l = half_line,\n                                                r = half_line)),\n    strip.text.y.left = element_text(angle = 90),\n    strip.placement = \"inside\",\n    strip.placement.x = NULL,\n    strip.placement.y = NULL,\n    strip.switch.pad.grid = unit(0.1, \"cm\"),\n    strip.switch.pad.wrap = unit(0.1, \"cm\"),\n    plot.background = element_rect(color = NA),\n    plot.title = element_text(size = base_size * 1.8, hjust = .5,\n                              vjust = 1, face = \"bold\",\n                              margin = margin(b = half_line * 1.2)),\n    plot.title.position = \"panel\",\n    plot.subtitle = element_text(size = base_size * 1.3,\n                                 hjust = .5, vjust = 1,\n                                 margin = margin(b = half_line * .9)),\n    plot.caption = element_text(size = rel(0.9), hjust = 1, vjust = 1,\n                                margin = margin(t = half_line * .9)),\n    plot.caption.position = \"panel\",\n    plot.tag = element_text(size = rel(1.2), hjust = .5, vjust = .5),\n    plot.tag.position = \"topleft\",\n    plot.margin = margin(rep(base_size, 4)),\n    complete = TRUE\n  )\n}\n\n\nThen use it:\n\nShow the codetheme_set(theme_custom())\n\nggplot(chic, aes(x = date, y = temp, color = season)) +\n  geom_point() + labs(x = \"Year\", y = \"Temperature (°F)\") + guides(color = \"none\")"
   },
   {
     "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#update-the-current-theme",
@@ -4905,5 +4905,222 @@
     "title": "A tutorial of ggplot2\n",
     "section": "12.6 Update the current theme",
     "text": "12.6 Update the current theme\nA ggplot is extendable, so is theme - using theme_update:\n\nShow the codetheme_custom &lt;- theme_update(panel.background = element_rect(fill = \"gray60\"))\n\nggplot(chic, aes(x = date, y = temp, color = season)) +\n  geom_point() + labs(x = \"Year\", y = \"Temperature (°F)\") + guides(color = \"none\")"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#add-horizontal-or-vertical-lines-to-a-plot",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#add-horizontal-or-vertical-lines-to-a-plot",
+    "title": "A tutorial of ggplot2\n",
+    "section": "13.1 Add horizontal or vertical lines to a plot",
+    "text": "13.1 Add horizontal or vertical lines to a plot\nWe might want to plot a horizontal or vertical line across the plot to highlight a threshold, or an event. This can be done using geom_vline() or geom_hline():\n\nShow the codeggplot(chic, aes(x = date, y = temp, color = o3)) +\n  geom_point() +\n  geom_hline(yintercept = c(0, 73)) +\n  labs(x = \"Year\", y = \"Temperature (°F)\")\n\n\n\n\n\n\n\nMore customization on the lines:\n\nShow the codeg &lt;- ggplot(chic, aes(x = temp, y = dewpoint)) +\n  geom_point(color = \"dodgerblue\", alpha = .5) +\n  labs(x = \"Temperature (°F)\", y = \"Dewpoint\")\n\ng +\n  geom_vline(aes(xintercept = median(temp)), linewidth = 1.5,\n             color = \"firebrick\", linetype = \"dashed\") +\n  geom_hline(aes(yintercept = median(dewpoint)), linewidth = 1.5,\n             color = \"firebrick\", linetype = \"dashed\")\n\n\n\n\n\n\n\nA sloping line also can be added using geom_abline():\n\nShow the codereg &lt;- lm(dewpoint ~ temp, data = chic)\n\ng +\n  geom_abline(intercept = coefficients(reg)[1],\n              slope = coefficients(reg)[2],\n              color = \"darkorange2\",\n              linewidth = 1.5) +\n  labs(title = paste0(\"y = \", round(coefficients(reg)[2], 2),\n                      \" * x + \", round(coefficients(reg)[1], 2)))"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#add-a-line-within-a-plot",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#add-a-line-within-a-plot",
+    "title": "A tutorial of ggplot2\n",
+    "section": "13.2 Add a line within a plot",
+    "text": "13.2 Add a line within a plot\nOne might need to limited the length of line, just for a certain range. This is when geom_linerange() comes to help:\n\nShow the codeg +\n  ## vertical line\n  geom_linerange(aes(x = 50, ymin = 20, ymax = 55),\n                 color = \"steelblue\", linewidth = 2) +\n  ## horizontal line\n  geom_linerange(aes(xmin = -Inf, xmax = 25, y = 0),\n                 color = \"red\", linewidth = 1)"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#add-curved-lines-and-arrows-to-a-plot",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#add-curved-lines-and-arrows-to-a-plot",
+    "title": "A tutorial of ggplot2\n",
+    "section": "13.3 Add curved lines and arrows to a plot",
+    "text": "13.3 Add curved lines and arrows to a plot"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#add-labels-to-your-data",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#add-labels-to-your-data",
+    "title": "A tutorial of ggplot2\n",
+    "section": "14.1 Add labels to your data",
+    "text": "14.1 Add labels to your data"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#add-text-annotations",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#add-text-annotations",
+    "title": "A tutorial of ggplot2\n",
+    "section": "14.2 Add text annotations",
+    "text": "14.2 Add text annotations"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#use-markdown-and-html-rendering-for-annotations",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#use-markdown-and-html-rendering-for-annotations",
+    "title": "A tutorial of ggplot2\n",
+    "section": "14.3 Use markdown and HTML rendering for annotations",
+    "text": "14.3 Use markdown and HTML rendering for annotations"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#flip-a-plot",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#flip-a-plot",
+    "title": "A tutorial of ggplot2\n",
+    "section": "15.1 Flip a plot",
+    "text": "15.1 Flip a plot"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#flip-an-axis",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#flip-an-axis",
+    "title": "A tutorial of ggplot2\n",
+    "section": "15.2 Flip an axis",
+    "text": "15.2 Flip an axis"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#reverse-an-axis",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#reverse-an-axis",
+    "title": "A tutorial of ggplot2\n",
+    "section": "15.3 Reverse an axis",
+    "text": "15.3 Reverse an axis"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#transform-an-axis",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#transform-an-axis",
+    "title": "A tutorial of ggplot2\n",
+    "section": "15.4 Transform an axis",
+    "text": "15.4 Transform an axis"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#circularize-a-plot",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#circularize-a-plot",
+    "title": "A tutorial of ggplot2\n",
+    "section": "15.5 Circularize a plot",
+    "text": "15.5 Circularize a plot"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#alternatives-to-a-box-plot",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#alternatives-to-a-box-plot",
+    "title": "A tutorial of ggplot2\n",
+    "section": "16.1 Alternatives to a box plot",
+    "text": "16.1 Alternatives to a box plot"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#plot-of-points",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#plot-of-points",
+    "title": "A tutorial of ggplot2\n",
+    "section": "16.1.1 Plot of points",
+    "text": "16.1.1 Plot of points"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#jitter-the-points",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#jitter-the-points",
+    "title": "A tutorial of ggplot2\n",
+    "section": "16.1.2 Jitter the points",
+    "text": "16.1.2 Jitter the points"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#violin-plots",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#violin-plots",
+    "title": "A tutorial of ggplot2\n",
+    "section": "16.1.3 Violin plots",
+    "text": "16.1.3 Violin plots"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#combine-violin-with-jitter",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#combine-violin-with-jitter",
+    "title": "A tutorial of ggplot2\n",
+    "section": "16.1.4 Combine violin with jitter",
+    "text": "16.1.4 Combine violin with jitter"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#combine-violin-with-box-plots",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#combine-violin-with-box-plots",
+    "title": "A tutorial of ggplot2\n",
+    "section": "16.1.5 Combine violin with box plots",
+    "text": "16.1.5 Combine violin with box plots"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#create-rug-representation-to-a-plot",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#create-rug-representation-to-a-plot",
+    "title": "A tutorial of ggplot2\n",
+    "section": "16.2 Create rug representation to a plot",
+    "text": "16.2 Create rug representation to a plot"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#create-a-correlation-matrix",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#create-a-correlation-matrix",
+    "title": "A tutorial of ggplot2\n",
+    "section": "16.3 Create a correlation matrix",
+    "text": "16.3 Create a correlation matrix"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#create-a-contour-plot",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#create-a-contour-plot",
+    "title": "A tutorial of ggplot2\n",
+    "section": "16.4 Create a contour plot",
+    "text": "16.4 Create a contour plot"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#create-a-heatmap-of-counts",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#create-a-heatmap-of-counts",
+    "title": "A tutorial of ggplot2\n",
+    "section": "16.5 Create a heatmap of counts",
+    "text": "16.5 Create a heatmap of counts"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#create-a-ridge-plot",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#create-a-ridge-plot",
+    "title": "A tutorial of ggplot2\n",
+    "section": "16.6 Create a ridge plot",
+    "text": "16.6 Create a ridge plot"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#add-a-loess-or-gam-smoothing",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#add-a-loess-or-gam-smoothing",
+    "title": "A tutorial of ggplot2\n",
+    "section": "18.1 Add a LOESS or GAM smoothing",
+    "text": "18.1 Add a LOESS or GAM smoothing"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#add-a-linear-fit",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#add-a-linear-fit",
+    "title": "A tutorial of ggplot2\n",
+    "section": "18.2 Add a linear fit",
+    "text": "18.2 Add a linear fit"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#specify-the-formula-for-smoothing",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#specify-the-formula-for-smoothing",
+    "title": "A tutorial of ggplot2\n",
+    "section": "18.3 Specify the formula for smoothing",
+    "text": "18.3 Specify the formula for smoothing"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#combine-ggplot2-with-shiny",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#combine-ggplot2-with-shiny",
+    "title": "A tutorial of ggplot2\n",
+    "section": "19.1 Combine ggplot2 with shiny\n",
+    "text": "19.1 Combine ggplot2 with shiny"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#plot.ly-via-plotly-and-ggplot2",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#plot.ly-via-plotly-and-ggplot2",
+    "title": "A tutorial of ggplot2\n",
+    "section": "19.2 Plot.ly via plotly and ggplot2\n",
+    "text": "19.2 Plot.ly via plotly and ggplot2"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#ggiraph-and-ggplot2",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#ggiraph-and-ggplot2",
+    "title": "A tutorial of ggplot2\n",
+    "section": "19.3 ggiraph and ggplot2\n",
+    "text": "19.3 ggiraph and ggplot2"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#highcharts-via-highcharter",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#highcharts-via-highcharter",
+    "title": "A tutorial of ggplot2\n",
+    "section": "19.4 Highcharts via highcharter\n",
+    "text": "19.4 Highcharts via highcharter"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#echarts-via-echarts4r",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#echarts-via-echarts4r",
+    "title": "A tutorial of ggplot2\n",
+    "section": "19.5 Echarts via echarts4r\n",
+    "text": "19.5 Echarts via echarts4r"
+  },
+  {
+    "objectID": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#chart.js-via-charter",
+    "href": "blog/2025-06-30-a-first-lesson-on-ggplot2/index.html#chart.js-via-charter",
+    "title": "A tutorial of ggplot2\n",
+    "section": "19.6 Chart.js via charter\n",
+    "text": "19.6 Chart.js via charter"
   }
 ]

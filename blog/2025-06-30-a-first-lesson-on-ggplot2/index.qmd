@@ -1554,20 +1554,143 @@ ggplot(chic, aes(x = date, y = temp, color = season)) +
 
 # 13. Lines
 
+```{r}
+theme_custom <- theme_update(
+  panel.background = element_rect(fill = "white"),
+  panel.grid.major = element_line(linewidth = .5),
+  panel.grid.minor = element_blank()
+)
+```
+
+## 13.1 Add horizontal or vertical lines to a plot
+
+We might want to plot a horizontal or vertical line across the plot to highlight a threshold, or an event. This can be done using `geom_vline()` or `geom_hline()`:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp, color = o3)) +
+  geom_point() +
+  geom_hline(yintercept = c(0, 73)) +
+  labs(x = "Year", y = "Temperature (°F)")
+```
+
+More customization on the lines:
+
+```{r}
+g <- ggplot(chic, aes(x = temp, y = dewpoint)) +
+  geom_point(color = "dodgerblue", alpha = .5) +
+  labs(x = "Temperature (°F)", y = "Dewpoint")
+
+g +
+  geom_vline(aes(xintercept = median(temp)), linewidth = 1.5,
+             color = "firebrick", linetype = "dashed") +
+  geom_hline(aes(yintercept = median(dewpoint)), linewidth = 1.5,
+             color = "firebrick", linetype = "dashed")
+```
+
+A sloping line also can be added using `geom_abline()`:
+
+```{r}
+reg <- lm(dewpoint ~ temp, data = chic)
+
+g +
+  geom_abline(intercept = coefficients(reg)[1],
+              slope = coefficients(reg)[2],
+              color = "darkorange2",
+              linewidth = 1.5) +
+  labs(title = paste0("y = ", round(coefficients(reg)[2], 2),
+                      " * x + ", round(coefficients(reg)[1], 2)))
+```
+
+## 13.2 Add a line within a plot
+
+One might need to limited the length of line, just for a certain range. This is when `geom_linerange()` comes to help:
+
+```{r}
+g +
+  ## vertical line
+  geom_linerange(aes(x = 50, ymin = 20, ymax = 55),
+                 color = "steelblue", linewidth = 2) +
+  ## horizontal line
+  geom_linerange(aes(xmin = -Inf, xmax = 25, y = 0),
+                 color = "red", linewidth = 1)
+```
+
+## 13.3 Add curved lines and arrows to a plot
+
 # 14. Text
+
+## 14.1 Add labels to your data
+
+## 14.2 Add text annotations
+
+## 14.3 Use markdown and HTML rendering for annotations
 
 # 15. Coordinates
 
+## 15.1 Flip a plot
+
+## 15.2 Flip an axis
+
+## 15.3 Reverse an axis
+
+## 15.4 Transform an axis
+
+## 15.5 Circularize a plot
+
 # 16. Chart Types
+
+## 16.1 Alternatives to a box plot
+
+## 16.1.1 Plot of points
+
+## 16.1.2 Jitter the points
+
+## 16.1.3 Violin plots
+
+## 16.1.4 Combine violin with jitter
+
+## 16.1.5 Combine violin with box plots
+
+## 16.2 Create rug representation to a plot
+
+## 16.3 Create a correlation matrix
+
+## 16.4 Create a contour plot
+
+## 16.5 Create a heatmap of counts
+
+## 16.6 Create a ridge plot
 
 # 17. Ribbons (AUC, CI, etc.)
 
 # 18. Smoothings
 
+## 18.1 Add a LOESS or GAM smoothing
+
+## 18.2 Add a linear fit
+
+## 18.3 Specify the formula for smoothing
+
 # 19. Interactive Plots
+
+## 19.1 Combine `ggplot2` with `shiny`
+
+## 19.2 Plot.ly via `plotly` and `ggplot2`
+
+## 19.3 `ggiraph` and `ggplot2`
+
+## 19.4 Highcharts via `highcharter`
+
+## 19.5 Echarts via `echarts4r`
+
+## 19.6 Chart.js via `charter`
 
 # 20. Remarks, Tipps & Resources
 
 # References
 
 - Source: <https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/>;
+- Top 50 `ggplot2` graphs: <https://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html>;
+- `ggplot2` extension gallery: <https://exts.ggplot2.tidyverse.org/gallery/>;
+- How to extend `ggplot2`: <https://cran.r-project.org/web/packages/ggplot2/vignettes/extending-ggplot2.html>.
+
