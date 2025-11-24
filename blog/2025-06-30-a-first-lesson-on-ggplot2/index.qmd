@@ -5,7 +5,7 @@ author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
 date: 06-30-2025
-date-modified: 07-11-2025
+date-modified: 11-24-2025
 categories: [r, ggplot2, visualization]
 image: grammar-of-graphics.png
 draft: false
@@ -1587,7 +1587,7 @@ g +
              color = "firebrick", linetype = "dashed")
 ```
 
-A sloping line also can be added using `geom_abline()`:
+A sloping line also can be added using `geom_abline()` (later we will learn how to add a linear fit with `stat_smooth(method = "lm")`):
 
 ```{r}
 reg <- lm(dewpoint ~ temp, data = chic)
@@ -1615,15 +1615,250 @@ g +
                  color = "red", linewidth = 1)
 ```
 
+Or you can use `annotate(geom = "segment")` to add a sloping line:
+
+```{r}
+g +
+  annotate(geom = "segment",
+           x = 50, xend = 75,
+                   y = 20, yend = 45,
+               color = "purple", linewidth = 2)
+```
+
 ## 13.3 Add curved lines and arrows to a plot
+
+If we set `geom = "curves"`, we have curved lines:
+
+```{r}
+g +
+  annotate(geom = "curve",x = 0, y = 60, xend = 75, yend = 0,
+             color = "tan", linewidth = 2) +
+  annotate(geom = "curve",
+           x = 0, y = 60, xend = 75, yend = 0,
+             curvature = -0.7, angle = 45,
+             color = "darkgoldenrod1", linewidth = 1) +
+  annotate(geom = "curve", x = 0, y = 60, xend = 75, yend = 0,
+             curvature = 0, linewidth = 1.5)
+```
+
+If we want to add arrows:
+
+```{r}
+g +
+  annotate(geom = "curve", x = 0, y = 60, xend = 75, yend = 0,
+             color = "tan", linewidth = 2,
+             arrow = arrow(length = unit(0.07, "npc"))) +
+  annotate(geom = "curve", x = 5, y = 55, xend = 70, yend = 5,
+             curvature = -0.7, angle = 45,
+             color = "darkgoldenrod1", linewidth = 1,
+             arrow = arrow(length = unit(0.03, "npc"),
+                           type = "closed",
+                           ends = "both"))
+```
 
 # 14. Text
 
 ## 14.1 Add labels to your data
 
+```{r}
+set.seed(2020)
+
+## just label 1% dataset, equally for each season
+sample <- chic |>
+  dplyr::group_by(season) |>
+  dplyr::sample_frac(0.01)
+
+## code without pipes:
+## sample <- sample_frac(group_by(chic, season), .01)
+
+ggplot(sample, aes(x = date, y = temp, color = season)) +
+  geom_point(data = chic) +
+  geom_label(aes(label = season), hjust = .5, vjust = -.5) +
+  ## can use `geom_text()` if we dont want boxes around lables
+  labs(x = "Year", y = "Temperature (°F)") +
+  xlim(as.Date(c('1997-01-01', '2000-12-31'))) +
+  ylim(c(0, 90)) +
+  theme(legend.position = "none")
+```
+
+Text are overlapping! the the package `{ggrepel}` comes to solve, just simply replace `geom_text()` by `geom_text_repel()`, and `geom_label()` by `geom_label_repel()`:
+
+```{r}
+library(ggrepel)
+
+ggplot(sample, aes(x = date, y = temp, color = season)) +
+  geom_point(data = chic) +
+  geom_label_repel(aes(label = season), fontface = "bold") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(legend.position = "none")
+```
+
+It may look nicer when we map `season` to `fill` instead of `color`:
+
+```{r}
+ggplot(sample, aes(x = date, y = temp)) +
+  geom_point(data = chic, size = .5) +
+  geom_point(aes(color = season), size = 1.5) +
+  geom_label_repel(aes(label = season, fill = season),
+                   color = "white", fontface = "bold",
+                   segment.color = "grey30") +
+  labs(x = "Year", y = "Temperature (°F)") +
+  theme(legend.position = "none")
+```
+
 ## 14.2 Add text annotations
 
+Several ways: `annotate(geom = "text")`, `annotate(geom = "label")`, `geom_text()` or `geom_label()`:
+
+```{r}
+g <-
+  ggplot(chic, aes(x = temp, y = dewpoint)) +
+  geom_point(alpha = .5) +
+  labs(x = "Temperature (°F)", y = "Dewpoint")
+
+g +
+  annotate(geom = "text", x = 25, y = 60, fontface = "bold",
+                label = "This is a useful annotation")
+```
+
+The problem is ggplot had drawn one text for one data point ~ 1462 labels and you only see one. We can solve this by:
+
+```{r}
+g +
+  geom_text(aes(x = 25, y = 60,
+                label = "This is a useful annotation"),
+            stat = "unique")
+```
+
+Change the properties of displayed text:
+
+```{r}
+g +
+  geom_text(aes(x = 25, y = 60,
+                label = "This is a useful annotation"),
+            stat = "unique", family = "Bangers",
+            size = 7, color = "darkcyan")
+```
+
+You might run into trouble when annotating with facets:
+
+```{r}
+ann <- data.frame(
+  o3 = 30,
+  temp = 20,
+  season = factor("Summer", levels = levels(chic$season)),
+  label = "Here is enough space\nfor some annotations."
+)
+
+g <-
+  ggplot(chic, aes(x = o3, y = temp)) +
+  geom_point() +
+  labs(x = "Ozone", y = "Temperature (°F)")
+
+g +
+  geom_text(data = ann, aes(label = label),
+            size = 7, fontface = "bold",
+            family = "Roboto Condensed") +
+  facet_wrap(~season)
+```
+
+Freescaling may cut your text:
+
+```{r}
+g +
+  geom_text(aes(x = 23, y = 97,
+                label = "This is not a useful annotation"),
+            size = 5, fontface = "bold") +
+  scale_y_continuous(limits = c(NA, 100)) +
+  facet_wrap(~season, scales = "free_x")
+```
+
+One workaround might be calculating the midpoint beforehand:
+
+```{r}
+ann <-
+  chic |>
+  dplyr::group_by(season) |>
+  dplyr::summarize(
+    o3 = min(o3, na.rm = TRUE) +
+          (max(o3, na.rm = TRUE) - min(o3, na.rm = TRUE)) / 2
+)
+
+ann
+```
+
+Then use it:
+
+```{r}
+g +
+  geom_text(data = ann,
+            aes(x = o3, y = 97,
+                label = "This is a useful annotation"),
+            size = 5, fontface = "bold") +
+  scale_y_continuous(limits = c(NA, 100)) +
+  facet_wrap(~season, scales = "free_x")
+```
+
+And there are also advanced solotions:
+
+```{r}
+library(grid)
+my_grob <- grobTree(textGrob("This text stays in place!",
+                             x = .1, y = .9, hjust = 0,
+                             gp = gpar(col = "black",
+                                       fontsize = 15,
+                                       fontface = "bold")))
+
+g +
+  annotation_custom(my_grob) +
+  facet_wrap(~season, scales = "free_x") +
+  scale_y_continuous(limits = c(NA, 100))
+```
+
 ## 14.3 Use markdown and HTML rendering for annotations
+
+`{ggtext}` provide syntax for markdown:
+
+```{r}
+library(ggtext)
+
+lab_md <- "This plot shows **temperature** in *°F* versus **ozone level** in *ppm*"
+
+g +
+  geom_richtext(aes(x = 35, y = 3, label = lab_md),
+                stat = "unique")
+```
+
+and also HTML:
+
+```{r}
+lab_html <- "&#9733; This plot shows <b style='color:red;'>temperature</b> in <i>°F</i> versus <b style='color:blue;'>ozone level</b>in <i>ppm</i> &#9733;"
+
+g +
+  geom_richtext(aes(x = 33, y = 3, label = lab_html),
+                stat = "unique")
+```
+
+They allow lots of customizations:
+
+```{r}
+g +
+  geom_richtext(aes(x = 10, y = 25, label = lab_md),
+                stat = "unique", angle = 30,
+                color = "white", fill = "steelblue",
+                label.color = NA, hjust = 0, vjust = 0,
+                family = "Playfair Display")
+```
+
+The other from `{ggtext}` is `geom_textbox()`:
+
+```{r}
+lab_long <- "**Lorem ipsum dolor**<br><i style='font-size:8pt;color:red;'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</i>"
+
+g +
+  geom_textbox(aes(x = 40, y = 10, label = lab_long),
+               width = unit(15, "lines"), stat = "unique")
+```
 
 # 15. Coordinates
 
