@@ -5,7 +5,7 @@ author:
   - name: "Tuan Le Khac"
     url: https://lktuan.github.io/
 date: 06-30-2025
-date-modified: 11-24-2025
+date-modified: 11-25-2025
 categories: [r, ggplot2, visualization]
 image: grammar-of-graphics.png
 draft: false
@@ -1864,33 +1864,258 @@ g +
 
 ## 15.1 Flip a plot
 
-## 15.2 Flip an axis
+```{r}
+ggplot(chic, aes(x = season, y = o3)) +
+  geom_boxplot(fill = "indianred") +
+  # can achieve this with argument orientation = "y", without coord_flip()
+  labs(x = "Season", y = "Ozone") +
+  coord_flip()
+```
+
+## 15.2 Fix an axis
+
+Literally force axis ratio in Cartesian coordinate system:
+
+```{r}
+ggplot(chic, aes(x = temp, y = o3)) +
+  geom_point() +
+  labs(x = "Temperature (°F)", y = "Ozone Level") +
+  scale_x_continuous(breaks = seq(0, 80, by = 20)) +
+  coord_fixed(ratio = 1)
+```
 
 ## 15.3 Reverse an axis
 
+```{r}
+ggplot(chic, aes(x = date, y = temp, color = o3)) +
+  geom_point() +
+  labs(x = "Year", y = "Temperature (°F)") +
+  scale_y_reverse() # same for x
+```
+
+This will only work for continuous data. If you work with discrete variable you should use `fct_rec()` from `{forcats}` package.
+
 ## 15.4 Transform an axis
 
+Instead of using linear mapping we can use `scale_y_log10()` or `scale_y_sqrt()`:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp, color = o3)) +
+  geom_point() +
+  labs(x = "Year", y = "Temperature (°F)") +
+  scale_y_log10(lim = c(0.1, 100)) # be careful of N/A
+```
+
 ## 15.5 Circularize a plot
+
+Circularize of polarize?:
+
+```{r}
+chic |>
+  dplyr::group_by(season) |>
+  dplyr::summarize(o3 = median(o3)) |>
+  ggplot(aes(x = season, y = o3)) +
+    geom_col(aes(fill = season), color = NA) +
+    labs(x = "", y = "Median Ozone Level") +
+    coord_polar() +
+    guides(fill = "none")
+```
+
+Using this approach we can create piechart:
+
+```{r}
+chic_sum <-
+  chic |>
+  dplyr::mutate(o3_avg = median(o3)) |>
+  dplyr::filter(o3 > o3_avg) |>
+  dplyr::mutate(n_all = n()) |>
+  dplyr::group_by(season) |>
+  dplyr::summarize(rel = n() / unique(n_all))
+
+ggplot(chic_sum, aes(x = "", y = rel)) +
+  geom_col(aes(fill = season), width = 1, color = NA) +
+  labs(x = "", y = "Proportion of Days Exceeding\nthe Median Ozone Level") +
+  coord_polar(theta = "y") +
+  scale_fill_brewer(palette = "Set1", name = "Season:") +
+  theme(axis.ticks = element_blank(),
+        panel.grid = element_blank())
+```
 
 # 16. Chart Types
 
 ## 16.1 Alternatives to a box plot
 
+Be aware that there might be people who never seen a box/or whisker plot before:
+
+```{r}
+g <-
+  ggplot(chic, aes(x = season, y = o3,
+                   color = season)) +
+    labs(x = "Season", y = "Ozone") +
+    scale_color_brewer(palette = "Dark2", guide = "none")
+
+g + geom_boxplot()
+```
+
 ## 16.1.1 Plot of points
+
+Let's just show all the data points:
+
+```{r}
+g + geom_point()
+```
+
+Add transparency to make it more informative:
+
+```{r}
+g + geom_point(alpha = .1)
+```
+
+Not working so well, the overlapping is still too high!
 
 ## 16.1.2 Jitter the points
 
+More readability, but be careful that you are adding noise to your data. Make sure audiences do not misinterprete it:
+
+```{r}
+g + geom_jitter(width = .3, alpha = .5)
+```
+
 ## 16.1.3 Violin plots
+
+This one is meta right now:
+
+```{r}
+g + geom_violin(fill = "gray80", linewidth = 1, alpha = .5)
+```
 
 ## 16.1.4 Combine violin with jitter
 
+Why dont try some combinations:
+
+```{r}
+g + geom_violin(fill = "gray80", linewidth = 1, alpha = .5) +
+    geom_jitter(alpha = .25, width = .3) +
+    coord_flip()
+```
+
+We can do more, control the width of the jitter by the so called `geom_sina()` from `{ggforce}`:
+
+```{r}
+library(ggforce)
+
+g + geom_violin(fill = "gray80", linewidth = 1, alpha = .5) +
+    geom_sina(alpha = .25) +
+    coord_flip()
+```
+
 ## 16.1.5 Combine violin with box plots
+
+```{r}
+g + geom_violin(aes(fill = season), linewidth = 1, alpha = .5) +
+    geom_boxplot(outlier.alpha = 0, coef = 0,
+                 color = "gray40", width = .2) +
+    scale_fill_brewer(palette = "Dark2", guide = "none") +
+    coord_flip()
+```
 
 ## 16.2 Create rug representation to a plot
 
+The rug representation supplement to scatter or heatmap plot to visualize overall distribution:
+
+```{r}
+ggplot(chic, aes(x = date, y = temp, color = season)) +
+  geom_point(show.legend = FALSE) +
+  geom_rug(sides = "r", alpha = .3, show.legend = FALSE) +
+  labs(x = "Year", y = "Temperature (°F)")
+```
+
 ## 16.3 Create a correlation matrix
 
+Create the matrix:
+
+```{r}
+corm <-
+  chic |>
+  dplyr::select(temp, dewpoint, pm10, o3) |>
+  corrr::correlate(diagonal = 1) |>
+  corrr::shave(upper = FALSE)
+
+corm
+```
+
+Pivot to long format:
+
+```{r}
+corm <- corm |>
+  tidyr::pivot_longer(
+    cols = -term,
+    names_to = "colname",
+    values_to = "corr"
+  ) |>
+  dplyr::mutate(
+    rowname = forcats::fct_inorder(term),
+    colname = forcats::fct_inorder(colname),
+    label = dplyr::if_else(is.na(corr), "", sprintf("%1.2f", corr))
+  )
+```
+
+Plot:
+
+```{r}
+library(forcats)
+
+ggplot(corm, aes(rowname, fct_rev(colname),
+                 fill = corr)) +
+  geom_tile() +
+  geom_text(aes(label = label)) +
+  coord_fixed() +
+  labs(x = NULL, y = NULL)
+```
+
+More customization:
+
+```{r}
+ggplot(corm, aes(rowname, fct_rev(colname),
+                 fill = corr)) +
+  geom_tile() +
+  geom_text(aes(
+    label = label,
+    color = abs(corr) < .75
+  )) +
+  coord_fixed(expand = FALSE) +
+  scale_color_manual(
+    values = c("white", "black"),
+    guide = "none"
+  ) +
+  scale_fill_distiller(
+    palette = "PuOr", na.value = "white",
+    direction = 1, limits = c(-1, 1),
+    name = "Pearson\nCorrelation:"
+  ) +
+  labs(x = NULL, y = NULL) +
+  theme(panel.border = element_rect(color = NA, fill = NA),
+        legend.position = c(.85, .8))
+```
+
 ## 16.4 Create a contour plot
+
+Basic:
+
+```{r}
+ggplot(chic, aes(temp, o3)) +
+  geom_density_2d() +
+  labs(x = "Temperature (°F)", x = "Ozone Level")
+```
+
+Vertical notation:
+
+```{r}
+ggplot(chic, aes(temp, o3)) +
+  geom_density_2d_filled(show.legend = FALSE) +
+  coord_cartesian(expand = FALSE) +
+  labs(x = "Temperature (°F)", x = "Ozone Level")
+```
 
 ## 16.5 Create a heatmap of counts
 
