@@ -291,7 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 <p>Lambda cho phép người dùng định nghĩa in-line functions. Việc sử dụng <code>lambda()</code> rất thuận tiện khi gọi lại (callback ~ một function được thực thi sau khi một function khác được thực thi; một cách lưu trữ function) hoặc khi đầu ra của một function là đối số cho một function khác.</p>
 <p>Hai hàm <code>square_fn</code> và <code>square_ld</code> dưới đây là một:</p>
-<div id="74aad070" class="cell" data-execution_count="1">
+<div id="09f9a00b" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">def</span> square_fn(x):</span>
 <span id="cb1-2"><a href="#cb1-2"></a>    <span class="cf">return</span> x <span class="op">*</span> x</span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
@@ -301,7 +301,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-7"><a href="#cb1-7"></a>    <span class="cf">assert</span> square_fn(i) <span class="op">==</span> square_ld(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>lambda</code> rất hữu ích khi sử dụng cùng với các function khác như <code>map</code>, <code>filter</code>, và <code>reduce</code> (mình rất hay sử dụng pattern này trên Excel 😂). <code>map(fn, interable)</code> sẽ apply hàm <code>fn</code> cho tất cả các phần tử trong <code>iterable</code> (như list, set, dict, tuple, string), trả về map object.</p>
-<div id="c4478da0" class="cell" data-execution_count="2">
+<div id="85d77a7c" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>nums <span class="op">=</span> [<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">2</span><span class="op">/</span><span class="dv">7</span>, <span class="dv">1001</span><span class="op">/</span><span class="dv">37500</span>, <span class="dv">40</span><span class="op">/</span><span class="dv">27</span>]</span>
 <span id="cb2-2"><a href="#cb2-2"></a>nums_squared <span class="op">=</span> [num <span class="op">*</span> num <span class="cf">for</span> num <span class="kw">in</span> nums]</span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="bu">print</span>(nums_squared)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -310,7 +310,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Dùng <code>map</code> và một hàm callback, cho ra kết quả tương đương:</p>
-<div id="f16d0683" class="cell" data-execution_count="3">
+<div id="cfb2748e" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>nums_squared_1 <span class="op">=</span> <span class="bu">map</span>(square_fn, nums)</span>
 <span id="cb4-2"><a href="#cb4-2"></a>nums_squared_2 <span class="op">=</span> <span class="bu">map</span>(<span class="kw">lambda</span> x: x<span class="op">*</span>x, nums)</span>
 <span id="cb4-3"><a href="#cb4-3"></a><span class="bu">print</span>(<span class="bu">list</span>(nums_squared_1)) <span class="co"># list to list the elements of map object</span></span>
@@ -321,7 +321,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Có thể dùng <code>map</code> với nhiều hơn 1 iterable. Ví dụ muốn tính MSE cho một hồi quy tuyến tính đơn giản <code>f(x) = ax + b</code> với ground tru <code>labels</code>, hai phương pháp sau tương đương:</p>
-<div id="c4c61582" class="cell" data-execution_count="4">
+<div id="f090c987" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>a, b <span class="op">=</span> <span class="dv">3</span>, <span class="op">-</span><span class="fl">0.5</span></span>
 <span id="cb6-2"><a href="#cb6-2"></a>xs <span class="op">=</span> [<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>]</span>
 <span id="cb6-3"><a href="#cb6-3"></a>labels <span class="op">=</span> [<span class="fl">6.4</span>, <span class="fl">8.9</span>, <span class="fl">10.9</span>, <span class="fl">15.3</span>]</span>
@@ -342,7 +342,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p><code>filter(fn, iterable)</code> giống như <code>map</code>, tuy nhiên <code>fn</code> là một hàm trả về giá trị boolean true/false, và <code>filter</code> sẽ trả về các phần tử của <code>iterable</code> khi <code>fn</code> trả về true.</p>
-<div id="38a8eaee" class="cell" data-execution_count="5">
+<div id="0299492e" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>bad_preds <span class="op">=</span> <span class="bu">filter</span>(<span class="kw">lambda</span> x: x <span class="op">&gt;</span> <span class="fl">0.5</span>, errors)</span>
 <span id="cb8-2"><a href="#cb8-2"></a></span>
 <span id="cb8-3"><a href="#cb8-3"></a><span class="bu">print</span>(<span class="bu">list</span>(bad_preds))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -351,7 +351,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p><code>reduce(fn, iterable, initializer)</code> được dùng khi ta muốn áp dụng một toán lên tất cả thành phần trong danh sách. Ví dụ muốn tính kết quả nhân của toàn bộ phần tử:</p>
-<div id="1957cfc0" class="cell" data-execution_count="6">
+<div id="6a1cc0c3" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>product <span class="op">=</span> <span class="dv">1</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a><span class="cf">for</span> num <span class="kw">in</span> nums:</span>
 <span id="cb10-3"><a href="#cb10-3"></a>    product <span class="op">*=</span> num</span>
@@ -361,7 +361,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Sử dụng <code>reduce</code>:</p>
-<div id="85c74c39" class="cell" data-execution_count="7">
+<div id="acf14b63" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="im">from</span> functools <span class="im">import</span> <span class="bu">reduce</span></span>
 <span id="cb12-2"><a href="#cb12-2"></a></span>
 <span id="cb12-3"><a href="#cb12-3"></a>product <span class="op">=</span> <span class="bu">reduce</span>(<span class="kw">lambda</span> x, y: x <span class="op">*</span> y, nums)</span>
@@ -386,7 +386,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="unpacking" class="level2">
 <h2 class="anchored" data-anchor-id="unpacking">3.1. Unpacking</h2>
 <p>Chúng ta có thể “giải nén” một list như thế này:</p>
-<div id="fd8c4857" class="cell" data-execution_count="8">
+<div id="fe26f3e0" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>elems <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>]</span>
 <span id="cb14-2"><a href="#cb14-2"></a>a,b,c,d <span class="op">=</span> elems</span>
 <span id="cb14-3"><a href="#cb14-3"></a></span>
@@ -396,7 +396,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Cũng có thể làm như thế này:</p>
-<div id="9917a429" class="cell" data-execution_count="9">
+<div id="68d41157" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>a, <span class="op">*</span>new_elems, d <span class="op">=</span> elems <span class="co"># remember the char * for extended unpacking</span></span>
 <span id="cb16-2"><a href="#cb16-2"></a></span>
 <span id="cb16-3"><a href="#cb16-3"></a><span class="bu">print</span>(a)</span>
@@ -412,7 +412,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="slicing" class="level2">
 <h2 class="anchored" data-anchor-id="slicing">3.2. Slicing</h2>
 <p>Chúng ta có thể reverse/đảo ngược một list với <code>[::-1]</code></p>
-<div id="eb2bab26" class="cell" data-execution_count="10">
+<div id="1358e2e5" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a>elem <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>))</span>
 <span id="cb18-2"><a href="#cb18-2"></a><span class="bu">print</span>(elem)</span>
 <span id="cb18-3"><a href="#cb18-3"></a></span>
@@ -424,7 +424,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Cú pháp <code>[x:y:z]</code> có nghĩa là lấy <strong><em>mỗi</em></strong> phần tử thứ <code>z</code> từ index <code>x</code> tới index <code>y</code>. Khi <code>z</code> âm, tương đương với việc lấy theo thứ tự ngược lại. <code>x</code> để trống chỉ việc lấy từ phần tử đầu tiên, <code>y</code> để rỗng chỉ việc lấy tới phần tử cuối cùng.</p>
-<div id="30a31a45" class="cell" data-execution_count="11">
+<div id="cbb46294" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a>evens <span class="op">=</span> elem[::<span class="dv">2</span>]</span>
 <span id="cb20-2"><a href="#cb20-2"></a><span class="bu">print</span>(evens)</span>
 <span id="cb20-3"><a href="#cb20-3"></a></span>
@@ -436,7 +436,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Cũng có thể dùng slicing để xóa các phần tử như thế này:</p>
-<div id="d74f7e13" class="cell" data-execution_count="12">
+<div id="76c81130" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="kw">del</span> elems[::<span class="dv">2</span>]</span>
 <span id="cb22-2"><a href="#cb22-2"></a><span class="bu">print</span>(elems)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -447,7 +447,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="insertion" class="level2">
 <h2 class="anchored" data-anchor-id="insertion">3.3. Insertion</h2>
 <p>Chúng ta có thể thay đổi giá trị một phần tử trong một list như sau:</p>
-<div id="09af6787" class="cell" data-execution_count="13">
+<div id="83427725" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a>elems <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>))</span>
 <span id="cb24-2"><a href="#cb24-2"></a></span>
 <span id="cb24-3"><a href="#cb24-3"></a>elems[<span class="dv">1</span>] <span class="op">=</span> <span class="dv">100</span></span>
@@ -457,7 +457,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Cũng có thể thay thế một giá trị bằng nhiều giá trị:</p>
-<div id="31f00e3c" class="cell" data-execution_count="14">
+<div id="2c5696ea" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a>elems <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>))</span>
 <span id="cb26-2"><a href="#cb26-2"></a>elems[<span class="dv">1</span>:<span class="dv">2</span>] <span class="op">=</span> [<span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>]</span>
 <span id="cb26-3"><a href="#cb26-3"></a><span class="bu">print</span>(elems)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -466,7 +466,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Nếu chúng ta muốn thêm 3 giá trị <code>0.3, 0.4, 0.5</code> vào giữa phần tử thứ 0 và 1 của list này, thì:</p>
-<div id="1970cbe1" class="cell" data-execution_count="15">
+<div id="144802da" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a>elems <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">10</span>))</span>
 <span id="cb28-2"><a href="#cb28-2"></a>elems[<span class="dv">1</span>:<span class="dv">1</span>] <span class="op">=</span> [<span class="fl">.3</span>, <span class="fl">.4</span>, <span class="fl">.5</span>]</span>
 <span id="cb28-3"><a href="#cb28-3"></a><span class="bu">print</span>(elems)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -478,7 +478,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="flattening" class="level2">
 <h2 class="anchored" data-anchor-id="flattening">3.4. Flattening</h2>
 <p>Chúng ta có thể flatten một list sử dung <code>sum(0)</code>:</p>
-<div id="e45b4ca7" class="cell" data-execution_count="16">
+<div id="9169d74b" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a>list_of_lists <span class="op">=</span> [[<span class="dv">1</span>], [<span class="dv">2</span>, <span class="dv">3</span>], [<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>]]</span>
 <span id="cb30-2"><a href="#cb30-2"></a><span class="bu">sum</span>(list_of_lists, [])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="16">
@@ -486,7 +486,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Cũng có thể sử dụng recursive lambda (another beauty of lambda)</p>
-<div id="6a0fecdc" class="cell" data-execution_count="17">
+<div id="b3a86822" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a>nested_lists <span class="op">=</span> [[<span class="dv">1</span>, <span class="dv">2</span>], [[<span class="dv">3</span>, <span class="dv">4</span>], [<span class="dv">5</span>, <span class="dv">6</span>], [[<span class="dv">7</span>, <span class="dv">8</span>], [<span class="dv">9</span>, <span class="dv">10</span>], [[<span class="dv">11</span>, [<span class="dv">12</span>, <span class="dv">13</span>]]]]]]</span>
 <span id="cb32-2"><a href="#cb32-2"></a>flatten <span class="op">=</span> <span class="kw">lambda</span> x: [y <span class="cf">for</span> i <span class="kw">in</span> x <span class="cf">for</span> y <span class="kw">in</span> flatten(i)] <span class="cf">if</span> <span class="bu">type</span>(x) <span class="kw">is</span> <span class="bu">list</span> <span class="cf">else</span> [x]</span>
 <span id="cb32-3"><a href="#cb32-3"></a></span>
@@ -505,7 +505,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <blockquote class="blockquote">
 <p>Từ generator được sử dụng cho cả hàm (hàm generator là hàm đã nói ở trên) và kết quả mà hàm đó sinh ra (đối tượng được hàm generator sinh ra cũng được gọi là generator). Vì vậy đôi khi việc này gây khó hiểu một chút. Hãy xem ví dụ về việc tạo n-grams từ một danh sách tokens dưới đây để hiểu sự khác biệt giữa list và generator:</p>
 </blockquote>
-<div id="16c78c8d" class="cell" data-execution_count="18">
+<div id="3b78156e" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1"></a>tokens <span class="op">=</span> [<span class="st">'i'</span>, <span class="st">'want'</span>, <span class="st">'to'</span>, <span class="st">'go'</span>, <span class="st">'to'</span>, <span class="st">'school'</span>]</span>
 <span id="cb34-2"><a href="#cb34-2"></a></span>
 <span id="cb34-3"><a href="#cb34-3"></a><span class="kw">def</span> ngrams(tokens, n):</span>
@@ -521,7 +521,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Trong ví dụ này, chúng ta phải lưu toàn bộ n-grams một lúc. Nếu có <code>m</code> tokens, memory requirement là <code>O(nm)</code> - sẽ là vấn đề nếu <code>m</code> lớn. Thay vào đó, chúng ta có thể sử dụng generator để tạo n-grams tiếp theo khi được yêu cầu. Đây gọi là lazy evaluation. Chúng ta có thể tạo một hàm <code>ngrams</code> trả về một generator sử dụng keyword <code>yield</code>, lúc này memory requirement là <code>O(n+m)</code>.</p>
-<div id="0ef8bb7f" class="cell" data-execution_count="19">
+<div id="ecfe8ba3" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a><span class="kw">def</span> ngrams(tokens, n):</span>
 <span id="cb36-2"><a href="#cb36-2"></a>    length <span class="op">=</span> <span class="bu">len</span>(tokens)</span>
 <span id="cb36-3"><a href="#cb36-3"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(length <span class="op">-</span> n <span class="op">+</span> <span class="dv">1</span>):</span>
@@ -533,7 +533,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb36-9"><a href="#cb36-9"></a><span class="cf">for</span> ngram <span class="kw">in</span> ngrams_generator:</span>
 <span id="cb36-10"><a href="#cb36-10"></a>    <span class="bu">print</span>(ngram)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;generator object ngrams at 0x00000239753BDB70&gt;
+<pre><code>&lt;generator object ngrams at 0x000002773917A980&gt;
 ['i', 'want', 'to']
 ['want', 'to', 'go']
 ['to', 'go', 'to']
@@ -541,7 +541,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Một cách khác để tạo n-grams là slice để lấy các sub-list <code>[0, 1, 2, ...,-n]</code>, <code>[1, 2, 3, ...,-n+1]</code>, <code>[2, 3, 4, ...,-n+2]</code>,… <code>[n-1, n, ...,-1]</code>, sau đó <code>zip</code> chúng lại:</p>
-<div id="20bef29e" class="cell" data-execution_count="20">
+<div id="b04fa5d4" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1"></a><span class="kw">def</span> ngrams(tokens, n):</span>
 <span id="cb38-2"><a href="#cb38-2"></a>    length <span class="op">=</span> <span class="bu">len</span>(tokens)</span>
 <span id="cb38-3"><a href="#cb38-3"></a>    slices <span class="op">=</span> (tokens[i:length<span class="op">-</span>n<span class="op">+</span>i<span class="op">+</span><span class="dv">1</span>] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n))</span>
@@ -554,7 +554,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb38-10"><a href="#cb38-10"></a><span class="cf">for</span> ngram <span class="kw">in</span> ngrams_generator:</span>
 <span id="cb38-11"><a href="#cb38-11"></a>    <span class="bu">print</span>(ngram)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;zip object at 0x00000239753EE840&gt;
+<pre><code>&lt;zip object at 0x000002773941B4C0&gt;
 ('i', 'want', 'to')
 ('want', 'to', 'go')
 ('to', 'go', 'to')
@@ -564,7 +564,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Lưu ý chúng ta sử dụng <code>(tokens[...] for i in range(n))</code>, chứ không phải <code>[tokens[...] for i in range(n)]</code>. <code>[]</code> trả về một list, <code>()</code> trả về generator. # 4. Classes &amp; magic methods</p>
 <hr>
 <p>Trong Python, magic methods được prefixed và suffixed bởi double underscore <code>__</code> (aka dunder). Magic method được biết đến rộng rãi nhất là <code>__init__</code>.</p>
-<div id="556e4b3e" class="cell" data-execution_count="21">
+<div id="6afef638" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1"></a><span class="kw">class</span> Node:</span>
 <span id="cb40-2"><a href="#cb40-2"></a>    <span class="co">""" A struct to denote the node of a binary tree.</span></span>
 <span id="cb40-3"><a href="#cb40-3"></a><span class="co">    It contains a value and pointers to left and right children.</span></span>
@@ -575,15 +575,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb40-8"><a href="#cb40-8"></a>        <span class="va">self</span>.right <span class="op">=</span> right</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In ra object, tuy nhiên nhìn không tường minh lắm!</p>
-<div id="e88cfb75" class="cell" data-execution_count="22">
+<div id="0dee31e7" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1"></a>root <span class="op">=</span> Node(<span class="dv">5</span>)</span>
 <span id="cb41-2"><a href="#cb41-2"></a><span class="bu">print</span>(root) <span class="co"># &lt;__main__.Node object at 0x1069c4518&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;__main__.Node object at 0x00000239753ED910&gt;</code></pre>
+<pre><code>&lt;__main__.Node object at 0x0000027748808500&gt;</code></pre>
 </div>
 </div>
 <p>Chúng ta mong muốn khi in ra một Node, giá trị của nó cũng như giá trị của các Node con (nếu có) cũng sẽ được in ra. Chúng ta dùng <code>__repr__</code>:</p>
-<div id="0e51d9b7" class="cell" data-execution_count="23">
+<div id="d15a7b5e" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1"></a><span class="kw">class</span> Node:</span>
 <span id="cb43-2"><a href="#cb43-2"></a>    <span class="co">""" A struct to denote the node of a binary tree.</span></span>
 <span id="cb43-3"><a href="#cb43-3"></a><span class="co">    It contains a value and pointers to left and right children.</span></span>
@@ -607,7 +607,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Chúng ta cũng muốn hai Node có thể được so sánh được với nhau, vì thế tạo ra các magic method để implement các operator: <code>==</code> với <code>__eq__</code>, <code>&gt;</code> với <code>__lt__</code>, ‘&gt;=’ với <code>__ge__</code>:</p>
-<div id="708d1089" class="cell" data-execution_count="24">
+<div id="117f6a75" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1"></a><span class="kw">class</span> Node:</span>
 <span id="cb45-2"><a href="#cb45-2"></a>    <span class="co">""" A struct to denote the node of a binary tree.</span></span>
 <span id="cb45-3"><a href="#cb45-3"></a><span class="co">    It contains a value and pointers to left and right children.</span></span>
@@ -646,7 +646,7 @@ False</code></pre>
 <h1>5. Local namespace, object’s attributes</h1>
 <hr>
 <p>Hàm <code>locals()</code> trả về danh sách các biến nằm trong local namespace:</p>
-<div id="aff88a01" class="cell" data-execution_count="25">
+<div id="9189b4dc" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1"></a><span class="kw">class</span> Model1:</span>
 <span id="cb47-2"><a href="#cb47-2"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, hidden_size<span class="op">=</span><span class="dv">100</span>, num_layers<span class="op">=</span><span class="dv">3</span>, learning_rate<span class="op">=</span><span class="fl">3e-4</span>):</span>
 <span id="cb47-3"><a href="#cb47-3"></a>        <span class="bu">print</span>(<span class="bu">locals</span>())</span>
@@ -656,18 +656,18 @@ False</code></pre>
 <span id="cb47-7"><a href="#cb47-7"></a></span>
 <span id="cb47-8"><a href="#cb47-8"></a>model1 <span class="op">=</span> Model1()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>{'self': &lt;__main__.Model1 object at 0x00000239754180D0&gt;, 'hidden_size': 100, 'num_layers': 3, 'learning_rate': 0.0003}</code></pre>
+<pre><code>{'self': &lt;__main__.Model1 object at 0x000002774A1B0650&gt;, 'hidden_size': 100, 'num_layers': 3, 'learning_rate': 0.0003}</code></pre>
 </div>
 </div>
 <p>Các attributes của 1 object cũng được lưu hết trong <code>__dict__</code>:</p>
-<div id="5542bde4" class="cell" data-execution_count="26">
+<div id="45650be7" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1"></a><span class="bu">print</span>(model1.__dict__)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>{'hidden_size': 100, 'num_layers': 3, 'learning_rate': 0.0003}</code></pre>
 </div>
 </div>
 <p>Khi có quá nhiều arguments, việc assign nó trong <code>__init__</code> trở nên phiền hà, chúng ta có thể làm như sau:</p>
-<div id="07a2503d" class="cell" data-execution_count="27">
+<div id="23024b78" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1"></a><span class="kw">class</span> Model2:</span>
 <span id="cb51-2"><a href="#cb51-2"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, hidden_size<span class="op">=</span><span class="dv">100</span>, num_layers<span class="op">=</span><span class="dv">3</span>, learning_rate<span class="op">=</span><span class="fl">3e-4</span>):</span>
 <span id="cb51-3"><a href="#cb51-3"></a>        params <span class="op">=</span> <span class="bu">locals</span>()</span>
@@ -681,7 +681,7 @@ False</code></pre>
 </div>
 </div>
 <p>Thậm chí rất tiện khi làm việc với <code>*kwargs</code>:</p>
-<div id="9c52d834" class="cell" data-execution_count="28">
+<div id="e2cc3ecd" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1"></a><span class="kw">class</span> Model3:</span>
 <span id="cb53-2"><a href="#cb53-2"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">**</span>kwargs):</span>
 <span id="cb53-3"><a href="#cb53-3"></a>        <span class="va">self</span>.__dict__ <span class="op">=</span> kwargs</span>
@@ -743,7 +743,7 @@ False</code></pre>
 <hr>
 <p>Chúng ta thường muốn đo lường thời gian chạy của 1 function. Các tự nhiên thường dùng là đặt <code>time.time()</code> ở hai điểm đầu và cuối giữa các lệnh.</p>
 <p>Ví dụ, với hàm tìm số Fibbonacci thứ n, với hai cách (1 cách sử dụng memoization).</p>
-<div id="16d27344" class="cell" data-execution_count="29">
+<div id="d6d5ccfc" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1"></a><span class="kw">def</span> fib_helper(n):</span>
 <span id="cb58-2"><a href="#cb58-2"></a>    <span class="cf">if</span> n <span class="op">&lt;</span> <span class="dv">2</span>:</span>
 <span id="cb58-3"><a href="#cb58-3"></a>        <span class="cf">return</span> n</span>
@@ -765,12 +765,12 @@ False</code></pre>
 <span id="cb58-19"><a href="#cb58-19"></a>    <span class="cf">return</span> fib_m_helper(n, {<span class="dv">0</span>: <span class="dv">0</span>, <span class="dv">1</span>: <span class="dv">1</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Hãy chắc chắn <code>fib</code> và <code>fib_m</code> tương đương nhau:</p>
-<div id="39b0b7a0" class="cell" data-execution_count="30">
+<div id="673bdb1a" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1"></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20</span>):</span>
 <span id="cb59-2"><a href="#cb59-2"></a>    <span class="cf">assert</span> fib(n) <span class="op">==</span> fib_m(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Đo lường thời gian chạy:</p>
-<div id="1ed51064" class="cell" data-execution_count="31">
+<div id="f2f17967" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1"></a><span class="im">import</span> time</span>
 <span id="cb60-2"><a href="#cb60-2"></a></span>
 <span id="cb60-3"><a href="#cb60-3"></a>start <span class="op">=</span> time.time()</span>
@@ -781,12 +781,12 @@ False</code></pre>
 <span id="cb60-8"><a href="#cb60-8"></a>fib_m(<span class="dv">30</span>)</span>
 <span id="cb60-9"><a href="#cb60-9"></a><span class="bu">print</span>(<span class="ss">f'With memoization, it takes </span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> start<span class="sc">:.7f}</span><span class="ss"> seconds.'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Without memoization, it takes 0.133619 seconds.
-With memoization, it takes 0.0000000 seconds.</code></pre>
+<pre><code>Without memoization, it takes 0.149301 seconds.
+With memoization, it takes 0.0009155 seconds.</code></pre>
 </div>
 </div>
 <p>Using decorator, define <code>timeit</code>:</p>
-<div id="9b085ae7" class="cell" data-execution_count="32">
+<div id="4108f807" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1"></a><span class="kw">def</span> timeit(fn): </span>
 <span id="cb62-2"><a href="#cb62-2"></a>    <span class="co"># *args and **kwargs are to support positional and named arguments of fn</span></span>
 <span id="cb62-3"><a href="#cb62-3"></a>    <span class="kw">def</span> get_time(<span class="op">*</span>args, <span class="op">**</span>kwargs): </span>
@@ -797,7 +797,7 @@ With memoization, it takes 0.0000000 seconds.</code></pre>
 <span id="cb62-8"><a href="#cb62-8"></a>    <span class="cf">return</span> get_time </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Sau đó thêm <code>@timeit</code> tới function:</p>
-<div id="4c9cce44" class="cell" data-execution_count="33">
+<div id="18486a98" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1"></a><span class="at">@timeit</span></span>
 <span id="cb63-2"><a href="#cb63-2"></a><span class="kw">def</span> fib(n):</span>
 <span id="cb63-3"><a href="#cb63-3"></a>    <span class="cf">return</span> fib_helper(n)</span>
@@ -809,7 +809,7 @@ With memoization, it takes 0.0000000 seconds.</code></pre>
 <span id="cb63-9"><a href="#cb63-9"></a>fib(<span class="dv">30</span>)</span>
 <span id="cb63-10"><a href="#cb63-10"></a>fib_m(<span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time taken in fib: 0.1192429
+<pre><code>Time taken in fib: 0.1506722
 Time taken in fib_m: 0.0000000</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="33">
@@ -824,7 +824,7 @@ Time taken in fib_m: 0.0000000</code></pre>
 <blockquote class="blockquote">
 <p>Memoization is a form of cache: we cache the previously calculated Fibonacci numbers so that we don’t have to calculate them again.</p>
 </blockquote>
-<div id="5c69b429" class="cell" data-execution_count="34">
+<div id="cd456e5d" class="cell" data-execution_count="34">
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1"></a><span class="im">import</span> functools</span>
 <span id="cb66-2"><a href="#cb66-2"></a></span>
 <span id="cb66-3"><a href="#cb66-3"></a><span class="at">@functools.lru_cache</span>()</span>
